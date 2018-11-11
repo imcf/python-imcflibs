@@ -65,7 +65,7 @@ def set_loglevel(verbosity):
     This will set the loglevel to INFO:
     >>> set_loglevel(1)
 
-    To set the verbosity level when you're e.g. using argparse to count the 
+    To set the verbosity level when you're e.g. using argparse to count the
     number of occurences of '-v' switches on the commandline into a variable
     'verbosity', this code can be used:
     >>> log.set_loglevel(args.verbosity)
