@@ -42,8 +42,11 @@ def filename(name):
     -------
     >>> filename('test_file_name')
     'test_file_name'
-    >>> filename(open(__file__, 'r'))
-    'strtools.py'
+
+    >>> import os.path
+    >>> fname = filename(open(__file__, 'r'))
+    >>> os.path.basename(fname) in ['strtools.py', 'strtools.pyc']
+    True
     """
     if isinstance(name, file):
         return name.name

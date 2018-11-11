@@ -26,8 +26,8 @@ def parse_path(path):
     Example
     -------
 
-    >>> path_to_file = pathtools.parse_path('/tmp/foo/file')
-    >>> path_to_dir = pathtools.parse_path('/tmp/foo/')
+    >>> path_to_file = parse_path('/tmp/foo/file')
+    >>> path_to_dir = parse_path('/tmp/foo/')
 
     orig : The full path string as given to this function.
     full : Backslashes replaced by the current separator.
