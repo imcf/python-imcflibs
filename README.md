@@ -10,11 +10,11 @@ Biozentrum, University of Basel, Switzerland.
 
 # Contents
 
-:note: TODO!
+:memo: TODO!
 
 # Example usage
 
-:note: TODO!
+:memo: TODO!
 
 
 [imcf]: https://www.biozentrum.unibas.ch/imcf
