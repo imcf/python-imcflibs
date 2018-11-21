@@ -3,6 +3,7 @@
 
 import pytest
 from imcflibs.pathtools import parse_path
+from imcflibs.pathtools import jython_fiji_exists
 
 __author__ = "Niko Ehrenfeuchter"
 __copyright__ = "Niko Ehrenfeuchter"
@@ -31,3 +32,16 @@ def test_parse_path():
     assert path_to_dir['dname'] == 'foo'
     assert path_to_dir['ext'] == ''
 
+
+def test_parse_path_windows():
+    path = r'C:\foo\bar'
+    parsed = parse_path(path)
+
+    assert parsed['orig'] == path
+    assert parsed['full'] == r'C:/foo/bar'
+    assert parsed['fname'] == 'bar'
+    assert parsed['dname'] == 'foo'
+
+
+def test_jython_fiji_exists(tmpdir):
+    assert jython_fiji_exists(str(tmpdir)) == True
