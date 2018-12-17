@@ -74,6 +74,58 @@ def jython_fiji_exists(path):
         return False
 
 
+def listdir_matching(path, suffix):
+    """Get a list of files in a directory matching a given suffix.
+
+    Parameters
+    ----------
+    path : str
+        The directory to scan for files.
+    suffix : str
+        The suffix to match filenames against.
+
+    Returns
+    -------
+    list
+        All file names in the directory matching the suffix (without path!).
+    """
+    matching_files = list()
+    for candidate in os.listdir(path):
+        if candidate.lower().endswith(suffix.lower()):
+            # log.debug("Found file %s", candidate)
+            matching_files.append(candidate)
+
+    return matching_files
+
+
+def image_basename(orig_name):
+    """Return the file name component without suffix(es).
+
+    Strip away the path and suffix of a given file name, doing a special
+    treatment for the composite suffix ".ome.tif(f)" which will be fully
+    stripped as well.
+
+    Parameters
+    ----------
+    orig_name : str
+
+    Example
+    -------
+    >>> image_basename('/path/to/some_funny_image_file_01.png')
+    'some_funny_image_file_01'
+
+    >>> image_basename('some-more-complex-stack.ome.tif')
+    'some-more-complex-stack'
+
+    >>> image_basename('/tmp/FoObAr.OMe.tIf')
+    'FoObAr'
+    """
+    base = os.path.splitext(os.path.basename(orig_name))[0]
+    if base.lower().endswith('.ome'):
+        base = base[:-4]
+    return base
+
+
 # pylint: disable-msg=C0103
 #   we use the variable name 'exists' in its common spelling (lowercase), so
 #   removing this workaround will be straightforward at a later point
