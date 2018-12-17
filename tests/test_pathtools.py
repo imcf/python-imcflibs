@@ -4,6 +4,7 @@
 import pytest
 from imcflibs.pathtools import parse_path
 from imcflibs.pathtools import jython_fiji_exists
+from imcflibs.pathtools import image_basename
 
 __author__ = "Niko Ehrenfeuchter"
 __copyright__ = "Niko Ehrenfeuchter"
@@ -45,3 +46,9 @@ def test_parse_path_windows():
 
 def test_jython_fiji_exists(tmpdir):
     assert jython_fiji_exists(str(tmpdir)) == True
+
+
+def test_image_basename():
+    assert image_basename('/path/to/image_file_01.png') == 'image_file_01'
+    assert image_basename('more-complex-stack.ome.tif') == 'more-complex-stack'
+    assert image_basename('/tmp/FoObAr.OMe.tIf') == 'FoObAr'
