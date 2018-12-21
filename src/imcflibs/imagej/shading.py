@@ -59,7 +59,8 @@ def correct_and_project(filename, path, model, proj, fmt):
     filename : str
         The full path to a multi-channel image stack.
     path : str
-        The full path to a directory for storing the results.
+        The full path to a directory for storing the results. Will be created in
+        case it doesn't exist yet.
     model : ij.ImagePlus
         A 32-bit floating point image to be used as the shading model.
     proj : str
@@ -69,6 +70,9 @@ def correct_and_project(filename, path, model, proj, fmt):
         The file format suffix to be used for the results and projections, e.g.
         '.ics' for ICS2 etc. See the Bio-Formats specification for details.
     """
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     orig = bioformats.import_image(filename, split_c=True)
     corrected = apply_model(orig, model)
     bioformats.export_using_orig_name(corrected, path, filename, "", fmt)
