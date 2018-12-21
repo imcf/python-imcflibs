@@ -76,3 +76,24 @@ def flatten(lst):
     for line in lst:
         flat += line
     return flat
+
+
+def strip_prefix(string, prefix):
+    """Remove a given prefix from a string.
+
+    Parameters
+    ----------
+    string : str
+        The original string from which the prefix should be removed.
+    prefix : str
+        The prefix to be removed.
+
+    Returns
+    -------
+    str
+        The original string without the given prefix. In case the original
+        string doesn't start with the prefix, it is returned unchanged.
+    """
+    if string.startswith(prefix):
+        string = string[len(prefix):]
+    return string

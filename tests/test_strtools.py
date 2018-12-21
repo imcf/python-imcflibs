@@ -7,6 +7,7 @@ import os
 from imcflibs.strtools import _is_string_like
 from imcflibs.strtools import filename
 from imcflibs.strtools import flatten
+from imcflibs.strtools import strip_prefix
 
 __author__ = "Niko Ehrenfeuchter"
 __copyright__ = "Niko Ehrenfeuchter"
@@ -30,3 +31,8 @@ def test_filename_from_handle(tmpdir):
 
 def test_flatten():
     assert flatten(('foo', 'bar')) == 'foobar'
+
+
+def test_strip_prefix():
+    assert strip_prefix('foobar', 'foo') == 'bar'
+    assert strip_prefix('foobar', 'bar') == 'foobar'
