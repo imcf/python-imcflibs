@@ -113,3 +113,4 @@ def process_folder(path, suffix, outpath, model_file, fmt):
     for orig_file in matching_files:
         in_file = os.path.join(path, orig_file)
         correct_and_project(in_file, outpath, imp, 'ALL', fmt)
+    imp.close()
