@@ -52,7 +52,7 @@ def apply_model(imps, model, merge=True):
 
 
 def correct_and_project(filename, path, model, proj, fmt):
-    """Apply a shading correction model to an image file.
+    """Apply a shading correction to an image and create a projection.
     
     Parameters
     ----------
