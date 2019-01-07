@@ -7,12 +7,12 @@ from ij.plugin import ZProjector
 
 def average(imp):
     """Create an average intensity projection.
-    
+
     Parameters
     ----------
     imp : ij.ImagePlus
         The input stack to be projected.
-    
+
     Returns
     -------
     ij.ImagePlus
@@ -25,12 +25,12 @@ def average(imp):
 
 def maximum(imp):
     """Create a maximum intensity projection.
-    
+
     Parameters
     ----------
     imp : ij.ImagePlus
         The input stack to be projected.
-    
+
     Returns
     -------
     ij.ImagePlus
@@ -43,7 +43,7 @@ def maximum(imp):
 
 def create_and_save(imp, projections, path, filename, export_format):
     """Wrapper to create one or more projections and export the results.
-    
+
     Parameters
     ----------
     imp : ij.ImagePlus
