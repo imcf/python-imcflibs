@@ -14,6 +14,7 @@ from loci.plugins import BF
 from loci.plugins.in import ImporterOptions
 
 from ..pathtools import image_basename
+from ..log import LOG as log
 
 
 def import_image(filename,
@@ -52,7 +53,7 @@ def import_image(filename,
     options.setSplitFocalPlanes(split_z)
     options.setSplitTimepoints(split_t)
     options.setId(filename)
-    # log.info("Reading [%s]" % filename)
+    log.info("Reading [%s]", filename)
     orig_imps = BF.openImagePlus(options)
     return orig_imps
 
@@ -70,14 +71,15 @@ def export(imp, filename, overwrite=False):
         A switch to indicate existing files should be overwritten. Default is to
         keep existing files, in this case an IOError is raised.
     """
-    # log.info("Exporting to [%s]" % out_file)
+    log.info("Exporting to [%s]", filename)
     if os.path.exists(filename):
         if not overwrite:
             raise IOError('file [%s] already exists!' % filename)
+        log.debug("Removing existing file [%s]...", filename)
         os.remove(filename)
 
     IJ.run(imp, "Bio-Formats Exporter", "save=[" + filename + "]")
-    # log.debug("Exporting finished.")
+    log.debug("Exporting finished.")
 
 
 def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
