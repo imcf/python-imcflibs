@@ -2,7 +2,7 @@
 
 Example
 -------
->>> from log import log
+>>> from log import LOG as log
 
 From there on a logger is available for usage with e.g. log.warn(), even if the
 import statement from above happens in multiple places across modules, it will
