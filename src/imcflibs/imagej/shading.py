@@ -60,7 +60,7 @@ def correct_and_project(filename, path, model, proj, fmt):
         The full path to a multi-channel image stack.
     path : str
         The full path to a directory for storing the results. Will be created in
-        case it doesn't exist yet.
+        case it doesn't exist yet. Existing files will be overwritten.
     model : ij.ImagePlus
         A 32-bit floating point image to be used as the shading model.
     proj : str
@@ -75,7 +75,7 @@ def correct_and_project(filename, path, model, proj, fmt):
 
     orig = bioformats.import_image(filename, split_c=True)
     corrected = apply_model(orig, model)
-    bioformats.export_using_orig_name(corrected, path, filename, "", fmt)
+    bioformats.export_using_orig_name(corrected, path, filename, "", fmt, True)
 
     if proj == 'None':
         projs = []
@@ -100,7 +100,8 @@ def process_folder(path, suffix, outpath, model_file, fmt):
     suffix : str
         The file name suffix of the files to be processed.
     outpath : str
-        The output folder where results will be stored.
+        The output folder where results will be stored. Existing files will be
+        overwritten.
     model_file : str
         The full path to a normalized 32-bit shading model image.
     fmt : str

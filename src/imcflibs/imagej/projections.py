@@ -52,7 +52,7 @@ def create_and_save(imp, projections, path, filename, export_format):
         A list of projection types to be done, valid options are 'Average',
         'Maximum' and 'Sum'.
     path : str
-        The path to store the results in.
+        The path to store the results in. Existing files will be overwritten.
     filename : str
         The original file name to derive the results name from.
     export_format : str
@@ -69,5 +69,6 @@ def create_and_save(imp, projections, path, filename, export_format):
         export_using_orig_name(proj,
                                path, filename,
                                "-%s" % command[projection],
-                               export_format)
+                               export_format,
+                               overwrite=True)
         proj.close()
