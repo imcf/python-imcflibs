@@ -1,6 +1,7 @@
 """Functions for creating Z projections."""
 
 from .bioformats import export_using_orig_name
+from ..log import LOG as log
 
 from ij.plugin import ZProjector
 
@@ -18,7 +19,7 @@ def average(imp):
     ij.ImagePlus
         The result of the projection.
     """
-    # log.debug("Creating average projection...")
+    log.debug("Creating average projection...")
     proj = ZProjector.run(imp, "avg")
     return proj
 
@@ -36,7 +37,7 @@ def maximum(imp):
     ij.ImagePlus
         The result of the projection.
     """
-    # log.debug("Creating maximum intensity projection...")
+    log.debug("Creating maximum intensity projection...")
     proj = ZProjector.run(imp, "max")
     return proj
 
@@ -64,7 +65,7 @@ def create_and_save(imp, projections, path, filename, export_format):
         'Sum': 'sum',
     }
     for projection in projections:
-        # log.debug("Creating '%s' projection..." % projection)
+        log.debug("Creating '%s' projection...", projection)
         proj = ZProjector.run(imp, command[projection])
         export_using_orig_name(proj,
                                path, filename,

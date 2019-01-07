@@ -5,6 +5,7 @@ import os
 from ..imagej import bioformats
 from ..imagej import projections
 from ..pathtools import listdir_matching
+from ..log import LOG as log
 
 from ij import IJ
 from ij.plugin import ImageCalculator, RGBStackMerge
@@ -70,6 +71,7 @@ def correct_and_project(filename, path, model, proj, fmt):
         The file format suffix to be used for the results and projections, e.g.
         '.ics' for ICS2 etc. See the Bio-Formats specification for details.
     """
+    log.debug("Processing [%s]...", filename)
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -87,7 +89,7 @@ def correct_and_project(filename, path, model, proj, fmt):
 
     # corrected.show()
     corrected.close()
-    # log.debug("Done processing [%s]" % os.path.basename(in_file))
+    log.debug("Done processing [%s].", os.path.basename(filename))
 
 
 def process_folder(path, suffix, outpath, model_file, fmt):
