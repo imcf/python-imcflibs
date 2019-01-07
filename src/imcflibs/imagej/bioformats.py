@@ -57,7 +57,7 @@ def import_image(filename,
     return orig_imps
 
 
-def export(imp, filename):
+def export(imp, filename, overwrite=False):
     """Simple wrapper to export an image to a given file.
 
     Parameters
@@ -66,13 +66,21 @@ def export(imp, filename):
         The ImagePlus object to be exported by Bio-Formats.
     filename : str
         The output filename, may include a full path.
+    overwrite : bool
+        A switch to indicate existing files should be overwritten. Default is to
+        keep existing files, in this case an IOError is raised.
     """
     # log.info("Exporting to [%s]" % out_file)
+    if os.path.exists(filename):
+        if not overwrite:
+            raise IOError('file [%s] already exists!' % filename)
+        os.remove(filename)
+
     IJ.run(imp, "Bio-Formats Exporter", "save=[" + filename + "]")
     # log.debug("Exporting finished.")
 
 
-def export_using_orig_name(imp, path, orig_name, tag, suffix):
+def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
     """Export an image to a given path, deriving the name from the input file.
 
     The input filename is stripped to its pure file name, without any path or
@@ -92,6 +100,8 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix):
         to denote information like "-avg" for an average projection image.
     suffix : str
         The new file name suffix, which also sets the file format for BF.    
+    overwrite : bool
+        A switch to indicate existing files should be overwritten.
 
     Returns
     -------
@@ -99,5 +109,5 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix):
         The full name of the exported file.
     """
     out_file = os.path.join(path, image_basename(orig_name) + tag + suffix)
-    export(imp, out_file)
+    export(imp, out_file, overwrite)
     return out_file
