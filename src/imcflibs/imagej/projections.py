@@ -19,6 +19,10 @@ def average(imp):
     ij.ImagePlus
         The result of the projection.
     """
+    if imp.getDimensions()[3] < 2:
+        log.warn("ImagePlus is not a z-stack, not creating a projection!")
+        return imp
+
     log.debug("Creating average projection...")
     proj = ZProjector.run(imp, "avg")
     return proj
@@ -37,6 +41,10 @@ def maximum(imp):
     ij.ImagePlus
         The result of the projection.
     """
+    if imp.getDimensions()[3] < 2:
+        log.warn("ImagePlus is not a z-stack, not creating a projection!")
+        return imp
+
     log.debug("Creating maximum intensity projection...")
     proj = ZProjector.run(imp, "max")
     return proj
@@ -59,6 +67,10 @@ def create_and_save(imp, projections, path, filename, export_format):
     export_format : str
         The suffix to be given to Bio-Formats, determining the storage format.
     """
+    if imp.getDimensions()[3] < 2:
+        log.error("ImagePlus is not a z-stack, not creating any projections!")
+        return
+
     command = {
         'Average': 'avg',
         'Maximum': 'max',
