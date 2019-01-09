@@ -126,6 +126,30 @@ def image_basename(orig_name):
     return base
 
 
+def gen_name_from_orig(path, orig_name, tag, suffix):
+    """Derive a file name from a given input file, an optional tag and a suffix.
+
+    Parameters
+    ----------
+    path : str or object that can be cast to a str
+        The output path.
+    orig_name : str or object that can be cast to a str
+        The input file name, may contain arbitrary path components.
+    tag : str
+        An optional tag to be added at the end of the new file name, can be used
+        to denote information like "-avg" for an average projection image.
+    suffix : str
+        The new file name suffix, which also sets the file format for BF.
+
+    Returns
+    -------
+    out_file : str
+        The newly generated file name with its full path.
+    """
+    name = os.path.join(path, image_basename(orig_name) + tag + suffix)
+    return name
+
+
 # pylint: disable-msg=C0103
 #   we use the variable name 'exists' in its common spelling (lowercase), so
 #   removing this workaround will be straightforward at a later point

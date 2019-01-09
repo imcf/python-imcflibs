@@ -13,7 +13,7 @@ from ij import IJ
 from loci.plugins import BF
 from loci.plugins.in import ImporterOptions
 
-from ..pathtools import image_basename
+from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
 
 
@@ -110,6 +110,6 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
     out_file : str
         The full name of the exported file.
     """
-    out_file = os.path.join(path, image_basename(orig_name) + tag + suffix)
+    out_file = gen_name_from_orig(path, orig_name, tag, suffix)
     export(imp, out_file, overwrite)
     return out_file
