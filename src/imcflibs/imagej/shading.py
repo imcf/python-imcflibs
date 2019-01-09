@@ -7,7 +7,7 @@ from ij.plugin import ImageCalculator, RGBStackMerge
 
 from ..imagej import bioformats
 from ..imagej import projections
-from ..pathtools import listdir_matching
+from ..pathtools import listdir_matching, gen_name_from_orig
 from ..log import LOG as log
 
 
@@ -55,6 +55,11 @@ def apply_model(imps, model, merge=True):
 def correct_and_project(filename, path, model, proj, fmt):
     """Apply a shading correction to an image and create a projection.
 
+    In case the target file for the shading corrected image already exists,
+    nothing is done - neither the shading correction is re-created nor any
+    projections will be done (independent on whether the latter one already
+    exist or not).
+
     Parameters
     ----------
     filename : str
@@ -71,7 +76,12 @@ def correct_and_project(filename, path, model, proj, fmt):
         The file format suffix to be used for the results and projections, e.g.
         '.ics' for ICS2 etc. See the Bio-Formats specification for details.
     """
-    log.debug("Processing [%s]...", filename)
+    target = gen_name_from_orig(path, filename, "", fmt)
+    if os.path.exists(target):
+        log.info("Found shading corrected file, not re-creating: %s", target)
+        return
+
+    log.debug("Applying shading correction on [%s]...", filename)
     if not os.path.exists(path):
         os.makedirs(path)
 
