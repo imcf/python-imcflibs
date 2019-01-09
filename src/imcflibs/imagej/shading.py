@@ -2,13 +2,13 @@
 
 import os
 
+from ij import IJ
+from ij.plugin import ImageCalculator, RGBStackMerge
+
 from ..imagej import bioformats
 from ..imagej import projections
 from ..pathtools import listdir_matching
 from ..log import LOG as log
-
-from ij import IJ
-from ij.plugin import ImageCalculator, RGBStackMerge
 
 
 def apply_model(imps, model, merge=True):
@@ -19,7 +19,7 @@ def apply_model(imps, model, merge=True):
 
     WARNING: the operation happens in-place, i.e. the original "imps" images
     will be modified!
-    
+
     Parameters
     ----------
     imps : list(ij.ImagePlus)
@@ -32,7 +32,7 @@ def apply_model(imps, model, merge=True):
     merge : bool, optional
         Whether or not to combine the resulting ImagePlus objects into a single
         multi-channel stack (default=True).
-    
+
     Returns
     -------
     ij.ImagePlus or list(ij.ImagePlus)
@@ -54,7 +54,7 @@ def apply_model(imps, model, merge=True):
 
 def correct_and_project(filename, path, model, proj, fmt):
     """Apply a shading correction to an image and create a projection.
-    
+
     Parameters
     ----------
     filename : str
