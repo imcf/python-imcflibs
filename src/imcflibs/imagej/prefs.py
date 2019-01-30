@@ -1,6 +1,6 @@
 """Functions to work with ImageJ preferences."""
 
-from ij import Prefs
+from ij import Prefs  # pylint: disable-msg=E0401
 
 def debug_mode():
     """Wrapper to check if 'imcf.debugging' is enabled.
