@@ -2,7 +2,7 @@
 
 from ij.plugin import ZProjector  # pylint: disable-msg=E0401
 
-from .bioformats import export_using_orig_name
+from .bioformats import export_using_orig_name  # pylint: disable-msg=E0401
 from ..log import LOG as log
 
 
