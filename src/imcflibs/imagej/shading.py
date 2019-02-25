@@ -2,8 +2,7 @@
 
 import os
 
-from ij import IJ
-from ij.plugin import ImageCalculator, RGBStackMerge
+import ij  # pylint: disable-msg=import-error
 
 from ..imagej import bioformats
 from ..imagej import projections
@@ -39,7 +38,7 @@ def apply_model(imps, model, merge=True):
         The merged ImagePlus with all channels, or the original list of stacks
         with the shading-corrected image planes.
     """
-    calc = ImageCalculator()
+    calc = ij.plugin.ImageCalculator()
     for stack in imps:
         # log.debug("Processing channel...")
         calc.run("Divide stack", stack, model)
@@ -47,7 +46,7 @@ def apply_model(imps, model, merge=True):
     if not merge:
         return imps
 
-    merger = RGBStackMerge()
+    merger = ij.plugin.RGBStackMerge()
     merged_imp = merger.mergeChannels(imps, False)
     return merged_imp
 
@@ -119,9 +118,9 @@ def process_folder(path, suffix, outpath, model_file, fmt):
     fmt : str
         The file format suffix for storing the results.
     """
+    imp = ij.IJ.openImage(model_file)
     matching_files = listdir_matching(path, suffix)
 
-    imp = IJ.openImage(model_file)
     imp.show()  # required, otherwise the IJ.run() call will ignore the imp
     for orig_file in matching_files:
         in_file = os.path.join(path, orig_file)
