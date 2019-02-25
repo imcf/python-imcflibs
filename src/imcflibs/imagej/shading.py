@@ -66,8 +66,9 @@ def correct_and_project(filename, path, model, proj, fmt):
     path : str
         The full path to a directory for storing the results. Will be created in
         case it doesn't exist yet. Existing files will be overwritten.
-    model : ij.ImagePlus
-        A 32-bit floating point image to be used as the shading model.
+    model : ij.ImagePlus or None
+        A 32-bit floating point image to be used as the shading model. If model
+        is None, no shading correction will be applied.
     proj : str
         A string describing the projections to be created. Use 'None' for not
         creating any projections, 'ALL' to do all supported ones.
@@ -80,13 +81,14 @@ def correct_and_project(filename, path, model, proj, fmt):
         log.info("Found shading corrected file, not re-creating: %s", target)
         return
 
-    log.debug("Applying shading correction on [%s]...", filename)
     if not os.path.exists(path):
         os.makedirs(path)
 
-    orig = bioformats.import_image(filename, split_c=True)
-    corrected = apply_model(orig, model)
-    bioformats.export_using_orig_name(corrected, path, filename, "", fmt, True)
+    imps = bioformats.import_image(filename, split_c=True)
+    if model is not None:
+        log.debug("Applying shading correction on [%s]...", filename)
+        imps = apply_model(imps, model)
+        bioformats.export_using_orig_name(imps, path, filename, "", fmt, True)
 
     if proj == 'None':
         projs = []
@@ -94,10 +96,10 @@ def correct_and_project(filename, path, model, proj, fmt):
         projs = ['Average', 'Maximum']
     else:
         projs = [proj]
-    projections.create_and_save(corrected, projs, path, filename, fmt)
+    projections.create_and_save(imps, projs, path, filename, fmt)
 
-    # corrected.show()
-    corrected.close()
+    # imps.show()
+    imps.close()
     log.debug("Done processing [%s].", os.path.basename(filename))
 
 
