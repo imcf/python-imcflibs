@@ -171,7 +171,7 @@ def derive_out_dir(in_dir, out_dir):
     str
         The full path to the directory to be used for output and temp files.
     """
-    if out_dir in ["-", "NONE"]:
+    if out_dir.upper() in ["-", "NONE"]:
         out_dir = in_dir
         log.info("No output directory given, using input dir [%s].", out_dir)
     else:

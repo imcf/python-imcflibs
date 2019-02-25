@@ -121,7 +121,7 @@ def process_folder(path, suffix, outpath, model_file, fmt):
     fmt : str
         The file format suffix for storing the results.
     """
-    if model_file in ["-", "NONE"]:
+    if model_file.upper() in ["-", "NONE"]:
         model = None
     else:
         model = ij.IJ.openImage(model_file)
