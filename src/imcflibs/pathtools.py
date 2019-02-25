@@ -4,6 +4,8 @@ import platform
 from os import sep
 import os.path
 
+from .log import LOG as log
+
 
 def parse_path(path):
     """Parse a path into its components.
@@ -148,6 +150,34 @@ def gen_name_from_orig(path, orig_name, tag, suffix):
     """
     name = os.path.join(path, image_basename(orig_name) + tag + suffix)
     return name
+
+
+def derive_out_dir(in_dir, out_dir):
+    """Derive `out_dir` from its own value and the value of `in_dir`.
+
+    In case the supplied value of `out_dir` is one of '-' or 'NONE', the
+    returned value will be set to `in_dir`. Otherwise the value of `out_dir`
+    will be returned unchanged.
+
+    Parameters
+    ----------
+    in_dir : str
+        The full path to the input directory.
+    out_dir : str
+        Either the full path to an output directory or one of '-' or 'NONE'.
+
+    Returns
+    -------
+    str
+        The full path to the directory to be used for output and temp files.
+    """
+    if out_dir in ["-", "NONE"]:
+        out_dir = in_dir
+        log.info("No output directory given, using input dir [%s].", out_dir)
+    else:
+        log.info("Using directory [%s] for results and temp files.", out_dir)
+
+    return out_dir
 
 
 # pylint: disable-msg=C0103
