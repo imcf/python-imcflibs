@@ -116,15 +116,23 @@ def process_folder(path, suffix, outpath, model_file, fmt):
         The output folder where results will be stored. Existing files will be
         overwritten.
     model_file : str
-        The full path to a normalized 32-bit shading model image.
+        The full path to a normalized 32-bit shading model image. If set to '-'
+        or 'NONE', no shading correction will be applied.
     fmt : str
         The file format suffix for storing the results.
     """
-    imp = ij.IJ.openImage(model_file)
-    matching_files = listdir_matching(path, suffix)
+    if model_file in ["-", "NONE"]:
+        model = None
+    else:
+        model = ij.IJ.openImage(model_file)
+        model.show()  # required, otherwise the IJ.run() call ignores the model
 
-    imp.show()  # required, otherwise the IJ.run() call will ignore the imp
+    matching_files = listdir_matching(path, suffix)
+    log.info("Running shading correction and projections on %s files...",
+             len(matching_files))
+
     for orig_file in matching_files:
         in_file = os.path.join(path, orig_file)
-        correct_and_project(in_file, outpath, imp, 'ALL', fmt)
-    imp.close()
+        correct_and_project(in_file, outpath, model, 'ALL', fmt)
+    if model:
+        model.close()
