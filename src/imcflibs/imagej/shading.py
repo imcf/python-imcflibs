@@ -4,7 +4,7 @@ import os
 
 import ij  # pylint: disable-msg=import-error
 
-from ..imagej import bioformats
+from ..imagej import bioformats  # pylint: disable-msg=no-name-in-module
 from ..imagej import projections
 from ..pathtools import listdir_matching, gen_name_from_orig
 from ..log import LOG as log
