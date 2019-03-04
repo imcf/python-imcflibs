@@ -72,6 +72,17 @@ def export(imp, filename, overwrite=False):
         keep existing files, in this case an IOError is raised.
     """
     log.info("Exporting to [%s]", filename)
+    suffix = filename[-3:].lower()
+    try:
+        unit = imp.calibration.unit
+        log.debug("Detected calibration unit: %s", unit)
+    except Error as err:
+        log.error("Unable to detect spatial unit: %s", err)
+        raise RuntimeError("Error detecting image calibration!")
+    if unit == 'pixel' and (suffix == 'ics' or suffix == 'ids'):
+        log.warn("Forcing unit to be 'm' instead of 'pixel' to avoid "
+                 "Bio-Formats 6.0.x Exporter bug!")
+        imp.calibration.unit = 'm'
     if os.path.exists(filename):
         if not overwrite:
             raise IOError('file [%s] already exists!' % filename)
