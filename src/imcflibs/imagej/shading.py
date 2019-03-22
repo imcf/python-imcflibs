@@ -117,7 +117,8 @@ def process_folder(path, suffix, outpath, model_file, fmt):
         overwritten.
     model_file : str
         The full path to a normalized 32-bit shading model image. If set to '-'
-        or 'NONE', no shading correction will be applied.
+        or 'NONE', no shading correction will be applied, i.e. only the
+        projection step will have an effect.
     fmt : str
         The file format suffix for storing the results.
     """
