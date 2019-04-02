@@ -76,7 +76,7 @@ def export(imp, filename, overwrite=False):
     try:
         unit = imp.calibration.unit
         log.debug("Detected calibration unit: %s", unit)
-    except Error as err:
+    except Exception as err:
         log.error("Unable to detect spatial unit: %s", err)
         raise RuntimeError("Error detecting image calibration!")
     if unit == 'pixel' and (suffix == 'ics' or suffix == 'ids'):
