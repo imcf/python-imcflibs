@@ -134,6 +134,10 @@ def process_folder(path, suffix, outpath, model_file, fmt):
         # the model needs to be shown, otherwise the IJ.run() call ignores it
         try:
             model.show()
+            canvas = model.getCanvas()
+            for _ in range(5):
+                # we have to show it, but we can make it smaller:
+                canvas.zoomOut(100, 100)
         except AttributeError:
             misc.error_exit("Opening shading model [%s] failed!" % model_file)
 
