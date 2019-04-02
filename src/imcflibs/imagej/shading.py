@@ -38,14 +38,16 @@ def apply_model(imps, model, merge=True):
         The merged ImagePlus with all channels, or the original list of stacks
         with the shading-corrected image planes.
     """
+    log.debug("Applying shading correction...")
     calc = ij.plugin.ImageCalculator()
-    for stack in imps:
-        # log.debug("Processing channel...")
+    for i, stack in enumerate(imps):
+        log.debug("Processing channel %i...", i)
         calc.run("Divide stack", stack, model)
 
     if not merge:
         return imps
 
+    log.debug("Merging shading-corrected channels...")
     merger = ij.plugin.RGBStackMerge()
     merged_imp = merger.mergeChannels(imps, False)
     return merged_imp
