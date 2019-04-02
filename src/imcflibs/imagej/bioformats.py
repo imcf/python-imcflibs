@@ -55,6 +55,7 @@ def import_image(filename,
     options.setId(filename)
     log.info("Reading [%s]", filename)
     orig_imps = BF.openImagePlus(options)
+    log.debug("Opened [%s] %s", filename, type(orig_imps))
     return orig_imps
 
 
@@ -78,7 +79,7 @@ def export(imp, filename, overwrite=False):
         log.debug("Detected calibration unit: %s", unit)
     except Exception as err:
         log.error("Unable to detect spatial unit: %s", err)
-        raise RuntimeError("Error detecting image calibration!")
+        raise RuntimeError("Error detecting image calibration: %s" % err)
     if unit == 'pixel' and (suffix == 'ics' or suffix == 'ids'):
         log.warn("Forcing unit to be 'm' instead of 'pixel' to avoid "
                  "Bio-Formats 6.0.x Exporter bug!")
