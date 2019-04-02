@@ -6,6 +6,7 @@ import ij  # pylint: disable-msg=import-error
 
 from ..imagej import bioformats  # pylint: disable-msg=no-name-in-module
 from ..imagej import projections
+from ..imagej import misc
 from ..pathtools import listdir_matching, gen_name_from_orig
 from ..log import LOG as log
 
@@ -130,7 +131,11 @@ def process_folder(path, suffix, outpath, model_file, fmt):
         model = None
     else:
         model = ij.IJ.openImage(model_file)
-        model.show()  # required, otherwise the IJ.run() call ignores the model
+        # the model needs to be shown, otherwise the IJ.run() call ignores it
+        try:
+            model.show()
+        except AttributeError:
+            misc.error_exit("Opening shading model [%s] failed!" % model_file)
 
     matching_files = listdir_matching(path, suffix)
     log.info("Running shading correction and projections on %s files...",
