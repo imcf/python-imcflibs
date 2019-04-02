@@ -89,8 +89,10 @@ def correct_and_project(filename, path, model, proj, fmt):
     imps = bioformats.import_image(filename, split_c=True)
     if model is not None:
         log.debug("Applying shading correction on [%s]...", filename)
-        imps = apply_model(imps, model)
-        bioformats.export_using_orig_name(imps, path, filename, "", fmt, True)
+        imp = apply_model(imps, model)
+        bioformats.export_using_orig_name(imp, path, filename, "", fmt, True)
+        # imps needs to be updated with the new (=merged) stack:
+        imps = [imp]
 
     if proj == 'None':
         projs = []
@@ -98,10 +100,10 @@ def correct_and_project(filename, path, model, proj, fmt):
         projs = ['Average', 'Maximum']
     else:
         projs = [proj]
-    projections.create_and_save(imps, projs, path, filename, fmt)
+    for imp in imps:
+        projections.create_and_save(imp, projs, path, filename, fmt)
+        imp.close()
 
-    # imps.show()
-    imps.close()
     log.debug("Done processing [%s].", os.path.basename(filename))
 
 
