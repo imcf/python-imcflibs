@@ -138,6 +138,30 @@ def process_folder(path, suffix, outpath, model_file, fmt):
     fmt : str
         The file format suffix for storing the results.
     """
+    matching_files = listdir_matching(path, suffix, fullpath=True)
+    process_files(matching_files, outpath, model_file, fmt)
+
+
+def process_files(files, outpath, model_file, fmt):
+    """Run shading correction and projections on a list of files.
+
+    Parameters
+    ----------
+    files : list(str)
+        The files to be processed, as a list of strings with the full path.
+    outpath : str
+        The output folder where results will be stored. Existing files will be
+        overwritten.
+    model_file : str
+        The full path to a normalized 32-bit shading model image. If set to '-'
+        or 'NONE', no shading correction will be applied, i.e. only the
+        projection step will have an effect.
+    fmt : str
+        The file format suffix for storing the results.
+    """
+    log.info("Running shading correction and projections on %s files...",
+             len(files))
+
     if model_file.upper() in ["-", "NONE"]:
         model = None
     else:
@@ -152,12 +176,8 @@ def process_folder(path, suffix, outpath, model_file, fmt):
         except AttributeError:
             misc.error_exit("Opening shading model [%s] failed!" % model_file)
 
-    matching_files = listdir_matching(path, suffix)
-    log.info("Running shading correction and projections on %s files...",
-             len(matching_files))
-
-    for orig_file in matching_files:
-        in_file = os.path.join(path, orig_file)
+    for in_file in files:
         correct_and_project(in_file, outpath, model, 'ALL', fmt)
+
     if model:
         model.close()
