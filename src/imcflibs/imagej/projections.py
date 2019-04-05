@@ -66,10 +66,20 @@ def create_and_save(imp, projections, path, filename, export_format):
         The original file name to derive the results name from.
     export_format : str
         The suffix to be given to Bio-Formats, determining the storage format.
+
+    Returns
+    -------
+    bool
+        True in case projections were created, False otherwise (e.g. if the
+        given ImagePlus is not a Z-stack).
     """
+    if not projections:
+        log.debug("No projection type requested, skipping...")
+        return False
+
     if imp.getDimensions()[3] < 2:
         log.error("ImagePlus is not a z-stack, not creating any projections!")
-        return
+        return False
 
     command = {
         'Average': 'avg',
@@ -85,3 +95,5 @@ def create_and_save(imp, projections, path, filename, export_format):
                                export_format,
                                overwrite=True)
         proj.close()
+
+    return True
