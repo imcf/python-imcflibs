@@ -78,22 +78,32 @@ def correct_and_project(filename, path, model, proj, fmt):
     fmt : str
         The file format suffix to be used for the results and projections, e.g.
         '.ics' for ICS2 etc. See the Bio-Formats specification for details.
+
+    Returns
+    -------
+    (bool, bool)
+        A tuple of booleans indicating whether a shading correction has been
+        applied and whether projections were created. The latter depends on
+        both, the requested projections as well as the image type (e.g. it can
+        be False even if projections were requested, but the image)
     """
     target = gen_name_from_orig(path, filename, "", fmt)
     if os.path.exists(target):
         log.info("Found shading corrected file, not re-creating: %s", target)
-        return
+        return False, False
 
     if not os.path.exists(path):
         os.makedirs(path)
 
     imps = bioformats.import_image(filename, split_c=True)
+    ret_corr = False
     if model is not None:
         log.debug("Applying shading correction on [%s]...", filename)
         imp = apply_model(imps, model)
         bioformats.export_using_orig_name(imp, path, filename, "", fmt, True)
         # imps needs to be updated with the new (=merged) stack:
         imps = [imp]
+        ret_corr = True
 
     if proj == 'None':
         projs = []
@@ -102,10 +112,11 @@ def correct_and_project(filename, path, model, proj, fmt):
     else:
         projs = [proj]
     for imp in imps:
-        projections.create_and_save(imp, projs, path, filename, fmt)
+        ret_proj = projections.create_and_save(imp, projs, path, filename, fmt)
         imp.close()
 
     log.debug("Done processing [%s].", os.path.basename(filename))
+    return ret_corr, ret_proj
 
 
 def process_folder(path, suffix, outpath, model_file, fmt):
