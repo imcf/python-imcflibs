@@ -76,7 +76,7 @@ def jython_fiji_exists(path):
         return False
 
 
-def listdir_matching(path, suffix):
+def listdir_matching(path, suffix, fullpath=False):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -85,6 +85,10 @@ def listdir_matching(path, suffix):
         The directory to scan for files.
     suffix : str
         The suffix to match filenames against.
+    fullpath : bool, optional
+        If set to True, the list returned by the function will contain the full
+        paths to the matching files (the default is False, which will result in
+        the file names only, without path).
 
     Returns
     -------
@@ -95,7 +99,10 @@ def listdir_matching(path, suffix):
     for candidate in os.listdir(path):
         if candidate.lower().endswith(suffix.lower()):
             # log.debug("Found file %s", candidate)
-            matching_files.append(candidate)
+            if fullpath:
+                matching_files.append(os.path.join(path, candidate))
+            else:
+                matching_files.append(candidate)
 
     return matching_files
 
