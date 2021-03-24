@@ -1,6 +1,7 @@
 # IMCFlibs
 
 [![Build Status](https://travis-ci.com/imcf/python-imcflibs.svg?branch=master)](https://travis-ci.com/imcf/python-imcflibs)
+[![DOI](https://zenodo.org/badge/156891364.svg)](https://zenodo.org/badge/latestdoi/156891364)
 
 ## A collection of Python helper functions. :snake::coffee::nut_and_bolt::wrench:
 
