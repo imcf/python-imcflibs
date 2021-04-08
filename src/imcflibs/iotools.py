@@ -7,7 +7,7 @@ from .log import LOG as log
 from .strtools import flatten
 
 
-def filehandle(fname, mode='r'):
+def filehandle(fname, mode="r"):
     """Make sure a variable is either a filehandle or create one from it.
 
     This function takes a variable and checks whether it is already a
@@ -41,13 +41,13 @@ def filehandle(fname, mode='r'):
     <type 'file'>
     """
     log.debug(type(fname))
-    if type(fname).__name__ == 'str':
+    if type(fname).__name__ == "str":
         try:
             return open(fname, mode)
         except IOError as err:
             message = "can't open '%s': %s"
             raise SystemExit(message % (fname, err))
-    elif type(fname).__name__ == 'file':
+    elif type(fname).__name__ == "file":
         if fname.mode != mode:
             message = "mode mismatch: %s != %s"
             raise IOError(message % (fname.mode, mode))
@@ -57,7 +57,7 @@ def filehandle(fname, mode='r'):
         raise SystemExit(message % type(fname))
 
 
-def readtxt(fname, path='', flat=False):
+def readtxt(fname, path="", flat=False):
     """Commodity function for reading text files plain or zipped.
 
     Read a text file line by line either plainly from a directory or a .zip or
@@ -90,13 +90,13 @@ def readtxt(fname, path='', flat=False):
     """
     zipread = None
     suffix = splitext(path)[1].lower()
-    if ((suffix == '.zip') or (suffix == '.jar')):
+    if (suffix == ".zip") or (suffix == ".jar"):
         # ZipFile only works as a context manager from Python 2.7 on
         # tag:python25
-        zipread = zipfile.ZipFile(path, 'r')
+        zipread = zipfile.ZipFile(path, "r")
         fin = zipread.open(fname)
     else:
-        fin = open(join(path, fname), 'r')
+        fin = open(join(path, fname), "r")
     txt = fin.readlines()  # returns file as a list, one entry per line
     if flat:
         txt = flatten(txt)

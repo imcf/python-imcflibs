@@ -2,6 +2,7 @@
 
 from ij import Prefs  # pylint: disable-msg=E0401
 
+
 def debug_mode():
     """Wrapper to check if 'imcf.debugging' is enabled.
 

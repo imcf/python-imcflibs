@@ -18,7 +18,7 @@ def _is_string_like(obj):
     False
     """
     try:
-        obj + ''
+        obj + ""
     except (TypeError, ValueError):
         return False
     return True
@@ -95,5 +95,5 @@ def strip_prefix(string, prefix):
         string doesn't start with the prefix, it is returned unchanged.
     """
     if string.startswith(prefix):
-        string = string[len(prefix):]
+        string = string[len(prefix) :]
     return string

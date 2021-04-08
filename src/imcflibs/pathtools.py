@@ -53,13 +53,13 @@ def parse_path(path):
     ''
     """
     parsed = {}
-    parsed['orig'] = path
-    path = path.replace('\\', sep)
-    parsed['full'] = path
-    parsed['path'] = os.path.dirname(path) + sep
-    parsed['fname'] = os.path.basename(path)
-    parsed['dname'] = os.path.basename(os.path.dirname(parsed['path']))
-    parsed['ext'] = os.path.splitext(parsed['fname'])[1]
+    parsed["orig"] = path
+    path = path.replace("\\", sep)
+    parsed["full"] = path
+    parsed["path"] = os.path.dirname(path) + sep
+    parsed["fname"] = os.path.basename(path)
+    parsed["dname"] = os.path.basename(os.path.dirname(parsed["path"]))
+    parsed["ext"] = os.path.splitext(parsed["fname"])[1]
     return parsed
 
 
@@ -130,7 +130,7 @@ def image_basename(orig_name):
     'FoObAr'
     """
     base = os.path.splitext(os.path.basename(orig_name))[0]
-    if base.lower().endswith('.ome'):
+    if base.lower().endswith(".ome"):
         base = base[:-4]
     return base
 
@@ -190,10 +190,11 @@ def derive_out_dir(in_dir, out_dir):
 # pylint: disable-msg=C0103
 #   we use the variable name 'exists' in its common spelling (lowercase), so
 #   removing this workaround will be straightforward at a later point
-if platform.python_implementation() == 'Jython':
+if platform.python_implementation() == "Jython":
     # pylint: disable-msg=F0401
     #   java.lang is only importable within Jython, pylint would complain
     import java.lang
+
     exists = jython_fiji_exists
 else:
     exists = os.path.exists

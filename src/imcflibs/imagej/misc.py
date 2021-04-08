@@ -15,8 +15,9 @@ def show_status(msg):
 def show_progress(cur, final):
     """Wrapper to update the progress bar and issue a log message."""
     # ij.IJ.showProgress is adding 1 to the value given as first parameter...
-    log.info("Progress: %s / %s (%s)", cur+1, final, (1.0+cur)/final)
+    log.info("Progress: %s / %s (%s)", cur + 1, final, (1.0 + cur) / final)
     IJ.showProgress(cur, final)
+
 
 def error_exit(msg):
     """Convenience wrapper to log an error and exit then."""

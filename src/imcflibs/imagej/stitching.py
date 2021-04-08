@@ -26,12 +26,12 @@ def process_fluoview_project(infile):
     micrometa.experiment.MosaicExperiment
         The mosaic object if parsing the project file has been successful.
     """
-    if infile[-9:] == '.omp2info':
+    if infile[-9:] == ".omp2info":
         mosaicclass = micrometa.fluoview.FluoView3kMosaic
-    elif infile[-4:] == '.log':
+    elif infile[-4:] == ".log":
         mosaicclass = micrometa.fluoview.FluoViewMosaic
     else:
-        error_exit('Unsupported input file: %s' % infile)
+        error_exit("Unsupported input file: %s" % infile)
 
     log.info("Parsing project file: [%s]", infile)
     ij.IJ.showStatus("Parsing mosaics...")
@@ -41,15 +41,15 @@ def process_fluoview_project(infile):
     ij.IJ.showProgress(0.0)
     show_status("Parsed %s / %s mosaics" % (0, total))
     for i, subtree in enumerate(mosaics.mosaictrees):
-        log.info("Parsing mosaic %s...", i+1)
+        log.info("Parsing mosaic %s...", i + 1)
         try:
             mosaics.add_mosaic(subtree, i)
         except (ValueError, IOError) as err:
-            log.warn('Skipping mosaic %s: %s', i, err)
+            log.warn("Skipping mosaic %s: %s", i, err)
         except RuntimeError as err:
-            log.warn('Error parsing mosaic %s, SKIPPING: %s', i, err)
+            log.warn("Error parsing mosaic %s, SKIPPING: %s", i, err)
         show_progress(i, total)
-        show_status("Parsed %s / %s mosaics" % (i+1, total))
+        show_status("Parsed %s / %s mosaics" % (i + 1, total))
     show_progress(total, total)
     show_status("Parsed %i mosaics." % total)
 
@@ -79,30 +79,30 @@ def gen_macro(mosaics, indir, outfile=None, opts=None):
     list(str)
         The generated macro code as a list of strings (one str per line).
     """
-    templates = join(getProperty('fiji.dir'), 'jars', 'python-micrometa.jar')
+    templates = join(getProperty("fiji.dir"), "jars", "python-micrometa.jar")
     log.info("Using macro templates from [%s].", templates)
     log.info("Using [%s] as base directory.", indir)
 
     # set the default stitcher options
     stitcher_options = {
-        'export_format': '".ids"',
-        'split_z_slices': 'false',
-        'rotation_angle': 0,
-        'stitch_regression': 0.3,
-        'stitch_maxavg_ratio': 2.5,
-        'stitch_abs_displace': 3.5,
-        'compute' : 'false',
+        "export_format": '".ids"',
+        "split_z_slices": "false",
+        "rotation_angle": 0,
+        "stitch_regression": 0.3,
+        "stitch_maxavg_ratio": 2.5,
+        "stitch_abs_displace": 3.5,
+        "compute": "false",
     }
     # merge explicit options, overriding the defaults from above if applicable:
     if opts:
         stitcher_options.update(opts)
 
     code = micrometa.imagej.gen_stitching_macro(
-        name=mosaics.infile['dname'],
+        name=mosaics.infile["dname"],
         path=indir,
-        tplpfx='templates/imagej-macro/stitching',
+        tplpfx="templates/imagej-macro/stitching",
         tplpath=templates,
-        opts=stitcher_options
+        opts=stitcher_options,
     )
 
     log.debug("============= begin of generated macro code =============")
@@ -110,7 +110,7 @@ def gen_macro(mosaics, indir, outfile=None, opts=None):
     log.debug("============= end of generated  macro code =============")
 
     if outfile is not None:
-        log.info('Writing stitching macro.')
+        log.info("Writing stitching macro.")
         micrometa.imagej.write_stitching_macro(code, outfile)
 
     return code

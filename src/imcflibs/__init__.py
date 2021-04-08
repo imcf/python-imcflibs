@@ -21,4 +21,4 @@ Biozentrum, University of Basel, Switzerland.
 [imagej]: https://imagej.net
 """
 
-__version__ = '${project.version}'
+__version__ = "${project.version}"

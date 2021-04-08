@@ -105,10 +105,10 @@ def correct_and_project(filename, path, model, proj, fmt):
         imps = [imp]
         ret_corr = True
 
-    if proj == 'None':
+    if proj == "None":
         projs = []
-    elif proj == 'ALL':
-        projs = ['Average', 'Maximum']
+    elif proj == "ALL":
+        projs = ["Average", "Maximum"]
     else:
         projs = [proj]
     for imp in imps:
@@ -159,8 +159,7 @@ def process_files(files, outpath, model_file, fmt):
     fmt : str
         The file format suffix for storing the results.
     """
-    log.info("Running shading correction and projections on %s files...",
-             len(files))
+    log.info("Running shading correction and projections on %s files...", len(files))
 
     if model_file.upper() in ["-", "NONE"]:
         model = None
@@ -177,7 +176,7 @@ def process_files(files, outpath, model_file, fmt):
             misc.error_exit("Opening shading model [%s] failed!" % model_file)
 
     for in_file in files:
-        correct_and_project(in_file, outpath, model, 'ALL', fmt)
+        correct_and_project(in_file, outpath, model, "ALL", fmt)
 
     if model:
         model.close()

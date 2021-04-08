@@ -82,18 +82,21 @@ def create_and_save(imp, projections, path, filename, export_format):
         return False
 
     command = {
-        'Average': 'avg',
-        'Maximum': 'max',
-        'Sum': 'sum',
+        "Average": "avg",
+        "Maximum": "max",
+        "Sum": "sum",
     }
     for projection in projections:
         log.debug("Creating '%s' projection...", projection)
         proj = ZProjector.run(imp, command[projection])
-        export_using_orig_name(proj,
-                               path, filename,
-                               "-%s" % command[projection],
-                               export_format,
-                               overwrite=True)
+        export_using_orig_name(
+            proj,
+            path,
+            filename,
+            "-%s" % command[projection],
+            export_format,
+            overwrite=True,
+        )
         proj.close()
 
     return True

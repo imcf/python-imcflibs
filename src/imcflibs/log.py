@@ -38,7 +38,7 @@ def enable_console_logging():
     return stream_handler
 
 
-def enable_file_logging(fname, mode='a'):
+def enable_file_logging(fname, mode="a"):
     """Add a logging handler writing to a file.
 
     Returns
