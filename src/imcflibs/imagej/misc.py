@@ -1,7 +1,7 @@
 """Miscellaneous ImageJ related functions, mostly convenience wrappers."""
 
 import sys, time
-from ij import IJ  # pylint: disable-msg=E0401
+from ij import IJ, ImageStack  # pylint: disable-msg=E0401
 
 from ..log import LOG as log
 
@@ -82,3 +82,47 @@ def calculate_mean_and_stdv(list):
     for x in list:
         tot = tot + (x - mean)**2
     return [mean, (tot/(len(list)))**0.5]
+
+def find_focus(imp):
+    """Function to get the focused stack. Only works on 1 channel
+
+    Parameters
+    ----------
+    imp : ImagePlus
+        1-channel ImagePlus
+    Returns
+    -------
+    int
+        Slice number which seems to be in focus
+    """
+
+    bitDepth     = imp.getBitDepth()
+    imDim        = imp.getDimensions()
+    focusedStack = ImageStack(imDim[0],imDim[1])
+
+    # Check if more than 1 channel
+    # FUTURE Could be improved for multi channel
+    if(imDim[2] != 1):
+        sys.exit('Image has more than one channel, please reduce dimensionality')
+
+    # Loop through each time points
+    for plane in range(1,imDim[4]+1):
+        m       = 0
+        normVar = 0
+        imp.setT(plane)
+        # Loop through each z plane
+        for tp in range(1,imDim[3]+1):
+            imp.setZ(tp)
+            pixArray = imp.getProcessor().getPixels()
+            mean     = ((sum(pixArray))/len(pixArray))
+            pixArray = [(x - mean)*(x-mean) for x in pixArray]
+            #pixArray = pixArray*pixArray
+
+            sumPixArray = sum(pixArray)
+            var         = sumPixArray/(imDim[0]*imDim[1]*mean)
+
+            if var > normVar:
+                normVar = var
+                m       = tp
+
+    return m
