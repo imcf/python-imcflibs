@@ -126,3 +126,22 @@ def find_focus(imp):
                 m       = tp
 
     return m
+
+def progressbar(progress, total, line_number, prefix=''):
+    """Progress bar for the IJ log window
+
+    Parameters
+    ----------
+    progress : int
+        Current step of the loop
+    total : int
+        Total number of steps for the loop
+    line_number : int
+        Number of the line to be updated
+    prefix : str, optional
+        Text to use before the progress bar, by default ''
+    """
+
+    size = 30
+    x    = int(size*progress/total)
+    IJ.log("\\Update%i:%s[%s%s] %i/%i\r" % (line_number, prefix, "#"*x, "."*(size-x), progress, total))
