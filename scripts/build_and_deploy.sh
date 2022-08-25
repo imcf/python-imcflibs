@@ -14,4 +14,4 @@ fi
 
 
 ### build and deploy
-mvn -Dimagej.app.directory="$FIJI_APP"
+mvn -Dscijava.app.directory="$FIJI_APP"
