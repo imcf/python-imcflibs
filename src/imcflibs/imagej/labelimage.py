@@ -1,3 +1,5 @@
+"""Functions to work with ImageJ label images."""
+
 from ij import IJ, ImagePlus
 from ij.plugin import Duplicator
 from ij.process import FloatProcessor
