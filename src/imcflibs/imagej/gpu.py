@@ -5,6 +5,7 @@ from ij.plugin import Duplicator
 
 from net.haesleinhuepf.clij2 import CLIJ2
 
+
 def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
     """Erode labels using GPU acceleration
 
@@ -30,14 +31,19 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
 
     for channel in channel_list:
 
-        current_channel = Duplicator().run(label_image,
-                                           channel, channel,
-                                           1, label_image.getNSlices(),
-                                           1, label_image.getNFrames())
+        current_channel = Duplicator().run(
+            label_image,
+            channel,
+            channel,
+            1,
+            label_image.getNSlices(),
+            1,
+            label_image.getNFrames(),
+        )
 
-        #clij2 = CLIJ2.getInstance()
-        src  = clij2_instance.push(current_channel)
-        dst  = clij2_instance.create(src)
+        # clij2 = CLIJ2.getInstance()
+        src = clij2_instance.push(current_channel)
+        dst = clij2_instance.create(src)
         mask = clij2_instance.create(src)
 
         clij2_instance.erodeLabels(src, dst, erosion_radius, False)
@@ -47,8 +53,9 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
 
     if len(list_of_images) > 1:
         return RGBStackMerge().mergeChannels(list_of_images, False)
-    else :
+    else:
         return list_of_images[0]
+
 
 def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
     """Dilate labels using GPU acceleration
@@ -76,14 +83,19 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
     for channel in channel_list:
         print(channel)
 
-        current_channel = Duplicator().run(label_image,
-                                           channel, channel,
-                                           1, label_image.getNSlices(),
-                                           1, label_image.getNFrames())
+        current_channel = Duplicator().run(
+            label_image,
+            channel,
+            channel,
+            1,
+            label_image.getNSlices(),
+            1,
+            label_image.getNFrames(),
+        )
 
-        #clij2 = CLIJ2.getInstance()
-        src  = clij2_instance.push(current_channel)
-        dst  = clij2_instance.create(src)
+        # clij2 = CLIJ2.getInstance()
+        src = clij2_instance.push(current_channel)
+        dst = clij2_instance.create(src)
         mask = clij2_instance.create(src)
 
         clij2_instance.dilateLabels(src, dst, dilation_radius)
@@ -96,8 +108,9 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
 
     if len(list_of_images) > 1:
         return RGBStackMerge().mergeChannels(list_of_images, False)
-    else :
+    else:
         return list_of_images[0]
+
 
 def merge_labels(clij2_instance, label_image, channel=None):
     """Merge touching labels using GPU acceleration
@@ -123,10 +136,15 @@ def merge_labels(clij2_instance, label_image, channel=None):
 
     for channel in channel_list:
 
-        current_channel = Duplicator().run(label_image,
-                                           channel, channel,
-                                           1, label_image.getNSlices(),
-                                           1, label_image.getNFrames())
+        current_channel = Duplicator().run(
+            label_image,
+            channel,
+            channel,
+            1,
+            label_image.getNSlices(),
+            1,
+            label_image.getNFrames(),
+        )
 
         src = clij2_instance.push(current_channel)
         dst = clij2_instance.create(src)
@@ -138,5 +156,5 @@ def merge_labels(clij2_instance, label_image, channel=None):
 
     if len(list_of_images) > 1:
         return RGBStackMerge().mergeChannels(list_of_images, False)
-    else :
+    else:
         return list_of_images[0]
