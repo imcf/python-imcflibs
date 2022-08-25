@@ -1,6 +1,8 @@
 """Miscellaneous ImageJ related functions, mostly convenience wrappers."""
 
-import sys, time
+import sys
+import time
+
 from ij import IJ, ImageStack  # pylint: disable-msg=E0401
 
 from ..log import LOG as log
