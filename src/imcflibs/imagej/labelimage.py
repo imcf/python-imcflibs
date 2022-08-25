@@ -5,6 +5,7 @@ from ij.plugin import Duplicator
 from ij.process import FloatProcessor
 from ij.plugin.filter import ThresholdToSelection, ImageProcessor
 
+
 def label_image_to_roi_list(implus, low_thresh=None):
     """Converts a label image to a list of ROIs
 
@@ -31,10 +32,9 @@ def label_image_to_roi_list(implus, low_thresh=None):
 
         existing_pixel_values = set()
 
-        for x in range(0,ip.getWidth()):
-            for y in range(0,ip.getHeight()):
+        for x in range(0, ip.getWidth()):
+            for y in range(0, ip.getHeight()):
                 existing_pixel_values.add(pixels[x][y])
-
 
         # Converts data in case it's RGB image
         fp = FloatProcessor(ip.getWidth(), ip.getHeight())
@@ -43,7 +43,7 @@ def label_image_to_roi_list(implus, low_thresh=None):
 
         # print(existing_pixel_values)
         for value in existing_pixel_values:
-            if low_thresh is not None :
+            if low_thresh is not None:
                 if value < low_thresh:
                     continue
             elif value == 0:
@@ -57,4 +57,3 @@ def label_image_to_roi_list(implus, low_thresh=None):
             max_value = max(max_value, value)
 
     return roi_list, max_value
-
