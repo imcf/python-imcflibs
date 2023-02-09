@@ -2,12 +2,15 @@
 
 from ij import IJ
 
-def run_defineMVD(project_filename,
-                  cziPath,
-                  dataset_save_path,
-                  method="Automatic Loader (Bioformats based)",
-                  timepoints_per_partition=1
-                  ):
+
+def run_defineMVD(
+    project_filename,
+    cziPath,
+    dataset_save_path,
+    method="Automatic Loader (Bioformats based)",
+    timepoints_per_partition=1,
+    loadMethod="Re-save as multiresolution HDF5",
+):
     """
     Run the Define Multi-View Dataset command
 
@@ -23,32 +26,50 @@ def run_defineMVD(project_filename,
         Image loader method, by default "Automatic Loader (Bioformats based)"
     timepoints_per_partition : int, optional
         split the output by timepoints. Use 0 for no split, by default 1
+    loadMethod : str, optional
+        Allows this function to either re-save the images or simply create a merged xml. Use "Load raw data" to avoid re-saving, by default "Re-save as multiresolution HDF5" will resave the input data
     """
     IJ.run(
         "Define Multi-View Dataset",
-        "define_dataset=["+method+"]"
-        + "project_filename=["+project_filename+"] "
-        + "path=["+cziPath+"] "
+        "define_dataset=["
+        + method
+        + "]"
+        + "project_filename=["
+        + project_filename
+        + "] "
+        + "path=["
+        + cziPath
+        + "] "
         + "exclude=10 bioformats_series_are?=Angles "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
-        + "how_to_load_images=[Re-save as multiresolution HDF5] "
-        + "dataset_save_path=["+dataset_save_path+"] "
+        + "how_to_load_images=["
+        + loadMethod
+        + "] "
+        + "dataset_save_path=["
+        + dataset_save_path
+        + "] "
         + "check_stack_sizes apply_angle_rotation "
         + "subsampling_factors=[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }] "
         + "hdf5_chunk_sizes=[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }] "
-        + "timepoints_per_partition="+str(timepoints_per_partition)+" " 
+        + "timepoints_per_partition="
+        + str(timepoints_per_partition)
+        + " "
         + "setups_per_partition=0 "
         + "use_deflate_compression "
-        + "export_path=["+dataset_save_path+"]"
-        )
+        + "export_path=["
+        + dataset_save_path
+        + "]",
+    )
     return
 
-def run_detectInterestPoints(project_path, 
-                             process_timepoint="All Timepoints", 
-                             sigma=1.8,
-                             threshold=0.008,
-                             maximum_number=3000
-                             ):
+
+def run_detectInterestPoints(
+    project_path,
+    process_timepoint="All Timepoints",
+    sigma=1.8,
+    threshold=0.008,
+    maximum_number=3000,
+):
     """
     run the detect interest points command for registration
 
@@ -65,15 +86,19 @@ def run_detectInterestPoints(project_path,
     maximum_number : int, optional
         maximum_number of interest points to use, by default 3000
     """
-    
+
     IJ.run(
         "Detect Interest Points for Registration",
-        "select=["+project_path+"] "
+        "select=["
+        + project_path
+        + "] "
         + "process_angle=[All angles] "
         + "process_channel=[All channels] "
         + "process_illumination=[All illuminations] "
         + "process_tile=[All tiles] "
-        + "process_timepoint=["+process_timepoint+"] "
+        + "process_timepoint=["
+        + process_timepoint
+        + "] "
         + "type_of_interest_point_detection=Difference-of-Gaussian "
         + "label_interest_points=beads "
         + "limit_amount_of_detections "
@@ -82,18 +107,26 @@ def run_detectInterestPoints(project_path,
         + "interest_point_specification=[Advanced ...] "
         + "downsample_xy=[Match Z Resolution (less downsampling)] "
         + "downsample_z=1x "
-        + "sigma="+str(sigma)+" "
-        + "threshold="+str(threshold)+" "
+        + "sigma="
+        + str(sigma)
+        + " "
+        + "threshold="
+        + str(threshold)
+        + " "
         + "find_maxima "
-        + "maximum_number="+str(3000)+" "
+        + "maximum_number="
+        + str(3000)
+        + " "
         + "type_of_detections_to_use=Brightest "
-        + "compute_on=[CPU (Java)]"
-        )
+        + "compute_on=[CPU (Java)]",
+    )
     return
 
-def run_registration(project_path,
-                   process_timepoint="All Timepoints",
-                   ):
+
+def run_registration(
+    project_path,
+    process_timepoint="All Timepoints",
+):
     """
     run the spatial registration command
 
@@ -108,12 +141,16 @@ def run_registration(project_path,
     # register using interest points
     IJ.run(
         "Register Dataset based on Interest Points",
-        "select=[" + project_path + "] "
+        "select=["
+        + project_path
+        + "] "
         + "process_angle=[All angles] "
         + "process_channel=[All channels] "
         + "process_illumination=[All illuminations] "
         + "process_tile=[All tiles] "
-        + "process_timepoint=["+process_timepoint+"] "
+        + "process_timepoint=["
+        + process_timepoint
+        + "] "
         + "registration_algorithm=[Precise descriptor-based (translation invariant)] "
         + "registration_in_between_views=[Compare all views against each other] "
         + "interest_points=beads "
@@ -132,18 +169,20 @@ def run_registration(project_path,
         + "allowed_error_for_ransac=5 "
         + "ransac_iterations=Normal "
         + "interestpoint_grouping=[Group interest points (simply combine all in one virtual view)] "
-        + "interest=5"
+        + "interest=5",
     )
     return
 
-def run_fusion(temp_path,
-               fused_xml_path,
-               process_timepoint="All Timepoints",
-               downsampling=1,
-               ram_handling="Virtual",
-               save_format="Save as new XML Project (HDF5)",
-               additional_option=""
-               ):
+
+def run_fusion(
+    temp_path,
+    fused_xml_path,
+    process_timepoint="All Timepoints",
+    downsampling=1,
+    ram_handling="Virtual",
+    save_format="Save as new XML Project (HDF5)",
+    additional_option="",
+):
     """
     run the image fusion command
 
@@ -167,22 +206,32 @@ def run_fusion(temp_path,
 
     IJ.run(
         "Fuse dataset ...",
-        "select=["+temp_path+"] "
+        "select=["
+        + temp_path
+        + "] "
         + "process_angle=[All angles] "
         + "process_channel=[All channels] "
-        + "process_illumination=["+process_timepoint+"] "
+        + "process_illumination=["
+        + process_timepoint
+        + "] "
         + "process_tile=[All tiles] "
         + "process_timepoint=[All Timepoints] "
         + "bounding_box=[Currently Selected Views] "
-        + "downsampling="+str(downsampling)+ " "
+        + "downsampling="
+        + str(downsampling)
+        + " "
         + "pixel_type=[16-bit unsigned integer] "
         + "interpolation=[Linear Interpolation] "
-        + "image=["+ram_handling+"] "
+        + "image=["
+        + ram_handling
+        + "] "
         + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
         + "blend "
         + additional_option
         + "produce=[Each timepoint & channel] "
-        + "fused_image=["+save_format+"] "
+        + "fused_image=["
+        + save_format
+        + "] "
         + "export_path=["
         + fused_xml_path
         + "]",
