@@ -195,7 +195,10 @@ def run_detectInterestPoints(
 
 
 def run_registration(
-    project_path, process_timepoint="All Timepoints", rigid_timepoints=False
+    project_path,
+    process_timepoint="All Timepoints",
+    process_channel="All channels",
+    rigid_timepoints=False,
 ):
     """
     run the registration command
@@ -206,12 +209,26 @@ def run_registration(
         Path to the .xml project
     process_timepoint : str, optional
         Specify which timepoint should be processed, by default "All Timepoints"
+    process_channel : str, optional
+        Specify which channels should be processed. By default, all channels are processed together, however this behavior could be undesirable if only one channel is adequate (beads or nuclei). In that case provide the channel name instead. by default "All channels"
     rigid_timepoints : bool, optional
         If spatial registration has already been run, set this boolean to True to consider each timepoint as rigid unit, by default False
     """
 
+    # If not process all channels at once, then adapt the option
+    if process_channel == "[All channels]":
+        process_channelArg = process_channel
+    else:
+        process_channelArg = (
+            "[Single channel (Select from List)] processing_channel=[channel Cam2-T3] "
+        )
+        #    "
+        #    + process_channel
+        #    + "] "
+        # )
+
     if rigid_timepoints:
-        rigid_timepointsArg = "consider_each_timepoint_as_rigid_unit "
+        rigid_timepointsArg = " consider_each_timepoint_as_rigid_unit"
     else:
         rigid_timepointsArg = ""
 
@@ -220,34 +237,65 @@ def run_registration(
         "Register Dataset based on Interest Points",
         "select=["
         + project_path
-        + "] "
-        + "process_angle=[All angles] "
-        + "process_channel=[All channels] "
-        + "process_illumination=[All illuminations] "
-        + "process_tile=[All tiles] "
-        + "process_timepoint=["
+        + "]"
+        + " process_angle=[All angles]"
+        + " process_channel="
+        + process_channelArg
+        + " process_illumination=[All illuminations]"
+        + " process_tile=[All tiles]"
+        + " process_timepoint=["
         + process_timepoint
-        + "] "
-        + "registration_algorithm=[Precise descriptor-based (translation invariant)] "
-        + "registration_in_between_views=[Compare all views against each other] "
-        + "interest_points=beads "
-        + "group_tiles "
-        + "group_illuminations "
-        + "group_channels "
+        + "]"
+        + " registration_algorithm=[Precise descriptor-based (translation invariant)]"
+        + " registration_in_between_views=[Compare all views against each other]"
+        + " interest_points=beads"
+        + " group_tiles"
+        + " group_illuminations"
+        + " group_channels"
         + rigid_timepointsArg
-        + "fix_views=[Fix first view] "
-        + "map_back_views=[Do not map back (use this if views are fixed)] "
-        + "transformation=Affine "
-        + "regularize_model "
-        + "model_to_regularize_with=Rigid "
-        + "lamba=0.10 "
-        + "number_of_neighbors=3 "
-        + "redundancy=3 "
-        + "significance=2 "
-        + "allowed_error_for_ransac=5 "
-        + "ransac_iterations=Normal "
-        + "interestpoint_grouping=[Group interest points (simply combine all in one virtual view)] "
-        + "interest=5",
+        + " fix_views=[Fix first view]"
+        + " map_back_views=[Do not map back (use this if views are fixed)]"
+        + " transformation=Affine"
+        + " regularize_model"
+        + " model_to_regularize_with=Rigid"
+        + " lamba=0.10"
+        + " number_of_neighbors=3"
+        + " redundancy=2"
+        + " significance=1"
+        + " allowed_error_for_ransac=5"
+        + " ransac_iterations=Normal"
+        + " interestpoint_grouping=[Group interest points (simply combine all in one virtual view)]"
+        + " interest=5",
+    )
+    return
+
+
+def run_duplicateReg(project_path, channel_source):
+    """
+    If registration has been generated using a single channel, use this function to duplicate the registration parameters to the other channels
+
+    Parameters
+    ----------
+    project_path : str
+        Path to the .xml project
+    channel_source : str
+        Specify the channel name
+    """
+    IJ.run(
+        "Duplicate Transformations",
+        "apply=[One channel to other channels] "
+        + "select="
+        + project_path
+        + " "
+        + "apply_to_angle=[All angles] "
+        + "apply_to_illumination=[All illuminations] "
+        + "apply_to_tile=[All tiles] "
+        + "apply_to_timepoint=[All Timepoints] "
+        + "source="
+        + channel_source
+        + " "
+        + "target=[All Channels] "
+        + "duplicate_which_transformations=[Replace all transformations]",
     )
     return
 
