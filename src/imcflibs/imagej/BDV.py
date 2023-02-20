@@ -63,6 +63,77 @@ def run_defineMVD(
     return
 
 
+def run_resave(
+    sourceXMLFile,
+    outputH5FilePath,
+    timepoints="All Timepoints",
+    timepoints_per_partition=1,
+    use_deflate_compression=True,
+):
+    """
+    Resave the xml dataset in a new format. Only accepts all timepoints or single timepoints
+
+    Parameters
+    ----------
+    sourceXMLFile : File
+        XML input file
+    outputH5FilePath : str
+        Export path for the output file
+    timepoints : str, optional
+        Which timepoints should be exported, by default "All Timepoints"
+    timepoints_per_partition : int, optional
+        How many timepoints per partition should be exported, by default 1
+    use_deflate_compression : bool, optional
+        Run deflate compression, by default True
+    """
+
+    # If all timepoints are nto to be saved at once
+    if timepoints == "All Timepoints":
+        timepoints = "resave_timepoint=[All Timepoints] "
+    else:
+        timepoints = (
+            "resave_timepoint=[Single Timepoint (Select from List)] processing_timepoint=[Timepoint "
+            + str(timepoints)
+            + "] "
+        )
+
+    # If use_deflate_compression
+    if use_deflate_compression:
+        use_deflate_compressionArg = "use_deflate_compression "
+    else:
+        use_deflate_compressionArg = ""
+
+    # If split_hdf5 option
+    if timepoints_per_partition != 0:
+        split_hdf5 = "split_hdf5 "
+    else:
+        split_hdf5 = ""
+
+    IJ.run(
+        "As HDF5",
+        "select="
+        + sourceXMLFile.getPath()
+        + " "
+        + "resave_angle=[All angles] "
+        + "resave_channel=[All channels] "
+        + "resave_illumination=[All illuminations] "
+        + "resave_tile=[All tiles] "
+        + timepoints
+        + "subsampling_factors=[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }] "
+        + "hdf5_chunk_sizes=[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }] "
+        + "timepoints_per_partition="
+        + str(timepoints_per_partition)
+        + " "
+        + "setups_per_partition=0 "
+        + use_deflate_compressionArg
+        + split_hdf5
+        + "export_path="
+        + outputH5FilePath,
+    )
+
+    return
+
+
 def run_detectInterestPoints(
     project_path,
     process_timepoint="All Timepoints",
