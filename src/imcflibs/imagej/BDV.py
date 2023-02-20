@@ -124,11 +124,10 @@ def run_detectInterestPoints(
 
 
 def run_registration(
-    project_path,
-    process_timepoint="All Timepoints",
+    project_path, process_timepoint="All Timepoints", rigid_timepoints=False
 ):
     """
-    run the spatial registration command
+    run the registration command
 
     Parameters
     ----------
@@ -136,7 +135,14 @@ def run_registration(
         Path to the .xml project
     process_timepoint : str, optional
         Specify which timepoint should be processed, by default "All Timepoints"
+    rigid_timepoints : bool, optional
+        If spatial registration has already been run, set this boolean to True to consider each timepoint as rigid unit, by default False
     """
+
+    if rigid_timepoints:
+        rigid_timepointsArg = "consider_each_timepoint_as_rigid_unit "
+    else:
+        rigid_timepointsArg = ""
 
     # register using interest points
     IJ.run(
@@ -157,6 +163,7 @@ def run_registration(
         + "group_tiles "
         + "group_illuminations "
         + "group_channels "
+        + rigid_timepointsArg
         + "fix_views=[Fix first view] "
         + "map_back_views=[Do not map back (use this if views are fixed)] "
         + "transformation=Affine "
