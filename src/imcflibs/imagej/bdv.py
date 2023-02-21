@@ -89,20 +89,24 @@ def run_resave(
     timepoints_per_partition=1,
     use_deflate_compression=True,
 ):
-    """Resave the xml dataset in a new format. Only accepts all timepoints or single timepoints
+    """Resave the xml dataset in a new format (either all or single timepoints).
+
+    Useful if it hasn't been done during dataset definition (see
+    `run_define_dataset_autoloader()`). Allows e.g. parallelization of HDF-5
+    re-saving.
 
     Parameters
     ----------
     sourceXMLFile : File
-        XML input file
+        XML input file.
     outputH5FilePath : str
-        Export path for the output file
+        Export path for the output file.
     timepoints : str, optional
-        Which timepoints should be exported, by default "All Timepoints"
+        Which timepoints should be exported, by default "All Timepoints".
     timepoints_per_partition : int, optional
-        How many timepoints per partition should be exported, by default 1
+        How many timepoints per partition should be exported, by default 1.
     use_deflate_compression : bool, optional
-        Run deflate compression, by default True
+        Run deflate compression, by default True.
     """
 
     # If all timepoints are nto to be saved at once
