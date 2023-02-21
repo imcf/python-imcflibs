@@ -4,6 +4,8 @@ import sys
 import time
 
 from ij import IJ  # pylint: disable-msg=import-error
+from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
+from ij.measure import ResultsTable  # pylint: disable-msg=import-error
 
 from ..log import LOG as log
 
@@ -172,3 +174,31 @@ def get_free_memory():
     free_memory = max_memory - used_memory
 
     return free_memory
+
+
+def setup_clean_ij_environment(rm=None, rt=None):
+    """Set up a clean and defined ImageJ environment.
+
+    Parameters
+    ----------
+    rm : RoiManager, optional
+        A reference to an IJ-RoiManager instance.
+    rt : ResultsTable, optional
+        A reference to an IJ-ResultsTable instance.
+    """
+    if not rm:
+        rm = RoiManager.getInstance()
+        if not rm:
+            rm = RoiManager()
+
+    if not rt:
+        rt = ResultsTable.getInstance()
+        if not rt:
+            rt = ResultsTable()
+
+    rm.runCommand("reset")
+    rt.reset()
+    IJ.log(r"\\Clear")
+
+    # FIXME: integrate commands from method below
+    # fix_ij_options()
