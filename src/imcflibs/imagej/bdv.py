@@ -173,7 +173,7 @@ def run_resave_as_h5(
     return
 
 
-def run_detectInterestPoints(
+def run_detect_interest_points(
     project_path,
     process_timepoint="All Timepoints",
     sigma=1.8,
@@ -305,7 +305,7 @@ def run_registration(
     return
 
 
-def run_duplicateReg(project_path, channel_source):
+def run_duplicate_reg(project_path, channel_source):
     """If registration has been generated using a single channel, use this function to duplicate the registration parameters to the other channels
 
     Parameters
