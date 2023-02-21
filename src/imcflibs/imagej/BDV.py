@@ -7,6 +7,7 @@ def run_define_dataset_autoloader(
     project_filename,
     czi_path,
     dataset_save_path,
+    bf_series_type,
     timepoints_per_partition=1,
     resave="Re-save as multiresolution HDF5",
     subsampling_factors=None,
@@ -22,6 +23,8 @@ def run_define_dataset_autoloader(
         path to the first czi
     dataset_save_path : str
         output path for the .xml
+    bf_series_type : str
+        One of "Angles" or "Tiles", specifying how Bio-Formats interprets the series.
     timepoints_per_partition : int, optional
         split the output by timepoints. Use 0 for no split, by default 1
     resave : str, optional
@@ -52,7 +55,9 @@ def run_define_dataset_autoloader(
         + "path=["
         + czi_path
         + "] "
-        + "exclude=10 bioformats_series_are?=Angles "
+        + "exclude=10 bioformats_series_are?="
+        + bf_series_type
+        + " "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
         + "how_to_load_images=["
         + resave
