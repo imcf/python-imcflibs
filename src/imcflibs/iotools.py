@@ -176,10 +176,10 @@ def get_folder_size(source):
     """
     total_size = 0
     for dirpath, _, filenames in os.walk(source):
-        for f in filenames:
-            fp = os.path.join(dirpath, f)
+        for fname in filenames:
+            fpath = os.path.join(dirpath, fname)
             # skip if it is symbolic link
-            if not os.path.islink(fp):
-                total_size += os.path.getsize(fp)
+            if not os.path.islink(fpath):
+                total_size += os.path.getsize(fpath)
 
     return total_size
