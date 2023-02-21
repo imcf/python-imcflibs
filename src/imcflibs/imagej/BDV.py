@@ -55,7 +55,8 @@ def run_define_dataset_autoloader(
         + "path=["
         + czi_path
         + "] "
-        + "exclude=10 bioformats_series_are?="
+        + "exclude=10 "
+        + "bioformats_series_are?="
         + bf_series_type
         + " "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
@@ -65,7 +66,8 @@ def run_define_dataset_autoloader(
         + "dataset_save_path=["
         + dataset_save_path
         + "] "
-        + "check_stack_sizes apply_angle_rotation "
+        + "check_stack_sizes "
+        + "apply_angle_rotation "
         + subsampling_factors
         + hdf5_chunk_sizes
         + "timepoints_per_partition="
