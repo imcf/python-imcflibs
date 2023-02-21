@@ -1,10 +1,11 @@
 """Functions to work with ImageJ label images."""
 
-from ij import IJ, ImagePlus
 # pylint: disable-msg=import-error
-from ij.plugin import Duplicator
-from ij.process import FloatProcessor
-from ij.plugin.filter import ThresholdToSelection, ImageProcessor
+
+from ij import IJ, ImagePlus, Prefs
+from ij.plugin import Duplicator, ImageCalculator
+from ij.process import FloatProcessor, ImageProcessor
+from ij.plugin.filter import ThresholdToSelection
 
 
 def label_image_to_roi_list(label_image, low_thresh=None):
@@ -61,3 +62,29 @@ def label_image_to_roi_list(label_image, low_thresh=None):
             max_value = max(max_value, value)
 
     return roi_list, max_value
+
+
+def relate_label_images(label_image_ref, label_image_to_relate):
+    """Relate label images, giving same label to objects being together
+
+    /!\ Won't work with touching labels
+
+    Parameters
+    ----------
+    label_image_ref : ImagePlus
+        Reference to use for the labels
+    label_image_to_relate : ImagePlus
+        Image to change for the labels
+
+    Returns
+    -------
+    ImagePlus
+        New ImagePlus with modified labels matching the reference
+    """
+
+    imp_dup = label_image_to_relate.duplicate()
+    IJ.setRawThreshold(imp_dup, 1, 65535)
+    Prefs.blackBackground = True
+    IJ.run(imp_dup, "Convert to Mask", "")
+    IJ.run(imp_dup, "Divide...", "value=255")
+    return ImageCalculator.run(label_image_ref, imp_dup, "Multimage_processorly create")
