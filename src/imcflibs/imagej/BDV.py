@@ -5,7 +5,7 @@ from ij import IJ
 
 def run_defineMVD(
     project_filename,
-    cziPath,
+    czi_path,
     dataset_save_path,
     method="Automatic Loader (Bioformats based)",
     timepoints_per_partition=1,
@@ -19,7 +19,7 @@ def run_defineMVD(
     ----------
     project_filename : str
         Name of the project (finishes with .xml)
-    cziPath : str
+    czi_path : str
         path to the first czi
     dataset_save_path : str
         output path for the .xml
@@ -55,7 +55,7 @@ def run_defineMVD(
         + project_filename
         + "] "
         + "path=["
-        + cziPath
+        + czi_path
         + "] "
         + "exclude=10 bioformats_series_are?=Angles "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
