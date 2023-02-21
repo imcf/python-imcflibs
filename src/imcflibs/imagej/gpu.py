@@ -6,23 +6,23 @@ from net.haesleinhuepf.clij2 import CLIJ2
 
 
 def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
-    """Erode labels using GPU acceleration
+    """Erode labels using GPU acceleration.
 
     Parameters
     ----------
     clij2_instance : clij2_instance
-        Instance of CLIJ to communicate with GPU
+        Instance of CLIJ to communicate with the GPU.
     label_image : ImagePlus
-        Label Image to erode
+        Label image to be eroded.
     erosion_radius : int
-        Radius for erosion
+        Radius for erosion.
     channel : int, optional
-        Specific channel to apply method
+        Specific channel to apply erosion.
 
     Returns
     -------
     ImagePlus
-        Label image with eroded labels
+        Label image with eroded labels.
     """
 
     list_of_images = []
@@ -57,23 +57,23 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
 
 
 def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
-    """Dilate labels using GPU acceleration
+    """Dilate labels using GPU acceleration.
 
     Parameters
     ----------
     clij2_instance : clij2_instance
-        Instance of CLIJ to communicate with GPU
+        Instance of CLIJ to communicate with the GPU.
     label_image : ImagePlus
-        Label Image to dilate
+        Label Image to be dilated.
     erosion_radius : int
-        Radius for dilation
+        Radius for dilation.
     channel : int, optional
-        Specific channel to apply method
+        Specific channel to apply dilation.
 
     Returns
     -------
     ImagePlus
-        Label image with dilated labels
+        Label image with dilated labels.
     """
 
     list_of_images = []
@@ -112,21 +112,21 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
 
 
 def merge_labels(clij2_instance, label_image, channel=None):
-    """Merge touching labels using GPU acceleration
+    """Merge touching labels using GPU acceleration.
 
     Parameters
     ----------
     clij2_instance : clij2_instance
-        Instance of CLIJ to communicate with GPU
+        Instance of CLIJ to communicate with the GPU.
     label_image : ImagePlus
-        Label image with touching labels
+        Label image with touching labels.
     channel : int, optional
-        Specific channel to apply method
+        Specific channel to apply label merging.
 
     Returns
     -------
     ImagePlus
-        New ImagePlus with merged labels
+        New ImagePlus with merged labels.
     """
 
     list_of_images = []
