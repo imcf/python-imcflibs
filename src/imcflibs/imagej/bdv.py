@@ -176,6 +176,7 @@ def run_resave_as_h5(
 def run_detect_interest_points(
     project_path,
     process_timepoint="All Timepoints",
+    process_channel="All channels",
     sigma=1.8,
     threshold=0.008,
     maximum_number=3000,
@@ -188,6 +189,8 @@ def run_detect_interest_points(
         Path to the .xml project
     process_timepoint : str, optional
         Specify which timepoint should be processed, by default "All Timepoints"
+    process_channel : str, optional
+        Specify which channel should be processed, by default "All channels"
     sigma : float, optional
         Minimum sigma for interest points detection, by default 1.8
     threshold : float, optional
@@ -196,13 +199,25 @@ def run_detect_interest_points(
         Maximum number of interest points to use, by default 3000.
     """
 
+    # If not process all channels at once, then adapt the option
+    if process_channel == "All channels":
+        process_channel_arg = "[" + process_channel + "] "
+    else:
+        process_channel_arg = (
+            "[Single channel (Select from List)] "
+            + "processing_channel=[channel "
+            + process_channel
+            + "] "
+        )
+
     IJ.run(
         "Detect Interest Points for Registration",
         "select=["
         + project_path
         + "] "
         + "process_angle=[All angles] "
-        + "process_channel=[All channels] "
+        + "process_channel="
+        + process_channel_arg
         + "process_illumination=[All illuminations] "
         + "process_tile=[All tiles] "
         + "process_timepoint=["
