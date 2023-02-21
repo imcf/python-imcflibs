@@ -69,24 +69,24 @@ def percentage(part, whole):
     return 100 * float(part) / float(whole)
 
 
-def calculate_mean_and_stdv(list):
+def calculate_mean_and_stdv(float_values):
     """Calculate mean and standard deviation from a list of floats.
 
     Parameters
     ----------
-    list : float
-        List containing values
+    float_values : list(float)
+        List containing float numbers.
 
     Returns
     -------
     [float, float]
         Mean and standard deviation of the list.
     """
-    mean = sum(list) / len(list)
+    mean = sum(float_values) / len(float_values)
     tot = 0.0
-    for x in list:
+    for x in float_values:
         tot = tot + (x - mean) ** 2
-    return [mean, (tot / (len(list))) ** 0.5]
+    return [mean, (tot / (len(float_values))) ** 0.5]
 
 
 def find_focus(imp):
