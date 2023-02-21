@@ -220,12 +220,10 @@ def run_registration(
         process_channelArg = process_channel
     else:
         process_channelArg = (
-            "[Single channel (Select from List)] processing_channel=[channel Cam2-T3] "
+            "[Single channel (Select from List)] processing_channel=[channel "
+            + process_channel
+            + "] "
         )
-        #    "
-        #    + process_channel
-        #    + "] "
-        # )
 
     if rigid_timepoints:
         rigid_timepointsArg = " consider_each_timepoint_as_rigid_unit"
