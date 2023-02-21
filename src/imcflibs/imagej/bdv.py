@@ -352,9 +352,9 @@ def run_duplicate_reg(project_path, channel_source):
     IJ.run(
         "Duplicate Transformations",
         "apply=[One channel to other channels] "
-        + "select="
+        + "select=["
         + project_path
-        + " "
+        + "] "
         + "apply_to_angle=[All angles] "
         + "apply_to_illumination=[All illuminations] "
         + "apply_to_tile=[All tiles] "
