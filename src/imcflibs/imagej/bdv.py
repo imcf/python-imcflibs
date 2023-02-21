@@ -1,6 +1,14 @@
-"""BigDataViewer related functions, mostly convenience wrappers. with simplified calls"""
+"""BigDataViewer related functions.
 
-from ij import IJ
+Mostly convenience wrappers with simplified calls and default values.
+"""
+
+# The pylint on Python 2.7 is too old to play nicely with black:
+# pylint: disable-msg=bad-continuation
+# Some function names just need to be longer than 30 chars:
+# pylint: disable-msg=invalid-name
+
+from ij import IJ  # pylint: disable-msg=import-error
 
 
 def run_define_dataset_autoloader(
