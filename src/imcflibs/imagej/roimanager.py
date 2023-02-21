@@ -262,10 +262,11 @@ def extract_color_of_all_rois(rm):
     all_rois = rm.getRoisAsArray()
     roi_colors = []
     for roi in all_rois:
-        if roi.getStrokeColor() == None:
-            roi_colors.append(rgb_color_lookup[roi.getColor().getRGB()])
+        stroke_color = roi.getStrokeColor()
+        if stroke_color:
+            roi_colors.append(rgb_color_lookup[stroke_color.getRGB()])
         else:
-            roi_colors.append(rgb_color_lookup[roi.getStrokeColor().getRGB()])
+            roi_colors.append(rgb_color_lookup[roi.getColor().getRGB()])
 
     return roi_colors
 
