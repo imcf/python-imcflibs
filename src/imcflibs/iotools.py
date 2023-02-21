@@ -109,20 +109,20 @@ def readtxt(fname, path="", flat=False):
 
 
 def list_dirs_containing_filetype(source, filetype):
-    """Recurs through the source dir and return all dirs & subdirs
-    that contain the specified filetype
+    """List all directories (recursive) that contain files with the given suffix.
 
     Parameters
     ----------
     source : str
-        Path to source dir
+        Path to source dir.
     filetype : str
-        List of all dirs that contain filetype
+        Filetype (string pattern) that should be matched against filenames in
+        the directories.
 
     Returns
     -------
-    list
-        List of all dirs that contain filetype
+    list(str)
+        List of all dirs that contain files of the given filetype.
     """
     dirs_containing_filetype = []
 
