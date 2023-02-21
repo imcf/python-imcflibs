@@ -336,8 +336,8 @@ def run_interest_points_registration(
     return
 
 
-def run_duplicate_reg(project_path, channel_source):
-    """Function to duplicate the registration parameters to the other channels.
+def run_duplicate_channel_transformations(project_path, channel_source):
+    """Duplicate the transformation parameters to the other channels.
 
     If registration has been generated using a single channel,this can be used
     to propagate it to the others.
