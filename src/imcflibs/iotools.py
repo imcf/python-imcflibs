@@ -141,19 +141,19 @@ def list_dirs_containing_filetype(source, filetype):
 
 
 def list_all_filenames(source, filetype):
-    """Get a sorted list of all files of specified filetype in a given directory
+    """Get a sorted list of all files of specified filetype in a given directory.
 
     Parameters
     ----------
     source : str
-        Path to source dir
+        Path to the directory to scan for desired files.
     filetype : str
-        File extension to specify filetype
+        The file extension to look for.
 
     Returns
     -------
-    list
-        List of all files of the given type in the source dir
+    list(str)
+        List of all files with the given suffix in the source directory.
     """
     os.chdir(str(source))
     allimages = sorted(glob.glob("*" + filetype))  # sorted by name
