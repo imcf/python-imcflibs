@@ -134,7 +134,10 @@ def find_focus(imp):
 
 
 def progressbar(progress, total, line_number, prefix=""):
-    """Progress bar for the IJ log window
+    """Progress bar for the IJ log window.
+
+    FIXME: how is this different from show_progressbar() above? Please explain
+    in the function description here.
 
     Parameters
     ----------
