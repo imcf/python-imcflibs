@@ -224,7 +224,7 @@ def run_detectInterestPoints(
         + " "
         + "find_maxima "
         + "maximum_number="
-        + str(3000)
+        + str(maximum_number)
         + " "
         + "type_of_detections_to_use=Brightest "
         + "compute_on=[CPU (Java)]",
