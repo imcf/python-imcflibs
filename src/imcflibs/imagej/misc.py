@@ -3,7 +3,7 @@
 import sys
 import time
 
-from ij import IJ, ImageStack  # pylint: disable-msg=E0401
+from ij import IJ  # pylint: disable-msg=import-error
 
 from ..log import LOG as log
 
@@ -90,48 +90,47 @@ def calculate_mean_and_stdv(list):
 
 
 def find_focus(imp):
-    """Function to get the focused stack. Only works on 1 channel
+    """Function to get the focused stack. Works on single-channel images only.
 
     Parameters
     ----------
     imp : ImagePlus
-        1-channel ImagePlus
+        A single-channel ImagePlus.
+
     Returns
     -------
     int
-        Slice number which seems to be in focus
+        Slice number which seems to be the best focused one.
     """
 
-    bitDepth = imp.getBitDepth()
-    imDim = imp.getDimensions()
-    focusedStack = ImageStack(imDim[0], imDim[1])
+    imp_dimensions = imp.getDimensions()
 
     # Check if more than 1 channel
     # FUTURE Could be improved for multi channel
-    if imDim[2] != 1:
+    if imp_dimensions[2] != 1:
         sys.exit("Image has more than one channel, please reduce dimensionality")
 
     # Loop through each time points
-    for plane in range(1, imDim[4] + 1):
-        m = 0
-        normVar = 0
+    for plane in range(1, imp_dimensions[4] + 1):
+        focused_slice = 0
+        norm_var = 0
         imp.setT(plane)
         # Loop through each z plane
-        for tp in range(1, imDim[3] + 1):
-            imp.setZ(tp)
-            pixArray = imp.getProcessor().getPixels()
-            mean = (sum(pixArray)) / len(pixArray)
-            pixArray = [(x - mean) * (x - mean) for x in pixArray]
-            # pixArray = pixArray*pixArray
+        for current_z in range(1, imp_dimensions[3] + 1):
+            imp.setZ(current_z)
+            pix_array = imp.getProcessor().getPixels()
+            mean = (sum(pix_array)) / len(pix_array)
+            pix_array = [(x - mean) * (x - mean) for x in pix_array]
+            # pix_array = pix_array*pix_array
 
-            sumPixArray = sum(pixArray)
-            var = sumPixArray / (imDim[0] * imDim[1] * mean)
+            sumpix_array = sum(pix_array)
+            var = sumpix_array / (imp_dimensions[0] * imp_dimensions[1] * mean)
 
-            if var > normVar:
-                normVar = var
-                m = tp
+            if var > norm_var:
+                norm_var = var
+                focused_slice = current_z
 
-    return m
+    return focused_slice
 
 
 def progressbar(progress, total, line_number, prefix=""):
