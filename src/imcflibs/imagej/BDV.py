@@ -89,8 +89,7 @@ def run_resave(
     timepoints_per_partition=1,
     use_deflate_compression=True,
 ):
-    """
-    Resave the xml dataset in a new format. Only accepts all timepoints or single timepoints
+    """Resave the xml dataset in a new format. Only accepts all timepoints or single timepoints
 
     Parameters
     ----------
@@ -160,8 +159,7 @@ def run_detectInterestPoints(
     threshold=0.008,
     maximum_number=3000,
 ):
-    """
-    run the detect interest points command for registration
+    """run the detect interest points command for registration
 
     Parameters
     ----------
@@ -219,8 +217,7 @@ def run_registration(
     process_channel="All channels",
     rigid_timepoints=False,
 ):
-    """
-    run the registration command
+    """run the registration command
 
     Parameters
     ----------
@@ -288,8 +285,7 @@ def run_registration(
 
 
 def run_duplicateReg(project_path, channel_source):
-    """
-    If registration has been generated using a single channel, use this function to duplicate the registration parameters to the other channels
+    """If registration has been generated using a single channel, use this function to duplicate the registration parameters to the other channels
 
     Parameters
     ----------
@@ -326,8 +322,7 @@ def run_fusion(
     save_format="Save as new XML Project (HDF5)",
     additional_option="",
 ):
-    """
-    run the image fusion command
+    """run the image fusion command
 
     Parameters
     ----------
