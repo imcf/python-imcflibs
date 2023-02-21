@@ -1,6 +1,5 @@
 """Convenience wrappers around CLIJ and GPU accelerated functions."""
 
-from ij import IJ
 from ij.plugin import Duplicator
 
 from net.haesleinhuepf.clij2 import CLIJ2
