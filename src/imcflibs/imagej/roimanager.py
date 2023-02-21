@@ -1,7 +1,7 @@
 """Functions to work with the RoiManager."""
 
-from ij.plugin.frame import RoiManager
-from ij.plugin import RoiEnlarger, RoiScaler
+from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
+from ij.plugin import RoiEnlarger, RoiScaler  # pylint: disable-msg=import-error
 
 
 def instantiate_roimanager():
