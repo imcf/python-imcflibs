@@ -1,5 +1,6 @@
 """I/O related functions."""
 
+import glob
 import zipfile
 
 import os
@@ -137,3 +138,24 @@ def list_dirs_containing_filetype(source, filetype):
                 break
 
     return dirs_containing_filetype
+
+
+def list_all_filenames(source, filetype):
+    """Get a sorted list of all files of specified filetype in a given directory
+
+    Parameters
+    ----------
+    source : str
+        Path to source dir
+    filetype : str
+        File extension to specify filetype
+
+    Returns
+    -------
+    list
+        List of all files of the given type in the source dir
+    """
+    os.chdir(str(source))
+    allimages = sorted(glob.glob("*" + filetype))  # sorted by name
+
+    return allimages
