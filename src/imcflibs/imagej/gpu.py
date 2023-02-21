@@ -2,7 +2,6 @@
 
 from ij.plugin import Duplicator
 
-from net.haesleinhuepf.clij2 import CLIJ2
 
 
 def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
