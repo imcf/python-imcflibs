@@ -3,17 +3,16 @@
 from ij import IJ
 
 
-def run_defineMVD(
+def run_define_dataset_autoloader(
     project_filename,
     czi_path,
     dataset_save_path,
-    method="Automatic Loader (Bioformats based)",
     timepoints_per_partition=1,
     loadMethod="Re-save as multiresolution HDF5",
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
 ):
-    """Run the Define Multi-View Dataset command.
+    """Run the Define Multi-View Dataset command using the "Auto-Loader" option.
 
     Parameters
     ----------
@@ -23,8 +22,6 @@ def run_defineMVD(
         path to the first czi
     dataset_save_path : str
         output path for the .xml
-    method : str, optional
-        Image loader method, by default "Automatic Loader (Bioformats based)"
     timepoints_per_partition : int, optional
         split the output by timepoints. Use 0 for no split, by default 1
     loadMethod : str, optional
@@ -48,9 +45,7 @@ def run_defineMVD(
         hdf5_chunk_sizes = " "
     IJ.run(
         "Define Multi-View Dataset",
-        "define_dataset=["
-        + method
-        + "]"
+        "define_dataset=[Automatic Loader (Bioformats based)] "
         + "project_filename=["
         + project_filename
         + "] "
