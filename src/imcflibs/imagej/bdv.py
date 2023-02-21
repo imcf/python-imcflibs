@@ -259,7 +259,7 @@ def run_detect_interest_points(
     return
 
 
-def run_registration(
+def run_interest_points_registration(
     project_path,
     process_timepoint="All Timepoints",
     process_channel="All channels",
