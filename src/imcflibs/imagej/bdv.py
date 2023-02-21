@@ -280,19 +280,19 @@ def run_registration(
     """
 
     # If not process all channels at once, then adapt the option
-    if process_channel == "[All channels]":
-        process_channelArg = process_channel
+    if process_channel == "[All channels] ":
+        process_channel_arg = process_channel
     else:
-        process_channelArg = (
+        process_channel_arg = (
             "[Single channel (Select from List)] processing_channel=[channel "
             + process_channel
             + "] "
         )
 
     if rigid_timepoints:
-        rigid_timepointsArg = " consider_each_timepoint_as_rigid_unit"
+        rigid_timepoints_arg = "consider_each_timepoint_as_rigid_unit "
     else:
-        rigid_timepointsArg = ""
+        rigid_timepoints_arg = " "
 
     # register using interest points
     IJ.run(
@@ -302,7 +302,7 @@ def run_registration(
         + "] "
         + "process_angle=[All angles] "
         + "process_channel="
-        + process_channelArg
+        + process_channel_arg
         + "process_illumination=[All illuminations] "
         + "process_tile=[All tiles] "
         + "process_timepoint=["
@@ -314,7 +314,7 @@ def run_registration(
         + "group_tiles "
         + "group_illuminations "
         + "group_channels "
-        + rigid_timepointsArg
+        + rigid_timepoints_arg
         + "fix_views=[Fix first view] "
         + "map_back_views=[Do not map back (use this if views are fixed)] "
         + "transformation=Affine "
