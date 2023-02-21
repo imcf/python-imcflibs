@@ -157,3 +157,18 @@ def progressbar(progress, total, line_number, prefix=""):
         "\\Update%i:%s[%s%s] %i/%i\r"
         % (line_number, prefix, "#" * x, "." * (size - x), progress, total)
     )
+
+
+def get_free_memory():
+    """Get the free memory thats available to ImageJ.
+
+    Returns
+    -------
+    free_memory : int
+        The free memory in bytes.
+    """
+    max_memory = int(IJ.maxMemory())
+    used_memory = int(IJ.currentMemory())
+    free_memory = max_memory - used_memory
+
+    return free_memory
