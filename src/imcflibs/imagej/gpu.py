@@ -1,7 +1,6 @@
 """Convenience wrappers around CLIJ and GPU accelerated functions."""
 
-from ij.plugin import Duplicator
-
+from ij.plugin import Duplicator  # pylint: disable-msg=import-error
 
 
 def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
