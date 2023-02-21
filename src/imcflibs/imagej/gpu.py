@@ -129,7 +129,10 @@ def merge_labels(clij2_instance, label_image, channel=None):
 
     list_of_images = []
 
-    channel_list = [channel] if channel else range(1, label_image.getNChannels() + 1)
+    if channel is None:
+        channel_list = range(1, label_image.getNChannels() + 1)
+    else:
+        channel_list = [channel]
 
     for channel in channel_list:
 
