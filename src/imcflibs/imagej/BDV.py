@@ -10,6 +10,8 @@ def run_defineMVD(
     method="Automatic Loader (Bioformats based)",
     timepoints_per_partition=1,
     loadMethod="Re-save as multiresolution HDF5",
+    subsampling_factors=None,
+    hdf5_chunk_sizes=None,
 ):
     """Run the Define Multi-View Dataset command.
 
@@ -29,7 +31,21 @@ def run_defineMVD(
         Allows this function to either re-save the images or simply create a merged xml.
         Use "Load raw data" to avoid re-saving, by default "Re-save as multiresolution
         HDF5" will resave the input data.
+    subsampling_factors: str, optional
+        Allow specifying subsampling factors explicitly, for example:
+        "[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }]"
+    hdf5_chunk_sizes: str, optional
+        Allow specifying hdf5_chunk_sizes factors explicitly, for example
+        "[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]"
     """
+    if subsampling_factors:
+        subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
+    else:
+        subsampling_factors = " "
+    if hdf5_chunk_sizes:
+        hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
+    else:
+        hdf5_chunk_sizes = " "
     IJ.run(
         "Define Multi-View Dataset",
         "define_dataset=["
@@ -50,8 +66,8 @@ def run_defineMVD(
         + dataset_save_path
         + "] "
         + "check_stack_sizes apply_angle_rotation "
-        + "subsampling_factors=[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }] "
-        + "hdf5_chunk_sizes=[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }] "
+        + subsampling_factors
+        + hdf5_chunk_sizes
         + "timepoints_per_partition="
         + str(timepoints_per_partition)
         + " "
