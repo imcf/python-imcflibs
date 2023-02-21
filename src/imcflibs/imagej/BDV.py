@@ -11,8 +11,7 @@ def run_defineMVD(
     timepoints_per_partition=1,
     loadMethod="Re-save as multiresolution HDF5",
 ):
-    """
-    Run the Define Multi-View Dataset command
+    """Run the Define Multi-View Dataset command.
 
     Parameters
     ----------
@@ -27,7 +26,9 @@ def run_defineMVD(
     timepoints_per_partition : int, optional
         split the output by timepoints. Use 0 for no split, by default 1
     loadMethod : str, optional
-        Allows this function to either re-save the images or simply create a merged xml. Use "Load raw data" to avoid re-saving, by default "Re-save as multiresolution HDF5" will resave the input data
+        Allows this function to either re-save the images or simply create a merged xml.
+        Use "Load raw data" to avoid re-saving, by default "Re-save as multiresolution
+        HDF5" will resave the input data.
     """
     IJ.run(
         "Define Multi-View Dataset",
