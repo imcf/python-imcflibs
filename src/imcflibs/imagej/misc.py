@@ -70,7 +70,7 @@ def percentage(part, whole):
 
 
 def calculate_mean_and_stdv(list):
-    """Gets statistics from a list
+    """Calculate mean and standard deviation from a list of floats.
 
     Parameters
     ----------
@@ -80,7 +80,7 @@ def calculate_mean_and_stdv(list):
     Returns
     -------
     [float, float]
-        Mean and Std of the list
+        Mean and standard deviation of the list.
     """
     mean = sum(list) / len(list)
     tot = 0.0
