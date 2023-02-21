@@ -89,6 +89,8 @@ def run_resave(
     timepoints="All Timepoints",
     timepoints_per_partition=1,
     use_deflate_compression=True,
+    subsampling_factors=None,
+    hdf5_chunk_sizes=None,
 ):
     """Resave the xml dataset in a new format (either all or single timepoints).
 
@@ -108,6 +110,12 @@ def run_resave(
         How many timepoints per partition should be exported, by default 1.
     use_deflate_compression : bool, optional
         Run deflate compression, by default True.
+    subsampling_factors: str, optional
+        Allow specifying subsampling factors explicitly, for example:
+        "[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }]"
+    hdf5_chunk_sizes: str, optional
+        Allow specifying hdf5_chunk_sizes factors explicitly, for example
+        "[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]"
     """
     # save all timepoints or a single one:
     if timepoints == "All Timepoints":
@@ -131,6 +139,15 @@ def run_resave(
     else:
         split_hdf5 = ""
 
+    if subsampling_factors:
+        subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
+    else:
+        subsampling_factors = " "
+    if hdf5_chunk_sizes:
+        hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
+    else:
+        hdf5_chunk_sizes = " "
+
     IJ.run(
         "As HDF5",
         "select="
@@ -141,8 +158,8 @@ def run_resave(
         + "resave_illumination=[All illuminations] "
         + "resave_tile=[All tiles] "
         + timepoints
-        + "subsampling_factors=[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }] "
-        + "hdf5_chunk_sizes=[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }] "
+        + subsampling_factors
+        + hdf5_chunk_sizes
         + "timepoints_per_partition="
         + str(timepoints_per_partition)
         + " "
