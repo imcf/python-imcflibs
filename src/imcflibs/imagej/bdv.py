@@ -97,7 +97,7 @@ def run_resave(
 
     Parameters
     ----------
-    sourceXMLFile : File
+    sourceXMLFile : File or str
         XML input file.
     outputH5FilePath : str
         Export path for the output file.
@@ -135,7 +135,7 @@ def run_resave(
     IJ.run(
         "As HDF5",
         "select="
-        + sourceXMLFile.getPath()
+        + str(sourceXMLFile)
         + " "
         + "resave_angle=[All angles] "
         + "resave_channel=[All channels] "
