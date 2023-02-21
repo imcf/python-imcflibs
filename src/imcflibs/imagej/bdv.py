@@ -180,7 +180,7 @@ def run_detectInterestPoints(
     threshold=0.008,
     maximum_number=3000,
 ):
-    """run the detect interest points command for registration
+    """Run the "Detect Interest Points" command for registration.
 
     Parameters
     ----------
@@ -193,7 +193,7 @@ def run_detectInterestPoints(
     threshold : float, optional
         Threshold value for the interest point detection, by default 0.008
     maximum_number : int, optional
-        maximum_number of interest points to use, by default 3000
+        Maximum number of interest points to use, by default 3000.
     """
 
     IJ.run(
