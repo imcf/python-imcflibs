@@ -410,6 +410,8 @@ def run_fusion(
         not forget to finish each additional option with a space
     """
 
+    # Add preserve original data anisotropy tickbox:
+    # tiles=> true; angle=>False
     IJ.run(
         "Fuse dataset ...",
         "select=["
