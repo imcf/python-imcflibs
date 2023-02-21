@@ -38,6 +38,7 @@ def run_define_dataset_autoloader(
         Allow specifying hdf5_chunk_sizes factors explicitly, for example
         "[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]"
     """
+
     if subsampling_factors:
         subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
     else:
@@ -108,8 +109,7 @@ def run_resave(
     use_deflate_compression : bool, optional
         Run deflate compression, by default True.
     """
-
-    # If all timepoints are nto to be saved at once
+    # save all timepoints or a single one:
     if timepoints == "All Timepoints":
         timepoints = "resave_timepoint=[All Timepoints] "
     else:
@@ -120,7 +120,6 @@ def run_resave(
             + "] "
         )
 
-    # If use_deflate_compression
     if use_deflate_compression:
         use_deflate_compression_arg = "use_deflate_compression "
     else:
