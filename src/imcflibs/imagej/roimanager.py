@@ -5,12 +5,12 @@ from ij.plugin import RoiEnlarger, RoiScaler  # pylint: disable-msg=import-error
 
 
 def instantiate_roimanager():
-    """instantiates the IJ-RoiManager
+    """Instantiate the IJ-RoiManager.
 
     Returns
     -------
-    IJ-RoiManager
-        a reference of the IJ-RoiManager
+    ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     """
     rm = RoiManager.getInstance()
     if not rm:
@@ -19,28 +19,28 @@ def instantiate_roimanager():
 
 
 def clear_ij_roi_manager(rm):
-    """delete all ROIs from the RoiManager
+    """Delete all ROIs from the RoiManager.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     """
     rm.runCommand("reset")
 
 
 def count_all_rois(rm):
-    """count the number of ROIS in the Roi manager
+    """Count the number of ROIS in the RoiManager.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
 
     Returns
     -------
     int
-        the number of rois in the IJ-RoiManager
+        The number of ROIs in the RoiManager.
     """
     number_of_rois = rm.getCount()
 
@@ -48,15 +48,15 @@ def count_all_rois(rm):
 
 
 def save_rois(rm, target, selected_rois=None):
-    """save selected ROIs in the RoiManager as zip to target path
+    """Save selected ROIs in the RoiManager as zip to target path.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     target : string
-        the path in to store the ROIs. e.g. /my-images/resulting_rois_subset.zip
-    selected_rois : array
+        The path to store the ROIs, e.g. /my-images/resulting_rois_subset.zip
+    selected_rois : list
         selected ROIs in the RoiManager to save
     """
     if selected_rois is not None:
@@ -69,27 +69,27 @@ def save_rois(rm, target, selected_rois=None):
 
 
 def show_all_rois_on_image(rm, imp):
-    """shows all ROIs in the ROiManager on imp
+    """Show all ROIs in the ROiManager on the given ImagePlus.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     imp : ImagePlus
-        the imp on which to show the ROIs
+        The imp on which to show the ROIs.
     """
     rm.runCommand(imp, "Show All")
 
 
 def rename_rois(rm, string):
-    """enumerate and rename all ROIs to include a custom string
+    """Rename all ROIs to include the given string as a prefix.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     string : str
-        _description_
+        The string to prefix the ROIs with.
     """
     number_of_rois = rm.getCount()
     for roi in range(number_of_rois):
@@ -99,12 +99,12 @@ def rename_rois(rm, string):
 
 
 def rename_rois_by_number(rm):
-    """rename all ROIs in the RoiManager according to their number
+    """Rename all ROIs in the RoiManager according to their index number.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     """
     number_of_rois = rm.getCount()
     for roi in range(number_of_rois):
@@ -112,16 +112,17 @@ def rename_rois_by_number(rm):
 
 
 def change_roi_color(rm, color, selected_rois=None):
-    """change the color of selected / all ROIs in the RoiManager
+    """Change the color of selected / all ROIs in the RoiManager.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     color : string
-        the desired color. e.g. "green", "red", "yellow", "magenta" ...
-    selected_rois : array
-        ROIs in the RoiManager to change
+        The desired color. e.g. "green", "red", "yellow", "magenta" ...
+    selected_rois : list, optional
+        ROIs in the RoiManager that should be changed. By default None which
+        will result in all ROIs to be changed.
     """
     if selected_rois is not None:
         rm.runCommand("Deselect")
@@ -136,16 +137,19 @@ def change_roi_color(rm, color, selected_rois=None):
 
 
 def measure_in_all_rois(imp, channel, rm):
-    """measures in all ROIS on a given channel of imp all parameters that are set in IJ "Set Measurements"
+    """Perform all configured measurements in one channel of the given image.
+
+    The choice of measured parameters is done through ImageJ's "Set
+    Measurements" command.
 
     Parameters
     ----------
     imp : ImagePlus
-        the imp to measure on
+        The imp to measure on.
     channel : integer
-        the channel to measure in. starts at 1.
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+        The channel to measure in (starting at 1).
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     """
     imp.setC(channel)
     rm.runCommand(imp, "Deselect")
@@ -153,29 +157,29 @@ def measure_in_all_rois(imp, channel, rm):
 
 
 def open_rois_from_zip(rm, path):
-    """open RoiManager ROIs from zip and adds them to the RoiManager
+    """Load ROIs from the given zip file and add them to the RoiManager.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     path : string
-        path to the Roi zip file
+        Path to the ROI zip file.
     """
     rm.runCommand("Open", path)
 
 
 def enlarge_all_rois(amount_in_um, rm, pixel_size_in_um):
-    """enlarges all ROIs in the RoiManager by x scaled units
+    """Enlarge all ROIs in the RoiManager by x scaled units.
 
     Parameters
     ----------
     amount_in_um : float
-        the value by which to enlarge in scaled units, e.g 3.5
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+        The value by which to enlarge in scaled units, e.g 3.5.
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     pixel_size_in_um : float
-        the pixel size, e.g. 0.65 px/um
+        The pixel size, e.g. 0.65 px/um.
     """
     amount_px = amount_in_um / pixel_size_in_um
     all_rois = rm.getRoisAsArray()
@@ -186,14 +190,14 @@ def enlarge_all_rois(amount_in_um, rm, pixel_size_in_um):
 
 
 def scale_all_rois(rm, scaling_factor):
-    """inflate or shrink all ROIs in the RoiManager
+    """Inflate or shrink all ROIs in the RoiManager.
 
     Parameters
     ----------
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     scaling_factor : float
-        the scaling factor by which to inflate (if > 1) or shrink (if < 1 )
+        The scaling factor by which to inflate (if > 1) or shrink (if < 1 ).
     """
     all_rois = rm.getRoisAsArray()
     rm.reset()
@@ -203,24 +207,26 @@ def scale_all_rois(rm, scaling_factor):
 
 
 def select_rois_above_min_intensity(imp, channel, rm, min_intensity):
-    """For all ROIs in the RoiManager, select ROIs based on intensity measurement in given channel of imp.
+    """Select ROIs based on their intensity in given channel of the image.
+
     See https://imagej.nih.gov/ij/developer/api/ij/process/ImageStatistics.html
 
     Parameters
     ----------
     imp : ImagePlus
-        the imp on which to measure
+        The imp on which to measure.
     channel : integer
-        the channel on which to measure. starts at 1
-    rm : RoiManager
-        a reference of the IJ-RoiManager
+        The channel to measure in (starting at 1).
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
     min_intensity : integer
-        the selection criterion (here: intensity threshold)
+        The selection criterion (lower intensity threshold).
 
     Returns
     -------
-    array
-        a selection of ROIs which passed the selection criterion (are above the threshold)
+    list(int)
+        A list of ROIs index numbers that fulfill the selection criterion
+        (intensity is above the threshold).
     """
     imp.setC(channel)
     all_rois = rm.getRoisAsArray()
@@ -235,17 +241,20 @@ def select_rois_above_min_intensity(imp, channel, rm, min_intensity):
 
 
 def extract_color_of_all_rois(rm):
-    """get the RGB color of ROIs in the RoiManager and match it to the colors name string
+    """Get the color names of the ROIs in the RoiManager.
+
+    Iterates over all ROIs and gets either their "Stroke Color" (if present) or
+    their "Color" property.
 
     Parameters
     ----------
-    rm : RoiManager
-        the IJ-RoiManager
+    rm : ij.plugin.frame.RoiManager
+        A reference of the IJ-RoiManager.
 
     Returns
     -------
-    array
-        an array containing the corresponding color name string for each roi in the ROiManager
+    list
+        A list containing the corresponding color name strings for each ROI.
     """
     rgb_color_lookup = {
         -65536: "red",
@@ -274,24 +283,25 @@ def extract_color_of_all_rois(rm):
 def put_rois_to_roimanager(
     roi_array, roi_manager, keep_rois_name, prefix, bbox=None, z_slice=None, group=None
 ):
-    """Puts all ROIs from a list to the Roi Manager
+    """Put all ROIs from a list to the RoiManager.
 
     Parameters
     ----------
     roi_array : list(roi)
-        List of ROIs to put in RM
-    roi_manager : RoiManager
-        ROIManager in which to put the ROIs
+        List of ROIs to put in RM.
+    roi_manager : ij.plugin.frame.RoiManager
+        ROIManager in which to put the ROIs.
     keep_rois_name : bool
-        If true, will keep the name of the Roi or will change it to its index
+        If true, will keep the name of the ROI. Otherwise the ROI will be
+        renamed using its index number.
     prefix : str
-        Prefix to put in front of the name of the Roi
+        String to prefix the name of the ROI with.
     bbox : roi, optional
-        Use this Roi's bounding box to shift the Roi array, by default None
+        Use this ROI's bounding box to shift the ROI array, by default None.
     z_slice : int, optional
-        If exists, will also shift the Roi in Z, by default None
+        Shift the ROI also in Z, by default None (=no shifting).
     group : int, optional
-        If exists, will put the Roi into a Roi group, by default None
+        Put the ROI into the given ROI group, by default None.
     """
     # roi_manager.reset()
     for index, roi in enumerate(roi_array):
@@ -307,16 +317,18 @@ def put_rois_to_roimanager(
 
 
 def shift_roi_by_bounding_box(roi, bbox, z_slice=None):
-    """Move a Roi based on a bounding box
+    """Move a ROI based on a bounding box.
+
+    FIXME: the docstring is talking about a ROI array. What array?
 
     Parameters
     ----------
-    roi  : Roi
-        Current Roi
-    bbox : Roi
-        Use this Roi's bounding box to shift the Roi array
+    roi : ROI
+        The ROI to be moved.
+    bbox : ROI
+        Use this ROI's bounding box to shift the ROI array.
     z_slice : int, optional
-        If exists, will also shift the Roi in Z, by default None
+        Shift the ROI also in Z, by default None (=no shifting).
     """
     # roi_manager.reset()
     roi.setLocation(bbox.x + roi.getBounds().x, bbox.y + roi.getBounds().y)
