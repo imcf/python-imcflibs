@@ -1,6 +1,8 @@
 """I/O related functions."""
 
 import zipfile
+
+import os
 from os.path import splitext, join
 
 from .log import LOG as log
@@ -104,3 +106,34 @@ def readtxt(fname, path="", flat=False):
     if zipread is not None:
         zipread.close()
     return txt
+
+
+def list_dirs_containing_filetype(source, filetype):
+    """Recurs through the source dir and return all dirs & subdirs
+    that contain the specified filetype
+
+    Parameters
+    ----------
+    source : str
+        Path to source dir
+    filetype : str
+        List of all dirs that contain filetype
+
+    Returns
+    -------
+    list
+        List of all dirs that contain filetype
+    """
+    dirs_containing_filetype = []
+
+    # walk recursively through all directories
+    # list their paths and all files inside (=os.walk)
+    for dirname, _, filenames in os.walk(source):
+        # stop when encountering a directory that contains "filetype"
+        # and store the directory path
+        for filename in filenames:
+            if filetype in filename:
+                dirs_containing_filetype.append(dirname + "/")
+                break
+
+    return dirs_containing_filetype
