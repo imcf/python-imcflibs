@@ -122,9 +122,9 @@ def run_resave(
 
     # If use_deflate_compression
     if use_deflate_compression:
-        use_deflate_compressionArg = "use_deflate_compression "
+        use_deflate_compression_arg = "use_deflate_compression "
     else:
-        use_deflate_compressionArg = ""
+        use_deflate_compression_arg = ""
 
     # If split_hdf5 option
     if timepoints_per_partition != 0:
@@ -148,7 +148,7 @@ def run_resave(
         + str(timepoints_per_partition)
         + " "
         + "setups_per_partition=0 "
-        + use_deflate_compressionArg
+        + use_deflate_compression_arg
         + split_hdf5
         + "export_path="
         + output_h5_file_path,
