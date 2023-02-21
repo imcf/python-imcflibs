@@ -83,7 +83,7 @@ def run_define_dataset_autoloader(
     return
 
 
-def run_resave(
+def run_resave_as_h5(
     source_xml_file,
     output_h5_file_path,
     timepoints="All Timepoints",
