@@ -8,7 +8,7 @@ def run_define_dataset_autoloader(
     czi_path,
     dataset_save_path,
     timepoints_per_partition=1,
-    loadMethod="Re-save as multiresolution HDF5",
+    resave="Re-save as multiresolution HDF5",
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
 ):
@@ -24,7 +24,7 @@ def run_define_dataset_autoloader(
         output path for the .xml
     timepoints_per_partition : int, optional
         split the output by timepoints. Use 0 for no split, by default 1
-    loadMethod : str, optional
+    resave : str, optional
         Allows this function to either re-save the images or simply create a merged xml.
         Use "Load raw data" to avoid re-saving, by default "Re-save as multiresolution
         HDF5" will resave the input data.
@@ -55,7 +55,7 @@ def run_define_dataset_autoloader(
         + "exclude=10 bioformats_series_are?=Angles "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
         + "how_to_load_images=["
-        + loadMethod
+        + resave
         + "] "
         + "dataset_save_path=["
         + dataset_save_path
