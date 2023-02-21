@@ -7,11 +7,14 @@ the corresponding functions provided by ImageJ.
 
 """
 
+# The pylint on Python 2.7 is too old to play nicely with black:
+# pylint: disable-msg=bad-continuation
+
 import os
 
-from ij import IJ
-from loci.plugins import BF
 from loci.plugins.in import ImporterOptions
+from ij import IJ  # pylint: disable-msg=import-error
+from loci.plugins import BF  # pylint: disable-msg=import-error
 
 from ..pathtools import gen_name_from_orig
 from ..log import LOG as log

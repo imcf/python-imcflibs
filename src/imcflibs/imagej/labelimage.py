@@ -1,6 +1,7 @@
 """Functions to work with ImageJ label images."""
 
 from ij import IJ, ImagePlus
+# pylint: disable-msg=import-error
 from ij.plugin import Duplicator
 from ij.process import FloatProcessor
 from ij.plugin.filter import ThresholdToSelection, ImageProcessor
