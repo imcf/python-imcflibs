@@ -142,13 +142,13 @@ def progressbar(progress, total, line_number, prefix=""):
     Parameters
     ----------
     progress : int
-        Current step of the loop
+        Current step of the loop.
     total : int
-        Total number of steps for the loop
+        Total number of steps for the loop.
     line_number : int
-        Number of the line to be updated
+        Number of the line to be updated.
     prefix : str, optional
-        Text to use before the progress bar, by default ''
+        Text to use before the progress bar, by default ''.
     """
 
     size = 30
