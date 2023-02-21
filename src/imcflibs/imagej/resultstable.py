@@ -1,4 +1,3 @@
-from ij import IJ
 
 
 def preset_results_column(results_table, column, value):
