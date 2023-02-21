@@ -1,3 +1,5 @@
+"""Functions to work with the RoiManager."""
+
 from ij.plugin.frame import RoiManager
 from ij.plugin import RoiEnlarger, RoiScaler
 

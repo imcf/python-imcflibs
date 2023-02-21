@@ -1,3 +1,4 @@
+"""Functions to work with results tables."""
 
 
 def preset_results_column(results_table, column, value):
