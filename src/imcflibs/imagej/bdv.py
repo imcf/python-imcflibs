@@ -265,7 +265,7 @@ def run_registration(
     process_channel="All channels",
     rigid_timepoints=False,
 ):
-    """run the registration command
+    """Run the registration command.
 
     Parameters
     ----------
@@ -274,9 +274,13 @@ def run_registration(
     process_timepoint : str, optional
         Specify which timepoint should be processed, by default "All Timepoints"
     process_channel : str, optional
-        Specify which channels should be processed. By default, all channels are processed together, however this behavior could be undesirable if only one channel is adequate (beads or nuclei). In that case provide the channel name instead. by default "All channels"
+        Specify which channels should be processed. By default, all channels are
+        processed together, however this behavior could be undesirable if only
+        one channel is adequate (beads or nuclei). In that case provide the
+        channel name instead. by default "All channels"
     rigid_timepoints : bool, optional
-        If spatial registration has already been run, set this boolean to True to consider each timepoint as rigid unit, by default False
+        If spatial registration has already been run, set this boolean to True
+        to consider each timepoint as rigid unit, by default False
     """
 
     # If not process all channels at once, then adapt the option
@@ -333,7 +337,10 @@ def run_registration(
 
 
 def run_duplicate_reg(project_path, channel_source):
-    """If registration has been generated using a single channel, use this function to duplicate the registration parameters to the other channels
+    """Function to duplicate the registration parameters to the other channels.
+
+    If registration has been generated using a single channel,this can be used
+    to propagate it to the others.
 
     Parameters
     ----------
@@ -381,13 +388,18 @@ def run_fusion(
     process_timepoint : str, optional
         Specify which timepoint should be processed, by default "All Timepoints"
     downsampling : int, optional
-        Downsampling factor to use during the fusion, by default 1 (no downsampling)
+        Downsampling factor to use during the fusion, by default 1 (no
+        downsampling)
     ram_handling : str, optional
-        Which type of ram_handling do you require, by default "Virtual". This is the conservative (not likely to fail even if only a low amount of RAM is available) and slow approach
+        Which type of ram_handling do you require, by default "Virtual". This is
+        the conservative (not likely to fail even if only a low amount of RAM is
+        available) and slow approach
     save_format : str, optional
-        file format of the new image, by default "Save as new XML Project (HDF5)", this is matching the conservative and slow approach
+        file format of the new image, by default "Save as new XML Project
+        (HDF5)", this is matching the conservative and slow approach
     additional_option : str, optional=""
-        Any additional options that should be added to the fusion command. Do not forget to finish each additional option with a space
+        Any additional options that should be added to the fusion command. Do
+        not forget to finish each additional option with a space
     """
 
     IJ.run(
