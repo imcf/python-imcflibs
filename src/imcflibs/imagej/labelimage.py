@@ -7,6 +7,7 @@ from ij.plugin import Duplicator, ImageCalculator
 from ij.process import FloatProcessor, ImageProcessor
 from ij.plugin.filter import ThresholdToSelection
 
+from inra.ijpb.label import LabelImages as li
 
 def label_image_to_roi_list(label_image, low_thresh=None):
     """Converts a label image to a list of ROIs
@@ -88,3 +89,35 @@ def relate_label_images(label_image_ref, label_image_to_relate):
     IJ.run(imp_dup, "Convert to Mask", "")
     IJ.run(imp_dup, "Divide...", "value=255")
     return ImageCalculator.run(label_image_ref, imp_dup, "Multimage_processorly create")
+
+
+def filter_objects(label_image, table, string, min_val, max_val):
+    """Filter labels based on values
+
+    Parameters
+    ----------
+    label_image : ImagePlus
+        Label image on which to filter
+    table : ResultsTable
+        ResultsTable containing all the measurements on which to filter
+    string : str
+        Measurement name on which to filter
+        e.g. "Area","Mean Intensity" etc...
+    min_val : float
+        Minimum value to keep
+    max_val : float
+        Maximum value to keep
+
+    Returns
+    -------
+    ImagePlus
+        Label image containing only the remaining labels
+    """
+
+    keep_label_id = []
+    for row in range(table.size()):
+        current_value = table.getValue(string, row)
+        if current_value >= min_val and current_value <= max_val:
+            keep_label_id.append(int(table.getLabel(row)))
+
+    return li.keepLabels(label_image, keep_label_id)
