@@ -159,3 +159,27 @@ def list_all_filenames(source, filetype):
     allimages = sorted(glob.glob("*" + filetype))  # sorted by name
 
     return allimages
+
+
+def get_folder_size(source):
+    """Determines the size of a given directory and its subdirectories in bytes
+
+    Parameters
+    ----------
+    source : str
+        Directory which size should be determined
+
+    Returns
+    -------
+    int
+        The size of the source folder in bytes
+    """
+    total_size = 0
+    for dirpath, _, filenames in os.walk(source):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            # skip if it is symbolic link
+            if not os.path.islink(fp):
+                total_size += os.path.getsize(fp)
+
+    return total_size
