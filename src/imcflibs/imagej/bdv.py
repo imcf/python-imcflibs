@@ -114,7 +114,8 @@ def run_resave(
         timepoints = "resave_timepoint=[All Timepoints] "
     else:
         timepoints = (
-            "resave_timepoint=[Single Timepoint (Select from List)] processing_timepoint=[Timepoint "
+            "resave_timepoint=[Single Timepoint (Select from List)] "
+            + "processing_timepoint=[Timepoint "
             + str(timepoints)
             + "] "
         )
