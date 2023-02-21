@@ -284,8 +284,8 @@ def run_registration(
     """
 
     # If not process all channels at once, then adapt the option
-    if process_channel == "[All channels] ":
-        process_channel_arg = process_channel
+    if process_channel == "All channels":
+        process_channel_arg = "[All channels] "
     else:
         process_channel_arg = (
             "[Single channel (Select from List)] processing_channel=[channel "
