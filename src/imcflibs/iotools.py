@@ -162,17 +162,17 @@ def list_all_filenames(source, filetype):
 
 
 def get_folder_size(source):
-    """Determines the size of a given directory and its subdirectories in bytes
+    """Get the total size of a given directory and its subdirectories.
 
     Parameters
     ----------
     source : str
-        Directory which size should be determined
+        Directory for which the size should be determined.
 
     Returns
     -------
     int
-        The size of the source folder in bytes
+        The total size of all files in the source dir and subdirs in bytes.
     """
     total_size = 0
     for dirpath, _, filenames in os.walk(source):
