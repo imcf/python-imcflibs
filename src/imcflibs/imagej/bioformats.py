@@ -20,9 +20,9 @@ from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
 
 
-def import_image(filename,
-                 color_mode='color',
-                 split_c=False, split_z=False, split_t=False):
+def import_image(
+    filename, color_mode="color", split_c=False, split_z=False, split_t=False
+):
     """Open an image file using the Bio-Formats importer.
 
     Parameters
@@ -46,10 +46,10 @@ def import_image(filename,
     """
     options = ImporterOptions()
     mode = {
-        'color' : ImporterOptions.COLOR_MODE_COLORIZED,
-        'composite' : ImporterOptions.COLOR_MODE_COMPOSITE,
-        'gray' : ImporterOptions.COLOR_MODE_GRAYSCALE,
-        'default' : ImporterOptions.COLOR_MODE_DEFAULT,
+        "color": ImporterOptions.COLOR_MODE_COLORIZED,
+        "composite": ImporterOptions.COLOR_MODE_COMPOSITE,
+        "gray": ImporterOptions.COLOR_MODE_GRAYSCALE,
+        "default": ImporterOptions.COLOR_MODE_DEFAULT,
     }
     options.setColorMode(mode[color_mode])
     options.setSplitChannels(split_c)
@@ -83,13 +83,15 @@ def export(imp, filename, overwrite=False):
     except Exception as err:
         log.error("Unable to detect spatial unit: %s", err)
         raise RuntimeError("Error detecting image calibration: %s" % err)
-    if unit == 'pixel' and (suffix == 'ics' or suffix == 'ids'):
-        log.warn("Forcing unit to be 'm' instead of 'pixel' to avoid "
-                 "Bio-Formats 6.0.x Exporter bug!")
-        imp.calibration.unit = 'm'
+    if unit == "pixel" and (suffix == "ics" or suffix == "ids"):
+        log.warn(
+            "Forcing unit to be 'm' instead of 'pixel' to avoid "
+            "Bio-Formats 6.0.x Exporter bug!"
+        )
+        imp.calibration.unit = "m"
     if os.path.exists(filename):
         if not overwrite:
-            raise IOError('file [%s] already exists!' % filename)
+            raise IOError("file [%s] already exists!" % filename)
         log.debug("Removing existing file [%s]...", filename)
         os.remove(filename)
 
@@ -116,7 +118,7 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
         An optional tag to be added at the end of the new file name, can be used
         to denote information like "-avg" for an average projection image.
     suffix : str
-        The new file name suffix, which also sets the file format for BF.    
+        The new file name suffix, which also sets the file format for BF.
     overwrite : bool
         A switch to indicate existing files should be overwritten.
 
