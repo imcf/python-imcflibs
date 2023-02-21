@@ -153,5 +153,5 @@ def merge_labels(clij2_instance, label_image, channel=None):
 
     if len(list_of_images) > 1:
         return RGBStackMerge().mergeChannels(list_of_images, False)
-    else:
-        return list_of_images[0]
+
+    return list_of_images[0]
