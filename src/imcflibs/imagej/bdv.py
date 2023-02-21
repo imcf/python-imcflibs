@@ -83,8 +83,8 @@ def run_define_dataset_autoloader(
 
 
 def run_resave(
-    sourceXMLFile,
-    outputH5FilePath,
+    source_xml_file,
+    output_h5_file_path,
     timepoints="All Timepoints",
     timepoints_per_partition=1,
     use_deflate_compression=True,
@@ -97,9 +97,9 @@ def run_resave(
 
     Parameters
     ----------
-    sourceXMLFile : File or str
+    source_xml_file : File or str
         XML input file.
-    outputH5FilePath : str
+    output_h5_file_path : str
         Export path for the output file.
     timepoints : str, optional
         Which timepoints should be exported, by default "All Timepoints".
@@ -135,7 +135,7 @@ def run_resave(
     IJ.run(
         "As HDF5",
         "select="
-        + str(sourceXMLFile)
+        + str(source_xml_file)
         + " "
         + "resave_angle=[All angles] "
         + "resave_channel=[All channels] "
@@ -151,7 +151,7 @@ def run_resave(
         + use_deflate_compressionArg
         + split_hdf5
         + "export_path="
-        + outputH5FilePath,
+        + output_h5_file_path,
     )
 
     return
