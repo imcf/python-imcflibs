@@ -209,6 +209,17 @@ def run_detect_interest_points(
             + process_channel
             + "] "
         )
+    # FIXME look into the actual call! @sebastien
+    # save all timepoints or a single one:
+    if process_timepoint == "All Timepoints":
+        process_timepoint = "resave_timepoint=[All Timepoints] "
+    else:
+        process_timepoint = (
+            "resave_timepoint=[Single Timepoint (Select from List)] "
+            + "processing_timepoint=[Timepoint "
+            + str(process_timepoint)
+            + "] "
+        )
 
     IJ.run(
         "Detect Interest Points for Registration",
