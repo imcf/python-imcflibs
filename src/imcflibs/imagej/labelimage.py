@@ -8,6 +8,7 @@ from ij.process import FloatProcessor, ImageProcessor
 from ij.plugin.filter import ThresholdToSelection
 
 from inra.ijpb.label import LabelImages as li
+from inra.ijpb.plugins import AnalyzeRegions
 
 def label_image_to_roi_list(label_image, low_thresh=None):
     """Converts a label image to a list of ROIs
@@ -121,3 +122,20 @@ def filter_objects(label_image, table, string, min_val, max_val):
             keep_label_id.append(int(table.getLabel(row)))
 
     return li.keepLabels(label_image, keep_label_id)
+
+
+def measure_objects_size_shape_2d(label_image):
+    """Measure the different labels shapes
+
+    Parameters
+    ----------
+    label_image : ImagePlus
+        Label image on which to get the shapes
+
+    Returns
+    -------
+    ResultsTable
+        ResultsTable with the shape measurements
+    """
+    regions = AnalyzeRegions()
+    return regions.process(label_image)
