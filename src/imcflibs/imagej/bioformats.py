@@ -15,9 +15,10 @@ the corresponding functions provided by ImageJ.
 
 import os
 
-from loci.plugins.in import ImporterOptions
 from ij import IJ
 from loci.plugins import BF
+
+from loci.plugins.in import ImporterOptions  # pdoc: skip
 
 from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
