@@ -56,5 +56,21 @@ necessary):
 }
 ```
 
+## Linting Python 2.7 with VS Code
+
+For being able to lint the old Python code properly, you'll need to set up an
+appropriate *virtualenv* with `pylint` being installed.
+
+Using [`fish`][www_fish] and [virtualfish][www_vf], this can be done as follows:
+
+```fish
+vf new -p python2.7 py2-imcf-fiji-packages
+pip install pylint
+```
+
+Then simply point your VS Code to the newly created venv and run the linting.
+
 [gh_scijava-scripts]: https://github.com/scijava/scijava-scripts
 [www_vscode]: https://code.visualstudio.com/
+[www_fish]: https://fishshell.com/
+[www_vf]: https://virtualfish.readthedocs.io/en/latest/
