@@ -25,11 +25,31 @@ Biozentrum, University of Basel, Switzerland.
 
 ## Contents
 
-📝 TODO!
+See the [API documentation][apidocs] for the package contents.
 
 ## Example usage
 
-📝 TODO!
+### Shading correction / projection
+
+Apply a shading correction model and create a maximum-intensity projection:
+
+```Python
+from imcflibs.imagej.shading import correct_and_project
+
+model = "/path/to/shading_model.tif"
+raw_image = "/path/to/raw_data/image.ome.tif"
+out_path = "/path/to/processed_data/"
+
+correct_and_project(raw_image, out_path, model, "Maximum", ".ics")
+```
+
+### Split TIFFs by channels and slices
+
+* See the [Split_TIFFs_By_Channels_And_Slices.py][script_split] script.
+
+### Use status and progress bar updates
+
+* See the [FluoView_OIF_OIB_OIR_Simple_Stitcher.py][script_fvstitch] script.
 
 [imcf]: https://www.biozentrum.unibas.ch/imcf
 [imagej]: https://imagej.net
@@ -37,3 +57,6 @@ Biozentrum, University of Basel, Switzerland.
 [jython3]: https://www.jython.org/jython-3-roadmap
 [sj_maven]: https://maven.scijava.org/#nexus-search;gav~ch.unibas.biozentrum.imcf~~~~
 [imcf_updsite]: https://imagej.net/list-of-update-sites/
+[apidocs]: https://imcf.one/apidocs/imcflibs/
+[script_split]: https://github.com/imcf/imcf-fiji-scripts/blob/master/src/main/resources/scripts/Plugins/IMCF_Utilities/Convert/Split_TIFFs_By_Channels_And_Slices.py
+[script_fvstitch]: https://github.com/imcf/imcf-fiji-scripts/blob/master/src/main/resources/scripts/Plugins/IMCF_Utilities/Stitching_Registration/FluoView_OIF_OIB_OIR_Simple_Stitcher.py
