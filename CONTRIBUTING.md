@@ -1,13 +1,6 @@
-Development And Contributing Instructions
-=========================================
+# Development And Contributing Instructions
 
-Creating a Python package
--------------------------
-
-:memo: TODO: add instructions for packaging for plain Python!
-
-Making a new release via Maven
-------------------------------
+## Making a new release via Maven
 
 To create a new release, clone the [scijava-scripts][gh_scijava-scripts] repo
 (e.g. in `/opt/imagej/`) and run the `release-version.sh` helper:
@@ -24,8 +17,7 @@ RELEASE_SCRIPT="$BASE_DIR/scijava-scripts/release-version.sh"
 $RELEASE_SCRIPT --skip-push --skip-gpg --skip-license-update
 ```
 
-Build & Deploy with Maven using Visual Studio Code
---------------------------------------------------
+## Build & Deploy with Maven using VS Code
 
 Building and deploying the package can be greatly simplified using "tasks" in
 [Visual Studio Code][www_vscode]. By adding the following settings to the
