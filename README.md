@@ -1,8 +1,8 @@
-# IMCFlibs
+# IMCFlibs 🐍 ☕ 🔩 🔧 🪛
 
 [![DOI](https://zenodo.org/badge/156891364.svg)](https://zenodo.org/badge/latestdoi/156891364)
 
-## Python convenience helpers. 🐍 ☕ 🔩 🔧 🪛
+## Python convenience helpers
 
 This package contains a diverse collection of Python functions dealing with
 paths, I/O (file handles, ...), strings etc. and tons of [Fiji][fiji] /
