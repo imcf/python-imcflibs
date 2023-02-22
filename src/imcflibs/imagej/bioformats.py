@@ -10,11 +10,14 @@ the corresponding functions provided by ImageJ.
 # The pylint on Python 2.7 is too old to play nicely with black:
 # pylint: disable-msg=bad-continuation
 
+# Mosts imports will fail with plain C-Python / pylint:
+# pylint: disable-msg=import-error
+
 import os
 
 from loci.plugins.in import ImporterOptions
-from ij import IJ  # pylint: disable-msg=import-error
-from loci.plugins import BF  # pylint: disable-msg=import-error
+from ij import IJ
+from loci.plugins import BF
 
 from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
