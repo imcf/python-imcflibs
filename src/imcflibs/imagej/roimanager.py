@@ -7,6 +7,8 @@ from ij.plugin import RoiEnlarger, RoiScaler  # pylint: disable-msg=import-error
 def instantiate_roimanager():
     """Instantiate the IJ-RoiManager.
 
+    FIXME: what is the idea here, please describe!
+
     Returns
     -------
     ij.plugin.frame.RoiManager

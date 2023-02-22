@@ -186,6 +186,7 @@ def setup_clean_ij_environment(rm=None, rt=None):
     rt : ResultsTable, optional
         A reference to an IJ-ResultsTable instance.
     """
+    # FIXME: use function(s) from the "roimanager" module!
     if not rm:
         rm = RoiManager.getInstance()
         if not rm:
