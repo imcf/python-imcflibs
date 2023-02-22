@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/imcf/python-imcflibs.svg?branch=master)](https://travis-ci.com/imcf/python-imcflibs)
 [![DOI](https://zenodo.org/badge/156891364.svg)](https://zenodo.org/badge/latestdoi/156891364)
 
-## A collection of Python helper functions. :snake::coffee::nut_and_bolt::wrench:
+## A collection of Python helper functions. 🐍 ☕ 🔩 🔧 🪛
 
 This package contains a diverse collection of Python functions dealing with
 paths, I/O (file handles, ...), strings etc.
@@ -15,12 +15,11 @@ Biozentrum, University of Basel, Switzerland.
 
 ## Contents
 
-:memo: TODO!
+📝 TODO!
 
 ## Example usage
 
-:memo: TODO!
-
+📝 TODO!
 
 [imcf]: https://www.biozentrum.unibas.ch/imcf
 [imagej]: https://imagej.net
