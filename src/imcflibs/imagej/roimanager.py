@@ -4,10 +4,11 @@ from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
 from ij.plugin import RoiEnlarger, RoiScaler  # pylint: disable-msg=import-error
 
 
-def instantiate_roimanager():
-    """Instantiate the IJ-RoiManager.
+def get_roimanager():
+    """Instantiate or get the IJ-RoiManager instance.
 
-    FIXME: what is the idea here, please describe!
+    Use to either get the current instance of the IJ RoiManager or instantiate
+    it if it does not yet exist.
 
     Returns
     -------
