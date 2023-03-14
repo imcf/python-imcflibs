@@ -323,6 +323,7 @@ def shift_roi_by_bounding_box(roi, bbox, z_slice=None):
     """Move a ROI based on a bounding box.
 
     FIXME: the docstring is talking about a ROI array. What array?
+    TODO: replace the word "array" with the word "object" in the docstring
 
     Parameters
     ----------
