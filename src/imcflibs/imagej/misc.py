@@ -197,10 +197,17 @@ def get_free_memory():
     return free_memory
 
 
-def setup_clean_ij_environment():
+def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-argument
     """Set up a clean and defined ImageJ environment.
 
     Clean active results table, roi manager and log, close any open image.
+
+    Parameters
+    ----------
+    rm : RoiManager, optional
+        Will be ignored (kept for keeping API compatibility).
+    rt : ResultsTable, optional
+        Will be ignored (kept for keeping API compatibility).
     """
 
     prefs.fix_ij_options()
