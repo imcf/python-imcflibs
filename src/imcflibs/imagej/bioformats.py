@@ -7,9 +7,6 @@ the corresponding functions provided by ImageJ.
 
 """
 
-# The pylint on Python 2.7 is too old to play nicely with black:
-# pylint: disable-msg=bad-continuation
-
 # Mosts imports will fail with plain C-Python / pylint:
 # pylint: disable-msg=import-error
 
