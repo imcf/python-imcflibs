@@ -22,7 +22,21 @@ from ..log import LOG as log
 
 
 def import_image(
-    filename, color_mode="color", split_c=False, split_z=False, split_t=False
+    filename,
+    color_mode="color",
+    split_c=False,
+    split_z=False,
+    split_t=False,
+    series_number=None,
+    c_start=None,
+    c_end=None,
+    c_interval=None,
+    z_start=None,
+    z_end=None,
+    z_interval=None,
+    t_start=None,
+    t_end=None,
+    t_interval=None,
 ):
     """Open an image file using the Bio-Formats importer.
 
@@ -39,6 +53,35 @@ def import_image(
         Whether to split the z-slices into separate ImagePlus objects.
     split_t : bool, optional
         Whether to split the time points into separate ImagePlus objects.
+    series_number : int, optional
+        open a specific Bio-Formats series
+    c_start : int, optional
+        only import a subset of channel starting with this one. Requires to set
+        c_end and c_interval.
+    c_end : int, optional
+        only import channel(s) ending with this one. Requires to set c_start and
+        c_interval.
+    c_interval : int, optional
+        only import a subset of channel with this interval. Requires to set
+        c_start and c_end.
+    z_start : int, optional
+        only import a subset of planes starting with this one. Requires to set
+        z_end and z_interval.
+    z_end : int, optional
+        only import a subset of planes ending with this one. Requires to set
+        z_start and z_interval.
+    z_interval : int, optional
+        only import a subset of planes with this interval. Requires to set
+        z_start and z_end.
+    t_start : int, optional
+        only import a subset of time points starting with this one. Requires to
+        set t_end and t_interval.
+    t_end : int, optional
+        only import a subset of time points ending with this one. Requires to
+        set t_start and t_interval.
+    t_interval : int, optional
+        only import a subset of time points with thsi interval. Requires to set
+        t_start and t_end.
 
     Returns
     -------
@@ -57,6 +100,33 @@ def import_image(
     options.setSplitFocalPlanes(split_z)
     options.setSplitTimepoints(split_t)
     options.setId(filename)
+    if series_number is not None:
+        options.setSeriesOn(series_number, True)
+
+    if c_start is not None:
+        if series_number is None:
+            series_number = 0
+        options.setSpecifyRanges(True)
+        options.setCBegin(series_number, c_start)
+        options.setCEnd(series_number, c_end)
+        options.setCStep(series_number, c_interval)
+
+    if z_start is not None:
+        if series_number is None:
+            series_number = 0
+        options.setSpecifyRanges(True)
+        options.setZBegin(series_number, z_start)
+        options.setZEnd(series_number, z_end)
+        options.setZStep(series_number, z_interval)
+
+    if t_start is not None:
+        if series_number is None:
+            series_number = 0
+        options.setSpecifyRanges(True)
+        options.setTBegin(series_number, t_start)
+        options.setTEnd(series_number, t_end)
+        options.setTStep(series_number, t_interval)
+
     log.info("Reading [%s]", filename)
     orig_imps = BF.openImagePlus(options)
     log.debug("Opened [%s] %s", filename, type(orig_imps))
