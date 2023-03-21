@@ -202,6 +202,8 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
     Clean active results table, roi manager and log, close any open image.
 
+    TODO: add link to docs / post / commit explaining the "Fresh Start" command!
+
     Parameters
     ----------
     rm : RoiManager, optional
