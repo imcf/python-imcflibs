@@ -201,3 +201,28 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
     out_file = gen_name_from_orig(path, orig_name, tag, suffix)
     export(imp, out_file, overwrite)
     return out_file
+
+
+def get_series_count_from_ome_metadata(path_to_file):
+    """get the Bio-Formates series count from an image on disk.
+
+    Useful for example to access a specific image in a container file format like .czi, .nd2, .lif...
+
+    Parameters
+    ----------
+    path_to_file : str
+        The full path to the image file
+
+    Returns
+    -------
+    int
+        The number of Bio-Formats series detected in the image files Metadata
+    """
+    reader = ImageReader()
+    omeMeta = MetadataTools.createOMEXMLMetadata()
+    reader.setMetadataStore(omeMeta)
+    reader.setId(path_to_file)
+    series_count = reader.getSeriesCount()
+    reader.close()
+
+    return series_count
