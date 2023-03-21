@@ -204,19 +204,19 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
 
 
 def get_series_count_from_ome_metadata(path_to_file):
-    """get the Bio-Formates series count from an image on disk.
+    """Get the Bio-Formates series count from a file on disk.
 
-    Useful for example to access a specific image in a container file format like .czi, .nd2, .lif...
+    Useful to access a specific image in a container format like .czi, .nd2, .lif...
 
     Parameters
     ----------
     path_to_file : str
-        The full path to the image file
+        The full path to the image file.
 
     Returns
     -------
     int
-        The number of Bio-Formats series detected in the image files Metadata
+        The number of Bio-Formats series detected in the image file metadata.
     """
     reader = ImageReader()
     omeMeta = MetadataTools.createOMEXMLMetadata()
@@ -229,9 +229,10 @@ def get_series_count_from_ome_metadata(path_to_file):
 
 
 def write_bf_memoryfile(path_to_file):
-    """Write a Bio-Formats memo-file so subsequent accesses to the same image file is faster.
+    """Write a BF memo-file so subsequent access to the same file is faster.
 
-    The Bio-Formats memo-file is written next to the image file.
+    The Bio-Formats memo-file is written next to the image file (i.e. in the
+    same folder as the given file).
 
     Parameters
     ----------
