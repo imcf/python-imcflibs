@@ -226,3 +226,22 @@ def get_series_count_from_ome_metadata(path_to_file):
     reader.close()
 
     return series_count
+
+
+def write_bf_memoryfile(path_to_file):
+    """Write a Bio-Formats memo-file so subsequent accesses to the same image file is faster.
+
+    The Bio-Formats memo-file is written next to the image file.
+
+    Parameters
+    ----------
+    path_to_file : string
+        The full path to the image file
+
+    Returns
+    -------
+    Nothing
+    """
+    reader = Memoizer(ImageReader())
+    reader.setId(path_to_file)
+    reader.close()
