@@ -2,6 +2,7 @@
 
 import sys
 import time
+import smtplib
 
 from ij import IJ  # pylint: disable-msg=import-error
 from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
@@ -133,6 +134,63 @@ def find_focus(imp):
                 focused_slice = current_z
 
     return focused_slice
+
+
+def send_mail(job_name, recipient, filename, total_execution_time):
+    """Send an email via smtp.unibas.ch.
+    Will likely NOT work without connection to the unibas network.
+
+    Parameters
+    ----------
+    recipient : string
+        recipients email address
+    job_name : string
+        Job name to display in the email
+    filename : string
+        the name of the file to be passed in the email
+    total_execution_time : str
+        the time it took to process the file in the format [HH:MM:SS:ss]
+    """
+    server = prefs.get("imcf.smtpserver", None)
+    if server is None:
+        print(
+            "Mail notifications only works if configured. Please use Plugins/IMCF_Utilities"
+        )
+        return
+
+    sender = prefs.get("imcf.sender_email", "")
+    if sender is "":
+        print(
+            "Mail notifications only works if configured. Please use Plugins/IMCF_Utilities"
+        )
+        return
+
+    header = "From: %s\n"
+    header += "To: %s\n"
+    header += "Subject: Your %s job finished successfully\n\n"
+    text = (
+        "Dear recipient,\n\n"
+        "This is an automated message.\n"
+        "Your dataset %s has been successfully processed (%s [HH:MM:SS:ss]).\n\n"
+        "Kind regards,\n"
+        "The IMCF-team"
+    )
+
+    message = header + text
+
+    try:
+        smtpObj = smtplib.SMTP(server)
+        smtpObj.sendmail(
+            sender,
+            job_name,
+            recipient,
+            message % (sender, recipient, job_name, filename, total_execution_time),
+        )
+        print("Successfully sent email")
+    except smtplib.SMTPException:
+        print("Error: unable to send email")
+
+    return
 
 
 def progressbar(progress, total, line_number, prefix=""):
