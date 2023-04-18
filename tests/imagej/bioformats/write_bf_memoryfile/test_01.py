@@ -9,7 +9,7 @@ parent_dir = str(PYTHON_IMCFLIBS_TESTDATA).replace("\\", "/")
 filename = "10x_phmax.czi"
 full_path = parent_dir + "/" + "10x_phmax.czi"
 bfmemofilename = "." + filename + ".bfmemo"
-os.chdir(parent_dir)
+os.chdir(parent_dir)  # DANGEROUS, relative paths and calling remove() below!
 if os.path.isfile(bfmemofilename):
     print("bf memo file already existed and was removed")
     os.remove(bfmemofilename)
