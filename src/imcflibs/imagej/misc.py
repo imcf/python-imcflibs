@@ -202,7 +202,7 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
     Clean active results table, roi manager and log, close any open image.
 
-    TODO: add link to docs / post / commit explaining the "Fresh Start" command!
+    "Fresh Start" is described here: https://imagej.nih.gov/ij/notes.html following this suggestion: https://forum.image.sc/t/fresh-start-macro-command-in-imagej-fiji/43102
 
     Parameters
     ----------
@@ -212,9 +212,9 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
         Will be ignored (kept for keeping API compatibility).
     """
 
-    prefs.fix_ij_options()
-
     IJ.run("Fresh Start", "")
     IJ.log("\\Clear")
+
+    prefs.fix_ij_options()
 
     return
