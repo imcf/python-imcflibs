@@ -17,6 +17,6 @@ if os.path.isfile(bfmemofilename):
 bioformats.write_bf_memoryfile(full_path)
 
 if not os.path.isfile(bfmemofilename):
-    print("test failed. A bf memo file does not exists")
+    print("Test FAILED. A bf memo file does not exist.")
 else:
-    print("test passed. A bf memo file was created.")
+    print("Test passed. A bf memo file was created.")
