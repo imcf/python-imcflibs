@@ -228,7 +228,6 @@ def get_series_count_from_ome_metadata(path_to_file):
     return series_count
 
 
-# TODO: discuss function name, drop "bf" as it's in the module name?
 def write_bf_memoryfile(path_to_file):
     """Write a BF memo-file so subsequent access to the same file is faster.
 
