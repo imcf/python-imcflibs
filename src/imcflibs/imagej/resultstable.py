@@ -1,5 +1,7 @@
 """Functions to work with results tables."""
 
+from ij.measure import ResultsTable
+
 
 def preset_results_column(results_table, column, value):
     """pre-set all rows in given column of the IJ-ResultsTable with desired value
@@ -35,3 +37,20 @@ def add_results_to_resultstable(results_table, column, values):
         results_table.setValue(column, index, value)
 
     results_table.show("Results")
+
+
+def get_resultstable():
+    """Instantiate or get the IJ-ResultsTable instance.
+
+    Use to either get the current instance of the IJ ResultsTable or instantiate
+    it if it does not yet exist.
+
+    Returns
+    -------
+    ij.measure.ResultsTable
+        A reference of the IJ-ResultsTable
+    """
+    rt = ResultsTable.getInstance()
+    if not rt:
+        rt = ResultsTable()
+    return rt
