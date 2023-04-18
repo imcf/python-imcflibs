@@ -15,7 +15,9 @@ import os
 from ij import IJ
 from loci.plugins import BF
 
-from loci.plugins.in import ImporterOptions  # pdoc: skip
+# from loci.plugins.in import ImporterOptions  # pdoc: skip
+
+from loci.formats import ImageReader, Memoizer
 
 from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
