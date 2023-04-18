@@ -1,7 +1,7 @@
 """Functions to work with the RoiManager."""
 
-from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
 from ij.plugin import RoiEnlarger, RoiScaler  # pylint: disable-msg=import-error
+from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
 
 
 def get_roimanager():
@@ -322,15 +322,14 @@ def put_rois_to_roimanager(
 def shift_roi_by_bounding_box(roi, bbox, z_slice=None):
     """Move a ROI based on a bounding box.
 
-    FIXME: the docstring is talking about a ROI array. What array?
-    TODO: replace the word "array" with the word "object" in the docstring
+    Use to translate a ROI based on another one's bounding box.
 
     Parameters
     ----------
     roi : ROI
         The ROI to be moved.
     bbox : ROI
-        Use this ROI's bounding box to shift the ROI array.
+        Use this ROI's bounding box to shift another ROI.
     z_slice : int, optional
         Shift the ROI also in Z, by default None (=no shifting).
     """
