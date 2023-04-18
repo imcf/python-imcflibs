@@ -137,7 +137,7 @@ def export(imp, filename, overwrite=False):
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         The ImagePlus object to be exported by Bio-Formats.
     filename : str
         The output filename, may include a full path.
@@ -178,7 +178,7 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         The ImagePlus object to be exported by Bio-Formats.
     path : str or object that can be cast to a str
         The output path.

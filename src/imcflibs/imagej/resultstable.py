@@ -8,7 +8,7 @@ def preset_results_column(results_table, column, value):
 
     Parameters
     ----------
-    results_table : ResultsTable
+    results_table : ij.measure.ResultsTable
         a reference of the IJ-ResultsTable
     column : str
         the desired column. will be created if it does not yet exist
@@ -26,12 +26,12 @@ def add_results_to_resultstable(results_table, column, values):
 
     Parameters
     ----------
-    results_table : ResultsTable
+    results_table : ij.measure.ResultsTable
         a reference of the IJ-ResultsTable
     column : string
         the column in which to add the values
-    values : array
-        tarray with values to be added
+    values : list(int, double or float)
+        array with values to be added
     """
     for index, value in enumerate(values):
         results_table.setValue(column, index, value)

@@ -96,7 +96,7 @@ def find_focus(imp):
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         A single-channel ImagePlus.
 
     Returns

@@ -25,7 +25,7 @@ def apply_model(imps, model, merge=True):
     imps : list(ij.ImagePlus)
         A list of ImagePlus objects (e.g. separate channels of a multi-channel
         stack image) that should be corrected for shading artefacts.
-    model : ImagePlus
+    model : ij.ImagePlus
         A 2D image with 32-bit float values normalized to 1.0 (i.e. no pixels
         with higher values) to be used for dividing the input images to correct
         for shading.

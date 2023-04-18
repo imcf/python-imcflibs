@@ -10,7 +10,7 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
     ----------
     clij2_instance : clij2_instance
         Instance of CLIJ to communicate with the GPU.
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label image to be eroded.
     erosion_radius : int
         Radius for erosion.
@@ -61,7 +61,7 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
     ----------
     clij2_instance : clij2_instance
         Instance of CLIJ to communicate with the GPU.
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label Image to be dilated.
     erosion_radius : int
         Radius for dilation.
@@ -116,7 +116,7 @@ def merge_labels(clij2_instance, label_image, channel=None):
     ----------
     clij2_instance : clij2_instance
         Instance of CLIJ to communicate with the GPU.
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label image with touching labels.
     channel : int, optional
         Specific channel to apply label merging.

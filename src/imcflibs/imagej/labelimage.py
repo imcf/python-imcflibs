@@ -13,7 +13,7 @@ def label_image_to_roi_list(label_image, low_thresh=None):
 
     Parameters
     ----------
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label image to convert
     low_thresh : int, optional
         Value under which the labels should be discarded, by default None
@@ -71,14 +71,14 @@ def relate_label_images(label_image_ref, label_image_to_relate):
 
     Parameters
     ----------
-    label_image_ref : ImagePlus
+    label_image_ref : ij.ImagePlus
         Reference to use for the labels
-    label_image_to_relate : ImagePlus
+    label_image_to_relate : ij.ImagePlus
         Image to change for the labels
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         New ImagePlus with modified labels matching the reference
     """
 
@@ -95,7 +95,7 @@ def filter_objects(label_image, table, string, min_val, max_val):
 
     Parameters
     ----------
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label image on which to filter
     table : ResultsTable
         ResultsTable containing all the measurements on which to filter
@@ -109,7 +109,7 @@ def filter_objects(label_image, table, string, min_val, max_val):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Label image containing only the remaining labels
     """
 
@@ -127,7 +127,7 @@ def measure_objects_size_shape_2d(label_image):
 
     Parameters
     ----------
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label image on which to get the shapes
 
     Returns
