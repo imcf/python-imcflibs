@@ -4,8 +4,8 @@ import sys
 import time
 
 from ij import IJ  # pylint: disable-msg=import-error
-from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
 from ij.measure import ResultsTable  # pylint: disable-msg=import-error
+from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
 
 from ..log import LOG as log
 

@@ -27,7 +27,6 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
     channel_list = [channel] if channel else range(1, label_image.getNChannels() + 1)
 
     for channel in channel_list:
-
         current_channel = Duplicator().run(
             label_image,
             channel,
@@ -135,7 +134,6 @@ def merge_labels(clij2_instance, label_image, channel=None):
         channel_list = [channel]
 
     for channel in channel_list:
-
         current_channel = Duplicator().run(
             label_image,
             channel,
