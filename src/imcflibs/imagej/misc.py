@@ -1,6 +1,8 @@
 """Miscellaneous ImageJ related functions, mostly convenience wrappers."""
 
-import sys, time
+import sys
+import time
+
 from ij import IJ, ImageStack  # pylint: disable-msg=E0401
 
 from ..log import LOG as log
@@ -24,7 +26,8 @@ def error_exit(msg):
     log.error(msg)
     sys.exit(msg)
 
-def elapsed_time_since(start,end=None):
+
+def elapsed_time_since(start, end=None):
     """Prints the elapsed time for execution
 
     Parameters
@@ -43,9 +46,10 @@ def elapsed_time_since(start,end=None):
     if not end:
         end = time.time()
 
-    hours, rem = divmod(end-start, 3600)
+    hours, rem = divmod(end - start, 3600)
     minutes, seconds = divmod(rem, 60)
-    return "{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds)
+    return "{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds)
+
 
 def percentage(part, whole):
     """Returns the percentage of a value based on total
@@ -62,7 +66,8 @@ def percentage(part, whole):
     float
         Percentage
     """
-    return 100 * float(part)/float(whole)
+    return 100 * float(part) / float(whole)
+
 
 def calculate_mean_and_stdv(list):
     """Gets statistics from a list
@@ -77,11 +82,12 @@ def calculate_mean_and_stdv(list):
     [float, float]
         Mean and Std of the list
     """
-    mean = sum(list)/len(list)
+    mean = sum(list) / len(list)
     tot = 0.0
     for x in list:
-        tot = tot + (x - mean)**2
-    return [mean, (tot/(len(list)))**0.5]
+        tot = tot + (x - mean) ** 2
+    return [mean, (tot / (len(list))) ** 0.5]
+
 
 def find_focus(imp):
     """Function to get the focused stack. Only works on 1 channel
@@ -96,38 +102,39 @@ def find_focus(imp):
         Slice number which seems to be in focus
     """
 
-    bitDepth     = imp.getBitDepth()
-    imDim        = imp.getDimensions()
-    focusedStack = ImageStack(imDim[0],imDim[1])
+    bitDepth = imp.getBitDepth()
+    imDim = imp.getDimensions()
+    focusedStack = ImageStack(imDim[0], imDim[1])
 
     # Check if more than 1 channel
     # FUTURE Could be improved for multi channel
-    if(imDim[2] != 1):
-        sys.exit('Image has more than one channel, please reduce dimensionality')
+    if imDim[2] != 1:
+        sys.exit("Image has more than one channel, please reduce dimensionality")
 
     # Loop through each time points
-    for plane in range(1,imDim[4]+1):
-        m       = 0
+    for plane in range(1, imDim[4] + 1):
+        m = 0
         normVar = 0
         imp.setT(plane)
         # Loop through each z plane
-        for tp in range(1,imDim[3]+1):
+        for tp in range(1, imDim[3] + 1):
             imp.setZ(tp)
             pixArray = imp.getProcessor().getPixels()
-            mean     = ((sum(pixArray))/len(pixArray))
-            pixArray = [(x - mean)*(x-mean) for x in pixArray]
-            #pixArray = pixArray*pixArray
+            mean = (sum(pixArray)) / len(pixArray)
+            pixArray = [(x - mean) * (x - mean) for x in pixArray]
+            # pixArray = pixArray*pixArray
 
             sumPixArray = sum(pixArray)
-            var         = sumPixArray/(imDim[0]*imDim[1]*mean)
+            var = sumPixArray / (imDim[0] * imDim[1] * mean)
 
             if var > normVar:
                 normVar = var
-                m       = tp
+                m = tp
 
     return m
 
-def progressbar(progress, total, line_number, prefix=''):
+
+def progressbar(progress, total, line_number, prefix=""):
     """Progress bar for the IJ log window
 
     Parameters
@@ -142,6 +149,29 @@ def progressbar(progress, total, line_number, prefix=''):
         Text to use before the progress bar, by default ''
     """
 
-    size = 30
-    x    = int(size*progress/total)
-    IJ.log("\\Update%i:%s[%s%s] %i/%i\r" % (line_number, prefix, "#"*x, "."*(size-x), progress, total))
+    size = 20
+    x = int(size * progress / total)
+    IJ.log(
+        "\\Update%i:%s[%s%s] %i/%i\r"
+        % (
+            line_number,
+            timed_log(prefix, True),
+            "#" * x,
+            "." * (size - x),
+            progress,
+            total,
+        )
+    )
+
+
+def timed_log(message, as_string=False):
+    """Print a log message with a timestamp added
+
+    Parameters
+    ----------
+    message : str
+        Message to print
+    """
+    if as_string:
+        return time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " "
+    IJ.log(time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " ")
