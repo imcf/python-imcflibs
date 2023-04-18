@@ -153,12 +153,32 @@ def progressbar(progress, total, line_number, prefix=""):
         Text to use before the progress bar, by default ''.
     """
 
-    size = 30
+    size = 20
     x = int(size * progress / total)
     IJ.log(
         "\\Update%i:%s[%s%s] %i/%i\r"
-        % (line_number, prefix, "#" * x, "." * (size - x), progress, total)
+        % (
+            line_number,
+            timed_log(prefix, True),
+            "#" * x,
+            "." * (size - x),
+            progress,
+            total,
+        )
     )
+
+
+def timed_log(message, as_string=False):
+    """Print a log message with a timestamp added
+
+    Parameters
+    ----------
+    message : str
+        Message to print
+    """
+    if as_string:
+        return time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " "
+    IJ.log(time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " ")
 
 
 def get_free_memory():
