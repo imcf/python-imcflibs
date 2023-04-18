@@ -8,7 +8,7 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
 
     Parameters
     ----------
-    clij2_instance : clij2_instance
+    clij2_instance : net.haesleinhuepf.clij.CLIJ
         Instance of CLIJ to communicate with the GPU.
     label_image : ij.ImagePlus
         Label image to be eroded.
@@ -19,7 +19,7 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Label image with eroded labels.
     """
 
@@ -58,7 +58,7 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
 
     Parameters
     ----------
-    clij2_instance : clij2_instance
+    clij2_instance : net.haesleinhuepf.clij.CLIJ
         Instance of CLIJ to communicate with the GPU.
     label_image : ij.ImagePlus
         Label Image to be dilated.
@@ -69,7 +69,7 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Label image with dilated labels.
     """
 
@@ -113,7 +113,7 @@ def merge_labels(clij2_instance, label_image, channel=None):
 
     Parameters
     ----------
-    clij2_instance : clij2_instance
+    clij2_instance : net.haesleinhuepf.clij.CLIJ
         Instance of CLIJ to communicate with the GPU.
     label_image : ij.ImagePlus
         Label image with touching labels.
@@ -122,7 +122,7 @@ def merge_labels(clij2_instance, label_image, channel=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         New ImagePlus with merged labels.
     """
 

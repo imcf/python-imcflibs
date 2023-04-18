@@ -300,7 +300,7 @@ def put_rois_to_roimanager(
     prefix : str
         String to prefix the name of the ROI with.
     bbox : java.awt.Rectangle, optional
-        Use this ROI's bounding box to shift the ROI array, by default None.
+        Use this bounding box to shift the ROI list, by default None.
     z_slice : int, optional
         Shift the ROI also in Z, by default None (=no shifting).
     group : int, optional
@@ -328,8 +328,8 @@ def shift_roi_by_bounding_box(roi, bbox, z_slice=None):
     ----------
     roi : ij.gui.Roi
         The ROI to be moved.
-    bbox : ij.gui.Roi
-        Use this ROI's bounding box to shift another ROI.
+    bbox : java.awt.Rectangle
+        Use this bounding box to shift the ROI.
     z_slice : int, optional
         Shift the ROI also in Z, by default None (=no shifting).
     """
