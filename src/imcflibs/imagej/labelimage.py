@@ -1,14 +1,12 @@
 """Functions to work with ImageJ label images."""
 
-# pylint: disable-msg=import-error
-
 from ij import IJ, ImagePlus, Prefs
 from ij.plugin import Duplicator, ImageCalculator
+from ij.plugin.filter import ImageProcessor, ThresholdToSelection
 from ij.process import FloatProcessor, ImageProcessor
-from ij.plugin.filter import ThresholdToSelection
-
 from inra.ijpb.label import LabelImages as li
 from inra.ijpb.plugins import AnalyzeRegions
+
 
 def label_image_to_roi_list(label_image, low_thresh=None):
     """Converts a label image to a list of ROIs
