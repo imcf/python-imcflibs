@@ -1,4 +1,4 @@
-# @ (label="Select the python-imcf-libs testdata directory", style="directory") File PYTHON_IMCFLIBS_TESTDATA
+# @ File (label="Select the python-imcf-libs testdata directory", style="directory") PYTHON_IMCFLIBS_TESTDATA
 
 
 import os
