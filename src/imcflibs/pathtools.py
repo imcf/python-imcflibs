@@ -14,6 +14,14 @@ def parse_path(path):
     No tests based on existing files are done, as this is supposed to also work
     on path strings that don't exist on the system running this code.
 
+    NOTE: it's fine to pass in `java.io.File` objects (as retrieved by using
+    ImageJ2's *Script Parameter* `#@ File`) for either of the parameters, so it
+    is safe to use this in ImageJ Python scripts without additional measures.
+
+    Parameters
+    ----------
+    path : str or str-like
+        The path to be parsed into components.
     Returns
     -------
     parsed = {
@@ -52,6 +60,7 @@ def parse_path(path):
     >>> path_to_dir['fname']
     ''
     """
+    path = str(path)
     parsed = {}
     parsed["orig"] = path
     path = path.replace("\\", sep)
