@@ -239,11 +239,7 @@ def write_bf_memoryfile(path_to_file):
     Parameters
     ----------
     path_to_file : string
-        The full path to the image file
-
-    Returns
-    -------
-    Nothing
+        The full path to the image file.
     """
     reader = Memoizer(ImageReader())
     reader.setId(path_to_file)
