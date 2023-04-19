@@ -81,6 +81,32 @@ def parse_path(path, prefix=""):
     return parsed
 
 
+def join2(path1, path2):
+    """Join two paths into one, much like os.path.join().
+
+    The main difference is that `join2()` takes exactly two arguments, but they
+    can be non-str (as long as they're having a `__str__()` method), so this is
+    safe to be used with stuff like `java.io.File` objects as retrieved when
+    using ImageJ2's *Script Parameter* `#@ File`.
+
+    In addition some sanitizing is done, e.g. in case one of the components is
+    containing double backslashes (`\\`), they will be replaced by the current
+    OS's path separator.
+
+    Parameters
+    ----------
+    path1 : str or str-like
+        The first component of the path to be joined.
+    path2 : str or str-like
+        The second component of the path to be joined.
+
+    Returns
+    -------
+    str
+    """
+    return parse_path(path2, prefix=path1)["full"]
+
+
 def jython_fiji_exists(path):
     """Wrapper to work around problems with Jython 2.7 in Fiji.
 
