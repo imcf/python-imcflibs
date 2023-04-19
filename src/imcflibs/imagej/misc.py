@@ -30,19 +30,18 @@ def error_exit(msg):
 
 
 def elapsed_time_since(start, end=None):
-    """Prints the elapsed time for execution
+    """Generate a string with the time elapsed between the two timepoints.
 
     Parameters
     ----------
-    start : time
-        Start time
-    end : time, optional
-        End time
+    start : time.time
+        Start time.
+    end : time.time, optional
+        End time. If skipped the current time will be used.
 
     Returns
     -------
     str
-        Formatted time elapsed
     """
 
     if not end:
