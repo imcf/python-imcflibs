@@ -1,7 +1,7 @@
 """Functions to work with the RoiManager."""
 
-from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
 from ij.plugin import RoiEnlarger, RoiScaler  # pylint: disable-msg=import-error
+from ij.plugin.frame import RoiManager  # pylint: disable-msg=import-error
 
 
 def get_roimanager():
@@ -78,7 +78,7 @@ def show_all_rois_on_image(rm, imp):
     ----------
     rm : ij.plugin.frame.RoiManager
         A reference of the IJ-RoiManager.
-    imp : ImagePlus
+    imp : ij.ImagePlus
         The imp on which to show the ROIs.
     """
     rm.runCommand(imp, "Show All")
@@ -147,7 +147,7 @@ def measure_in_all_rois(imp, channel, rm):
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         The imp to measure on.
     channel : integer
         The channel to measure in (starting at 1).
@@ -216,7 +216,7 @@ def select_rois_above_min_intensity(imp, channel, rm, min_intensity):
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         The imp on which to measure.
     channel : integer
         The channel to measure in (starting at 1).
@@ -290,7 +290,7 @@ def put_rois_to_roimanager(
 
     Parameters
     ----------
-    roi_array : list(roi)
+    roi_array : list(ij.gui.Roi)
         List of ROIs to put in RM.
     roi_manager : ij.plugin.frame.RoiManager
         ROIManager in which to put the ROIs.
@@ -299,8 +299,8 @@ def put_rois_to_roimanager(
         renamed using its index number.
     prefix : str
         String to prefix the name of the ROI with.
-    bbox : roi, optional
-        Use this ROI's bounding box to shift the ROI array, by default None.
+    bbox : java.awt.Rectangle, optional
+        Use this bounding box to shift the ROI list, by default None.
     z_slice : int, optional
         Shift the ROI also in Z, by default None (=no shifting).
     group : int, optional
@@ -322,15 +322,14 @@ def put_rois_to_roimanager(
 def shift_roi_by_bounding_box(roi, bbox, z_slice=None):
     """Move a ROI based on a bounding box.
 
-    FIXME: the docstring is talking about a ROI array. What array?
-    TODO: replace the word "array" with the word "object" in the docstring
+    Use to translate a ROI based on another one's bounding box.
 
     Parameters
     ----------
-    roi : ROI
+    roi : ij.gui.Roi
         The ROI to be moved.
-    bbox : ROI
-        Use this ROI's bounding box to shift the ROI array.
+    bbox : java.awt.Rectangle
+        Use this bounding box to shift the ROI.
     z_slice : int, optional
         Shift the ROI also in Z, by default None (=no shifting).
     """

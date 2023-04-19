@@ -8,9 +8,9 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
 
     Parameters
     ----------
-    clij2_instance : clij2_instance
+    clij2_instance : net.haesleinhuepf.clij.CLIJ
         Instance of CLIJ to communicate with the GPU.
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label image to be eroded.
     erosion_radius : int
         Radius for erosion.
@@ -19,7 +19,7 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Label image with eroded labels.
     """
 
@@ -27,7 +27,6 @@ def erode_labels(clij2_instance, label_image, erosion_radius, channel=None):
     channel_list = [channel] if channel else range(1, label_image.getNChannels() + 1)
 
     for channel in channel_list:
-
         current_channel = Duplicator().run(
             label_image,
             channel,
@@ -59,9 +58,9 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
 
     Parameters
     ----------
-    clij2_instance : clij2_instance
+    clij2_instance : net.haesleinhuepf.clij.CLIJ
         Instance of CLIJ to communicate with the GPU.
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label Image to be dilated.
     erosion_radius : int
         Radius for dilation.
@@ -70,7 +69,7 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Label image with dilated labels.
     """
 
@@ -114,16 +113,16 @@ def merge_labels(clij2_instance, label_image, channel=None):
 
     Parameters
     ----------
-    clij2_instance : clij2_instance
+    clij2_instance : net.haesleinhuepf.clij.CLIJ
         Instance of CLIJ to communicate with the GPU.
-    label_image : ImagePlus
+    label_image : ij.ImagePlus
         Label image with touching labels.
     channel : int, optional
         Specific channel to apply label merging.
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         New ImagePlus with merged labels.
     """
 
@@ -135,7 +134,6 @@ def merge_labels(clij2_instance, label_image, channel=None):
         channel_list = [channel]
 
     for channel in channel_list:
-
         current_channel = Duplicator().run(
             label_image,
             channel,

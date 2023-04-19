@@ -5,10 +5,9 @@ import os
 import ij  # pylint: disable-msg=import-error
 
 from ..imagej import bioformats  # pylint: disable-msg=no-name-in-module
-from ..imagej import projections
-from ..imagej import misc
-from ..pathtools import listdir_matching, gen_name_from_orig
+from ..imagej import misc, projections
 from ..log import LOG as log
+from ..pathtools import gen_name_from_orig, listdir_matching
 
 
 def apply_model(imps, model, merge=True):
@@ -25,7 +24,7 @@ def apply_model(imps, model, merge=True):
     imps : list(ij.ImagePlus)
         A list of ImagePlus objects (e.g. separate channels of a multi-channel
         stack image) that should be corrected for shading artefacts.
-    model : ImagePlus
+    model : ij.ImagePlus
         A 2D image with 32-bit float values normalized to 1.0 (i.e. no pixels
         with higher values) to be used for dividing the input images to correct
         for shading.
