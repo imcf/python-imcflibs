@@ -30,9 +30,13 @@ def filename(name):
     This is a convenience function to retrieve the filename as a string given
     either an open filehandle or just a plain str containing the name.
 
+    When running in Jython the function will also convert `java.io.File` objects
+    to `str`. NOTE: this also works if the Java object is a directory, not an
+    actual file.
+
     Parameters
     ----------
-    name : str or filehandle
+    name : str or filehandle or java.io.File
 
     Returns
     -------
@@ -48,6 +52,14 @@ def filename(name):
     >>> os.path.basename(fname) in ['strtools.py', 'strtools.pyc']
     True
     """
+    try:
+        if isinstance(name, java.io.File):
+            return str(name)
+    except:
+        # we silently ignore this case and continue with checks below as most
+        # likely we are not running under Jython
+        pass
+
     if isinstance(name, file):
         return name.name
     elif _is_string_like(name):
