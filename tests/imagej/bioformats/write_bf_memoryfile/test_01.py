@@ -22,3 +22,14 @@ if not os.path.isfile(bfmemofile):
     print("Test FAILED: can't find BF memory file [%s]" % bfmemofile)
 else:
     print("Test passed, BF memory file [%s] was created." % bfmemofile)
+
+print(
+    """
+================================= IMPORTANT =================================
+Bio-Formats will only create a memory-file ONCE per session, meaning if this
+script is being run multiple times subsequently without closing ImageJ in
+between it will FAIL as the memory-file gets deleted by the script but will
+only be re-created by Bio-Formats in a FRESH ImageJ instance!!
+================================= IMPORTANT =================================
+"""
+)
