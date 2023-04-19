@@ -91,7 +91,9 @@ def calculate_mean_and_stdv(float_values):
 
 
 def find_focus(imp):
-    """Function to get the focused stack. Works on single-channel images only.
+    """Find the slice of a stack that seems to bet the best focused one.
+
+    NOTE: currently only single-channel stacks are supported.
 
     Parameters
     ----------
@@ -101,7 +103,6 @@ def find_focus(imp):
     Returns
     -------
     int
-        Slice number which seems to be the best focused one.
     """
 
     imp_dimensions = imp.getDimensions()
