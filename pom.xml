@@ -96,6 +96,16 @@
 				<role>support</role>
 			</roles>
 		</developer>
+		<developer>
+			<name>Sebastien Herbert</name>
+			<id>sebherbert</id>
+			<url>https://imagej.net/people/sebherbert</url>
+			<roles>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>support</role>
+			</roles>
+		</developer>
 	</developers>
 	<contributors>
 		<!--
