@@ -20,7 +20,7 @@ def label_image_to_roi_list(label_image, low_thresh=None):
 
     Returns
     -------
-    roi_list : list(roi)  FIXME: what's the exact "roi" type?
+    roi_list : list(ij.gui.Roi)
         List of all the ROIs converted from the label image
     """
 
