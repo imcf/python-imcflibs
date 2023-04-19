@@ -86,6 +86,16 @@
 				<role>support</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>Cellkai</id>
+			<name>Kai Schleicher</name>
+			<url>https://imagej.net/people/CellKai</url>
+			<roles>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>support</role>
+			</roles>
+		</developer>
 	</developers>
 	<contributors>
 		<!--
