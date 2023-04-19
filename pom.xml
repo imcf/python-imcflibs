@@ -76,6 +76,16 @@
 				<role>maintainer</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>lguerard</id>
+			<name>Laurent Guerard</name>
+			<url>https://imagej.net/people/lguerard</url>
+			<roles>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>support</role>
+			</roles>
+		</developer>
 	</developers>
 	<contributors>
 		<!--
