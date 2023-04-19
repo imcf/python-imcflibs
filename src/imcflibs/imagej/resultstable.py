@@ -4,7 +4,7 @@ from ij.measure import ResultsTable
 
 
 def preset_results_column(results_table, column, value):
-    """pre-set all rows in given column of the IJ-ResultsTable with desired value
+    """Pre-set all rows in given column of the ResultsTable with desired values.
 
     Parameters
     ----------
@@ -22,7 +22,7 @@ def preset_results_column(results_table, column, value):
 
 
 def add_results_to_resultstable(results_table, column, values):
-    """add values to the ResultsTable starting from row 0 of a given column
+    """Add values to the ResultsTable starting from row 0 of a given column.
 
     Parameters
     ----------
@@ -40,7 +40,7 @@ def add_results_to_resultstable(results_table, column, values):
 
 
 def get_resultstable():
-    """Instantiate or get the IJ-ResultsTable instance.
+    """Instantiate or get the ResultsTable instance.
 
     Use to either get the current instance of the IJ ResultsTable or instantiate
     it if it does not yet exist.
