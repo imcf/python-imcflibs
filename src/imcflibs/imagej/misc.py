@@ -95,6 +95,9 @@ def find_focus(imp):
 
     NOTE: currently only single-channel stacks are supported.
 
+    FIXME: explain what the function is actually doing, i.e. how does it decide
+    what "the best focused one" is?
+
     Parameters
     ----------
     imp : ij.ImagePlus
