@@ -53,19 +53,18 @@ def elapsed_time_since(start, end=None):
 
 
 def percentage(part, whole):
-    """Returns the percentage of a value based on total
+    """Calculate the percentage of a value based on total.
 
     Parameters
     ----------
     part : float
-        Part
+        Part.
     whole : float
-        Complete size
+        Complete size.
 
     Returns
     -------
     float
-        Percentage
     """
     return 100 * float(part) / float(whole)
 
@@ -81,7 +80,7 @@ def calculate_mean_and_stdv(float_values):
     Returns
     -------
     [float, float]
-        Mean and standard deviation of the list.
+        Mean (1st item) and standard deviation (2nd item) of the list.
     """
     mean = sum(float_values) / len(float_values)
     tot = 0.0
@@ -141,8 +140,8 @@ def find_focus(imp):
 def progressbar(progress, total, line_number, prefix=""):
     """Progress bar for the IJ log window.
 
-    Shows a progress bar in the log window of Fiji at a specific line
-    independant from the main Fiji progress bar
+    Show a progress bar in the log window of Fiji at a specific line independent
+    of the main Fiji progress bar.
 
     Parameters
     ----------
@@ -172,7 +171,7 @@ def progressbar(progress, total, line_number, prefix=""):
 
 
 def timed_log(message, as_string=False):
-    """Print a log message with a timestamp added
+    """Print a message to the ImageJ log window with a timestamp added.
 
     Parameters
     ----------
