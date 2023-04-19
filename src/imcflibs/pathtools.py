@@ -7,7 +7,7 @@ import os.path
 from .log import LOG as log
 
 
-def parse_path(path):
+def parse_path(path, prefix=""):
     """Parse a path into its components.
 
     If the path doesn't end with the pathsep, it is assumed being a file!
@@ -22,6 +22,10 @@ def parse_path(path):
     ----------
     path : str or str-like
         The path to be parsed into components.
+    prefix : str or str-like, optional
+        An optional path component that will be prefixed to the given path using
+        `os.path.join()`.
+
     Returns
     -------
     parsed = {
@@ -61,6 +65,11 @@ def parse_path(path):
     ''
     """
     path = str(path)
+    if prefix:
+        # remove leading slash, otherwise join() will discard the first path:
+        if path.startswith("/"):
+            path = path[1:]
+        path = os.path.join(str(prefix), path)
     parsed = {}
     parsed["orig"] = path
     path = path.replace("\\", sep)
