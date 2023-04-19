@@ -1,11 +1,11 @@
-# @ File (label="Select the python-imcflibs testdata directory", style="directory") PYTHON_IMCFLIBS_TESTDATA
+# @ File (label="Select the IMCF testdata directory", style="directory") IMCF_TESTDATA
 
 import os
 from imcflibs.pathtools import join2
 from imcflibs.imagej import bioformats
 
 
-testfile = join2(PYTHON_IMCFLIBS_TESTDATA, "systems/lsm700/beads/10x_phmax.czi")
+testfile = join2(IMCF_TESTDATA, "systems/lsm700/beads/10x_phmax.czi")
 print(testfile)
 
 assert os.path.exists(testfile)

@@ -1,12 +1,11 @@
-# @ File (label="Select the python-imcf-libs testdata directory", style="directory") PYTHON_IMCFLIBS_TESTDATA
-
+# @ File (label="Select the IMCF testdata directory", style="directory") IMCF_TESTDATA
 
 import os
 from imcflibs.pathtools import parse_path
 from imcflibs.imagej import bioformats
 
 
-components = parse_path("systems/lsm700/beads/10x_phmax.czi", PYTHON_IMCFLIBS_TESTDATA)
+components = parse_path("systems/lsm700/beads/10x_phmax.czi", IMCF_TESTDATA)
 full_path = components["full"]
 bfmemofile = components["path"] + "." + components["fname"] + ".bfmemo"
 
