@@ -38,6 +38,7 @@ def parse_path(path, prefix=""):
         - `path` : The same as `full`, up to (including) the last separator.
         - `dname` : The segment between the last two separators (directory).
         - `fname` : The segment after the last separator (filename).
+        - `basename` : The filename without extension.
         - `ext` : The filename extension, containing max 1 dot (included).
 
     Examples
@@ -50,6 +51,7 @@ def parse_path(path, prefix=""):
      'ext': '',
      'fname': 'file',
      'full': '/tmp/foo/file',
+     'basename': 'file',
      'orig': '/tmp/foo/file',
      'path': '/tmp/foo/'}
 
@@ -60,6 +62,7 @@ def parse_path(path, prefix=""):
      'ext': '',
      'fname': '',
      'full': '/tmp/foo/',
+     'basename': '',
      'orig': '/tmp/foo/',
      'path': '/tmp/foo/'}
 
@@ -70,6 +73,7 @@ def parse_path(path, prefix=""):
      'ext': '.ext',
      'fname': 'file.ext',
      'full': 'C:/Temp/foo/file.ext',
+     'basename': 'file',
      'orig': 'C:\\Temp\\foo\\file.ext',
      'path': 'C:/Temp/foo/'}
     """
@@ -86,7 +90,10 @@ def parse_path(path, prefix=""):
     parsed["path"] = os.path.dirname(path) + sep
     parsed["fname"] = os.path.basename(path)
     parsed["dname"] = os.path.basename(os.path.dirname(parsed["path"]))
-    parsed["ext"] = os.path.splitext(parsed["fname"])[1]
+    split_ext = os.path.splitext(parsed["fname"])
+    parsed["ext"] = split_ext[1]
+    parsed["basename"] = split_ext[0]
+
     return parsed
 
 
