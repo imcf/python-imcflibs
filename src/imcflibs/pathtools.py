@@ -8,7 +8,7 @@ from .log import LOG as log
 
 
 def parse_path(path, prefix=""):
-    """Parse a path into its components.
+    r"""Parse a path into its components.
 
     If the path doesn't end with the pathsep, it is assumed being a file!
     No tests based on existing files are done, as this is supposed to also work
@@ -28,41 +28,50 @@ def parse_path(path, prefix=""):
 
     Returns
     -------
-    parsed = {
-        'orig' : str   # string as passed into this function
-        'full' : str   # separators adjusted to current platform
-        'path' : str   # like previous, up to (including) the last separator
-        'dname' : str  # segment between the last two separators (directory)
-        'fname' : str  # segment after the last separator (filename)
-        'ext' : str    # filename extension, containing max 1 dot (included)
-    }
+    dict
+        The parsed (and possibly combined) path split into its components, with
+        the following keys:
+        - `orig` : The full string as passed into this function (possibly
+          combined with the prefix in case one was specified).
+        - `full` : The same as `orig` with separators adjusted to the current
+          platform.
+        - `path` : The same as `full`, up to (including) the last separator.
+        - `dname` : The segment between the last two separators (directory).
+        - `fname` : The segment after the last separator (filename).
+        - `ext` : The filename extension, containing max 1 dot (included).
 
-    Example
-    -------
+    Examples
+    --------
 
-    >>> path_to_file = parse_path('/tmp/foo/file')
-    >>> path_to_dir = parse_path('/tmp/foo/')
+    POSIX-style path to a file with a suffix:
 
-    orig : The full path string as given to this function.
-    full : Backslashes replaced by the current separator.
+    >>> parse_path('/tmp/foo/file.suffix')
+    {'dname': 'foo',
+     'ext': '',
+     'fname': 'file',
+     'full': '/tmp/foo/file',
+     'orig': '/tmp/foo/file',
+     'path': '/tmp/foo/'}
 
-    path : 'full' up to the last separator (included)
-    >>> path_to_file['path']
-    '/tmp/foo/'
-    >>> path_to_dir['path']
-    '/tmp/foo/'
+     POSIX-style path to a directory:
 
-    dname : The last directory of the path in 'full'.
-    >>> path_to_file['dname']
-    'foo'
-    >>> path_to_dir['dname']
-    'foo'
+    >>> parse_path('/tmp/foo/')
+    {'dname': 'foo',
+     'ext': '',
+     'fname': '',
+     'full': '/tmp/foo/',
+     'orig': '/tmp/foo/',
+     'path': '/tmp/foo/'}
 
-    fname : The filename of 'full', empty in case of a directory.
-    >>> path_to_file['fname']
-    'file'
-    >>> path_to_dir['fname']
-    ''
+     Windows-style path to a file:
+
+    >>> parse_path('C:\\Temp\\foo\\file.ext')
+    {'dname': 'foo',
+     'ext': '.ext',
+     'fname': 'file.ext',
+     'full': 'C:/Temp/foo/file.ext',
+     'orig': 'C:\\Temp\\foo\\file.ext',
+     'path': 'C:/Temp/foo/'}
     """
     path = str(path)
     if prefix:
