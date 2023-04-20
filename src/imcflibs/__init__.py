@@ -1,6 +1,8 @@
 """Python convenience from and for the IMCF (Imaging Core Facility).
 
 .. include:: ../../README.md
+
+.. include:: ../../CHANGELOG.md
 """
 
 __version__ = "${project.version}"
