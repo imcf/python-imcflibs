@@ -14,7 +14,8 @@ import os
 
 from ij import IJ
 
-from ._loci import BF, ImporterOptions, ImageReader, Memoizer
+from ._loci import ImporterOptions  # pdoc: skip
+from ._loci import BF, ImageReader, Memoizer
 
 from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
