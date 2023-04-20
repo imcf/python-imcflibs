@@ -6,29 +6,29 @@
 
 ### Added
 
-* `pathtools.join2` can be used to join paths, much like `os.path.join` except
-  that it will work with `java.io.File` objects as well (but doesn't support
-  more than two path components / parameters).
-* `resultstable` sub-module with the following functions:
-  * `add_results_to_resultstable`
-  * `get_resultstable`
-  * `preset_results_column`
-* `misc.timed_log` for printing log messages with a timestamp.
-* Several functions in the `misc` submodule:
-  * `calculate_mean_and_stdv`
-  * `elapsed_time_since`
-  * `find_focus`
-  * `get_free_memory`
-  * `percentage`
-  * `progressbar`
-  * `setup_clean_ij_environment`
-  * `timed_log`
+* `imcflibs.pathtools.join2` can be used to join paths, much like `os.path.join`
+  except that it will work with `java.io.File` objects as well (but doesn't
+  support more than two path components / parameters).
+* `imcflibs.imagej.resultstable` sub-module with the following functions:
+  * `imcflibs.imagej.resultstable.add_results_to_resultstable`
+  * `imcflibs.imagej.resultstable.get_resultstable`
+  * `imcflibs.imagej.resultstable.preset_results_column`
+* `imcflibs.imagej.misc.timed_log` for printing log messages with a timestamp.
+* Several functions in the `imcflibs.imagej.misc` submodule:
+  * `imcflibs.imagej.misc.calculate_mean_and_stdv`
+  * `imcflibs.imagej.misc.elapsed_time_since`
+  * `imcflibs.imagej.misc.find_focus`
+  * `imcflibs.imagej.misc.get_free_memory`
+  * `imcflibs.imagej.misc.percentage`
+  * `imcflibs.imagej.misc.progressbar`
+  * `imcflibs.imagej.misc.setup_clean_ij_environment`
+  * `imcflibs.imagej.misc.timed_log`
 
 ### Changed
 
-* `strtools.filename` and `pathtools.parse_path` can now also work on
-  `java.io.File` objects, which happen to be the type when using ImageJ2's
-  *Script Parameter* `@# File`.
-* The dict returned by `pathtools.parse_path` now also contains the key
+* `imcflibs.strtools.filename` and `imcflibs.pathtools.parse_path` can now also
+  work on `java.io.File` objects, which happen to be the type when using
+  ImageJ2's *Script Parameter* `@# File`.
+* The dict returned by `imcflibs.pathtools.parse_path` now also contains the key
   `basename` that provides the filename without extension.
 * Many improvements / clarifications in function docstrings.
