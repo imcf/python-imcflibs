@@ -300,7 +300,7 @@ def find_dirs_containing_filetype(source, filetype):
     return dirs_containing_filetype
 
 
-def get_folder_size(source):
+def folder_size(source):
     """Get the total size of a given directory and its subdirectories.
 
     Parameters
