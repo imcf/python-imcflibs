@@ -14,9 +14,9 @@ def parse_path(path, prefix=""):
     No tests based on existing files are done, as this is supposed to also work
     on path strings that don't exist on the system running this code.
 
-    NOTE: it's fine to pass in `java.io.File` objects (as retrieved by using
-    ImageJ2's *Script Parameter* `#@ File`) for either of the parameters, so it
-    is safe to use this in ImageJ Python scripts without additional measures.
+    The function accepts `java.io.File` objects (as retrieved by using ImageJ2's
+    *Script Parameter* `#@ File`) for either of the parameters, so it is safe to
+    use this in ImageJ Python scripts without additional measures.
 
     Parameters
     ----------
@@ -55,7 +55,7 @@ def parse_path(path, prefix=""):
      'orig': '/tmp/foo/file',
      'path': '/tmp/foo/'}
 
-     POSIX-style path to a directory:
+    POSIX-style path to a directory:
 
     >>> parse_path('/tmp/foo/')
     {'dname': 'foo',
@@ -66,7 +66,7 @@ def parse_path(path, prefix=""):
      'orig': '/tmp/foo/',
      'path': '/tmp/foo/'}
 
-     Windows-style path to a file:
+    Windows-style path to a file:
 
     >>> parse_path('C:\\Temp\\foo\\file.ext')
     {'dname': 'foo',
