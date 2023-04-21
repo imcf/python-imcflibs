@@ -155,7 +155,7 @@ def jython_fiji_exists(path):
         return False
 
 
-def listdir_matching(path, suffix, fullpath=False):
+def listdir_matching(path, suffix, fullpath=False, sort=False):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -168,6 +168,9 @@ def listdir_matching(path, suffix, fullpath=False):
         If set to True, the list returned by the function will contain the full
         paths to the matching files (the default is False, which will result in
         the file names only, without path).
+    sort : bool, optional
+        If set to True, the returned list will be sorted using Python's built-in
+        `sorted()` call. By default False.
 
     Returns
     -------
@@ -182,6 +185,9 @@ def listdir_matching(path, suffix, fullpath=False):
                 matching_files.append(os.path.join(path, candidate))
             else:
                 matching_files.append(candidate)
+
+    if sort:
+        matching_files = sorted(matching_files)
 
     return matching_files
 

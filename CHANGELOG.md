@@ -47,4 +47,6 @@
   * OME-TIFF filenames are now treated as special cases in the sense that the
     `.ome` part is stripped from the `basename` key and added to the `ext` key
     instead (as it is part of the suffix).
+* `imcflibs.pathtools.listdir_matching` now has an additional optional argument
+  `sort` (defaulting to `False`) to request the resulting list to be sorted.
 * Many improvements / clarifications in function docstrings.
