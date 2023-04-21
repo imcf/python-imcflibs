@@ -38,8 +38,13 @@ def parse_path(path, prefix=""):
         - `path` : The same as `full`, up to (including) the last separator.
         - `dname` : The segment between the last two separators (directory).
         - `fname` : The segment after the last separator (filename).
-        - `basename` : The filename without extension.
-        - `ext` : The filename extension, containing max 1 dot (included).
+        - `basename` : The filename without extension. Note that *OME-TIFF*
+          files (having a suffix like `.ome.tif` or `.ome.tiff`) are treated as
+          special case in the sense that the `.ome` part is also stripped from
+          the basename and added to the `ext` key (see below).
+        - `ext` : The filename extension, containing max 1 dot (included) with
+          the special case of `.ome.tif` / `.ome.tiff` where 2 dots are
+          contained to represent the full suffix.
 
     Examples
     --------
@@ -76,6 +81,17 @@ def parse_path(path, prefix=""):
      'basename': 'file',
      'orig': 'C:\\Temp\\foo\\file.ext',
      'path': 'C:/Temp/foo/'}
+
+    Special treatment for *OME-TIFF* suffixes:
+
+    >>> parse_path("/path/to/some/nice.OME.tIf")
+    {'basename': 'nice',
+    'dname': 'some',
+    'ext': '.OME.tIf',
+    'fname': 'nice.OME.tIf',
+    'full': '/path/to/some/nice.OME.tIf',
+    'orig': '/path/to/some/nice.OME.tIf',
+    'path': '/path/to/some/'}
     """
     path = str(path)
     if prefix:
@@ -90,9 +106,12 @@ def parse_path(path, prefix=""):
     parsed["path"] = os.path.dirname(path) + sep
     parsed["fname"] = os.path.basename(path)
     parsed["dname"] = os.path.basename(os.path.dirname(parsed["path"]))
-    split_ext = os.path.splitext(parsed["fname"])
-    parsed["ext"] = split_ext[1]
-    parsed["basename"] = split_ext[0]
+    base, ext = os.path.splitext(parsed["fname"])
+    parsed["ext"] = ext
+    parsed["basename"] = base
+    if base.lower().endswith(".ome") and ext.lower().startswith(".tif"):
+        parsed["basename"] = base[:-4]
+        parsed["ext"] = base[-4:] + ext
 
     return parsed
 
@@ -178,8 +197,8 @@ def image_basename(orig_name):
     ----------
     orig_name : str
 
-    Example
-    -------
+    Examples
+    --------
     >>> image_basename('/path/to/some_funny_image_file_01.png')
     'some_funny_image_file_01'
 
@@ -189,10 +208,7 @@ def image_basename(orig_name):
     >>> image_basename('/tmp/FoObAr.OMe.tIf')
     'FoObAr'
     """
-    base = os.path.splitext(os.path.basename(orig_name))[0]
-    if base.lower().endswith(".ome"):
-        base = base[:-4]
-    return base
+    return parse_path(orig_name)["basename"]
 
 
 def gen_name_from_orig(path, orig_name, tag, suffix):
