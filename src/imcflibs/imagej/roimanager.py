@@ -50,8 +50,8 @@ def count_all_rois(rm):
     return number_of_rois
 
 
-def save_rois(rm, target, selected_rois=None):
-    """Save selected ROIs in the RoiManager as zip to target path.
+def save_rois_to_zip(rm, target, selected_rois=None):
+    """Save selected ROIs in the RoiManager as zip to the target path.
 
     Parameters
     ----------
@@ -159,7 +159,7 @@ def measure_in_all_rois(imp, channel, rm):
     rm.runCommand(imp, "Measure")
 
 
-def open_rois_from_zip(rm, path):
+def load_rois_from_zip(rm, path):
     """Load ROIs from the given zip file and add them to the RoiManager.
 
     Parameters
