@@ -19,6 +19,15 @@
   * `imcflibs.imagej.misc.progressbar`
   * `imcflibs.imagej.misc.setup_clean_ij_environment`
   * `imcflibs.imagej.misc.timed_log`
+* New `imcflibs.imagej.labelimage` submodule, providing:
+  * `imcflibs.imagej.labelimage.filter_objects`
+  * `imcflibs.imagej.labelimage.label_image_to_roi_list`
+  * `imcflibs.imagej.labelimage.measure_objects_size_shape_2d`
+  * `imcflibs.imagej.labelimage.relate_label_images`
+* New `imcflibs.imagej.gpu` submodule, providing:
+  * `imcflibs.imagej.gpu.erode_labels`
+  * `imcflibs.imagej.gpu.dilate_labels`
+  * `imcflibs.imagej.gpu.merge_labels`
 * New `imcflibs.imagej.resultstable` submodule, providing:
   * `imcflibs.imagej.resultstable.add_results_to_resultstable`
   * `imcflibs.imagej.resultstable.get_resultstable`
