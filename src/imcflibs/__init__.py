@@ -2,7 +2,7 @@
 
 .. include:: ../../README.md
 
-.. include:: ../../tests/imagej/README.md
+.. include:: ../../TESTING.md
 
 .. include:: ../../CHANGELOG.md
 """
