@@ -6,10 +6,10 @@
 
 ### Added
 
-* `imcflibs.pathtools.join2` can be used to join paths, much like `os.path.join`
-  except that it will work with `java.io.File` objects as well (but doesn't
-  support more than two path components / parameters).
-* `imcflibs.imagej.resultstable` sub-module with the following functions:
+* New functions in `imcflibs.pathtools`:
+  * `imcflibs.pathtools.join2` can be used to join paths, much like
+    `os.path.join` except that it will work with `java.io.File` objects as well
+    (but doesn't support more than two path components / parameters).
   * `imcflibs.imagej.resultstable.add_results_to_resultstable`
   * `imcflibs.imagej.resultstable.get_resultstable`
   * `imcflibs.imagej.resultstable.preset_results_column`
