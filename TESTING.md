@@ -4,7 +4,7 @@ Unfortunately there is nothing like `pytest` available for the parts that are
 running exclusively in a ImageJ2 / Fiji context. So in order to provide at least
 some basic, semi-interactive tests the following conventions are being used:
 
-* Each ***function*** in one of the `imcflibs.imagej` submodules should have its
+* Each ***function*** in any of the `imcflibs.imagej` submodules should have its
   own directory underneath `/tests/imagej/`, using their fully qualified name
   as the path (only skipping the `imcflibs.` prefix). For example test scripts
   for `imcflibs.imagej.bioformats.import_image()` will be placed in the
