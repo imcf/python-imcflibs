@@ -1,5 +1,7 @@
+
 # IMCFlibs 🐍 ☕ 🔩 🔧 🪛
 
+[![Build Status](https://github.com/imcf/python-imcflibs/actions/workflows/build.yml/badge.svg)](https://github.com/imcf/python-imcflibs/actions/workflows/build.yml)
 [![DOI](https://zenodo.org/badge/156891364.svg)](https://zenodo.org/badge/latestdoi/156891364)
 
 This package contains a diverse collection of Python functions dealing with
