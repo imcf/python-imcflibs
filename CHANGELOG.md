@@ -10,11 +10,7 @@
   * `imcflibs.pathtools.join2` can be used to join paths, much like
     `os.path.join` except that it will work with `java.io.File` objects as well
     (but doesn't support more than two path components / parameters).
-  * `imcflibs.imagej.resultstable.add_results_to_resultstable`
-  * `imcflibs.imagej.resultstable.get_resultstable`
-  * `imcflibs.imagej.resultstable.preset_results_column`
-* `imcflibs.imagej.misc.timed_log` for printing log messages with a timestamp.
-* Several functions in the `imcflibs.imagej.misc` submodule:
+* New functions in `imcflibs.imagej.misc`:
   * `imcflibs.imagej.misc.calculate_mean_and_stdv`
   * `imcflibs.imagej.misc.elapsed_time_since`
   * `imcflibs.imagej.misc.find_focus`
@@ -23,6 +19,10 @@
   * `imcflibs.imagej.misc.progressbar`
   * `imcflibs.imagej.misc.setup_clean_ij_environment`
   * `imcflibs.imagej.misc.timed_log`
+* New `imcflibs.imagej.resultstable` submodule, providing:
+  * `imcflibs.imagej.resultstable.add_results_to_resultstable`
+  * `imcflibs.imagej.resultstable.get_resultstable`
+  * `imcflibs.imagej.resultstable.preset_results_column`
 
 ### Changed
 
