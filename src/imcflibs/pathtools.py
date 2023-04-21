@@ -300,27 +300,6 @@ def find_dirs_containing_filetype(source, filetype):
     return dirs_containing_filetype
 
 
-def list_all_filenames(source, filetype):
-    """Get a sorted list of all files of specified filetype in a given directory.
-
-    Parameters
-    ----------
-    source : str
-        Path to the directory to scan for desired files.
-    filetype : str
-        The file extension to look for.
-
-    Returns
-    -------
-    list(str)
-        List of all files with the given suffix in the source directory.
-    """
-    os.chdir(str(source))
-    allimages = sorted(glob.glob("*" + filetype))  # sorted by name
-
-    return allimages
-
-
 def get_folder_size(source):
     """Get the total size of a given directory and its subdirectories.
 
