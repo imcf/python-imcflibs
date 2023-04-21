@@ -1,4 +1,4 @@
-# Changelog
+# Changelog 🧾
 
 <!-- markdownlint-disable MD024 (no-duplicate-header) -->
 
