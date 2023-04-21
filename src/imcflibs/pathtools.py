@@ -1,4 +1,4 @@
-"""Helper functions to work with filenames."""
+"""Helper functions to work with filenames, directories etc."""
 
 import platform
 from os import sep
