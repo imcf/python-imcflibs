@@ -135,8 +135,8 @@
 		<url>https://github.com/imcf/python-imcflibs/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Travis CI</system>
-		<url>https://travis-ci.com/imcf/python-imcflibs</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/imcf/python-imcflibs/actions</url>
 	</ciManagement>
 
 	<properties>
