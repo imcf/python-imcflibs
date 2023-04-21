@@ -9,19 +9,19 @@ from inra.ijpb.plugins import AnalyzeRegions
 
 
 def label_image_to_roi_list(label_image, low_thresh=None):
-    """Converts a label image to a list of ROIs
+    """Convert a label image to a list of ROIs.
 
     Parameters
     ----------
     label_image : ij.ImagePlus
-        Label image to convert
+        Label image to convert.
     low_thresh : int, optional
-        Value under which the labels should be discarded, by default None
+        Value under which the labels should be discarded, by default `None`.
 
     Returns
     -------
     roi_list : list(ij.gui.Roi)
-        List of all the ROIs converted from the label image
+        List of all the ROIs converted from the label image.
     """
 
     roi_list = []
@@ -65,21 +65,21 @@ def label_image_to_roi_list(label_image, low_thresh=None):
 
 
 def relate_label_images(label_image_ref, label_image_to_relate):
-    """Relate label images, giving same label to objects being together
+    """Relate label images, giving the same label to objects belonging together.
 
-    /!\ Won't work with touching labels
+    ❗ NOTE: Won't work with touching labels ❗
 
     Parameters
     ----------
     label_image_ref : ij.ImagePlus
-        Reference to use for the labels
+        Reference to use for the labels.
     label_image_to_relate : ij.ImagePlus
-        Image to change for the labels
+        Image to change for the labels.
 
     Returns
     -------
     ij.ImagePlus
-        New ImagePlus with modified labels matching the reference
+        New ImagePlus with modified labels matching the reference.
     """
 
     imp_dup = label_image_to_relate.duplicate()
@@ -91,26 +91,25 @@ def relate_label_images(label_image_ref, label_image_to_relate):
 
 
 def filter_objects(label_image, table, string, min_val, max_val):
-    """Filter labels based on values
+    """Filter labels based on specific min and max values.
 
     Parameters
     ----------
     label_image : ij.ImagePlus
-        Label image on which to filter
+        Label image on which to filter.
     table : ResultsTable
-        ResultsTable containing all the measurements on which to filter
+        ResultsTable containing all the measurements on which to filter.
     string : str
-        Measurement name on which to filter
-        e.g. "Area","Mean Intensity" etc...
+        Measurement name on which to filter, e.g. `Area`, `Mean Intensity` etc.
     min_val : float
-        Minimum value to keep
+        Minimum value to keep.
     max_val : float
         Maximum value to keep
 
     Returns
     -------
     ij.ImagePlus
-        Label image containing only the remaining labels
+        Label image containing only the remaining labels.
     """
 
     keep_label_id = []
@@ -123,17 +122,17 @@ def filter_objects(label_image, table, string, min_val, max_val):
 
 
 def measure_objects_size_shape_2d(label_image):
-    """Measure the different labels shapes
+    """Measure the shapes of the different labels.
 
     Parameters
     ----------
     label_image : ij.ImagePlus
-        Label image on which to get the shapes
+        Label image on which to get the shapes.
 
     Returns
     -------
     ResultsTable
-        ResultsTable with the shape measurements
+        ResultsTable with the shape measurements.
     """
     regions = AnalyzeRegions()
     return regions.process(label_image)
