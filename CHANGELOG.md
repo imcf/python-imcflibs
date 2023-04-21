@@ -10,6 +10,7 @@
   * `imcflibs.pathtools.join2` can be used to join paths, much like
     `os.path.join` except that it will work with `java.io.File` objects as well
     (but doesn't support more than two path components / parameters).
+  * `imcflibs.pathtools.find_dirs_containing_filetype`
 * New functions in `imcflibs.imagej.misc`:
   * `imcflibs.imagej.misc.calculate_mean_and_stdv`
   * `imcflibs.imagej.misc.elapsed_time_since`

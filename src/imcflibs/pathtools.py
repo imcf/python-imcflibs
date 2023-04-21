@@ -263,13 +263,13 @@ def derive_out_dir(in_dir, out_dir):
     return out_dir
 
 
-def list_dirs_containing_filetype(source, filetype):
-    """List all directories (recursive) that contain files with the given suffix.
+def find_dirs_containing_filetype(source, filetype):
+    """Recursively list directories containing files with a given suffix.
 
     Parameters
     ----------
     source : str
-        Path to source dir.
+        Path to base directory to start recursive search in.
     filetype : str
         Filetype (string pattern) that should be matched against filenames in
         the directories.
@@ -277,7 +277,7 @@ def list_dirs_containing_filetype(source, filetype):
     Returns
     -------
     list(str)
-        List of all dirs that contain files of the given filetype.
+        List of all dirs that contain files with the given suffix / filetype.
     """
     dirs_containing_filetype = []
 
