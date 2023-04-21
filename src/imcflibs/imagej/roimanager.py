@@ -283,10 +283,10 @@ def extract_color_of_all_rois(rm):
     return roi_colors
 
 
-def put_rois_to_roimanager(
+def add_rois_to_roimanager(
     roi_array, roi_manager, keep_rois_name, prefix, bbox=None, z_slice=None, group=None
 ):
-    """Put all ROIs from a list to the RoiManager.
+    """Add all ROIs from a list to the RoiManager.
 
     Parameters
     ----------
