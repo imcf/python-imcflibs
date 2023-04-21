@@ -69,6 +69,8 @@ def relate_label_images(label_image_ref, label_image_to_relate):
 
     ❗ NOTE: Won't work with touching labels ❗
 
+    FIXME: explain with an example what the function is doing!
+
     Parameters
     ----------
     label_image_ref : ij.ImagePlus
