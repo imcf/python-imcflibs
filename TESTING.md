@@ -35,6 +35,19 @@ some basic, semi-interactive tests the following conventions are being used:
     Parameter* `IMCF_TESTDATA` will remember this selection, so it will be
     sufficient to just confirm the dialog by pressing `Enter`.
 
+## Quick Workflow Summary
+
+First, make sure to have the test data 🔬🔭around (or some mocks 🪨🪵), then:
+
+1. Code 📝
+1. Build and deploy locally (`Shift`+`Ctrl`+`B`) 📦
+1. Start Fiji 🇫🇯
+1. Drag-and-Drop the respective test script 🐍🧪
+1. Hit `Ctrl`+`R` to run it 🏃‍♀️
+1. Confirm dialog with `Enter` ✅
+1. Inspect the output 🔎👀
+1. Repeat 🔁
+
 ## Test Script Template 🏗
 
 As described above, each test script should use the `IMCF_TESTDATA` parameter to
