@@ -2,6 +2,8 @@
 
 .. include:: ../../README.md
 
+.. include:: ../../tests/imagej/README.md
+
 .. include:: ../../CHANGELOG.md
 """
 
