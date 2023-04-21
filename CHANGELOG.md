@@ -34,6 +34,23 @@
   * `imcflibs.imagej.resultstable.add_results_to_resultstable`
   * `imcflibs.imagej.resultstable.get_resultstable`
   * `imcflibs.imagej.resultstable.preset_results_column`
+* New `imcflibs.imagej.roimanager` submodule, providing:
+  * `imcflibs.imagej.roimanager.add_rois_to_roimanager`
+  * `imcflibs.imagej.roimanager.change_roi_color`
+  * `imcflibs.imagej.roimanager.clear_ij_roi_manager`
+  * `imcflibs.imagej.roimanager.count_all_rois`
+  * `imcflibs.imagej.roimanager.enlarge_all_rois`
+  * `imcflibs.imagej.roimanager.extract_color_of_all_rois`
+  * `imcflibs.imagej.roimanager.get_roimanager`
+  * `imcflibs.imagej.roimanager.load_rois_from_zip`
+  * `imcflibs.imagej.roimanager.measure_in_all_rois`
+  * `imcflibs.imagej.roimanager.rename_rois_by_number`
+  * `imcflibs.imagej.roimanager.rename_rois`
+  * `imcflibs.imagej.roimanager.save_rois_to_zip`
+  * `imcflibs.imagej.roimanager.scale_all_rois`
+  * `imcflibs.imagej.roimanager.select_rois_above_min_intensity`
+  * `imcflibs.imagej.roimanager.shift_roi_by_bounding_box`
+  * `imcflibs.imagej.roimanager.show_all_rois_on_image`
 
 ### Changed
 
