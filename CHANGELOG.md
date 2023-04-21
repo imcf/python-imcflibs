@@ -36,12 +36,15 @@
 
 ### Changed
 
-* `imcflibs.strtools.filename` and `imcflibs.pathtools.parse_path` can now also
-  work on `java.io.File` objects, which happen to be the type when using
-  ImageJ2's *Script Parameter* `@# File`.
-* The dict returned by `imcflibs.pathtools.parse_path` now also contains the key
-  `basename` that provides the filename without extension.
-* `imcflibs.pathtools.parse_path` treats OME-TIFF filenames as special cases now
-  in the sense that the `.ome` part is stripped from the `basename` key and
-  added to the `ext` key instead (as it is part of the suffix).
+* The functions below now also accept parameters of type `java.io.File` (instead
+  of `str`), making them safe for being used directly with variables retrieved
+  via ImageJ2's *Script Parameter* `@# File`:
+  * `imcflibs.pathtools.parse_path`
+  * `imcflibs.strtools.filename`
+* Several changes in `imcflibs.pathtools.parse_path`:
+  * The returned dict now contains an additional key `basename` that provides
+    the filename without extension.
+  * OME-TIFF filenames are now treated as special cases in the sense that the
+    `.ome` part is stripped from the `basename` key and added to the `ext` key
+    instead (as it is part of the suffix).
 * Many improvements / clarifications in function docstrings.
