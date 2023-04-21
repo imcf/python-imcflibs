@@ -210,7 +210,7 @@ def scale_all_rois(rm, scaling_factor):
 
 
 def select_rois_above_min_intensity(imp, channel, rm, min_intensity):
-    """Select ROIs based on their intensity in given channel of the image.
+    """Select ROIs based on their intensity in a given channel of the image.
 
     See https://imagej.nih.gov/ij/developer/api/ij/process/ImageStatistics.html
 
@@ -228,7 +228,7 @@ def select_rois_above_min_intensity(imp, channel, rm, min_intensity):
     Returns
     -------
     list(int)
-        A list of ROIs index numbers that fulfill the selection criterion
+        A list of ROI index numbers fulfilling the selection criterion
         (intensity is above the threshold).
     """
     imp.setC(channel)
@@ -322,14 +322,15 @@ def put_rois_to_roimanager(
 def shift_roi_by_bounding_box(roi, bbox, z_slice=None):
     """Move a ROI based on a bounding box.
 
-    Use to translate a ROI based on another one's bounding box.
+    Translate one ROI based on another ROI's bounding box.
 
     Parameters
     ----------
     roi : ij.gui.Roi
         The ROI to be moved.
     bbox : java.awt.Rectangle
-        Use this bounding box to shift the ROI.
+        The bounding box by which the ROI should be shifted, e.g. retrieved by
+        calling `OtherRoi.getBounds()` on a ROI object.
     z_slice : int, optional
         Shift the ROI also in Z, by default None (=no shifting).
     """
