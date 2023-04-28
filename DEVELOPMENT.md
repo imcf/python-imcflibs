@@ -17,6 +17,14 @@ RELEASE_SCRIPT="$BASE_DIR/scijava-scripts/release-version.sh"
 $RELEASE_SCRIPT --skip-push --skip-gpg --skip-license-update
 ```
 
+**IMPORTANT**: after the release has been built, the corresponding tag needs to
+be pushed to github, e.g. like this:
+
+```bash
+RELEASE_TAG=$(git tag -l "python-imcflibs-*" | tail -n 1)
+git push origin $RELEASE_TAG
+```
+
 ## Build & Deploy with Maven using VS Code
 
 Building and deploying the package can be greatly simplified using "tasks" in
