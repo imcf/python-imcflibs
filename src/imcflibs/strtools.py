@@ -118,13 +118,12 @@ def sort_alphanumerically(data):
 
     Parameters
     ----------
-    data : list
-        List containing all the files to sort.
+    data : list(str)
+        List of strings to be sorted.
 
     Returns
     -------
     list
-        List with filenames sorted.
 
     Examples
     --------
