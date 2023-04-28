@@ -125,6 +125,14 @@ def sort_alphanumerically(data):
     -------
     list
         List with filenames sorted.
+
+    Examples
+    --------
+    >>> sorted([ "foo-1", "foo-2", "foo-10" ])
+    ["foo-1", "foo-10", "foo-2"]
+
+    >>> sort_alphanumerically([ "foo-1", "foo-2", "foo-10" ])
+    ["foo-1", "foo-2", "foo-10"]
     """
     convert = lambda text: int(text) if text.isdigit() else text.lower()
     alphanum_key = lambda key: [convert(c) for c in re.split("([0-9]+)", key)]
