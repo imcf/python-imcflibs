@@ -1,5 +1,7 @@
 """String related helper functions."""
 
+import re
+
 
 # this is taken from numpy's iotools:
 def _is_string_like(obj):
