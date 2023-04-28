@@ -11,7 +11,7 @@
 
 	<groupId>ch.unibas.biozentrum.imcf</groupId>
 	<artifactId>python-imcflibs</artifactId>
-	<version>1.4.0-SNAPSHOT</version>
+	<version>1.4.1-SNAPSHOT</version>
 
 	<name>python-imcflibs</name>
 	<description>
