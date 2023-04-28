@@ -2,6 +2,18 @@
 
 <!-- markdownlint-disable MD024 (no-duplicate-header) -->
 
+## 1.4.0
+
+### Added
+
+* `imcflibs.strtools.sort_alphanumerically` to sort a list of strings taking
+  into account numerical values correctly.
+
+### Changed
+
+* `imcflibs.pathtools.listdir_matching` is now using the new
+  `sort_alphanumerically()` function from above.
+
 ## 1.3.0
 
 ### Added
