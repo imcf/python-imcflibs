@@ -170,8 +170,8 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
         paths to the matching files (the default is False, which will result in
         the file names only, without path).
     sort : bool, optional
-        If set to True, the returned list will be sorted using the strtools
-        sort_alphanumerically method.
+        If set to True, the returned list will be sorted using
+        `imcflibs.strtools.sort_alphanumerically()`.
 
     Returns
     -------
