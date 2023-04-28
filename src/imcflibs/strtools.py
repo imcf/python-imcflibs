@@ -114,17 +114,17 @@ def strip_prefix(string, prefix):
 
 
 def sort_alphanumerically(data):
-    """Sort a list alphanumerically
+    """Sort a list alphanumerically.
 
     Parameters
     ----------
     data : list
-        List containing all the files to sort
+        List containing all the files to sort.
 
     Returns
     -------
     list
-        List with filenames sorted
+        List with filenames sorted.
     """
     convert = lambda text: int(text) if text.isdigit() else text.lower()
     alphanum_key = lambda key: [convert(c) for c in re.split("([0-9]+)", key)]
