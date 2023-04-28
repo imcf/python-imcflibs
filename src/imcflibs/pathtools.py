@@ -1,9 +1,10 @@
 """Helper functions to work with filenames, directories etc."""
 
+import os.path
 import platform
 from os import sep
-import os.path
 
+from . import strtools
 from .log import LOG as log
 
 
@@ -169,8 +170,8 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
         paths to the matching files (the default is False, which will result in
         the file names only, without path).
     sort : bool, optional
-        If set to True, the returned list will be sorted using Python's built-in
-        `sorted()` call. By default False.
+        If set to True, the returned list will be sorted using the strtools
+        sort_alphanumerically method.
 
     Returns
     -------
@@ -187,7 +188,7 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
                 matching_files.append(candidate)
 
     if sort:
-        matching_files = sorted(matching_files)
+        matching_files = strtools.sort_alphanumerically(matching_files)
 
     return matching_files
 
