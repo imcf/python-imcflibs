@@ -11,7 +11,7 @@ def scijava_logger(log_service):
     ----------
     log_service : org.scijava.log.LogService
         The LogService instance, usually retrieved in a SciJava script by using
-        the script parameters annotation '#@ LogService logs' or equivalent.
+        the script parameters annotation `#@ LogService logs` or equivalent.
 
     Returns
     -------

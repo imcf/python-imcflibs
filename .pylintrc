@@ -1,0 +1,6 @@
+[BASIC]
+# Good variable names which should always be accepted, separated by a comma
+good-names=i,j,k,ex,Run,_,x,y,z,rm,rt
+
+# don't mess with black autoformatting, just let it do its job:
+disable=bad-continuation

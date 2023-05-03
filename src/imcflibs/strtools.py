@@ -1,5 +1,7 @@
 """String related helper functions."""
 
+import re
+
 
 # this is taken from numpy's iotools:
 def _is_string_like(obj):
@@ -30,9 +32,13 @@ def filename(name):
     This is a convenience function to retrieve the filename as a string given
     either an open filehandle or just a plain str containing the name.
 
+    When running in Jython the function will also convert `java.io.File` objects
+    to `str`. NOTE: this also works if the Java object is a directory, not an
+    actual file.
+
     Parameters
     ----------
-    name : str or filehandle
+    name : str or filehandle or java.io.File
 
     Returns
     -------
@@ -48,6 +54,14 @@ def filename(name):
     >>> os.path.basename(fname) in ['strtools.py', 'strtools.pyc']
     True
     """
+    try:
+        if isinstance(name, java.io.File):
+            return str(name)
+    except:
+        # we silently ignore this case and continue with checks below as most
+        # likely we are not running under Jython
+        pass
+
     if isinstance(name, file):
         return name.name
     elif _is_string_like(name):
@@ -97,3 +111,28 @@ def strip_prefix(string, prefix):
     if string.startswith(prefix):
         string = string[len(prefix) :]
     return string
+
+
+def sort_alphanumerically(data):
+    """Sort a list alphanumerically.
+
+    Parameters
+    ----------
+    data : list(str)
+        List of strings to be sorted.
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    >>> sorted([ "foo-1", "foo-2", "foo-10" ])
+    ["foo-1", "foo-10", "foo-2"]
+
+    >>> sort_alphanumerically([ "foo-1", "foo-2", "foo-10" ])
+    ["foo-1", "foo-2", "foo-10"]
+    """
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [convert(c) for c in re.split("([0-9]+)", key)]
+    return sorted(data, key=alphanum_key)
