@@ -11,20 +11,21 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
     Parameters
     ----------
     imp : ImagePlus
-        Binary 3D stack
+        Binary 3D stack or 2D image.
     title : str
-        Title of the new image
+        Title of the new image.
     min_thresh : int, optional
-        Threshold to do segmentation, also allows for label filtering by default 1
+        Threshold to do segmentation, also allows for label filtering, by
+        default 1.
     min_vol : float, optional
-        Volume under which to filter objects, by default None
+        Volume under which to exclude objects, by default None.
     max_vol : float, optional
-        Volume above which to filter objects, by default None
+        Volume above which to exclude objects, by default None.
 
     Returns
     -------
     ImagePlus
-        Segmented 3D labelled ImagePlus
+        Segmented labeled ImagePlus.
     """
     cal = imp.getCalibration()
     img = ImageHandler.wrap(imp)
