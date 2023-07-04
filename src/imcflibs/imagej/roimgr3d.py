@@ -78,8 +78,10 @@ def population3d_to_imgplus(imp, population):
     return new_img.getImagePlus()
 
 
-def pop_from_ImagePlus(imp):
-    """Get the Objects3DPopulation from an ImagePlus
+def imgplus_to_population3d(imp):
+    """Get an Objects3DPopulation from an ImagePlus (2D/3D).
+
+    Works on: 2D and 3D.
 
     Parameters
     ----------
