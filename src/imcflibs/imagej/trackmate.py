@@ -134,10 +134,67 @@ def log_detector(
     settings.detectorSettings["DO_SUBPIXEL_LOCALIZATION"] = subpix_localization
 
     return settings
+
+def spot_filtering(
+    settings,
     quality_thresh=None,
-    intensity_thresh=None,
-    circularity_thresh=None,
     area_thresh=None,
+    circularity_thresh=None,
+    intensity_dict_thresh=None,
+):
+    """Add spot filtering for different features to the settings dictionary.
+
+    Parameters
+    ----------
+    settings : fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    quality_thresh : float, optional
+        Threshold to use for quality filtering of the spots, by default None.
+        If the threshold is positive, will exclude everything below the value.
+        If the threshold is negative, will exclude everything above the value.
+    area_thresh : float, optional
+        Threshold to use for area filtering of the spots, by default None.
+        If the threshold is positive, will exclude everything below the value.
+        If the threshold is negative, will exclude everything above the value.
+    circularity_thresh : float, optional
+        Threshold to use for circularity filtering of the spots, by default None.
+        If the threshold is positive, will exclude everything below the value.
+        If the threshold is negative, will exclude everything above the value.
+    intensity_dict_thresh : dict, optional
+        Threshold to use for intensity filtering of the spots, by default None.
+        Dictionary needs to contain the channel index as key and the filter as value.
+        If the threshold is positive, will exclude everything below the value.
+        If the threshold is negative, will exclude everything above the value.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+
+    settings.initialSpotFilterValue = -1.0
+    settings.addAllAnalyzers()
+
+    # Here 'true' takes everything ABOVE the mean_int value
+    if quality_thresh:
+        filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)))
+        settings.addSpotFilter(filter_spot)
+    if area_thresh:
+        filter_spot = FeatureFilter("AREA", Double(abs(area_thresh)), area_thresh >= 0)
+        settings.addSpotFilter(filter_spot)
+    if circularity_thresh:
+        filter_spot = FeatureFilter(
+            "CIRCULARITY", Double(abs(circularity_thresh)), circularity_thresh >= 0
+        )
+        settings.addSpotFilter(filter_spot)
+    if intensity_dict_thresh:
+        for key, value in intensity_dict_thresh.items():
+            filter_spot = FeatureFilter(
+                "MEAN_INTENSITY_CH" + str(key), abs(value), value >= 0
+            )
+            settings.addSpotFilter(filter_spot)
+
+    return settings
     crop_roi=None,
 ):
     # sourcery skip: merge-else-if-into-elif, swap-if-else-branches
