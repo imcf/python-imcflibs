@@ -13,6 +13,127 @@ def run_tm(
     implus,
     detector_type,
     channel_number,
+def cellpose_detector(
+    imageplus,
+    cellpose_env_path,
+    model_to_use,
+    obj_diameter,
+    target_chnl,
+    optional_chnl=None,
+    use_gpu=True,
+    simplify_contours=True,
+):
+    """Create a dictionary with all settings for TrackMate using Cellpose.
+
+    Parameters
+    ----------
+    imageplus : ij.ImagePlus
+        ImagePlus on which to apply the detector.
+    cellpose_env_path : str
+        Path to the Cellpose environment.
+    model_to_use : str
+        Name of the model to use for the segmentation (CYTO, NUCLEI, CYTO2).
+    obj_diameter : float
+        Diameter of the objects to detect in the image.
+        This will be calibrated to the unit used in the image.
+    target_chnl : int
+        Index of the channel to use for segmentation.
+    optional_chnl : int, optional
+        Index of the secondary channel to use for segmentation, by default None.
+    use_gpu : bool, optional
+        Boolean for GPU usage, by default True.
+    simplify_contours : bool, optional
+        Boolean for simplifying the contours, by default True.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+    settings = Settings(imageplus)
+
+    settings.detectorFactory = CellposeDetectorFactory()
+    settings.detectorSettings["TARGET_CHANNEL"] = target_chnl
+    if optional_chnl:
+        settings.detectorSettings["OPTIONAL_CHANNEL_2"] = optional_chnl
+    settings.detectorSettings["CELLPOSE_PYTHON_FILEPATH"] = pathtools.join2(
+        cellpose_env_path, "python.exe"
+    )
+    settings.detectorSettings["CELLPOSE_MODEL_FILEPATH"] = os.path.join(
+        os.environ["USERPROFILE"], ".cellpose", "models"
+    )
+    settings.detectorSettings["CELLPOSE_MODEL"] = model_to_use
+    settings.detectorSettings["CELL_DIAMETER"] = obj_diameter
+    settings.detectorSettings["USE_GPU"] = use_gpu
+    settings.detectorSettings["SIMPLIFY_CONTOURS"] = simplify_contours
+
+    return settings
+
+
+def stardist_detector(imageplus, target_chnl):
+    """Create a dictionary with all settings for TrackMate using StarDist.
+
+    Parameters
+    ----------
+    imageplus : ij.ImagePlus
+        Image on which to do the segmentation.
+    target_chnl : int
+        Index of the channel on which to do the segmentation.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+
+    settings = Settings(imageplus)
+    settings.detectorFactory = StarDistDetectorFactory()
+    settings.detectorSettings["TARGET_CHANNEL"] = target_chnl
+
+    return settings
+
+
+def log_detector(
+    imageplus,
+    radius,
+    target_chnl,
+    quality_threshold=0.0,
+    median_filtering=True,
+    subpix_localization=True,
+):
+    """Create a dictionary with all settings for TrackMate using the LogDetector.
+
+    Parameters
+    ----------
+    imageplus : ij.ImagePlus
+        Image on which to do the segmentation.
+    radius : float
+        Radius of the objects to detect.
+    target_chnl : int
+        Index of the channel on which to do the segmentation.
+    quality_threshold : int, optional
+        Threshold to use for excluding the spots by quality, by default 0.
+    median_filtering : bool, optional
+        Boolean to do median filtering, by default True.
+    subpix_localization : bool, optional
+        Boolean to do subpixel localization, by default True.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+
+    settings = Settings(imageplus)
+    settings.detectorFactory = LogDetectorFactory()
+
+    settings.detectorSettings["RADIUS"] = Double(radius)
+    settings.detectorSettings["TARGET_CHANNEL"] = target_chnl
+    settings.detectorSettings["THRESHOLD"] = Double(quality_threshold)
+    settings.detectorSettings["DO_MEDIAN_FILTERING"] = median_filtering
+    settings.detectorSettings["DO_SUBPIXEL_LOCALIZATION"] = subpix_localization
+
+    return settings
     quality_thresh=None,
     intensity_thresh=None,
     circularity_thresh=None,
