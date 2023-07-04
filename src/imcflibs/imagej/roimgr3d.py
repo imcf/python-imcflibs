@@ -44,24 +44,26 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
     return seg.getImagePlus()
 
 
-def redraw_stack_from_Objects3DPopulation(imp, pop):
-    """Make an ImagePlus from a Objects3DPopulation
+def population3d_to_imgplus(imp, population):
+    """Make an ImagePlus from an Objects3DPopulation (2D/3D).
+
+    Works on: 2D and 3D.
 
     Parameters
     ----------
-    imp : ImagePlus
-        Original ImagePlus to get info about size
-    pop : Objects3DPopulation
-        Population to use to draw the new stack
+    imp : ij.ImagePlus
+        Original ImagePlus to derive the size of the resulting ImagePlus.
+    population : mcib3d.geom.Objects3DPopulation
+        Population to use to generate the new ImagePlus.
 
     Returns
     -------
     ImagePlus
-        Newly created ImagePlus from the population
+        Newly created ImagePlus from the population.
     """
     dim = imp.getDimensions()
     new_imp = IJ.createImage(
-        "Filtered labelled stack",
+        "Filtered labeled stack",
         "16-bit black",
         dim[0],
         dim[1],
@@ -71,7 +73,8 @@ def redraw_stack_from_Objects3DPopulation(imp, pop):
     )
     new_imp.setCalibration(imp.getCalibration())
     new_img = ImageHandler.wrap(new_imp)
-    pop.drawPopulation(new_img)
+    population.drawPopulation(new_img)
+
     return new_img.getImagePlus()
 
 
@@ -80,13 +83,13 @@ def pop_from_ImagePlus(imp):
 
     Parameters
     ----------
-    imp : ImagePlus
-        Labelled stack to use to get population
+    imp : ij.ImagePlus
+        Labeled 3D stack or 2D image to use to get population.
 
     Returns
     -------
-    Objects3DPopulation
-        Population from the image
+    mcib3d.geom.Objects3DPopulation
+        Population from the image.
     """
     img = ImageHandler.wrap(imp)
     return Objects3DPopulation(img)
