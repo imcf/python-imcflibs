@@ -3,8 +3,8 @@ from mcib3d.geom import Objects3DPopulation
 from mcib3d.image3d import ImageHandler, ImageLabeller
 
 
-def segment_3D_image(imp, title, min_thresh=1, min_vol=None, max_vol=None):
-    """Segment a 3D binary image to get a labelled stack
+def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
+    """Segment a binary image to get a label image (2D/3D).
 
     Parameters
     ----------
