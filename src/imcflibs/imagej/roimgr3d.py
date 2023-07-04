@@ -6,6 +6,8 @@ from mcib3d.image3d import ImageHandler, ImageLabeller
 def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
     """Segment a binary image to get a label image (2D/3D).
 
+    Works on: 2D and 3D binary data.
+
     Parameters
     ----------
     imp : ImagePlus
