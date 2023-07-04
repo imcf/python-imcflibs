@@ -1,6 +1,6 @@
 from ij import IJ
 from mcib3d.geom import Objects3DPopulation
-from mcib3d.image3d import ImageHandler, ImageLabeller
+from mcib3d.image3d import ImageHandler
 
 
 def population3d_to_imgplus(imp, population):
