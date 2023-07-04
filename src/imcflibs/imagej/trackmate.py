@@ -195,6 +195,54 @@ def spot_filtering(
             settings.addSpotFilter(filter_spot)
 
     return settings
+
+def track_filtering(
+    settings,
+    link_max_dist=0.5,
+    gap_closing_dist=0.5,
+    max_frame_gap=2,
+    track_splitting_max_dist=None,
+    track_merging_max_distance=None,
+):
+    """Add track filtering for different features to the settings dictionary.
+
+    Parameters
+    ----------
+    settings : fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    link_max_dist : float, optional
+        Maximal displacement of the spots, by default 0.5.
+    gap_closing_dist : float, optional
+        Maximal distance for gap closing, by default 0.5.
+    max_frame_gap : int, optional
+        Maximal frame interval between spots to be bridged, by default 2.
+    track_splitting_max_dist : int, optional
+        Maximal frame interval for splitting tracks, by default None.
+    track_merging_max_distance : int, optional
+        Maximal frame interval for merging tracks , by default None.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+
+    settings.trackerFactory = SparseLAPTrackerFactory()
+    settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+    settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist  # must be double
+    settings.trackerSettings[
+        "GAP_CLOSING_MAX_DISTANCE"
+    ] = gap_closing_dist  # must be double
+    settings.trackerSettings["MAX_FRAME_GAP"] = max_frame_gap
+    if track_splitting_max_dist:
+        settings.trackerSettings["ALLOW_TRACK_SPLITTING"] = True
+        settings.trackerSettings["SPLITTING_MAX_DISTANCE"] = track_splitting_max_dist
+    if track_merging_max_distance:
+        settings.trackerSettings["ALLOW_TRACK_MERGING"] = True
+        settings.trackerSettings["MERGING_MAX_DISTANCE"] = True
+
+    return settings
+
     crop_roi=None,
 ):
     # sourcery skip: merge-else-if-into-elif, swap-if-else-branches
