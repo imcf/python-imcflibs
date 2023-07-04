@@ -3,7 +3,7 @@ from mcib3d.geom import Objects3DPopulation
 from mcib3d.image3d import ImageHandler, ImageLabeller
 
 
-def segment_3D_image2(imp, title, min_thresh=1, min_vol=None):
+def segment_3D_image(imp, title, min_thresh=1, min_vol=None, max_vol=None):
     """Segment a 3D binary image to get a labelled stack
 
     Parameters
@@ -16,6 +16,8 @@ def segment_3D_image2(imp, title, min_thresh=1, min_vol=None):
         Threshold to do segmentation, also allows for label filtering by default 1
     min_vol : float, optional
         Volume under which to filter objects, by default None
+    max_vol : float, optional
+        Volume above which to filter objects, by default None
 
     Returns
     -------
@@ -29,6 +31,8 @@ def segment_3D_image2(imp, title, min_thresh=1, min_vol=None):
     labeler = ImageLabeller()
     if min_vol:
         labeler.setMinSize(min_vol)
+    if max_vol:
+        labeler.setMaxSize(max_vol)
 
     seg = labeler.getLabels(img)
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
