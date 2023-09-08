@@ -108,8 +108,10 @@ def run_define_dataset_autoloader(
 
 def run_define_dataset_manualoader(
     project_filename,
-    file_path,
-    series_treatment,
+    source_directory,
+    image_file_pattern,
+    dataset_organisation,
+    file_definition,
 ):
     """Run the Define Multi-View Dataset command using the "Manual Loader" option
 
@@ -117,46 +119,56 @@ def run_define_dataset_manualoader(
     ----------
     project_filename : str
         Name of the project
-    file_path : str
-        Path to the file
-    series_treatment : str
-        How to treat the series, possible choices are only "Tiles" or "Angles"
+    source_directory : str
+        Path to the folder containing the file(s)
+    image_file_pattern : str
+        Pattern corresponding to the names of your files separating the
+        different dimensions
+    dataset_organisation : str
+        Organisation of the dataset and the dimensions to process
+    file_definition : dict
+        Dictionary containing all the info about the file repartitions
     """
 
     xml_filename = project_filename + ".xml"
 
-    parent_dir = os.path.dirname(file_path)
-    filename = os.path.basename(file_path)
-    temp = os.path.join(parent_dir, filename + "_temp")
-    h5_path = os.path.join(temp, project_filename)
+    temp = os.path.join(source_directory, project_filename + "_temp")
+    os.path.join(temp, project_filename)
 
     IJ.run(
         "Define dataset ...",
-        "define_dataset=[Automatic Loader (Bioformats based)] "
+        "define_dataset=[Manual Loader (Bioformats based)] "
         + "project_filename=["
         + xml_filename
         + "] "
-        + "path=["
-        + file_path
-        + "] "
-        + "bioformats_series_are?="
-        + series_treatment
+        + "multiple_timepoints="
+        + file_definition["multiple_timepoints"]
         + " "
-        + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
-        + "how_to_load_images=[Re-save as multiresolution HDF5] "
-        + "dataset_save_path=["
-        + temp
-        + "] "
-        + "check_stack_sizes "
-        + "subsampling_factors=[{ {1,1,1}, {2,2,1}, {4,4,1}, {8,8,2}, {16,16,4} }] "
-        + "hdf5_chunk_sizes=[{ {32,32,4}, {32,16,8}, {16,16,16}, {32,16,8}, {32,32,4} }] "
-        + "timepoints_per_partition=1 "
-        + "setups_per_partition=0 "
-        + "use_deflate_compression "
-        + "export_path=["
-        + h5_path
-        + "]",
+        + "multiple_channels="
+        + file_definition["multiple_channels"]
+        + " "
+        + "multiple_illumination_directions="
+        + file_definition["multiple_illuminations"]
+        + " "
+        + "multiple_angles="
+        + file_definition["multiple_angles"]
+        + " "
+        + "multiple_tiles="
+        + file_definition["multiple_tiles"]
+        + " "
+        + "image_file_directory="
+        + source_directory
+        + " "
+        + "image_file_pattern="
+        + image_file_pattern
+        + dataset_organisation
+        + " "
+        + "calibration_type=[Same voxel-size for all views] "
+        + "calibration_definition=[Load voxel-size(s) from file(s)] "
+        + "imglib2_data_container=[ArrayImg (faster)]",
     )
+
+    return
 
 
 def run_resave_as_h5(
@@ -279,6 +291,8 @@ def run_phase_correlation_pairwise_shifts_calculation(
         How to deal with the tiles, by default "group"
     """
     options_dict = parse_options(input_dict)
+
+    print(options_dict)
 
     use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
     use_channel = "channels=[Average Channels]" if treat_channels == "group" else ""
@@ -778,20 +792,20 @@ def run_2steps_fusion(
         if not os.path.exists(result_path):
             os.makedirs(result_path)
 
-        pathtools.join2(result_path, file_info["basename"] + ".h5")
-        pathtools.join2(result_path, file_info["basename"] + ".xml")
+    pathtools.join2(result_path, file_info["basename"] + ".h5")
+    pathtools.join2(result_path, file_info["basename"] + ".xml")
 
-        h5_fused_path_temp = pathtools.join2(
-            result_path, file_info["basename"] + "_temp.h5"
-        )
-        xml_fused_path_temp = pathtools.join2(
-            result_path, file_info["basename"] + "_temp.xml"
-        )
+    h5_fused_path_temp = pathtools.join2(
+        result_path, file_info["basename"] + "_fused.h5"
+    )
+    xml_fused_path_temp = pathtools.join2(
+        result_path, file_info["basename"] + "_fused.xml"
+    )
 
     options_dict = parse_options(input_dict)
 
     IJ.run(
-        "Fuse dataset...",
+        "Fuse dataset ...",
         "select=["
         + project_path
         + "] "
@@ -861,7 +875,7 @@ def run_2steps_fusion(
 def parse_options(input_dict):
     output_dict = {}
 
-    if input_dict["process_channel"] or "process_channel" in input_dict:
+    if "process_channel" in input_dict:
         output_dict["channel_text"], output_dict["channel_select"] = (
             "[Single channel (Select from List)] ",
             "processing_channel=[channel "
@@ -874,7 +888,7 @@ def parse_options(input_dict):
             "",
         )
 
-    if input_dict["process_illumination"] or "process_illumination" in input_dict:
+    if "process_illumination" in input_dict:
         output_dict["illumination_text"], output_dict["illumination_select"] = (
             "[Single illumination (Select from List)] ",
             "processing_illumination=[illumination "
@@ -887,7 +901,7 @@ def parse_options(input_dict):
             "",
         )
 
-    if input_dict["process_tile"] or "process_tile" in input_dict:
+    if "process_tile" in input_dict:
         output_dict["tile_text"], output_dict["tile_select"] = (
             "[Single tile (Select from List)] ",
             "processing_tile=[tile " + str(input_dict["process_tile"] - 1) + "] ",
@@ -895,7 +909,7 @@ def parse_options(input_dict):
     else:
         output_dict["tile_text"], output_dict["tile_select"] = ("[All tiles] ", "")
 
-    if input_dict["process_timepoint"] or "process_timepoint" in input_dict:
+    if "process_timepoint" in input_dict:
         output_dict["timepoint_text"], output_dict["timepoint_select"] = (
             "[Single timepoint (Select from List)] ",
             "processing_timepoint=[timepoint "
@@ -908,7 +922,7 @@ def parse_options(input_dict):
             "",
         )
 
-    if input_dict["process_angle"] or "process_angle" in input_dict:
+    if "process_angle" in input_dict:
         output_dict["angle_text"], output_dict["angle_select"] = (
             "[Single angle (Select from List)] ",
             "processing_angle=[angle " + str(input_dict["process_angle"] - 1) + "] ",
