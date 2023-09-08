@@ -7,15 +7,18 @@ Mostly convenience wrappers with simplified calls and default values.
 # pylint: disable-msg=bad-continuation
 # Some function names just need to be longer than 30 chars:
 # pylint: disable-msg=invalid-name
+import os
 
 from ij import IJ  # pylint: disable-msg=import-error
+
+from .. import pathtools
 
 
 def run_define_dataset_autoloader(
     project_filename,
-    czi_path,
-    dataset_save_path,
+    file_path,
     bf_series_type,
+    dataset_save_path=None,
     timepoints_per_partition=1,
     resave="Re-save as multiresolution HDF5",
     subsampling_factors=None,
@@ -26,9 +29,10 @@ def run_define_dataset_autoloader(
     Parameters
     ----------
     project_filename : str
-        Name of the project (finishes with .xml)
-    czi_path : str
-        path to the first czi
+        Name of the project
+    file_path : str
+        path to the file, can be the first czi or a regex to match all files
+        with an extension
     dataset_save_path : str
         output path for the .xml
     bf_series_type : str
@@ -47,6 +51,16 @@ def run_define_dataset_autoloader(
         "[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]"
     """
 
+    file_info = pathtools.parse_path(file_path)
+    result_folder = pathtools.join2(file_info["path"], project_filename)
+
+    project_filename = project_filename.replace(" ", "_")
+
+    if not os.path.exists(result_folder):
+        os.makedirs(result_folder)
+
+    if not dataset_save_path:
+        dataset_save_path = pathtools.join2(result_folder, project_filename)
     if subsampling_factors:
         subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
     else:
@@ -55,14 +69,16 @@ def run_define_dataset_autoloader(
         hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
     else:
         hdf5_chunk_sizes = " "
+
     IJ.run(
         "Define Multi-View Dataset",
         "define_dataset=[Automatic Loader (Bioformats based)] "
         + "project_filename=["
         + project_filename
+        + ".xml"
         + "] "
         + "path=["
-        + czi_path
+        + file_path
         + "] "
         + "exclude=10 "
         + "bioformats_series_are?="
@@ -73,7 +89,7 @@ def run_define_dataset_autoloader(
         + resave
         + "] "
         + "dataset_save_path=["
-        + dataset_save_path
+        + result_folder
         + "] "
         + "check_stack_sizes "
         + "apply_angle_rotation "
@@ -88,7 +104,59 @@ def run_define_dataset_autoloader(
         + dataset_save_path
         + "]",
     )
-    return
+
+
+def run_define_dataset_manualoader(
+    project_filename,
+    file_path,
+    series_treatment,
+):
+    """Run the Define Multi-View Dataset command using the "Manual Loader" option
+
+    Parameters
+    ----------
+    project_filename : str
+        Name of the project
+    file_path : str
+        Path to the file
+    series_treatment : str
+        How to treat the series, possible choices are only "Tiles" or "Angles"
+    """
+
+    xml_filename = project_filename + ".xml"
+
+    parent_dir = os.path.dirname(file_path)
+    filename = os.path.basename(file_path)
+    temp = os.path.join(parent_dir, filename + "_temp")
+    h5_path = os.path.join(temp, project_filename)
+
+    IJ.run(
+        "Define dataset ...",
+        "define_dataset=[Automatic Loader (Bioformats based)] "
+        + "project_filename=["
+        + xml_filename
+        + "] "
+        + "path=["
+        + file_path
+        + "] "
+        + "bioformats_series_are?="
+        + series_treatment
+        + " "
+        + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
+        + "how_to_load_images=[Re-save as multiresolution HDF5] "
+        + "dataset_save_path=["
+        + temp
+        + "] "
+        + "check_stack_sizes "
+        + "subsampling_factors=[{ {1,1,1}, {2,2,1}, {4,4,1}, {8,8,2}, {16,16,4} }] "
+        + "hdf5_chunk_sizes=[{ {32,32,4}, {32,16,8}, {16,16,16}, {32,16,8}, {32,32,4} }] "
+        + "timepoints_per_partition=1 "
+        + "setups_per_partition=0 "
+        + "use_deflate_compression "
+        + "export_path=["
+        + h5_path
+        + "]",
+    )
 
 
 def run_resave_as_h5(
@@ -179,6 +247,254 @@ def run_resave_as_h5(
     )
 
     return
+
+
+def run_phase_correlation_pairwise_shifts_calculation(
+    project_path,
+    input_dict,
+    treat_timepoints="group",
+    treat_channels="group",
+    treat_illuminations="group",
+    treat_angles="[treat individually]",
+    treat_tiles="group",
+):
+    """Run the Pairwise shifts calculation using Phase Correlation
+
+    Parameters
+    ----------
+    project_path : str
+        Path to the XML
+    input_dict : dict
+        Dictionary containing all the required information for angle, channel,
+        illuminations and timepoints
+    treat_timepoints : str, optional
+        How to deal with the timepoints, by default "group"
+    treat_channels : str, optional
+        How to deal with the channels, by default "group"
+    treat_illuminations : str, optional
+        How to deal with the illuminations, by default "group"
+    treat_angles : str, optional
+        How to deal with the angles, by default "[treat individually]"
+    treat_tiles : str, optional
+        How to deal with the tiles, by default "group"
+    """
+    options_dict = parse_options(input_dict)
+
+    use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
+    use_channel = "channels=[Average Channels]" if treat_channels == "group" else ""
+    use_illumination = (
+        "illuminations=[Average Illuminations]"
+        if treat_illuminations == "group"
+        else ""
+    )
+    use_timepoint = (
+        "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
+    )
+    use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
+
+    IJ.run(
+        "Calculate pairwise shifts ...",
+        "select=["
+        + project_path
+        + "] "
+        + "process_angle="
+        + options_dict["angle_text"]
+        + "process_channel="
+        + options_dict["channel_text"]
+        + "process_illumination="
+        + options_dict["illumination_text"]
+        + "process_tile="
+        + options_dict["tile_text"]
+        + "process_timepoint="
+        + options_dict["timepoint_text"]
+        + options_dict["timepoint_select"]
+        + options_dict["angle_select"]
+        + options_dict["channel_select"]
+        + options_dict["illumination_select"]
+        + options_dict["tile_select"]
+        + options_dict["timepoint_select"]
+        + " "
+        + "method=[Phase Correlation] "
+        + "show_expert_grouping_options "
+        + "show_expert_algorithm_parameters "
+        + use_angle
+        + " "
+        + use_channel
+        + " "
+        + use_illumination
+        + " "
+        + use_timepoint
+        + " "
+        + use_tile
+        + " "
+        + "how_to_treat_angles="
+        + treat_angles
+        + " "
+        + "how_to_treat_channels="
+        + treat_channels
+        + " "
+        + "how_to_treat_illuminations="
+        + treat_illuminations
+        + " "
+        + "how_to_treat_tiles="
+        + treat_tiles
+        + " "
+        + "how_to_treat_timepoints="
+        + treat_timepoints
+        + " "
+        + "subpixel_accuracy",
+    )
+
+
+def run_filter_pairwise_shifts(
+    project_path,
+    min_r=0.7,
+    max_r=1,
+    max_shift_x=0,
+    max_shift_y=0,
+    max_shift_z=0,
+    max_displacement=0,
+):
+    """Filter the pairwise shifts based on different thresholds
+
+    Parameters
+    ----------
+    project_path : str
+        Path of the XML on which to apply the filters
+    min_r : float, optional
+        Minimal quality of the link to keep, by default 0.7
+    max_r : float, optional
+        Maximal quality of the link to keep, by default 1
+    max_shift_x : int, optional
+        Maximal shift in X to keep, by default 0
+    max_shift_y : int, optional
+        Maximal shift in Y to keep, by default 0
+    max_shift_z : int, optional
+        Maximal shift in Z to keep, by default 0
+    max_displacement : int, optional
+        Maximal displacement to keep, by default 0
+    """
+    IJ.run(
+        "Filter pairwise shifts ...",
+        "select=["
+        + project_path
+        + "] "
+        + "filter_by_link_quality "
+        + "min_r="
+        + str(min_r)
+        + " "
+        + "max_r="
+        + str(max_r)
+        + " "
+        + "max_shift_in_x="
+        + str(max_shift_x)
+        + " "
+        + "max_shift_in_y="
+        + str(max_shift_y)
+        + " "
+        + "max_shift_in_z="
+        + str(max_shift_z)
+        + " "
+        + "max_displacement="
+        + str(max_displacement),
+    )
+
+
+def run_optimize_apply_shifts(
+    project_path,
+    input_dict,
+    treat_timepoints="group",
+    treat_channels="group",
+    treat_illuminations="group",
+    treat_angles="[treat individually]",
+    treat_tiles="group",
+):
+    """Optimize the shifts and apply it to the dataset
+
+    Parameters
+    ----------
+    project_path : str
+        Path of the XML on which to optimize and apply the shifts
+    input_dict : dict
+        Dictionary containing all the required informations for angles,
+        channels, illuminations, tiles and timepoints
+    treat_timepoints : str, optional
+        How to treat the timepoints, by default "group"
+    treat_channels : str, optional
+        How to treat the channels, by default "group"
+    treat_illuminations : str, optional
+        How to treat the illuminations, by default "group"
+    treat_angles : str, optional
+        How to treat the angles, by default "[treat individually]"
+    treat_tiles : str, optional
+        How to treat the tiles, by default "group"
+    """
+    options_dict = parse_options(input_dict)
+
+    use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
+    use_channel = "channels=[Average Channels]" if treat_channels == "group" else ""
+    use_illumination = (
+        "illuminations=[Average Illuminations]"
+        if treat_illuminations == "group"
+        else ""
+    )
+    use_timepoint = (
+        "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
+    )
+    use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
+
+    IJ.run(
+        "Optimize globally and apply shifts ...",
+        "select=["
+        + project_path
+        + "] "
+        + "process_angle="
+        + options_dict["angle_text"]
+        + "process_channel="
+        + options_dict["channel_text"]
+        + "process_illumination="
+        + options_dict["illumination_text"]
+        + "process_tile="
+        + options_dict["tile_text"]
+        + "process_timepoint="
+        + options_dict["timepoint_text"]
+        + options_dict["timepoint_select"]
+        + options_dict["angle_select"]
+        + options_dict["channel_select"]
+        + options_dict["illumination_select"]
+        + options_dict["tile_select"]
+        + options_dict["timepoint_select"]
+        + " "
+        + "relative=2.500 "
+        + "absolute=3.500 "
+        + "global_optimization_strategy=[Two-Round using Metadata to align unconnected "
+        + "Tiles and iterative dropping of bad links] "
+        + "show_expert_grouping_options "
+        + use_angle
+        + " "
+        + use_channel
+        + " "
+        + use_illumination
+        + " "
+        + use_timepoint
+        + " "
+        + use_tile
+        + " "
+        + "how_to_treat_angles="
+        + treat_angles
+        + " "
+        + "how_to_treat_channels="
+        + treat_channels
+        + " "
+        + "how_to_treat_illuminations="
+        + treat_illuminations
+        + " "
+        + "how_to_treat_tiles="
+        + treat_tiles
+        + " "
+        + "how_to_treat_timepoints="
+        + treat_timepoints,
+    )
 
 
 def run_detect_interest_points(
@@ -445,3 +761,159 @@ def run_fusion(
         + "]",
     )
     return
+
+
+def run_2steps_fusion(
+    project_path,
+    input_dict,
+    result_path=None,
+    downsampling=1,
+    interpolation="[Linear Interpolation]",
+    pixel_type="[16-bit unsigned integer]",
+    export="HDF5",
+):
+    file_info = pathtools.parse_path(project_path)
+    if not result_path:
+        result_path = pathtools.join2(file_info["path"], file_info["basename"])
+        if not os.path.exists(result_path):
+            os.makedirs(result_path)
+
+        pathtools.join2(result_path, file_info["basename"] + ".h5")
+        pathtools.join2(result_path, file_info["basename"] + ".xml")
+
+        h5_fused_path_temp = pathtools.join2(
+            result_path, file_info["basename"] + "_temp.h5"
+        )
+        xml_fused_path_temp = pathtools.join2(
+            result_path, file_info["basename"] + "_temp.xml"
+        )
+
+    options_dict = parse_options(input_dict)
+
+    IJ.run(
+        "Fuse dataset...",
+        "select=["
+        + project_path
+        + "] "
+        + "process_angle="
+        + options_dict["angle_text"]
+        + "process_channel="
+        + options_dict["channel_text"]
+        + "process_illumination="
+        + options_dict["illumination_text"]
+        + "process_tile="
+        + options_dict["tile_text"]
+        + "process_timepoint="
+        + options_dict["timepoint_text"]
+        + "bouding_box=[All Views] "
+        + "downsampling="
+        + str(downsampling)
+        + " "
+        + "interpolation="
+        + interpolation
+        + " "
+        + "pixel_type="
+        + pixel_type
+        + " "
+        + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
+        + "blend preserve_original produce=[Each timepoint & channel] "
+        + "fused_image=[ZARR/N5/HDF5 export using N5-API] "
+        + "define_input=[Auto-load from input data (values shown below)] "
+        + "export="
+        + export
+        + " "
+        + "create "
+        + "create_0 "
+        + "hdf5_file=["
+        + h5_fused_path_temp
+        + "] "
+        + "xml_output_file=["
+        + xml_fused_path_temp
+        + "] "
+        + "show_advanced_block_size_options "
+        + "block_size_x=128 "
+        + "block_size_y=128 "
+        + "block_size_z=64 "
+        + "block_size_factor_x=1 "
+        + "block_size_factor_y=1 "
+        + "block_size_factor_z=1",
+    )
+
+    # IJ.run(
+    #     "As HDF5 ...",
+    #     "select=["
+    #     + h5_fused_path_temp
+    #     + "] "
+    #     + "resave_angle=[All angles] "
+    #     + "resave_channel=[All channels] "
+    #     + "resave_illumination=[All illuminations] "
+    #     + "resave_tile=[All tiles] "
+    #     + "resave_timepoint=[All Timepoints] "
+    #     + "timepoints_per_partition=1 "
+    #     + "setups_per_partition=0 "
+    #     + "use_deflate_compression "
+    #     + "export_path=["
+    #     + xml_fused_path
+    #     + "]",
+    # )
+
+
+def parse_options(input_dict):
+    output_dict = {}
+
+    if input_dict["process_channel"] or "process_channel" in input_dict:
+        output_dict["channel_text"], output_dict["channel_select"] = (
+            "[Single channel (Select from List)] ",
+            "processing_channel=[channel "
+            + str(input_dict["process_channel"] - 1)
+            + "] ",
+        )
+    else:
+        output_dict["channel_text"], output_dict["channel_select"] = (
+            "[All channels] ",
+            "",
+        )
+
+    if input_dict["process_illumination"] or "process_illumination" in input_dict:
+        output_dict["illumination_text"], output_dict["illumination_select"] = (
+            "[Single illumination (Select from List)] ",
+            "processing_illumination=[illumination "
+            + str(input_dict["process_illumination"] - 1)
+            + "] ",
+        )
+    else:
+        output_dict["illumination_text"], output_dict["illumination_select"] = (
+            "[All illuminations] ",
+            "",
+        )
+
+    if input_dict["process_tile"] or "process_tile" in input_dict:
+        output_dict["tile_text"], output_dict["tile_select"] = (
+            "[Single tile (Select from List)] ",
+            "processing_tile=[tile " + str(input_dict["process_tile"] - 1) + "] ",
+        )
+    else:
+        output_dict["tile_text"], output_dict["tile_select"] = ("[All tiles] ", "")
+
+    if input_dict["process_timepoint"] or "process_timepoint" in input_dict:
+        output_dict["timepoint_text"], output_dict["timepoint_select"] = (
+            "[Single timepoint (Select from List)] ",
+            "processing_timepoint=[timepoint "
+            + str(input_dict["process_timepoint"] - 1)
+            + "] ",
+        )
+    else:
+        output_dict["timepoint_text"], output_dict["timepoint_select"] = (
+            "[All Timepoints] ",
+            "",
+        )
+
+    if input_dict["process_angle"] or "process_angle" in input_dict:
+        output_dict["angle_text"], output_dict["angle_select"] = (
+            "[Single angle (Select from List)] ",
+            "processing_angle=[angle " + str(input_dict["process_angle"] - 1) + "] ",
+        )
+    else:
+        output_dict["angle_text"], output_dict["angle_select"] = ("[All angles] ", "")
+
+    return output_dict
