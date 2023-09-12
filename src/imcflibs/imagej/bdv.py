@@ -8,6 +8,7 @@ Mostly convenience wrappers with simplified calls and default values.
 # Some function names just need to be longer than 30 chars:
 # pylint: disable-msg=invalid-name
 import os
+import sys
 
 from ij import IJ  # pylint: disable-msg=import-error
 
@@ -674,7 +675,13 @@ def run_interest_points_registration(
     return
 
 
-def run_duplicate_channel_transformations(project_path, channel_source):
+def run_duplicate_transformations(
+    project_path,
+    transformation_type="channel",
+    channel_source=None,
+    tile_source=None,
+    transformation_to_use="[Replace all transformations]",
+):
     """Duplicate the transformation parameters to the other channels.
 
     If registration has been generated using a single channel,this can be used
@@ -686,22 +693,64 @@ def run_duplicate_channel_transformations(project_path, channel_source):
         Path to the .xml project
     channel_source : str
         Specify the channel name
+
     """
+
+    tile_apply = ""
+    tile_process = ""
+
+    chnl_apply = ""
+    chnl_process = ""
+
+    if transformation_type == "channel":
+        apply = "[One channel to other channels]"
+        target = "[All Channels]"
+        if channel_source:
+            source = str(channel_source - 1)
+        if tile_source:
+            tile_apply = "apply_to_tile=[Single tile (Select from List)] "
+            tile_process = "processing_tile=[tile " + str(tile_source) + "] "
+        else:
+            tile_apply = "apply_to_tile=[All tiles] "
+    elif transformation_type == "tile":
+        apply = "[One tile to other tiles]"
+        target = "[All Tiles]"
+        if tile_source:
+            source = str(tile_source)
+        if channel_source:
+            chnl_apply = "apply_to_channel=[Single channel (Select from List)] "
+            chnl_process = (
+                "processing_channel=[channel " + str(channel_source - 1) + "] "
+            )
+        else:
+            chnl_apply = "[All Channels] "
+    else:
+        sys.exit("Issue with transformation duplication")
+
     IJ.run(
         "Duplicate Transformations",
-        "apply=[One channel to other channels] "
+        "apply="
+        + apply
+        + " "
         + "select=["
         + project_path
         + "] "
         + "apply_to_angle=[All angles] "
         + "apply_to_illumination=[All illuminations] "
-        + "apply_to_tile=[All tiles] "
+        + tile_apply
+        + tile_process
+        + chnl_apply
+        + chnl_process
         + "apply_to_timepoint=[All Timepoints] "
         + "source="
-        + channel_source
+        + source
         + " "
-        + "target=[All Channels] "
-        + "duplicate_which_transformations=[Replace all transformations]",
+        + "target="
+        + target
+        + " "
+        + "duplicate_which_transformations="
+        + transformation_to_use
+        + " ",
     )
     return
 
@@ -777,7 +826,7 @@ def run_fusion(
     return
 
 
-def run_2steps_fusion(
+def run_fusion2(
     project_path,
     input_dict,
     result_path=None,
