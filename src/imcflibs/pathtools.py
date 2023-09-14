@@ -325,6 +325,18 @@ def folder_size(source):
     return total_size
 
 
+def create_directory(new_path):
+    """create a new directory if it does not already exist
+
+    Parameters
+    ----------
+    new_path : str
+        Path to the new directory
+    """
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
+
+
 # pylint: disable-msg=C0103
 #   we use the variable name 'exists' in its common spelling (lowercase), so
 #   removing this workaround will be straightforward at a later point
