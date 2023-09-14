@@ -9,6 +9,7 @@ Mostly convenience wrappers with simplified calls and default values.
 # pylint: disable-msg=invalid-name
 import os
 import sys
+import shutil
 
 from ij import IJ  # pylint: disable-msg=import-error
 
@@ -29,11 +30,11 @@ def backup_xml_files(source_directory, subfolder_name):
         name of the subfolder. Will be created if it does not exists.
     """
 
-    xml_backup_directory = source_directory + "/xml-backup"
-    create_directory(xml_backup_directory)
+    xml_backup_directory = os.path.join(source_directory, "xml-backup")
+    pathtools.create_directory(xml_backup_directory)
     backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
-    create_directory(backup_subfolder)
-    all_xml_files = list_all_filenames(source_directory, ".xml*")
+    pathtools.create_directory(backup_subfolder)
+    all_xml_files = pathtools.listdir_matching(source_directory, ".xml*")
     os.chdir(source_directory)
     for xml_file in all_xml_files:
         shutil.copy2(xml_file, backup_subfolder)
