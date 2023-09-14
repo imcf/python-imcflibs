@@ -15,6 +15,8 @@ from ij import IJ  # pylint: disable-msg=import-error
 
 from .. import pathtools
 
+from .log import LOG as log
+
 
 def backup_xml_files(source_directory, subfolder_name):
     """Copy all .xml (and .xml~) files to a subfolder inside
@@ -96,8 +98,7 @@ def run_define_dataset_autoloader(
     else:
         hdf5_chunk_sizes = " "
 
-    IJ.run(
-        "Define Multi-View Dataset",
+    options = (
         "define_dataset=[Automatic Loader (Bioformats based)] "
         + "project_filename=["
         + project_filename
@@ -131,6 +132,10 @@ def run_define_dataset_autoloader(
         + "]",
     )
 
+    log.debug(options)
+    IJ.run("Define Multi-View Dataset", options)
+    return
+
 
 def run_define_dataset_manualoader(
     project_filename,
@@ -161,8 +166,7 @@ def run_define_dataset_manualoader(
     temp = os.path.join(source_directory, project_filename + "_temp")
     os.path.join(temp, project_filename)
 
-    IJ.run(
-        "Define dataset ...",
+    options = (
         "define_dataset=[Manual Loader (Bioformats based)] "
         + "project_filename=["
         + xml_filename
@@ -193,6 +197,9 @@ def run_define_dataset_manualoader(
         + "calibration_definition=[Load voxel-size(s) from file(s)] "
         + "imglib2_data_container=[ArrayImg (faster)]",
     )
+
+    log.debug(options)
+    IJ.run("Define dataset ...", options)
 
     return
 
@@ -262,8 +269,7 @@ def run_resave_as_h5(
     else:
         hdf5_chunk_sizes = " "
 
-    IJ.run(
-        "As HDF5",
+    options = (
         "select="
         + str(source_xml_file)
         + " "
@@ -283,6 +289,9 @@ def run_resave_as_h5(
         + "export_path="
         + output_h5_file_path,
     )
+
+    log.debug(options)
+    IJ.run("As HDF5", options)
 
     return
 
@@ -332,8 +341,7 @@ def run_phase_correlation_pairwise_shifts_calculation(
     )
     use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
 
-    IJ.run(
-        "Calculate pairwise shifts ...",
+    options = (
         "select=["
         + project_path
         + "] "
@@ -385,6 +393,9 @@ def run_phase_correlation_pairwise_shifts_calculation(
         + "subpixel_accuracy",
     )
 
+    log.debug(options)
+    IJ.run("Calculate pairwise shifts ...", options)
+
     backup_xml_files(project_path, "phase_correlation_shift_calculation")
     return
 
@@ -417,8 +428,8 @@ def run_filter_pairwise_shifts(
     max_displacement : int, optional
         Maximal displacement to keep, by default 0
     """
-    IJ.run(
-        "Filter pairwise shifts ...",
+
+    options = (
         "select=["
         + project_path
         + "] "
@@ -441,6 +452,9 @@ def run_filter_pairwise_shifts(
         + "max_displacement="
         + str(max_displacement),
     )
+
+    log.debug(options)
+    IJ.run("Filter pairwise shifts ...", options)
 
     backup_xml_files(project_path, "filter_pairwise_shifts")
     return
@@ -489,8 +503,7 @@ def run_optimize_apply_shifts(
     )
     use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
 
-    IJ.run(
-        "Optimize globally and apply shifts ...",
+    options = (
         "select=["
         + project_path
         + "] "
@@ -541,6 +554,9 @@ def run_optimize_apply_shifts(
         + "how_to_treat_timepoints="
         + treat_timepoints,
     )
+
+    log.debug(options)
+    IJ.run("Optimize globally and apply shifts ...", options)
 
     backup_xml_files(project_path, "optimize_and_apply_shifts")
     return
@@ -594,8 +610,7 @@ def run_detect_interest_points(
             + "] "
         )
 
-    IJ.run(
-        "Detect Interest Points for Registration",
+    options = (
         "select=["
         + project_path
         + "] "
@@ -629,6 +644,9 @@ def run_detect_interest_points(
         + "type_of_detections_to_use=Brightest "
         + "compute_on=[CPU (Java)]",
     )
+
+    log.debug(options)
+    IJ.run("Detect Interest Points for Registration", options)
     return
 
 
@@ -671,9 +689,7 @@ def run_interest_points_registration(
     else:
         rigid_timepoints_arg = " "
 
-    # register using interest points
-    IJ.run(
-        "Register Dataset based on Interest Points",
+    options = (
         "select=["
         + project_path
         + "] "
@@ -706,6 +722,10 @@ def run_interest_points_registration(
         + "interestpoint_grouping=[Group interest points (simply combine all in one virtual view)] "
         + "interest=5",
     )
+
+    log.debug(options)
+    # register using interest points
+    IJ.run("Register Dataset based on Interest Points", options)
     return
 
 
@@ -761,8 +781,7 @@ def run_duplicate_transformations(
     else:
         sys.exit("Issue with transformation duplication")
 
-    IJ.run(
-        "Duplicate Transformations",
+    options = (
         "apply="
         + apply
         + " "
@@ -787,82 +806,86 @@ def run_duplicate_transformations(
         + " ",
     )
 
+    log.debug(options)
+    IJ.run("Duplicate Transformations", options)
+
     backup_xml_files(project_path, "duplicate_transformation_" + transformation_type)
     return
 
 
+# def run_fusion(
+#     temp_path,
+#     fused_xml_path,
+#     process_timepoint="All Timepoints",
+#     downsampling=1,
+#     ram_handling="Virtual",
+#     save_format="Save as new XML Project (HDF5)",
+#     additional_option="",
+# ):
+#     """run the image fusion command
+
+#     Parameters
+#     ----------
+#     temp_path : str
+#         temporary folder output (scratch)
+#     fused_xml_path : str
+#         final xml output path
+#     process_timepoint : str, optional
+#         Specify which timepoint should be processed, by default "All Timepoints"
+#     downsampling : int, optional
+#         Downsampling factor to use during the fusion, by default 1 (no
+#         downsampling)
+#     ram_handling : str, optional
+#         Which type of ram_handling do you require, by default "Virtual". This is
+#         the conservative (not likely to fail even if only a low amount of RAM is
+#         available) and slow approach
+#     save_format : str, optional
+#         file format of the new image, by default "Save as new XML Project
+#         (HDF5)", this is matching the conservative and slow approach
+#     additional_option : str, optional=""
+#         Any additional options that should be added to the fusion command. Do
+#         not forget to finish each additional option with a space
+#     """
+#     # Add preserve original data anisotropy tickbox:
+#     # tiles=> true; angle=>False
+
+#     options = (
+#         "select=["
+#         + temp_path
+#         + "] "
+#         + "process_angle=[All angles] "
+#         + "process_channel=[All channels] "
+#         + "process_illumination=["
+#         + process_timepoint
+#         + "] "
+#         + "process_tile=[All tiles] "
+#         + "process_timepoint=[All Timepoints] "
+#         + "bounding_box=[Currently Selected Views] "
+#         + "downsampling="
+#         + str(downsampling)
+#         + " "
+#         + "pixel_type=[16-bit unsigned integer] "
+#         + "interpolation=[Linear Interpolation] "
+#         + "image=["
+#         + ram_handling
+#         + "] "
+#         + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
+#         + "blend "
+#         + additional_option
+#         + "produce=[Each timepoint & channel] "
+#         + "fused_image=["
+#         + save_format
+#         + "] "
+#         + "export_path=["
+#         + fused_xml_path
+#         + "]",
+#     )
+
+#     IJ.run("Fuse dataset ...", options)
+#     return
+
+
 def run_fusion(
-    temp_path,
-    fused_xml_path,
-    process_timepoint="All Timepoints",
-    downsampling=1,
-    ram_handling="Virtual",
-    save_format="Save as new XML Project (HDF5)",
-    additional_option="",
-):
-    """run the image fusion command
-
-    Parameters
-    ----------
-    temp_path : str
-        temporary folder output (scratch)
-    fused_xml_path : str
-        final xml output path
-    process_timepoint : str, optional
-        Specify which timepoint should be processed, by default "All Timepoints"
-    downsampling : int, optional
-        Downsampling factor to use during the fusion, by default 1 (no
-        downsampling)
-    ram_handling : str, optional
-        Which type of ram_handling do you require, by default "Virtual". This is
-        the conservative (not likely to fail even if only a low amount of RAM is
-        available) and slow approach
-    save_format : str, optional
-        file format of the new image, by default "Save as new XML Project
-        (HDF5)", this is matching the conservative and slow approach
-    additional_option : str, optional=""
-        Any additional options that should be added to the fusion command. Do
-        not forget to finish each additional option with a space
-    """
-
-    # Add preserve original data anisotropy tickbox:
-    # tiles=> true; angle=>False
-    IJ.run(
-        "Fuse dataset ...",
-        "select=["
-        + temp_path
-        + "] "
-        + "process_angle=[All angles] "
-        + "process_channel=[All channels] "
-        + "process_illumination=["
-        + process_timepoint
-        + "] "
-        + "process_tile=[All tiles] "
-        + "process_timepoint=[All Timepoints] "
-        + "bounding_box=[Currently Selected Views] "
-        + "downsampling="
-        + str(downsampling)
-        + " "
-        + "pixel_type=[16-bit unsigned integer] "
-        + "interpolation=[Linear Interpolation] "
-        + "image=["
-        + ram_handling
-        + "] "
-        + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
-        + "blend "
-        + additional_option
-        + "produce=[Each timepoint & channel] "
-        + "fused_image=["
-        + save_format
-        + "] "
-        + "export_path=["
-        + fused_xml_path
-        + "]",
-    )
-    return
-
-
-def fusion_main(
     project_path,
     input_dict,
     result_path=None,
@@ -871,7 +894,7 @@ def fusion_main(
     pixel_type="[16-bit unsigned integer]",
     export="HDF5",
 ):
-    """Wrapper method to call the right fusion method.
+    """Wrapper to BigStitcher > Batch Processing > Fuse Dataset.
 
     Depending on the export type, inputs are different and therefore will
     distribute inputs differently.
@@ -894,53 +917,7 @@ def fusion_main(
     export : str, optional
         Format of the output fused image, by default "HDF5".
     """
-    if export == "HDF5":
-        run_fusion_h5(
-            project_path,
-            input_dict,
-            result_path,
-            downsampling,
-            interpolation,
-            pixel_type,
-        )
-    elif export == "Tiff":
-        run_fusion_tiff(
-            project_path,
-            input_dict,
-            result_path,
-            downsampling,
-            interpolation,
-            pixel_type,
-        )
 
-
-def run_fusion_tiff(
-    project_path,
-    input_dict,
-    result_path,
-    downsampling,
-    interpolation,
-    pixel_type,
-):
-    """Wrapper to BigStitcher > Batch Processing > Fuse Dataset.
-    Fuse a dataset to Tiff.
-
-    Parameters
-    ----------
-    project_path : str
-        Path to the XML file.
-    input_dict : dict
-        Dictionary containing all the required informations for angles,
-        channels, illuminations, tiles and timepoints.
-    result_path : str
-        Path to store the resulting fused image.
-    downsampling : int
-        Downsampling value.
-    interpolation : str
-        Type of interpolation to do during fusion.
-    pixel_type : str
-        Type of pixel to use for the fusion.
-    """
     file_info = pathtools.parse_path(project_path)
     if not result_path:
         result_path = pathtools.join2(file_info["path"], file_info["basename"])
@@ -949,8 +926,7 @@ def run_fusion_tiff(
 
     options_dict = parse_options(input_dict)
 
-    IJ.run(
-        "Fuse dataset ...",
+    options = (
         "select=["
         + project_path
         + "] "
@@ -976,106 +952,44 @@ def run_fusion_tiff(
         + " "
         + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
         + "blend preserve_original produce=[Each timepoint & channel] "
-        + "output_file_directory=["
-        + result_path
-        + "] "
-        + "filename_addition=[]",
     )
 
+    if export == "TIFF":
+        options += (
+            "output_file_directory=[" + result_path + "] " + "filename_addition=[]",
+        )
+    elif export == "HDF5":
+        h5_fused_path = pathtools.join2(
+            result_path, file_info["basename"] + "_fused.h5"
+        )
+        xml_fused_path = pathtools.join2(
+            result_path, file_info["basename"] + "_fused.xml"
+        )
 
-def run_fusion_h5(
-    project_path,
-    input_dict,
-    result_path,
-    downsampling,
-    interpolation,
-    pixel_type,
-):
-    """Wrapper to BigStitcher > Batch Processing > Fuse Dataset.
-    Fuse a dataset to a BDV compatible H5/XML using N5-API.
-    Create_0 = include pyramids.
-    Uses NON-default block sizes for H5 on purpose to improve speed.
+        options += (
+            +"fused_image=[ZARR/N5/HDF5 export using N5-API] "
+            + "define_input=[Auto-load from input data (values shown below)] "
+            + "export=HDF5 "
+            + "create "
+            + "create_0 "
+            + "hdf5_file=["
+            + h5_fused_path
+            + "] "
+            + "xml_output_file=["
+            + xml_fused_path
+            + "] "
+            + "show_advanced_block_size_options "
+            + "block_size_x=128 "
+            + "block_size_y=128 "
+            + "block_size_z=64 "
+            + "block_size_factor_x=1 "
+            + "block_size_factor_y=1 "
+            + "block_size_factor_z=1",
+        )
 
-    Parameters
-    ----------
-    project_path : str
-        Path to the XML file.
-    input_dict : dict
-        Dictionary containing all the required informations for angles,
-        channels, illuminations, tiles and timepoints.
-    result_path : str
-        Path to store the resulting fused image.
-    downsampling : int
-        Downsampling value.
-    interpolation : str
-        Type of interpolation to do during fusion.
-    pixel_type : str
-        Type of pixel to use for the fusion.
-    """
-    file_info = pathtools.parse_path(project_path)
-    if not result_path:
-        result_path = pathtools.join2(file_info["path"], file_info["basename"])
-        if not os.path.exists(result_path):
-            os.makedirs(result_path)
-
-    pathtools.join2(result_path, file_info["basename"] + ".h5")
-    pathtools.join2(result_path, file_info["basename"] + ".xml")
-
-    h5_fused_path_temp = pathtools.join2(
-        result_path, file_info["basename"] + "_fused.h5"
-    )
-    xml_fused_path_temp = pathtools.join2(
-        result_path, file_info["basename"] + "_fused.xml"
-    )
-
-    options_dict = parse_options(input_dict)
-
-    IJ.run(
-        "Fuse dataset ...",
-        "select=["
-        + project_path
-        + "] "
-        + "process_angle="
-        + options_dict["angle_text"]
-        + "process_channel="
-        + options_dict["channel_text"]
-        + "process_illumination="
-        + options_dict["illumination_text"]
-        + "process_tile="
-        + options_dict["tile_text"]
-        + "process_timepoint="
-        + options_dict["timepoint_text"]
-        + "bouding_box=[All Views] "
-        + "downsampling="
-        + str(downsampling)
-        + " "
-        + "interpolation="
-        + interpolation
-        + " "
-        + "pixel_type="
-        + pixel_type
-        + " "
-        + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
-        + "blend preserve_original produce=[Each timepoint & channel] "
-        + "fused_image=[ZARR/N5/HDF5 export using N5-API] "
-        + "define_input=[Auto-load from input data (values shown below)] "
-        + "export=HDF5 "
-        + "create "
-        + "create_0 "
-        + "hdf5_file=["
-        + h5_fused_path_temp
-        + "] "
-        + "xml_output_file=["
-        + xml_fused_path_temp
-        + "] "
-        + "show_advanced_block_size_options "
-        + "block_size_x=128 "
-        + "block_size_y=128 "
-        + "block_size_z=64 "
-        + "block_size_factor_x=1 "
-        + "block_size_factor_y=1 "
-        + "block_size_factor_z=1",
-    )
+    log.debug(options)
+    IJ.run("Fuse dataset ...", options)
+    return
 
 
 def parse_options(input_dict):
@@ -1136,4 +1050,5 @@ def parse_options(input_dict):
     else:
         output_dict["angle_text"], output_dict["angle_select"] = ("[All angles] ", "")
 
+    log.debug(output_dict)
     return output_dict
