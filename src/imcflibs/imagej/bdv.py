@@ -15,6 +15,30 @@ from ij import IJ  # pylint: disable-msg=import-error
 from .. import pathtools
 
 
+def backup_xml_files(source_directory, subfolder_name):
+    """Copy all .xml (and .xml~) files to a subfolder inside
+    a folder called "xml-backup" in the source dir.
+    Will create a the folders if they don't exists.
+    Uses shutil.copy2 which will overwrite existing files.
+
+    Parameters
+    ----------
+    source_directory : str
+        full path to the directory containing the xml files
+    subfolder_name : str
+        name of the subfolder. Will be created if it does not exists.
+    """
+
+    xml_backup_directory = source_directory + "/xml-backup"
+    create_directory(xml_backup_directory)
+    backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
+    create_directory(backup_subfolder)
+    all_xml_files = list_all_filenames(source_directory, ".xml*")
+    os.chdir(source_directory)
+    for xml_file in all_xml_files:
+        shutil.copy2(xml_file, backup_subfolder)
+
+
 def run_define_dataset_autoloader(
     project_filename,
     file_path,
@@ -360,6 +384,9 @@ def run_phase_correlation_pairwise_shifts_calculation(
         + "subpixel_accuracy",
     )
 
+    backup_xml_files(project_path, "phase_correlation_shift_calculation")
+    return
+
 
 def run_filter_pairwise_shifts(
     project_path,
@@ -413,6 +440,9 @@ def run_filter_pairwise_shifts(
         + "max_displacement="
         + str(max_displacement),
     )
+
+    backup_xml_files(project_path, "filter_pairwise_shifts")
+    return
 
 
 def run_optimize_apply_shifts(
@@ -510,6 +540,9 @@ def run_optimize_apply_shifts(
         + "how_to_treat_timepoints="
         + treat_timepoints,
     )
+
+    backup_xml_files(project_path, "optimize_and_apply_shifts")
+    return
 
 
 def run_detect_interest_points(
@@ -752,6 +785,8 @@ def run_duplicate_transformations(
         + transformation_to_use
         + " ",
     )
+
+    backup_xml_files(project_path, "duplicate_transformation_" + transformation_type)
     return
 
 
@@ -826,7 +861,7 @@ def run_fusion(
     return
 
 
-def run_fusion2(
+def fusion_main(
     project_path,
     input_dict,
     result_path=None,
@@ -835,6 +870,147 @@ def run_fusion2(
     pixel_type="[16-bit unsigned integer]",
     export="HDF5",
 ):
+    """Wrapper method to call the right fusion method.
+
+    Depending on the export type, inputs are different and therefore will
+    distribute inputs differently.
+
+    Parameters
+    ----------
+    project_path : str
+        Path of the XML on which to do the fusion.
+    input_dict : dict
+        Dictionary containing all the required informations for angles,
+        channels, illuminations, tiles and timepoints.
+    result_path : str, optional
+        Path to store the resulting fused image, by default None.
+    downsampling : int, optional
+        Downsampling value to use during fusion, by default 1.
+    interpolation : str, optional
+        Interpolation to use during fusion, by default "[Linear Interpolation]".
+    pixel_type : str, optional
+        Pixel type to use during fusion, by default "[16-bit unsigned integer]".
+    export : str, optional
+        Format of the output fused image, by default "HDF5".
+    """
+    if export == "HDF5":
+        run_fusion_h5(
+            project_path,
+            input_dict,
+            result_path,
+            downsampling,
+            interpolation,
+            pixel_type,
+        )
+    elif export == "Tiff":
+        run_fusion_tiff(
+            project_path,
+            input_dict,
+            result_path,
+            downsampling,
+            interpolation,
+            pixel_type,
+        )
+
+
+def run_fusion_tiff(
+    project_path,
+    input_dict,
+    result_path,
+    downsampling,
+    interpolation,
+    pixel_type,
+):
+    """Wrapper to BigStitcher > Batch Processing > Fuse Dataset.
+    Fuse a dataset to Tiff.
+
+    Parameters
+    ----------
+    project_path : str
+        Path to the XML file.
+    input_dict : dict
+        Dictionary containing all the required informations for angles,
+        channels, illuminations, tiles and timepoints.
+    result_path : str
+        Path to store the resulting fused image.
+    downsampling : int
+        Downsampling value.
+    interpolation : str
+        Type of interpolation to do during fusion.
+    pixel_type : str
+        Type of pixel to use for the fusion.
+    """
+    file_info = pathtools.parse_path(project_path)
+    if not result_path:
+        result_path = pathtools.join2(file_info["path"], file_info["basename"])
+        if not os.path.exists(result_path):
+            os.makedirs(result_path)
+
+    options_dict = parse_options(input_dict)
+
+    IJ.run(
+        "Fuse dataset ...",
+        "select=["
+        + project_path
+        + "] "
+        + "process_angle="
+        + options_dict["angle_text"]
+        + "process_channel="
+        + options_dict["channel_text"]
+        + "process_illumination="
+        + options_dict["illumination_text"]
+        + "process_tile="
+        + options_dict["tile_text"]
+        + "process_timepoint="
+        + options_dict["timepoint_text"]
+        + "bouding_box=[All Views] "
+        + "downsampling="
+        + str(downsampling)
+        + " "
+        + "interpolation="
+        + interpolation
+        + " "
+        + "pixel_type="
+        + pixel_type
+        + " "
+        + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
+        + "blend preserve_original produce=[Each timepoint & channel] "
+        + "output_file_directory=["
+        + result_path
+        + "] "
+        + "filename_addition=[]",
+    )
+
+
+def run_fusion_h5(
+    project_path,
+    input_dict,
+    result_path,
+    downsampling,
+    interpolation,
+    pixel_type,
+):
+    """Wrapper to BigStitcher > Batch Processing > Fuse Dataset.
+    Fuse a dataset to a BDV compatible H5/XML using N5-API.
+    Create_0 = include pyramids.
+    Uses NON-default block sizes for H5 on purpose to improve speed.
+
+    Parameters
+    ----------
+    project_path : str
+        Path to the XML file.
+    input_dict : dict
+        Dictionary containing all the required informations for angles,
+        channels, illuminations, tiles and timepoints.
+    result_path : str
+        Path to store the resulting fused image.
+    downsampling : int
+        Downsampling value.
+    interpolation : str
+        Type of interpolation to do during fusion.
+    pixel_type : str
+        Type of pixel to use for the fusion.
+    """
     file_info = pathtools.parse_path(project_path)
     if not result_path:
         result_path = pathtools.join2(file_info["path"], file_info["basename"])
@@ -882,9 +1058,7 @@ def run_fusion2(
         + "blend preserve_original produce=[Each timepoint & channel] "
         + "fused_image=[ZARR/N5/HDF5 export using N5-API] "
         + "define_input=[Auto-load from input data (values shown below)] "
-        + "export="
-        + export
-        + " "
+        + "export=HDF5 "
         + "create "
         + "create_0 "
         + "hdf5_file=["
@@ -901,24 +1075,6 @@ def run_fusion2(
         + "block_size_factor_y=1 "
         + "block_size_factor_z=1",
     )
-
-    # IJ.run(
-    #     "As HDF5 ...",
-    #     "select=["
-    #     + h5_fused_path_temp
-    #     + "] "
-    #     + "resave_angle=[All angles] "
-    #     + "resave_channel=[All channels] "
-    #     + "resave_illumination=[All illuminations] "
-    #     + "resave_tile=[All tiles] "
-    #     + "resave_timepoint=[All Timepoints] "
-    #     + "timepoints_per_partition=1 "
-    #     + "setups_per_partition=0 "
-    #     + "use_deflate_compression "
-    #     + "export_path=["
-    #     + xml_fused_path
-    #     + "]",
-    # )
 
 
 def parse_options(input_dict):
