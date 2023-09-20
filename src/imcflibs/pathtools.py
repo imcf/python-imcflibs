@@ -3,13 +3,14 @@
 import os.path
 import platform
 from os import sep
+import re
 
 from . import strtools
 from .log import LOG as log
 
 
 def parse_path(path, prefix=""):
-    r"""Parse a path into its components.
+    """Parse a path into its components.
 
     If the path doesn't end with the pathsep, it is assumed being a file!
     No tests based on existing files are done, as this is supposed to also work
@@ -156,7 +157,7 @@ def jython_fiji_exists(path):
         return False
 
 
-def listdir_matching(path, suffix, fullpath=False, sort=False):
+def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -180,8 +181,13 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
     """
     matching_files = list()
     for candidate in os.listdir(path):
-        if candidate.lower().endswith(suffix.lower()):
+        if not regex and candidate.lower().endswith(suffix.lower()):
             # log.debug("Found file %s", candidate)
+            if fullpath:
+                matching_files.append(os.path.join(path, candidate))
+            else:
+                matching_files.append(candidate)
+        if regex and re.match(suffix.lower(), candidate.lower()):
             if fullpath:
                 matching_files.append(os.path.join(path, candidate))
             else:

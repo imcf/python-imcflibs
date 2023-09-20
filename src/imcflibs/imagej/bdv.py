@@ -36,7 +36,7 @@ def backup_xml_files(source_directory, subfolder_name):
     pathtools.create_directory(xml_backup_directory)
     backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
     pathtools.create_directory(backup_subfolder)
-    all_xml_files = pathtools.listdir_matching(source_directory, ".xml*")
+    all_xml_files = pathtools.listdir_matching(source_directory, ".xml*", regex=True)
     os.chdir(source_directory)
     for xml_file in all_xml_files:
         shutil.copy2(xml_file, backup_subfolder)
