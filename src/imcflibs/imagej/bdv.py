@@ -15,7 +15,7 @@ from ij import IJ  # pylint: disable-msg=import-error
 
 from .. import pathtools
 
-from .log import LOG as log
+from ..log import LOG as log
 
 
 def backup_xml_files(source_directory, subfolder_name):
