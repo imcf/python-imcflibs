@@ -80,9 +80,9 @@ def run_define_dataset_autoloader(
     """
 
     file_info = pathtools.parse_path(file_path)
-    result_folder = pathtools.join2(file_info["path"], project_filename)
 
     project_filename = project_filename.replace(" ", "_")
+    result_folder = pathtools.join2(file_info["path"], project_filename)
 
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
@@ -199,7 +199,7 @@ def run_define_dataset_manualoader(
     )
 
     log.debug(options)
-    IJ.run("Define dataset ...", options)
+    IJ.run("Define dataset ...", str(options))
 
     return
 
@@ -291,7 +291,7 @@ def run_resave_as_h5(
     )
 
     log.debug(options)
-    IJ.run("As HDF5", options)
+    IJ.run("As HDF5", str(options))
 
     return
 
@@ -354,6 +354,9 @@ def run_phase_correlation_pairwise_shifts_calculation(
     treat_tiles : str, optional
         How to deal with the tiles, by default "group"
     """
+
+    file_info = pathtools.parse_path(project_path)
+
     options_dict = parse_options(input_dict)
 
     print(options_dict)
@@ -423,9 +426,9 @@ def run_phase_correlation_pairwise_shifts_calculation(
     )
 
     log.debug(options)
-    IJ.run("Calculate pairwise shifts ...", options)
+    IJ.run("Calculate pairwise shifts ...", str(options))
 
-    backup_xml_files(project_path, "phase_correlation_shift_calculation")
+    backup_xml_files(file_info["path"], "phase_correlation_shift_calculation")
     return
 
 
@@ -458,6 +461,8 @@ def run_filter_pairwise_shifts(
         Maximal displacement to keep, by default 0
     """
 
+    file_info = pathtools.parse_path(project_path)
+
     options = (
         "select=["
         + project_path
@@ -479,13 +484,13 @@ def run_filter_pairwise_shifts(
         + str(max_shift_z)
         + " "
         + "max_displacement="
-        + str(max_displacement),
+        + str(max_displacement)
     )
 
     log.debug(options)
-    IJ.run("Filter pairwise shifts ...", options)
+    IJ.run("Filter pairwise shifts ...", str(options))
 
-    backup_xml_files(project_path, "filter_pairwise_shifts")
+    backup_xml_files(file_info["path"], "filter_pairwise_shifts")
     return
 
 
@@ -518,6 +523,9 @@ def run_optimize_apply_shifts(
     treat_tiles : str, optional
         How to treat the tiles, by default "group"
     """
+
+    file_info = pathtools.parse_path(project_path)
+
     options_dict = parse_options(input_dict)
 
     use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
@@ -581,13 +589,13 @@ def run_optimize_apply_shifts(
         + treat_tiles
         + " "
         + "how_to_treat_timepoints="
-        + treat_timepoints,
+        + treat_timepoints
     )
 
     log.debug(options)
-    IJ.run("Optimize globally and apply shifts ...", options)
+    IJ.run("Optimize globally and apply shifts ...", str(options))
 
-    backup_xml_files(project_path, "optimize_and_apply_shifts")
+    backup_xml_files(file_info["path"], "optimize_and_apply_shifts")
     return
 
 
@@ -671,11 +679,11 @@ def run_detect_interest_points(
         + str(maximum_number)
         + " "
         + "type_of_detections_to_use=Brightest "
-        + "compute_on=[CPU (Java)]",
+        + "compute_on=[CPU (Java)]"
     )
 
     log.debug(options)
-    IJ.run("Detect Interest Points for Registration", options)
+    IJ.run("Detect Interest Points for Registration", str(options))
     return
 
 
@@ -779,6 +787,8 @@ def run_duplicate_transformations(
 
     """
 
+    file_info = pathtools.parse_path(project_path)
+
     tile_apply = ""
     tile_process = ""
 
@@ -832,13 +842,15 @@ def run_duplicate_transformations(
         + " "
         + "duplicate_which_transformations="
         + transformation_to_use
-        + " ",
+        + " "
     )
 
     log.debug(options)
-    IJ.run("Duplicate Transformations", options)
+    IJ.run("Duplicate Transformations", str(options))
 
-    backup_xml_files(project_path, "duplicate_transformation_" + transformation_type)
+    backup_xml_files(
+        file_info["path"], "duplicate_transformation_" + transformation_type
+    )
     return
 
 
@@ -949,9 +961,9 @@ def run_fusion(
 
     file_info = pathtools.parse_path(project_path)
     if not result_path:
-        result_path = pathtools.join2(file_info["path"], file_info["basename"])
-        if not os.path.exists(result_path):
-            os.makedirs(result_path)
+        result_path = file_info["path"]
+        # if not os.path.exists(result_path):
+        #     os.makedirs(result_path)
 
     options_dict = parse_options(input_dict)
 
@@ -984,8 +996,12 @@ def run_fusion(
     )
 
     if export == "TIFF":
-        options += (
-            "output_file_directory=[" + result_path + "] " + "filename_addition=[]",
+        options = (
+            options
+            + "output_file_directory=["
+            + result_path
+            + "] "
+            + "filename_addition=[]"
         )
     elif export == "HDF5":
         h5_fused_path = pathtools.join2(
@@ -995,8 +1011,9 @@ def run_fusion(
             result_path, file_info["basename"] + "_fused.xml"
         )
 
-        options += (
-            +"fused_image=[ZARR/N5/HDF5 export using N5-API] "
+        options = (
+            options
+            + "fused_image=[ZARR/N5/HDF5 export using N5-API] "
             + "define_input=[Auto-load from input data (values shown below)] "
             + "export=HDF5 "
             + "create "
@@ -1013,11 +1030,11 @@ def run_fusion(
             + "block_size_z=64 "
             + "block_size_factor_x=1 "
             + "block_size_factor_y=1 "
-            + "block_size_factor_z=1",
+            + "block_size_factor_z=1"
         )
 
     log.debug(options)
-    IJ.run("Fuse dataset ...", options)
+    IJ.run("Fuse dataset ...", str(options))
     return
 
 
