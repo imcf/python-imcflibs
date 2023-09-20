@@ -92,11 +92,16 @@ def run_define_dataset_autoloader(
     if subsampling_factors:
         subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
     else:
-        subsampling_factors = " "
+        subsampling_factors = "manual_mipmap_setup subsampling_factors=[{ {1,1,1}, {2,2,1}, {4,4,1}, {8,8,2}, {16,16,4} }] "
     if hdf5_chunk_sizes:
         hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
     else:
-        hdf5_chunk_sizes = " "
+        hdf5_chunk_sizes = "hdf5_chunk_sizes=[{ {32,32,4}, {32,16,8}, {16,16,16}, {32,16,8}, {32,32,4} }] "
+
+    if bf_series_type == "Angles":
+        angle_rotation = "apply_angle_rotation "
+    else:
+        angle_rotation = ""
 
     options = (
         "define_dataset=[Automatic Loader (Bioformats based)] "
@@ -105,12 +110,12 @@ def run_define_dataset_autoloader(
         + ".xml"
         + "] "
         + "path=["
-        + file_path
+        + file_info["path"]
         + "] "
         + "exclude=10 "
-        + "bioformats_series_are?="
-        + bf_series_type
-        + " "
+        # + "bioformats_series_are?="
+        # + bf_series_type
+        # + " "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
         + "how_to_load_images=["
         + resave
@@ -119,21 +124,30 @@ def run_define_dataset_autoloader(
         + result_folder
         + "] "
         + "check_stack_sizes "
-        + "apply_angle_rotation "
+        + angle_rotation
         + subsampling_factors
         + hdf5_chunk_sizes
+        + "split_hdf5 "
         + "timepoints_per_partition="
         + str(timepoints_per_partition)
         + " "
         + "setups_per_partition=0 "
         + "use_deflate_compression "
-        + "export_path=["
-        + dataset_save_path
-        + "]",
+        # + "export_path=["
+        # + dataset_save_path
+        # + "]",
     )
 
     log.debug(options)
-    IJ.run("Define Multi-View Dataset", options)
+
+    if bf_series_type == "Tiles":
+        log.debug("Doing tiled dataset definition")
+        IJ.run("Define dataset ...", str(options))
+    elif bf_series_type == "Angles":
+        log.debug("Doing multi-view dataset definition")
+        IJ.run("Define Multi-View Dataset", str(options))
+    else:
+        raise ValueError("Wrong answer for series type")
     return
 
 
