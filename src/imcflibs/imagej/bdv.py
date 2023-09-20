@@ -499,8 +499,9 @@ def run_filter_pairwise_shifts(
         + "max_shift_in_z="
         + str(max_shift_z)
         + " "
-        + "max_displacement="
-        + str(max_displacement)
+        + "filter_by_total_shift_magnitude "
+        if max_displacement
+        else "" + "max_displacement=" + str(max_displacement)
     )
 
     log.debug(options)
