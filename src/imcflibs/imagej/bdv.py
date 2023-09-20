@@ -296,6 +296,35 @@ def run_resave_as_h5(
     return
 
 
+def run_flip_axes(source_xml_file, x=False, y=True, z=False):
+    """Wrapper for BigStitcher > Batch Processing > Tools > Flip axes.
+    For example, nd2 files require a flip along the y axis.
+
+    Parameters
+    ----------
+    h5_resave_xml_path : str
+        full path to the .xml-file
+    x : bool, optional
+        flip images along the x axes, by default False
+    y : bool, optional
+        flip mages along the  axes, by default True
+    z : bool, optional
+        flip images along the z axes, by default False
+    """
+
+    file_info = pathtools.parse_path(source_xml_file)
+
+    axes_to_flip = ""
+    if x is True:
+        axes_to_flip += " flip_x"
+    if y is True:
+        axes_to_flip += " flip_y"
+    if z is True:
+        axes_to_flip += " flip_z"
+
+    IJ.run("Flip Axes", "select=" + source_xml_file + axes_to_flip)
+
+    backup_xml_files(file_info["path"], "flip_axes")
 def run_phase_correlation_pairwise_shifts_calculation(
     project_path,
     input_dict,
