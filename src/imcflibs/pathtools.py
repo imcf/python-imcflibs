@@ -37,6 +37,7 @@ def parse_path(path, prefix=""):
           combined with the prefix in case one was specified).
         - `full` : The same as `orig` with separators adjusted to the current
           platform.
+        - `parent` : The parent folder of the selected file.
         - `path` : The same as `full`, up to (including) the last separator.
         - `dname` : The segment between the last two separators (directory).
         - `fname` : The segment after the last separator (filename).
@@ -60,6 +61,7 @@ def parse_path(path, prefix=""):
      'full': '/tmp/foo/file',
      'basename': 'file',
      'orig': '/tmp/foo/file',
+     'parent': '/tmp/',
      'path': '/tmp/foo/'}
 
     POSIX-style path to a directory:
@@ -71,6 +73,7 @@ def parse_path(path, prefix=""):
      'full': '/tmp/foo/',
      'basename': '',
      'orig': '/tmp/foo/',
+     'parent': '/tmp/',
      'path': '/tmp/foo/'}
 
     Windows-style path to a file:
@@ -82,6 +85,7 @@ def parse_path(path, prefix=""):
      'full': 'C:/Temp/foo/file.ext',
      'basename': 'file',
      'orig': 'C:\\Temp\\foo\\file.ext',
+     'parent': 'C:/Temp/',
      'path': 'C:/Temp/foo/'}
 
     Special treatment for *OME-TIFF* suffixes:
@@ -93,6 +97,7 @@ def parse_path(path, prefix=""):
     'fname': 'nice.OME.tIf',
     'full': '/path/to/some/nice.OME.tIf',
     'orig': '/path/to/some/nice.OME.tIf',
+    'parent': '/path/to/',
     'path': '/path/to/some/'}
     """
     path = str(path)
@@ -105,7 +110,9 @@ def parse_path(path, prefix=""):
     parsed["orig"] = path
     path = path.replace("\\", sep)
     parsed["full"] = path
-    parsed["path"] = os.path.dirname(path) + sep
+    folder = os.path.dirname(path)
+    parsed["path"] = folder + sep
+    parsed["parent"] = os.path.dirname(folder)
     parsed["fname"] = os.path.basename(path)
     parsed["dname"] = os.path.basename(os.path.dirname(parsed["path"]))
     base, ext = os.path.splitext(parsed["fname"])
