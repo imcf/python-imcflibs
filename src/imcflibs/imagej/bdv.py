@@ -339,9 +339,11 @@ def run_flip_axes(source_xml_file, x=False, y=True, z=False):
     IJ.run("Flip Axes", "select=" + source_xml_file + axes_to_flip)
 
     backup_xml_files(file_info["path"], "flip_axes")
+
+
 def run_phase_correlation_pairwise_shifts_calculation(
     project_path,
-    input_dict,
+    input_dict={},
     treat_timepoints="group",
     treat_channels="group",
     treat_illuminations="group",
@@ -510,7 +512,7 @@ def run_filter_pairwise_shifts(
 
 def run_optimize_apply_shifts(
     project_path,
-    input_dict,
+    input_dict={},
     treat_timepoints="group",
     treat_channels="group",
     treat_illuminations="group",
@@ -771,7 +773,7 @@ def run_interest_points_registration(
         + "allowed_error_for_ransac=5 "
         + "ransac_iterations=Normal "
         + "interestpoint_grouping=[Group interest points (simply combine all in one virtual view)] "
-        + "interest=5",
+        + "interest=5"
     )
 
     log.debug(options)
@@ -942,7 +944,7 @@ def run_duplicate_transformations(
 
 def run_fusion(
     project_path,
-    input_dict,
+    input_dict={},
     result_path=None,
     downsampling=1,
     interpolation="[Linear Interpolation]",
