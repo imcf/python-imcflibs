@@ -349,6 +349,7 @@ def run_phase_correlation_pairwise_shifts_calculation(
     treat_illuminations="group",
     treat_angles="[treat individually]",
     treat_tiles="group",
+    downsampling_xyz="",
 ):
     """Run the Pairwise shifts calculation using Phase Correlation
 
@@ -369,6 +370,10 @@ def run_phase_correlation_pairwise_shifts_calculation(
         How to deal with the angles, by default "[treat individually]"
     treat_tiles : str, optional
         How to deal with the tiles, by default "group"
+    downsampling_xyz : list of int, optional
+        specify downsampling in x,y and z, e.g. [4,4,4], by default empty,
+        meaning BigStitcher chooses
+
     """
 
     file_info = pathtools.parse_path(project_path)
@@ -388,6 +393,9 @@ def run_phase_correlation_pairwise_shifts_calculation(
         "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
     )
     use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
+
+    if downsampling_xyz != "":
+        downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (downsampling_xyz[0], downsampling_xyz[1], downsampling_xyz[2])
 
     options = (
         "select=["
@@ -438,6 +446,7 @@ def run_phase_correlation_pairwise_shifts_calculation(
         + "how_to_treat_timepoints="
         + treat_timepoints
         + " "
+        + downsampling
         + "subpixel_accuracy",
     )
 
