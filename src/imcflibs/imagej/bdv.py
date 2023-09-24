@@ -1008,7 +1008,7 @@ def run_fusion(
         + options_dict["tile_text"]
         + "process_timepoint="
         + options_dict["timepoint_text"]
-        + "bouding_box=[All Views] "
+        + "bounding_box=[All Views] "
         + "downsampling="
         + str(downsampling)
         + " "
