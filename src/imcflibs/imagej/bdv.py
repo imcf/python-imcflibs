@@ -461,10 +461,8 @@ def run_filter_pairwise_shifts(
     project_path,
     min_r=0.7,
     max_r=1,
-    max_shift_x=0,
-    max_shift_y=0,
-    max_shift_z=0,
-    max_displacement=0,
+    max_shift_xyz="",
+    max_displacement="",
 ):
     """Filter the pairwise shifts based on different thresholds
 
@@ -476,17 +474,21 @@ def run_filter_pairwise_shifts(
         Minimal quality of the link to keep, by default 0.7
     max_r : float, optional
         Maximal quality of the link to keep, by default 1
-    max_shift_x : int, optional
-        Maximal shift in X to keep, by default 0
-    max_shift_y : int, optional
-        Maximal shift in Y to keep, by default 0
-    max_shift_z : int, optional
-        Maximal shift in Z to keep, by default 0
+    max_shift_xyz : list of int, optional
+        Maximal shift in X, Y and Z in px to keep, e.g. [10,10,10], by default empty,
+        meaning this option is skipped
     max_displacement : int, optional
-        Maximal displacement to keep, by default 0
+        Maximal displacement to keep, by default empty,
+        meaning this option is skipped
     """
 
     file_info = pathtools.parse_path(project_path)
+
+    if max_shift_xyz != "":
+        filter_by_max_shift = " filter_by_shift_in_each_dimension max_shift_in_x=%s max_shift_in_y=%s max_shift_in_z=%s" % (max_shift_xyz[0], max_shift_xyz[1], max_shift_xyz[2])
+
+    if max_displacement != "":
+        filter_by_max_displacement = " filter_by_total_shift_magnitude max_displacement=%s" % (max_displacement)
 
     options = (
         "select=["
@@ -498,19 +500,8 @@ def run_filter_pairwise_shifts(
         + " "
         + "max_r="
         + str(max_r)
-        + " "
-        + "max_shift_in_x="
-        + str(max_shift_x)
-        + " "
-        + "max_shift_in_y="
-        + str(max_shift_y)
-        + " "
-        + "max_shift_in_z="
-        + str(max_shift_z)
-        + " "
-        + "filter_by_total_shift_magnitude "
-        if max_displacement
-        else "" + "max_displacement=" + str(max_displacement)
+        + filter_by_max_shift
+        + filter_by_max_displacement
     )
 
     log.debug(options)
