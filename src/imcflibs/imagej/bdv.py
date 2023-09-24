@@ -519,6 +519,8 @@ def run_optimize_apply_shifts(
     treat_illuminations="group",
     treat_angles="[treat individually]",
     treat_tiles="group",
+    relative_error=2.5,
+    absolute_error=3.5,
 ):
     """Optimize the shifts and apply it to the dataset
 
@@ -539,6 +541,10 @@ def run_optimize_apply_shifts(
         How to treat the angles, by default "[treat individually]"
     treat_tiles : str, optional
         How to treat the tiles, by default "group"
+    relative_error: str, optional
+        relative alignment error in px, by default 2.5
+    absolute_error: str, optional
+        absolute alignment error in px, by default 3.5
     """
 
     file_info = pathtools.parse_path(project_path)
@@ -578,8 +584,12 @@ def run_optimize_apply_shifts(
         + options_dict["tile_select"]
         + options_dict["timepoint_select"]
         + " "
-        + "relative=2.500 "
-        + "absolute=3.500 "
+        + "relative="
+        + str(relative_error)
+        + " "
+        + "absolute="
+        + str(absolute_error)
+        + " "
         + "global_optimization_strategy=[Two-Round using Metadata to align unconnected "
         + "Tiles and iterative dropping of bad links] "
         + "show_expert_grouping_options "
