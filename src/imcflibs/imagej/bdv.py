@@ -401,6 +401,8 @@ def run_phase_correlation_pairwise_shifts_calculation(
             downsampling_xyz[1],
             downsampling_xyz[2]
         )
+    else:
+        downsampling = ""
 
     options = (
         "select=["
