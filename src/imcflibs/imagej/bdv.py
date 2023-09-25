@@ -497,12 +497,16 @@ def run_filter_pairwise_shifts(
             max_shift_xyz[1],
             max_shift_xyz[2]
         )
+    else:
+        filter_by_max_shift = ""
 
     if max_displacement != "":
         filter_by_max_displacement = (
             " filter_by_total_shift_magnitude max_displacement=%s") % (
             max_displacement
         )
+    else:
+        filter_by_max_displacement = ""
 
     options = (
         "select=["
@@ -555,9 +559,9 @@ def run_optimize_apply_shifts(
         How to treat the angles, by default "[treat individually]"
     treat_tiles : str, optional
         How to treat the tiles, by default "group"
-    relative_error: str, optional
+    relative_error: float, optional
         relative alignment error in px, by default 2.5
-    absolute_error: str, optional
+    absolute_error: float, optional
         absolute alignment error in px, by default 3.5
     """
 
