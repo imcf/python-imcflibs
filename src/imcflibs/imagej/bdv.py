@@ -395,7 +395,12 @@ def run_phase_correlation_pairwise_shifts_calculation(
     use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
-        downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (downsampling_xyz[0], downsampling_xyz[1], downsampling_xyz[2])
+        downsampling = (
+            "downsample_in_x=%s" + "downsample_in_y=%s downsample_in_z=%s ") % (
+            downsampling_xyz[0],
+            downsampling_xyz[1],
+            downsampling_xyz[2]
+        )
 
     options = (
         "select=["
@@ -485,10 +490,19 @@ def run_filter_pairwise_shifts(
     file_info = pathtools.parse_path(project_path)
 
     if max_shift_xyz != "":
-        filter_by_max_shift = " filter_by_shift_in_each_dimension max_shift_in_x=%s max_shift_in_y=%s max_shift_in_z=%s" % (max_shift_xyz[0], max_shift_xyz[1], max_shift_xyz[2])
+        filter_by_max_shift = (
+            " filter_by_shift_in_each_dimension"
+            " max_shift_in_x=%s max_shift_in_y=%s max_shift_in_z=%s") % (
+            max_shift_xyz[0],
+            max_shift_xyz[1],
+            max_shift_xyz[2]
+        )
 
     if max_displacement != "":
-        filter_by_max_displacement = " filter_by_total_shift_magnitude max_displacement=%s" % (max_displacement)
+        filter_by_max_displacement = (
+            " filter_by_total_shift_magnitude max_displacement=%s") % (
+            max_displacement
+        )
 
     options = (
         "select=["
@@ -529,7 +543,7 @@ def run_optimize_apply_shifts(
     project_path : str
         Path of the XML on which to optimize and apply the shifts
     input_dict : dict
-        Dictionary containing all the required informations for angles,
+        Dictionary containing all the required information for angles,
         channels, illuminations, tiles and timepoints
     treat_timepoints : str, optional
         How to treat the timepoints, by default "group"
