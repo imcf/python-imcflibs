@@ -57,7 +57,7 @@ def run_define_dataset_autoloader(
     Parameters
     ----------
     project_filename : str
-        Name of the project
+        Name of the project without .xml extension
     file_path : str
         path to the file, can be the first czi or a regex to match all files
         with an extension
@@ -163,7 +163,7 @@ def run_define_dataset_manualoader(
     Parameters
     ----------
     project_filename : str
-        Name of the project
+        Name of the project without .xml extension
     source_directory : str
         Path to the folder containing the file(s)
     image_file_pattern : str
