@@ -209,7 +209,7 @@ def run_define_dataset_manualoader(
         + " "
         + "calibration_type=[Same voxel-size for all views] "
         + "calibration_definition=[Load voxel-size(s) from file(s)] "
-        + "imglib2_data_container=[ArrayImg (faster)]",
+        + "imglib2_data_container=[ArrayImg (faster)]"
     )
 
     log.debug(options)
@@ -238,7 +238,7 @@ def run_resave_as_h5(
     source_xml_file : File or str
         XML input file.
     output_h5_file_path : str
-        Export path for the output file.
+        Export path for the output file including .xml extension
     timepoints : str, optional
         Which timepoints should be exported, by default "All Timepoints".
     timepoints_per_partition : int, optional
@@ -301,7 +301,7 @@ def run_resave_as_h5(
         + use_deflate_compression_arg
         + split_hdf5
         + "export_path="
-        + output_h5_file_path,
+        + output_h5_file_path
     )
 
     log.debug(options)
@@ -454,7 +454,7 @@ def run_phase_correlation_pairwise_shifts_calculation(
         + treat_timepoints
         + " "
         + downsampling
-        + "subpixel_accuracy",
+        + "subpixel_accuracy"
     )
 
     log.debug(options)
