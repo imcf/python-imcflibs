@@ -1039,16 +1039,20 @@ def run_fusion(
         + pixel_type
         + " "
         + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
-        + "blend preserve_original produce=[Each timepoint & channel] "
+        + "blend "
+        + "preserve_original "
+        + "produce=[Each timepoint & channel] "
     )
 
     if export == "TIFF":
         options = (
             options
+            + "fused_image=[Save as (compressed) TIFF stacks] "
+            + "define_input=[Auto-load from input data (values shown below)] "
             + "output_file_directory=["
             + result_path
-            + "] "
-            + "filename_addition=[]"
+            + "/.] "
+            + "filename_addition=[" + file_info["basename"] + "]"
         )
     elif export == "HDF5":
         h5_fused_path = pathtools.join2(
