@@ -180,6 +180,9 @@ def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
     sort : bool, optional
         If set to True, the returned list will be sorted using
         `imcflibs.strtools.sort_alphanumerically()`.
+    regex : bool, optional
+        If set to True, uses the suffix-string as regular expression to match
+        filenames. By default False.
 
     Returns
     -------
