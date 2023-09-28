@@ -21,7 +21,6 @@ from ..log import LOG as log
 def backup_xml_files(source_directory, subfolder_name):
     """Copy all .xml (and .xml~) files to a subfolder inside
     a folder called "xml-backup" in the source dir.
-    Will create a the folders if they don't exists.
     Uses shutil.copy2 which will overwrite existing files.
 
     Parameters
@@ -36,7 +35,7 @@ def backup_xml_files(source_directory, subfolder_name):
     pathtools.create_directory(xml_backup_directory)
     backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
     pathtools.create_directory(backup_subfolder)
-    all_xml_files = pathtools.listdir_matching(source_directory, ".xml*", regex=True)
+    all_xml_files = pathtools.listdir_matching(source_directory, ".*\.xml", regex=True)
     os.chdir(source_directory)
     for xml_file in all_xml_files:
         shutil.copy2(xml_file, backup_subfolder)
