@@ -871,7 +871,7 @@ def run_duplicate_transformations(
                 "processing_channel=[channel " + str(channel_source - 1) + "] "
             )
         else:
-            chnl_apply = "apply_to_channel=[All Channels] "
+            chnl_apply = "apply_to_channel=[All channels] "
     else:
         sys.exit("Issue with transformation duplication")
 
