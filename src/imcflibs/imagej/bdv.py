@@ -828,13 +828,22 @@ def run_duplicate_transformations(
     ----------
     project_path : str
         Path to the .xml project
-    channel_source : str
-        Specify the channel name
-
+    transformation_type : str, optional
+        select mode, e.g. "channel" or "tiles"
+    channel_source : int, optional
+        number of the reference channel, starts at 1, by default None
+    tile source : int, optional
+        the reference tile, by default None
+    transformation_to_use : str, optional
+        select which transformations to duplicate.
+        Alternative option: "[Add last transformation only]"
     """
 
     file_info = pathtools.parse_path(project_path)
 
+    apply = ""
+    source = ""
+    target = ""
     tile_apply = ""
     tile_process = ""
 
