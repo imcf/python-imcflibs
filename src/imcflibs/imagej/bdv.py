@@ -1117,7 +1117,7 @@ def parse_options(input_dict):
         output_dict["illumination_text"], output_dict["illumination_select"] = (
             "[Single illumination (Select from List)] ",
             "processing_illumination=[illumination "
-            + str(input_dict["process_illumination"] - 1)
+            + str(input_dict["process_illumination"])
             + "] ",
         )
     else:
@@ -1129,7 +1129,7 @@ def parse_options(input_dict):
     if "process_tile" in input_dict:
         output_dict["tile_text"], output_dict["tile_select"] = (
             "[Single tile (Select from List)] ",
-            "processing_tile=[tile " + str(input_dict["process_tile"] - 1) + "] ",
+            "processing_tile=[tile " + str(input_dict["process_tile"]) + "] ",
         )
     else:
         output_dict["tile_text"], output_dict["tile_select"] = ("[All tiles] ", "")
@@ -1138,7 +1138,7 @@ def parse_options(input_dict):
         output_dict["timepoint_text"], output_dict["timepoint_select"] = (
             "[Single timepoint (Select from List)] ",
             "processing_timepoint=[timepoint "
-            + str(input_dict["process_timepoint"] - 1)
+            + str(input_dict["process_timepoint"])
             + "] ",
         )
     else:
@@ -1150,7 +1150,7 @@ def parse_options(input_dict):
     if "process_angle" in input_dict:
         output_dict["angle_text"], output_dict["angle_select"] = (
             "[Single angle (Select from List)] ",
-            "processing_angle=[angle " + str(input_dict["process_angle"] - 1) + "] ",
+            "processing_angle=[angle " + str(input_dict["process_angle"]) + "] ",
         )
     else:
         output_dict["angle_text"], output_dict["angle_select"] = ("[All angles] ", "")
