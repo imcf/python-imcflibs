@@ -410,16 +410,16 @@ def run_phase_correlation_pairwise_shifts_calculation(
         "select=["
         + project_path
         + "] "
-        + "process_angle="
-        + options_dict["angle_text"]
+        + +"process_angle="
+        + options_dict["angle_processing_option"]
         + "process_channel="
-        + options_dict["channel_text"]
+        + options_dict["channel_processing_option"]
         + "process_illumination="
-        + options_dict["illumination_text"]
+        + options_dict["illumination_processing_option"]
         + "process_tile="
-        + options_dict["tile_text"]
+        + options_dict["tile_processing_option"]
         + "process_timepoint="
-        + options_dict["timepoint_text"]
+        + options_dict["timepoint_processing_option"]
         + options_dict["timepoint_select"]
         + options_dict["angle_select"]
         + options_dict["channel_select"]
@@ -586,15 +586,15 @@ def run_optimize_apply_shifts(
         + project_path
         + "] "
         + "process_angle="
-        + options_dict["angle_text"]
+        + options_dict["angle_processing_option"]
         + "process_channel="
-        + options_dict["channel_text"]
+        + options_dict["channel_processing_option"]
         + "process_illumination="
-        + options_dict["illumination_text"]
+        + options_dict["illumination_processing_option"]
         + "process_tile="
-        + options_dict["tile_text"]
+        + options_dict["tile_processing_option"]
         + "process_timepoint="
-        + options_dict["timepoint_text"]
+        + options_dict["timepoint_processing_option"]
         + options_dict["timepoint_select"]
         + options_dict["angle_select"]
         + options_dict["channel_select"]
@@ -954,15 +954,15 @@ def run_fusion(
         + project_path
         + "] "
         + "process_angle="
-        + options_dict["angle_text"]
+        + options_dict["angle_processing_option"]
         + "process_channel="
-        + options_dict["channel_text"]
+        + options_dict["channel_processing_option"]
         + "process_illumination="
-        + options_dict["illumination_text"]
+        + options_dict["illumination_processing_option"]
         + "process_tile="
-        + options_dict["tile_text"]
+        + options_dict["tile_processing_option"]
         + "process_timepoint="
-        + options_dict["timepoint_text"]
+        + options_dict["timepoint_processing_option"]
         + "bounding_box=[All Views] "
         + "downsampling="
         + str(downsampling)
