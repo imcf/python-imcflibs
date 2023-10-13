@@ -383,10 +383,8 @@ def run_phase_correlation_pairwise_shifts_calculation(
 
     options_dict = parse_options(input_dict)
 
-    print(options_dict)
-
     use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
-    use_channel = "channels=[Average Channels]" if treat_channels == "group" else ""
+    use_channel = options_dict["use_channel"] if treat_channels == "group" else ""
     use_illumination = (
         "illuminations=[Average Illuminations]"
         if treat_illuminations == "group"
@@ -395,7 +393,7 @@ def run_phase_correlation_pairwise_shifts_calculation(
     use_timepoint = (
         "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
     )
-    use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
+    use_tile = options_dict["use_tiles"] if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
         downsampling = ("downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s ") % (
@@ -570,7 +568,7 @@ def run_optimize_apply_shifts(
     options_dict = parse_options(input_dict)
 
     use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
-    use_channel = "channels=[Average Channels]" if treat_channels == "group" else ""
+    use_channel = options_dict["use_channel"] if treat_channels == "group" else ""
     use_illumination = (
         "illuminations=[Average Illuminations]"
         if treat_illuminations == "group"
@@ -579,7 +577,7 @@ def run_optimize_apply_shifts(
     use_timepoint = (
         "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
     )
-    use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
+    use_tile = options_dict["use_tiles"] if treat_tiles == "group" else ""
 
     options = (
         "select=["
@@ -1028,6 +1026,20 @@ def run_fusion(
 
 def parse_options(input_dict):
     output_dict = {}
+
+    # options to select reference views for grouped views
+
+    output_dict["use_channel"] = "channels=[Average Channels]"
+    if "reference_channel" in input_dict:
+        output_dict["use_channel"] = (
+            "channels=[use Channel " + str(input_dict["reference_channel"] - 1) + "] "
+        )
+
+    output_dict["use_tiles"] = "tiles=[Average Tiles]"
+    if "reference_tile" in input_dict:
+        output_dict["use_tiles"] = (
+            "tiles=[use Tile " + str(input_dict["reference_tile"]) + "] "
+        )
 
     # options to select views in a dataset for processing
 
