@@ -1029,60 +1029,59 @@ def run_fusion(
 def parse_options(input_dict):
     output_dict = {}
 
+    # options to select views in a dataset for processing
+
+    output_dict["channel_processing_option"] = "[All channels] "
+    output_dict["channel_select"] = ""
     if "process_channel" in input_dict:
-        output_dict["channel_text"], output_dict["channel_select"] = (
-            "[Single channel (Select from List)] ",
+        output_dict[
+            "channel_processing_option"
+        ] = "[Single channel (Select from List)] "
+        output_dict["channel_select"] = (
             "processing_channel=[channel "
             + str(input_dict["process_channel"] - 1)
-            + "] ",
-        )
-    else:
-        output_dict["channel_text"], output_dict["channel_select"] = (
-            "[All channels] ",
-            "",
+            + "] "
         )
 
+    output_dict["illumination_processing_option"] = "[All illuminations] "
+    output_dict["illumination_select"] = ""
     if "process_illumination" in input_dict:
-        output_dict["illumination_text"], output_dict["illumination_select"] = (
-            "[Single illumination (Select from List)] ",
+        output_dict[
+            "illumination_processing_option"
+        ] = "[Single illumination (Select from List)] "
+        output_dict["illumination_select"] = (
             "processing_illumination=[illumination "
             + str(input_dict["process_illumination"])
-            + "] ",
-        )
-    else:
-        output_dict["illumination_text"], output_dict["illumination_select"] = (
-            "[All illuminations] ",
-            "",
+            + "] "
         )
 
+    output_dict["tile_processing_option"] = "[All tiles] "
+    output_dict["tile_select"] = ""
     if "process_tile" in input_dict:
-        output_dict["tile_text"], output_dict["tile_select"] = (
-            "[Single tile (Select from List)] ",
-            "processing_tile=[tile " + str(input_dict["process_tile"]) + "] ",
+        output_dict["tile_processing_option"] = "[Single tile (Select from List)] "
+        output_dict["tile_select"] = (
+            "processing_tile=[tile " + str(input_dict["process_tile"]) + "] "
         )
-    else:
-        output_dict["tile_text"], output_dict["tile_select"] = ("[All tiles] ", "")
 
+    output_dict["timepoint_processing_option"] = "[All Timepoints] "
+    output_dict["timepoint_select"] = ""
     if "process_timepoint" in input_dict:
-        output_dict["timepoint_text"], output_dict["timepoint_select"] = (
-            "[Single timepoint (Select from List)] ",
+        output_dict[
+            "timepoint_processing_option"
+        ] = "[Single timepoint (Select from List)] "
+        output_dict["timepoint_select"] = (
             "processing_timepoint=[timepoint "
             + str(input_dict["process_timepoint"])
-            + "] ",
-        )
-    else:
-        output_dict["timepoint_text"], output_dict["timepoint_select"] = (
-            "[All Timepoints] ",
-            "",
+            + "] "
         )
 
+    output_dict["angle_processing_option"] = "[All angles] "
+    output_dict["angle_select"] = ""
     if "process_angle" in input_dict:
-        output_dict["angle_text"], output_dict["angle_select"] = (
-            "[Single angle (Select from List)] ",
-            "processing_angle=[angle " + str(input_dict["process_angle"]) + "] ",
+        output_dict["angle_processing_option"] = "[Single angle (Select from List)] "
+        output_dict["angle_select"] = (
+            "processing_angle=[angle " + str(input_dict["process_angle"]) + "] "
         )
-    else:
-        output_dict["angle_text"], output_dict["angle_select"] = ("[All angles] ", "")
 
     log.debug(output_dict)
     return output_dict
