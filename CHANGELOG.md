@@ -15,6 +15,30 @@
     an Objects3DPopulation into an ImagePlus (2D/3D).
   * `imcflibs.imagej.objects3d.imgplus_to_population3d` to get the
     Objects3DPopulation from an ImagePlus (2D/3D).
+* New `imcflibs.imagej.bdv` submodule, providing BigDataViewer related
+  functions:
+  * `imcflibs.imagej.bdv.backup_xml_files` to create a backup of BDV-XML files
+  * `imcflibs.imagej.bdv.define_dataset_auto` to run "Define Multi-View Dataset"
+    using the "Auto-Loader" option.
+  * `imcflibs.imagej.bdv.define_dataset_manual` to run "Define Multi-View
+    Dataset" using the "Manual Loader" option.
+  * `imcflibs.imagej.bdv.resave_as_h5` to resave the xml dataset in a new format
+    (either all or single timepoints).
+  * `imcflibs.imagej.bdv.flip_axes` tocall BigStitcher's "Flip Axes" command.
+  * `imcflibs.imagej.bdv.phase_correlation_pairwise_shifts_calculation` to
+    calculate pairwise shifts using Phase Correlation.
+  * `imcflibs.imagej.bdv.filter_pairwise_shifts` for filtering pairwise shifts
+    based on different thresholds.
+  * `imcflibs.imagej.bdv.optimize_and_apply_shifts` to optimize shifts and apply
+    them to a dataset.
+  * `imcflibs.imagej.bdv.detect_interest_points` for running the "Detect
+    Interest Points" command for registration.
+  * `imcflibs.imagej.bdv.interest_points_registration` to run the "Register
+    Dataset based on Interest Points" command.
+  * `imcflibs.imagej.bdv.duplicate_transformations` for duplicating /
+    propagating transformation parameters to other channels.
+  * `imcflibs.imagej.bdv.fuse_dataset` to call BigStitcher's "Fuse Dataset"
+    command.
 
 ## 1.4.0
 
