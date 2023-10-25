@@ -233,7 +233,9 @@ def sanitize_image_title(imp):
     imp : ImagePlus
         The ImagePlus to be renamed.
     """
-    image_title = os.path.basename(imp.getTitle())  # FIXME: Kai, why this?
+    # sometimes (unclear when) the title contains the full path, therefore we
+    # simply call `os.path.basename()` on it to remove all up to the last "/":
+    image_title = os.path.basename(imp.getTitle())
     image_title = image_title.replace(".czi", "")
     image_title = image_title.replace(" ", "_")
     image_title = image_title.replace("_-_", "")
