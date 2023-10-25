@@ -2,6 +2,20 @@
 
 <!-- markdownlint-disable MD024 (no-duplicate-header) -->
 
+## 1.5.0
+
+### Added
+
+* `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
+  various suffixes from an ImagePlus.
+* `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image
+  to get a label image (2D/3D).
+* New `imcflibs.imagej.objects3d` submodule, providing:
+  * `imcflibs.imagej.objects3d.population3d_to_imgplus` to turn
+    an Objects3DPopulation into an ImagePlus (2D/3D).
+  * `imcflibs.imagej.objects3d.imgplus_to_population3d` to get the
+    Objects3DPopulation from an ImagePlus (2D/3D).
+
 ## 1.4.0
 
 ### Added
