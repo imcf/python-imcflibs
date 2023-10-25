@@ -19,18 +19,20 @@ from ..log import LOG as log
 
 
 def backup_xml_files(source_directory, subfolder_name):
-    """Copy all .xml (and .xml~) files to a subfolder inside
-    a folder called "xml-backup" in the source dir.
-    Uses shutil.copy2 which will overwrite existing files.
+    """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
+
+    Copies all `.xml` and `.xml~` files to a subfolder with the given name inside a
+    folder called `xml-backup` in the source directory. Uses the `shutil.copy2()`
+    command, which will overwrite existing files.
 
     Parameters
     ----------
     source_directory : str
-        full path to the directory containing the xml files
+        Full path to the directory containing the xml files.
     subfolder_name : str
-        name of the subfolder. Will be created if it does not exists.
+        The name of the subfolder that will be used inside `xml-backup`. Will be
+        created if necessary.
     """
-
     xml_backup_directory = os.path.join(source_directory, "xml-backup")
     pathtools.create_directory(xml_backup_directory)
     backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
@@ -394,11 +396,10 @@ def run_phase_correlation_pairwise_shifts_calculation(
     use_tile = "tiles=[Average Tiles]" if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
-        downsampling = (
-            "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s ") % (
+        downsampling = ("downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s ") % (
             downsampling_xyz[0],
             downsampling_xyz[1],
-            downsampling_xyz[2]
+            downsampling_xyz[2],
         )
     else:
         downsampling = ""
@@ -493,19 +494,15 @@ def run_filter_pairwise_shifts(
     if max_shift_xyz != "":
         filter_by_max_shift = (
             " filter_by_shift_in_each_dimension"
-            " max_shift_in_x=%s max_shift_in_y=%s max_shift_in_z=%s") % (
-            max_shift_xyz[0],
-            max_shift_xyz[1],
-            max_shift_xyz[2]
-        )
+            " max_shift_in_x=%s max_shift_in_y=%s max_shift_in_z=%s"
+        ) % (max_shift_xyz[0], max_shift_xyz[1], max_shift_xyz[2])
     else:
         filter_by_max_shift = ""
 
     if max_displacement != "":
         filter_by_max_displacement = (
-            " filter_by_total_shift_magnitude max_displacement=%s") % (
-            max_displacement
-        )
+            " filter_by_total_shift_magnitude max_displacement=%s"
+        ) % (max_displacement)
     else:
         filter_by_max_displacement = ""
 
@@ -1060,7 +1057,9 @@ def run_fusion(
             + "output_file_directory=["
             + result_path
             + "/.] "
-            + "filename_addition=[" + file_info["basename"] + "]"
+            + "filename_addition=["
+            + file_info["basename"]
+            + "]"
         )
     elif export == "HDF5":
         h5_fused_path = pathtools.join2(
