@@ -82,6 +82,8 @@ def run_define_dataset_autoloader(
     # FIXME: the docstring is actually not corrct, in the sense that the function will
     # switch to `Define dataset ...` in case the `bf_series_type` is `Tiles`
 
+    # FIXME: improve the timepoints_per_partition parameter description!
+
     file_info = pathtools.parse_path(file_path)
 
     project_filename = project_filename.replace(" ", "_")
@@ -177,6 +179,9 @@ def run_define_dataset_manualoader(
     file_definition : dict
         Dictionary containing the details about the file repartitions.
     """
+
+    # FIXME: explain image_file_pattern, dataset_organisation and
+    # file_definition with more details / examples
 
     xml_filename = project_filename + ".xml"
 
@@ -379,6 +384,9 @@ def run_phase_correlation_pairwise_shifts_calculation(
 
     """
 
+    # FIXME: input_dict is not a good parameter name, plus the parse_options()
+    # function needs to be refactored and documented first!
+
     file_info = pathtools.parse_path(project_path)
 
     options_dict = parse_options(input_dict)
@@ -562,6 +570,9 @@ def run_optimize_apply_shifts(
     absolute_error: float, optional
         absolute alignment error in px, by default 3.5
     """
+
+    # FIXME: input_dict is not a good parameter name, plus the parse_options()
+    # function needs to be refactored and documented first!
 
     file_info = pathtools.parse_path(project_path)
 
@@ -835,6 +846,7 @@ def run_duplicate_transformations(
         select which transformations to duplicate.
         Alternative option: "[Add last transformation only]"
     """
+    # FIXME: transformation_to_use requires explanations of possible values!
 
     file_info = pathtools.parse_path(project_path)
 
@@ -847,6 +859,11 @@ def run_duplicate_transformations(
     chnl_apply = ""
     chnl_process = ""
 
+    # FIXME: invalid parameter combinations!
+    # Calling the function with transformation_type="channel" and
+    # channel_source=None (the default) will lead to an invalid combination!
+    # Same for transformation_type="tile" / tile_source=None, in both cases the
+    # resulting call will contain the sequence ` source= `.
     if transformation_type == "channel":
         apply = "[One channel to other channels]"
         target = "[All Channels]"
