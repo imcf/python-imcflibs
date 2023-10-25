@@ -67,17 +67,17 @@ def run_define_dataset_autoloader(
     bf_series_type : str
         One of "Angles" or "Tiles", specifying how Bio-Formats interprets the series.
     timepoints_per_partition : int, optional
-        Split the output by timepoints. Use 0 for no split, by default 1.
+        Split the output by timepoints. Use `0` for no split, by default `1`.
     resave : str, optional
         Allow the function to either re-save the images or simply create a
-        merged xml. Use "Load raw data" to avoid re-saving, by default "Re-save
-        as multiresolution HDF5" will resave the input data.
-    subsampling_factors: str, optional
+        merged xml. Use `Load raw data` to avoid re-saving, by default `Re-save
+        as multiresolution HDF5` which will resave the input data.
+    subsampling_factors : str, optional
         Specify subsampling factors explicitly, for example:
         `[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }]`.
-    hdf5_chunk_sizes: str, optional
+    hdf5_chunk_sizes : str, optional
         Specify hdf5_chunk_sizes factors explicitly, for example
-        `[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]`
+        `[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]`.
     """
     # FIXME: the docstring is actually not corrct, in the sense that the function will
     # switch to `Define dataset ...` in case the `bf_series_type` is `Tiles`
@@ -263,19 +263,19 @@ def run_resave_as_h5(
     source_xml_file : File or str
         XML input file.
     output_h5_file_path : str
-        Export path for the output file including .xml extension
+        Export path for the output file including the `.xml `extension.
     timepoints : str, optional
-        Which timepoints should be exported, by default "All Timepoints".
+        The timepoints that should be exported, by default `All Timepoints`.
     timepoints_per_partition : int, optional
-        How many timepoints per partition should be exported, by default 1.
+        How many timepoints to export per partition, by default `1`.
     use_deflate_compression : bool, optional
-        Run deflate compression, by default True.
-    subsampling_factors: str, optional
-        Allow specifying subsampling factors explicitly, for example:
-        "[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }]"
-    hdf5_chunk_sizes: str, optional
-        Allow specifying hdf5_chunk_sizes factors explicitly, for example
-        "[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]"
+        Run deflate compression, by default `True`.
+    subsampling_factors : str, optional
+        Specify subsampling factors explicitly, for example:
+        `[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }]`.
+    hdf5_chunk_sizes : str, optional
+        Specify hdf5_chunk_sizes factors explicitly, for example
+        `[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]`.
     """
     # save all timepoints or a single one:
     if timepoints == "All Timepoints":
@@ -336,19 +336,22 @@ def run_resave_as_h5(
 
 
 def run_flip_axes(source_xml_file, x=False, y=True, z=False):
-    """Wrapper for BigStitcher > Batch Processing > Tools > Flip axes.
-    For example, nd2 files require a flip along the y axis.
+    """Call BigStitcher's "Flip Axes" command.
+
+    Wrapper for `BigStitcher > Batch Processing > Tools > Flip Axes`. This is
+    required for some formats, for example Nikon `.nd2` files need a flip along
+    the Y-axis.
 
     Parameters
     ----------
-    h5_resave_xml_path : str
-        full path to the .xml-file
+    source_xml_file : str
+        Full path to the `.xml` file.
     x : bool, optional
-        flip images along the x axes, by default False
+        Flip images along the X-axis, by default `False`.
     y : bool, optional
-        flip mages along the  axes, by default True
+        Flip mages along the Y-axis, by default `True`.
     z : bool, optional
-        flip images along the z axes, by default False
+        Flip images along the Z-axis, by default `False`.
     """
 
     file_info = pathtools.parse_path(source_xml_file)
@@ -376,29 +379,28 @@ def run_phase_correlation_pairwise_shifts_calculation(
     treat_tiles="group",
     downsampling_xyz="",
 ):
-    """Run the Pairwise shifts calculation using Phase Correlation
+    """Calculate pairwise shifts using Phase Correlation.
 
     Parameters
     ----------
     project_path : str
-        Path to the XML
+        Full path to the `.xml` file.
     input_dict : dict
-        Dictionary containing all the required information for angle, channel,
-        illuminations and timepoints
+        Options dict containing the required information for angle, channel,
+        illuminations and timepoints.
     treat_timepoints : str, optional
-        How to deal with the timepoints, by default "group"
+        How to deal with the timepoints, by default `group`.
     treat_channels : str, optional
-        How to deal with the channels, by default "group"
+        How to deal with the channels, by default `group`.
     treat_illuminations : str, optional
-        How to deal with the illuminations, by default "group"
+        How to deal with the illuminations, by default `group`.
     treat_angles : str, optional
-        How to deal with the angles, by default "[treat individually]"
+        How to deal with the angles, by default `[treat individually]`.
     treat_tiles : str, optional
-        How to deal with the tiles, by default "group"
+        How to deal with the tiles, by default `group`.
     downsampling_xyz : list of int, optional
-        specify downsampling in x,y and z, e.g. [4,4,4], by default empty,
-        meaning BigStitcher chooses
-
+        Downsampling factors in X, Y and Z, for example `[4,4,4]`. By default
+        empty which will result in BigStitcher choosing the factors.
     """
 
     # FIXME: input_dict is not a good parameter name, plus the parse_options()
@@ -496,22 +498,22 @@ def run_filter_pairwise_shifts(
     max_shift_xyz="",
     max_displacement="",
 ):
-    """Filter the pairwise shifts based on different thresholds
+    """Filter the pairwise shifts based on different thresholds.
 
     Parameters
     ----------
     project_path : str
-        Path of the XML on which to apply the filters
+        Path to the `.xml` on which to apply the filters.
     min_r : float, optional
-        Minimal quality of the link to keep, by default 0.7
+        Minimal quality of the link to keep, by default `0.7`.
     max_r : float, optional
-        Maximal quality of the link to keep, by default 1
-    max_shift_xyz : list of int, optional
-        Maximal shift in X, Y and Z in px to keep, e.g. [10,10,10], by default empty,
-        meaning this option is skipped
+        Maximal quality of the link to keep, by default `1`.
+    max_shift_xyz : list(int), optional
+        Maximal shift in X, Y and Z (in pixels) to keep, e.g. `[10,10,10]`. By
+        default empty, meaning no filtering based on the shifts will be applied.
     max_displacement : int, optional
-        Maximal displacement to keep, by default empty,
-        meaning this option is skipped
+        Maximal displacement to keep. By default empty, meaning no filtering
+        based on the displacement will be applied.
     """
 
     file_info = pathtools.parse_path(project_path)
@@ -563,29 +565,29 @@ def run_optimize_apply_shifts(
     relative_error=2.5,
     absolute_error=3.5,
 ):
-    """Optimize the shifts and apply it to the dataset
+    """Optimize the shifts and apply them to the dataset.
 
     Parameters
     ----------
     project_path : str
-        Path of the XML on which to optimize and apply the shifts
+        Path to the `.xml` on which to optimize and apply the shifts.
     input_dict : dict
         Dictionary containing all the required information for angles,
-        channels, illuminations, tiles and timepoints
+        channels, illuminations, tiles and timepoints.
     treat_timepoints : str, optional
-        How to treat the timepoints, by default "group"
+        How to treat the timepoints, by default `group`.
     treat_channels : str, optional
-        How to treat the channels, by default "group"
+        How to treat the channels, by default `group`.
     treat_illuminations : str, optional
-        How to treat the illuminations, by default "group"
+        How to treat the illuminations, by default `group`.
     treat_angles : str, optional
-        How to treat the angles, by default "[treat individually]"
+        How to treat the angles, by default `[treat individually]`.
     treat_tiles : str, optional
-        How to treat the tiles, by default "group"
-    relative_error: float, optional
-        relative alignment error in px, by default 2.5
-    absolute_error: float, optional
-        absolute alignment error in px, by default 3.5
+        How to treat the tiles, by default `group`.
+    relative_error : float, optional
+        Relative alignment error (in px) to accept, by default `2.5`.
+    absolute_error : float, optional
+        Absolute alignment error (in px) to accept, by default `3.5`.
     """
 
     # FIXME: input_dict is not a good parameter name, plus the parse_options()
@@ -683,17 +685,17 @@ def run_detect_interest_points(
     Parameters
     ----------
     project_path : str
-        Path to the .xml project
+        Path to the `.xml` project.
     process_timepoint : str, optional
-        Specify which timepoint should be processed, by default "All Timepoints"
+        Timepoint to be processed, by default `All Timepoints`.
     process_channel : str, optional
-        Specify which channel should be processed, by default "All channels"
+        Channel to be processed, by default `All channels`.
     sigma : float, optional
-        Minimum sigma for interest points detection, by default 1.8
+        Minimum sigma for interest points detection, by default `1.8`.
     threshold : float, optional
-        Threshold value for the interest point detection, by default 0.008
+        Threshold value for the interest point detection, by default `0.008`.
     maximum_number : int, optional
-        Maximum number of interest points to use, by default 3000.
+        Maximum number of interest points to use, by default `3000`.
     """
 
     # If not process all channels at once, then adapt the option
@@ -764,22 +766,24 @@ def run_interest_points_registration(
     process_channel="All channels",
     rigid_timepoints=False,
 ):
-    """Run the registration command.
+    """Run the "Register Dataset based on Interest Points" command.
 
     Parameters
     ----------
     project_path : str
-        Path to the .xml project
+        Path to the `.xml` project.
     process_timepoint : str, optional
-        Specify which timepoint should be processed, by default "All Timepoints"
+        Timepoint to be processed, by default `All Timepoints`.
     process_channel : str, optional
-        Specify which channels should be processed. By default, all channels are
-        processed together, however this behavior could be undesirable if only
-        one channel is adequate (beads or nuclei). In that case provide the
-        channel name instead. by default "All channels"
+        Channels to be used for performing the registration. By default, all
+        channels are taken into account, however this behavior could be
+        undesirable if only one channel is adequate (e.g. beads or other useful
+        fiducials). To restrict registration to a specific channel, provide the
+        channel name using this parameter. By default `All channels`.
     rigid_timepoints : bool, optional
-        If spatial registration has already been run, set this boolean to True
-        to consider each timepoint as rigid unit, by default False
+        If set to `True` each timepoint will be considered as a rigid unit
+        (useful e.g. if spatial registration has already been performed before).
+        By default `False`.
     """
 
     # If not process all channels at once, then adapt the option
@@ -844,24 +848,25 @@ def run_duplicate_transformations(
     tile_source=None,
     transformation_to_use="[Replace all transformations]",
 ):
-    """Duplicate the transformation parameters to the other channels.
+    """Duplicate / propagate transformation parameters to other channels.
 
-    If registration has been generated using a single channel,this can be used
-    to propagate it to the others.
+    Propagate the transformation parameters generated by a previously performed
+    registration of a single channel to the other channels.
 
     Parameters
     ----------
     project_path : str
-        Path to the .xml project
+        Path to the `.xml` project.
     transformation_type : str, optional
-        select mode, e.g. "channel" or "tiles"
+        Transformation mode, one of `channel` (to propagate from one channel to
+        all others) and `tiles` (to propagate from one tile to all others).
     channel_source : int, optional
-        number of the reference channel, starts at 1, by default None
-    tile source : int, optional
-        the reference tile, by default None
+        Reference channel nummber (starting at 1), by default None.
+    tile_source : int, optional
+        Reference tile, by default None.
     transformation_to_use : str, optional
-        select which transformations to duplicate.
-        Alternative option: "[Add last transformation only]"
+        One of `[Replace all transformations]` (default) and `[Add last
+        transformation only]` to specify which transformations to propagate.
     """
     # FIXME: transformation_to_use requires explanations of possible values!
 
@@ -949,7 +954,9 @@ def run_fusion(
     pixel_type="[16-bit unsigned integer]",
     export="HDF5",
 ):
-    """Wrapper to BigStitcher > Batch Processing > Fuse Dataset.
+    """Call BigStitcher's "Fuse Dataset" command.
+
+    Wrapper to `BigStitcher > Batch Processing > Fuse Dataset`.
 
     Depending on the export type, inputs are different and therefore will
     distribute inputs differently.
@@ -957,20 +964,21 @@ def run_fusion(
     Parameters
     ----------
     project_path : str
-        Path of the XML on which to do the fusion.
+        Path to the `.xml` on which to run the fusion.
     input_dict : dict
         Dictionary containing all the required informations for angles,
         channels, illuminations, tiles and timepoints.
     result_path : str, optional
-        Path to store the resulting fused image, by default None.
+        Path to store the resulting fused image, by default `None` which will
+        store the result in the same folder as the input project.
     downsampling : int, optional
-        Downsampling value to use during fusion, by default 1.
+        Downsampling value to use during fusion, by default `1`.
     interpolation : str, optional
-        Interpolation to use during fusion, by default "[Linear Interpolation]".
+        Interpolation to use during fusion, by default `[Linear Interpolation]`.
     pixel_type : str, optional
-        Pixel type to use during fusion, by default "[16-bit unsigned integer]".
+        Pixel type to use during fusion, by default `[16-bit unsigned integer]`.
     export : str, optional
-        Format of the output fused image, by default "HDF5".
+        Format of the output fused image, by default `HDF5`.
     """
 
     file_info = pathtools.parse_path(project_path)
