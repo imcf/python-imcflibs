@@ -53,31 +53,31 @@ def run_define_dataset_autoloader(
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
 ):
-    """Run the Define Multi-View Dataset command using the "Auto-Loader" option.
+    """Run "Define Multi-View Dataset" using the "Auto-Loader" option.
 
     Parameters
     ----------
     project_filename : str
-        Name of the project without .xml extension
+        Name of the project (without an `.xml` extension).
     file_path : str
-        path to the file, can be the first czi or a regex to match all files
-        with an extension
+        Path to the file, can be the first `.czi` or a regex to match all files
+        with an extension.
     dataset_save_path : str
-        output path for the .xml
+        Output path for the `.xml`.
     bf_series_type : str
         One of "Angles" or "Tiles", specifying how Bio-Formats interprets the series.
     timepoints_per_partition : int, optional
-        split the output by timepoints. Use 0 for no split, by default 1
+        Split the output by timepoints. Use 0 for no split, by default 1.
     resave : str, optional
-        Allows this function to either re-save the images or simply create a merged xml.
-        Use "Load raw data" to avoid re-saving, by default "Re-save as multiresolution
-        HDF5" will resave the input data.
+        Allow the function to either re-save the images or simply create a
+        merged xml. Use "Load raw data" to avoid re-saving, by default "Re-save
+        as multiresolution HDF5" will resave the input data.
     subsampling_factors: str, optional
-        Allow specifying subsampling factors explicitly, for example:
-        "[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }]"
+        Specify subsampling factors explicitly, for example:
+        `[{ {1,1,1}, {2,2,1}, {4,4,2}, {8,8,4} }]`.
     hdf5_chunk_sizes: str, optional
-        Allow specifying hdf5_chunk_sizes factors explicitly, for example
-        "[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]"
+        Specify hdf5_chunk_sizes factors explicitly, for example
+        `[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]`
     """
     # FIXME: the docstring is actually not corrct, in the sense that the function will
     # switch to `Define dataset ...` in case the `bf_series_type` is `Tiles`
@@ -161,21 +161,21 @@ def run_define_dataset_manualoader(
     dataset_organisation,
     file_definition,
 ):
-    """Run the Define Multi-View Dataset command using the "Manual Loader" option
+    """Run "Define Multi-View Dataset" using the "Manual Loader" option.
 
     Parameters
     ----------
     project_filename : str
-        Name of the project without .xml extension
+        Name of the project (without an `.xml` extension).
     source_directory : str
-        Path to the folder containing the file(s)
+        Path to the folder containing the file(s).
     image_file_pattern : str
         Pattern corresponding to the names of your files separating the
-        different dimensions
+        different dimensions.
     dataset_organisation : str
-        Organisation of the dataset and the dimensions to process
+        Organisation of the dataset and the dimensions to process.
     file_definition : dict
-        Dictionary containing all the info about the file repartitions
+        Dictionary containing the details about the file repartitions.
     """
 
     xml_filename = project_filename + ".xml"
