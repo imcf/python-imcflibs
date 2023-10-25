@@ -43,7 +43,7 @@ def backup_xml_files(source_directory, subfolder_name):
         shutil.copy2(xml_file, backup_subfolder)
 
 
-def run_define_dataset_autoloader(
+def define_dataset_auto(
     project_filename,
     file_path,
     bf_series_type,
@@ -173,7 +173,7 @@ def run_define_dataset_autoloader(
     return
 
 
-def run_define_dataset_manualoader(
+def define_dataset_manual(
     project_filename,
     source_directory,
     image_file_pattern,
@@ -241,7 +241,7 @@ def run_define_dataset_manualoader(
     IJ.run("Define dataset ...", str(options))
 
 
-def run_resave_as_h5(
+def resave_as_h5(
     source_xml_file,
     output_h5_file_path,
     timepoints="All Timepoints",
@@ -253,8 +253,7 @@ def run_resave_as_h5(
     """Resave the xml dataset in a new format (either all or single timepoints).
 
     Useful if it hasn't been done during dataset definition (see
-    `run_define_dataset_autoloader()`). Allows e.g. parallelization of HDF-5
-    re-saving.
+    `define_dataset_auto()`). Allows e.g. parallelization of HDF-5 re-saving.
 
     Parameters
     ----------
@@ -333,7 +332,7 @@ def run_resave_as_h5(
     return
 
 
-def run_flip_axes(source_xml_file, x=False, y=True, z=False):
+def flip_axes(source_xml_file, x=False, y=True, z=False):
     """Call BigStitcher's "Flip Axes" command.
 
     Wrapper for `BigStitcher > Batch Processing > Tools > Flip Axes`. This is
@@ -367,7 +366,7 @@ def run_flip_axes(source_xml_file, x=False, y=True, z=False):
     backup_xml_files(file_info["path"], "flip_axes")
 
 
-def run_phase_correlation_pairwise_shifts_calculation(
+def phase_correlation_pairwise_shifts_calculation(
     project_path,
     input_dict={},
     treat_timepoints="group",
@@ -489,7 +488,7 @@ def run_phase_correlation_pairwise_shifts_calculation(
     return
 
 
-def run_filter_pairwise_shifts(
+def filter_pairwise_shifts(
     project_path,
     min_r=0.7,
     max_r=1,
@@ -552,7 +551,7 @@ def run_filter_pairwise_shifts(
     return
 
 
-def run_optimize_apply_shifts(
+def optimize_and_apply_shifts(
     project_path,
     input_dict={},
     treat_timepoints="group",
@@ -670,7 +669,7 @@ def run_optimize_apply_shifts(
     return
 
 
-def run_detect_interest_points(
+def detect_interest_points(
     project_path,
     process_timepoint="All Timepoints",
     process_channel="All channels",
@@ -758,7 +757,7 @@ def run_detect_interest_points(
     return
 
 
-def run_interest_points_registration(
+def interest_points_registration(
     project_path,
     process_timepoint="All Timepoints",
     process_channel="All channels",
@@ -839,7 +838,7 @@ def run_interest_points_registration(
     return
 
 
-def run_duplicate_transformations(
+def duplicate_transformations(
     project_path,
     transformation_type="channel",
     channel_source=None,
@@ -943,7 +942,7 @@ def run_duplicate_transformations(
     return
 
 
-def run_fusion(
+def fuse_dataset(
     project_path,
     input_dict={},
     result_path=None,
