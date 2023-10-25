@@ -421,7 +421,7 @@ def run_phase_correlation_pairwise_shifts_calculation(
     use_tile = options_dict["use_tiles"] if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
-        downsampling = ("downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s ") % (
+        downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (
             downsampling_xyz[0],
             downsampling_xyz[1],
             downsampling_xyz[2],
