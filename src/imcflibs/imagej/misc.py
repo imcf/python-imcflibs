@@ -222,8 +222,6 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
     prefs.fix_ij_options()
 
-    return
-
 
 def sanitize_image_title(imp):
     """Remove special chars and various suffixes from an open ImagePlus.
