@@ -240,8 +240,6 @@ def run_define_dataset_manualoader(
     log.debug(options)
     IJ.run("Define dataset ...", str(options))
 
-    return
-
 
 def run_resave_as_h5(
     source_xml_file,
