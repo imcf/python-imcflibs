@@ -79,6 +79,8 @@ def run_define_dataset_autoloader(
         Allow specifying hdf5_chunk_sizes factors explicitly, for example
         "[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]"
     """
+    # FIXME: the docstring is actually not corrct, in the sense that the function will
+    # switch to `Define dataset ...` in case the `bf_series_type` is `Tiles`
 
     file_info = pathtools.parse_path(file_path)
 
