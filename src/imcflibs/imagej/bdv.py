@@ -1061,76 +1061,127 @@ def fuse_dataset(
     IJ.run("Fuse dataset ...", str(options))
 
 
-def parse_options(input_dict):
-    output_dict = {}
+class ProcessingOptions(object):
+    def __init__(self):
+        self._use_channel = "channels=[Average Channels]"
+        self._use_tiles = "tiles=[Average Tiles]"
+        self._channel_processing_option = "[All channels] "
+        self._channel_select = ""
+        self._illumination_processing_option = "[All illuminations] "
+        self._illumination_select = ""
+        self._tile_processing_option = "[All tiles] "
+        self._tile_select = ""
+        self._timepoint_processing_option = "[All Timepoints] "
+        self._timepoint_select = ""
+        self._angle_processing_option = "[All angles] "
+        self._angle_select = ""
 
-    # options to select reference views for grouped views
+    @property
+    def use_channel(self):
+        return self._use_channel
 
-    output_dict["use_channel"] = "channels=[Average Channels]"
-    if "reference_channel" in input_dict:
-        output_dict["use_channel"] = (
-            "channels=[use Channel " + str(input_dict["reference_channel"] - 1) + "] "
+    @property
+    def use_tiles(self):
+        return self._use_tiles
+
+    @property
+    def channel_processing_option(self):
+        return self._channel_processing_option
+
+    @property
+    def channel_select(self):
+        return self._channel_select
+
+    @property
+    def illumination_processing_option(self):
+        return self._illumination_processing_option
+
+    @property
+    def illumination_select(self):
+        return self._illumination_select
+
+    @property
+    def tile_processing_option(self):
+        return self._tile_processing_option
+
+    @property
+    def tile_select(self):
+        return self._tile_select
+
+    @property
+    def timepoint_processing_option(self):
+        return self._timepoint_processing_option
+
+    @property
+    def timepoint_select(self):
+        return self._timepoint_select
+
+    @property
+    def angle_processing_option(self):
+        return self._angle_processing_option
+
+    @property
+    def angle_select(self):
+        return self._angle_select
+
+    @use_channel.setter
+    def use_channel(self, value):
+        channel = int(value) - 1
+        self._use_channel = "channels=[use Channel %s] " % channel
+
+    @use_tiles.setter
+    def use_tiles(self, value):
+        self._use_tiles = "tiles=[use Tile %s] " % value
+
+    @channel_processing_option.setter
+    def channel_processing_option(self, value):
+        self._channel_processing_option = value
+
+    @channel_select.setter
+    def channel_select(self, value):
+        # NOTE: also requires `channel_processing_option` to be adjusted
+        self.channel_processing_option = "[Single channel (Select from List)] "
+        channel = int(value) - 1
+        self._channel_select = "processing_channel=[channel %s] " % channel
+
+    @illumination_processing_option.setter
+    def illumination_processing_option(self, value):
+        self._illumination_processing_option = value
+
+    @illumination_select.setter
+    def illumination_select(self, value):
+        # NOTE: also requires `illumination_processing_option` to be adjusted
+        self.illumination_processing_option = (
+            "[Single illumination (Select from List)] "
         )
+        self._illumination_select = "processing_illumination=[illumination %s] " % value
 
-    output_dict["use_tiles"] = "tiles=[Average Tiles]"
-    if "reference_tile" in input_dict:
-        output_dict["use_tiles"] = (
-            "tiles=[use Tile " + str(input_dict["reference_tile"]) + "] "
-        )
+    @tile_processing_option.setter
+    def tile_processing_option(self, value):
+        self._tile_processing_option = value
 
-    # options to select views in a dataset for processing
+    @tile_select.setter
+    def tile_select(self, value):
+        # NOTE: also requires `tile_processing_option` to be adjusted
+        self.tile_processing_option = "[Single tile (Select from List)] "
+        self._tile_select = "processing_tile=[tile %s] " % value
 
-    output_dict["channel_processing_option"] = "[All channels] "
-    output_dict["channel_select"] = ""
-    if "process_channel" in input_dict:
-        output_dict[
-            "channel_processing_option"
-        ] = "[Single channel (Select from List)] "
-        output_dict["channel_select"] = (
-            "processing_channel=[channel "
-            + str(input_dict["process_channel"] - 1)
-            + "] "
-        )
+    @timepoint_processing_option.setter
+    def timepoint_processing_option(self, value):
+        self._timepoint_processing_option = value
 
-    output_dict["illumination_processing_option"] = "[All illuminations] "
-    output_dict["illumination_select"] = ""
-    if "process_illumination" in input_dict:
-        output_dict[
-            "illumination_processing_option"
-        ] = "[Single illumination (Select from List)] "
-        output_dict["illumination_select"] = (
-            "processing_illumination=[illumination "
-            + str(input_dict["process_illumination"])
-            + "] "
-        )
+    @timepoint_select.setter
+    def timepoint_select(self, value):
+        # NOTE: also requires `timepoint_processing_option` to be adjusted
+        self.timepoint_processing_option = "[Single timepoint (Select from List)] "
+        self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
 
-    output_dict["tile_processing_option"] = "[All tiles] "
-    output_dict["tile_select"] = ""
-    if "process_tile" in input_dict:
-        output_dict["tile_processing_option"] = "[Single tile (Select from List)] "
-        output_dict["tile_select"] = (
-            "processing_tile=[tile " + str(input_dict["process_tile"]) + "] "
-        )
+    @angle_processing_option.setter
+    def angle_processing_option(self, value):
+        self._angle_processing_option = value
 
-    output_dict["timepoint_processing_option"] = "[All Timepoints] "
-    output_dict["timepoint_select"] = ""
-    if "process_timepoint" in input_dict:
-        output_dict[
-            "timepoint_processing_option"
-        ] = "[Single timepoint (Select from List)] "
-        output_dict["timepoint_select"] = (
-            "processing_timepoint=[timepoint "
-            + str(input_dict["process_timepoint"])
-            + "] "
-        )
-
-    output_dict["angle_processing_option"] = "[All angles] "
-    output_dict["angle_select"] = ""
-    if "process_angle" in input_dict:
-        output_dict["angle_processing_option"] = "[Single angle (Select from List)] "
-        output_dict["angle_select"] = (
-            "processing_angle=[angle " + str(input_dict["process_angle"]) + "] "
-        )
-
-    log.debug(output_dict)
-    return output_dict
+    @angle_select.setter
+    def angle_select(self, value):
+        # NOTE: also requires `angle_processing_option` to be adjusted
+        self.angle_processing_option = "[Single angle (Select from List)] "
+        self._angle_select = "processing_angle=[angle ] " % value
