@@ -382,9 +382,9 @@ def phase_correlation_pairwise_shifts_calculation(
     ----------
     project_path : str
         Full path to the `.xml` file.
-    input_dict : dict
+    input_dict : dict, optional
         Options dict containing the required information for angle, channel,
-        illuminations and timepoints.
+        illuminations and timepoints. By default an empty dict.
     treat_timepoints : str, optional
         How to deal with the timepoints, by default `group`.
     treat_channels : str, optional
@@ -568,9 +568,9 @@ def optimize_and_apply_shifts(
     ----------
     project_path : str
         Path to the `.xml` on which to optimize and apply the shifts.
-    input_dict : dict
+    input_dict : dict, optional
         Dictionary containing all the required information for angles,
-        channels, illuminations, tiles and timepoints.
+        channels, illuminations, tiles and timepoints. By default an empty dict.
     treat_timepoints : str, optional
         How to treat the timepoints, by default `group`.
     treat_channels : str, optional
@@ -962,9 +962,9 @@ def fuse_dataset(
     ----------
     project_path : str
         Path to the `.xml` on which to run the fusion.
-    input_dict : dict
+    input_dict : dict, optional
         Dictionary containing all the required informations for angles,
-        channels, illuminations, tiles and timepoints.
+        channels, illuminations, tiles and timepoints. By default an empty dict.
     result_path : str, optional
         Path to store the resulting fused image, by default `None` which will
         store the result in the same folder as the input project.
