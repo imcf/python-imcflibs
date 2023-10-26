@@ -666,7 +666,6 @@ def optimize_and_apply_shifts(
     IJ.run("Optimize globally and apply shifts ...", str(options))
 
     backup_xml_files(file_info["path"], "optimize_and_apply_shifts")
-    return
 
 
 def detect_interest_points(
@@ -1060,7 +1059,6 @@ def fuse_dataset(
 
     log.debug(options)
     IJ.run("Fuse dataset ...", str(options))
-    return
 
 
 def parse_options(input_dict):
