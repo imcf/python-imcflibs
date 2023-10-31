@@ -943,7 +943,7 @@ def duplicate_transformations(
 
 def fuse_dataset(
     project_path,
-    input_dict={},
+    processing_opts=None,
     result_path=None,
     downsampling=1,
     interpolation="[Linear Interpolation]",
@@ -961,9 +961,10 @@ def fuse_dataset(
     ----------
     project_path : str
         Path to the `.xml` on which to run the fusion.
-    input_dict : dict, optional
-        Dictionary containing all the required informations for angles,
-        channels, illuminations, tiles and timepoints. By default an empty dict.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptinos` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped.
     result_path : str, optional
         Path to store the resulting fused image, by default `None` which will
         store the result in the same folder as the input project.
@@ -977,28 +978,29 @@ def fuse_dataset(
         Format of the output fused image, by default `HDF5`.
     """
 
+    if processing_opts is None:
+        processing_opts = ProcessingOptions()
+
     file_info = pathtools.parse_path(project_path)
     if not result_path:
         result_path = file_info["path"]
         # if not os.path.exists(result_path):
         #     os.makedirs(result_path)
 
-    options_dict = parse_options(input_dict)
-
     options = (
         "select=["
         + project_path
         + "] "
         + "process_angle="
-        + options_dict["angle_processing_option"]
+        + processing_opts.angle_processing_option
         + "process_channel="
-        + options_dict["channel_processing_option"]
+        + processing_opts.channel_processing_option
         + "process_illumination="
-        + options_dict["illumination_processing_option"]
+        + processing_opts.illumination_processing_option
         + "process_tile="
-        + options_dict["tile_processing_option"]
+        + processing_opts.tile_processing_option
         + "process_timepoint="
-        + options_dict["timepoint_processing_option"]
+        + processing_opts.timepoint_processing_option
         + "bounding_box=[All Views] "
         + "downsampling="
         + str(downsampling)
