@@ -622,7 +622,7 @@ def optimize_and_apply_shifts(
         + processing_opts.channel_select
         + processing_opts.illumination_select
         + processing_opts.tile_select
-        + " "
+        + " "  # WARNING: original code had another "timepoint_select" option here!
         + "relative="
         + str(relative_error)
         + " "
