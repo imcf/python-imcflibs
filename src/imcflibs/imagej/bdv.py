@@ -553,7 +553,7 @@ def filter_pairwise_shifts(
 
 def optimize_and_apply_shifts(
     project_path,
-    input_dict={},
+    processing_opts=None,
     treat_timepoints="group",
     treat_channels="group",
     treat_illuminations="group",
@@ -568,9 +568,10 @@ def optimize_and_apply_shifts(
     ----------
     project_path : str
         Path to the `.xml` on which to optimize and apply the shifts.
-    input_dict : dict, optional
-        Dictionary containing all the required information for angles,
-        channels, illuminations, tiles and timepoints. By default an empty dict.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptinos` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped.
     treat_timepoints : str, optional
         How to treat the timepoints, by default `group`.
     treat_channels : str, optional
@@ -587,45 +588,40 @@ def optimize_and_apply_shifts(
         Absolute alignment error (in px) to accept, by default `3.5`.
     """
 
-    # FIXME: input_dict is not a good parameter name, plus the parse_options()
-    # function needs to be refactored and documented first!
+    if processing_opts is None:
+        processing_opts = ProcessingOptions()
 
     file_info = pathtools.parse_path(project_path)
 
-    options_dict = parse_options(input_dict)
-
     use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
-    use_channel = options_dict["use_channel"] if treat_channels == "group" else ""
-    use_illumination = (
-        "illuminations=[Average Illuminations]"
-        if treat_illuminations == "group"
-        else ""
-    )
-    use_timepoint = (
-        "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
-    )
-    use_tile = options_dict["use_tiles"] if treat_tiles == "group" else ""
+    use_channel = processing_opts.use_channel if treat_channels == "group" else ""
+    use_illumination = ""
+    if treat_illuminations == "group":
+        use_illumination = "illuminations=[Average Illuminations]"
+    use_timepoint = ""
+    if treat_timepoints == "group":
+        use_timepoint = "timepoints=[Average Timepoints]"
+    use_tile = processing_opts.use_tiles if treat_tiles == "group" else ""
 
     options = (
         "select=["
         + project_path
         + "] "
         + "process_angle="
-        + options_dict["angle_processing_option"]
+        + processing_opts.angle_processing_option
         + "process_channel="
-        + options_dict["channel_processing_option"]
+        + processing_opts.channel_processing_option
         + "process_illumination="
-        + options_dict["illumination_processing_option"]
+        + processing_opts.illumination_processing_option
         + "process_tile="
-        + options_dict["tile_processing_option"]
+        + processing_opts.tile_processing_option
         + "process_timepoint="
-        + options_dict["timepoint_processing_option"]
-        + options_dict["timepoint_select"]
-        + options_dict["angle_select"]
-        + options_dict["channel_select"]
-        + options_dict["illumination_select"]
-        + options_dict["tile_select"]
-        + options_dict["timepoint_select"]
+        + processing_opts.timepoint_processing_option
+        + processing_opts.timepoint_select
+        + processing_opts.angle_select
+        + processing_opts.channel_select
+        + processing_opts.illumination_select
+        + processing_opts.tile_select
         + " "
         + "relative="
         + str(relative_error)
