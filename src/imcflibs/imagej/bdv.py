@@ -368,7 +368,7 @@ def flip_axes(source_xml_file, x=False, y=True, z=False):
 
 def phase_correlation_pairwise_shifts_calculation(
     project_path,
-    input_dict={},
+    processing_opts=None,
     treat_timepoints="group",
     treat_channels="group",
     treat_illuminations="group",
@@ -382,9 +382,10 @@ def phase_correlation_pairwise_shifts_calculation(
     ----------
     project_path : str
         Full path to the `.xml` file.
-    input_dict : dict, optional
-        Options dict containing the required information for angle, channel,
-        illuminations and timepoints. By default an empty dict.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptinos` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped.
     treat_timepoints : str, optional
         How to deal with the timepoints, by default `group`.
     treat_channels : str, optional
@@ -400,15 +401,13 @@ def phase_correlation_pairwise_shifts_calculation(
         empty which will result in BigStitcher choosing the factors.
     """
 
-    # FIXME: input_dict is not a good parameter name, plus the parse_options()
-    # function needs to be refactored and documented first!
+    if processing_opts is None:
+        processing_opts = ProcessingOptions()
 
     file_info = pathtools.parse_path(project_path)
 
-    options_dict = parse_options(input_dict)
-
     use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
-    use_channel = options_dict["use_channel"] if treat_channels == "group" else ""
+    use_channel = processing_opts.use_channel if treat_channels == "group" else ""
     use_illumination = (
         "illuminations=[Average Illuminations]"
         if treat_illuminations == "group"
@@ -417,7 +416,7 @@ def phase_correlation_pairwise_shifts_calculation(
     use_timepoint = (
         "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
     )
-    use_tile = options_dict["use_tiles"] if treat_tiles == "group" else ""
+    use_tile = processing_opts.use_tiles if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
         downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (
@@ -432,22 +431,22 @@ def phase_correlation_pairwise_shifts_calculation(
         "select=["
         + project_path
         + "] "
-        + +"process_angle="
-        + options_dict["angle_processing_option"]
+        + "process_angle="
+        + processing_opts.angle_processing_option
         + "process_channel="
-        + options_dict["channel_processing_option"]
+        + processing_opts.channel_processing_option
         + "process_illumination="
-        + options_dict["illumination_processing_option"]
+        + processing_opts.illumination_processing_option
         + "process_tile="
-        + options_dict["tile_processing_option"]
+        + processing_opts.tile_processing_option
         + "process_timepoint="
-        + options_dict["timepoint_processing_option"]
-        + options_dict["timepoint_select"]
-        + options_dict["angle_select"]
-        + options_dict["channel_select"]
-        + options_dict["illumination_select"]
-        + options_dict["tile_select"]
-        + options_dict["timepoint_select"]
+        + processing_opts.timepoint_processing_option
+        + processing_opts.timepoint_select
+        + processing_opts.angle_select
+        + processing_opts.channel_select
+        + processing_opts.illumination_select
+        + processing_opts.tile_select
+        # + options_dict["timepoint_select"]  # FIXME: is this duplication intended??
         + " "
         + "method=[Phase Correlation] "
         + "show_expert_grouping_options "
