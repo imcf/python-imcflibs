@@ -52,6 +52,50 @@ class ProcessingOptions(object):
         self._angle_processing_option = "[All angles] "
         self._angle_select = ""
 
+    def format_acitt_options(self):
+        """Format Angle / Channel / Illumination / Tile / Timepoint options.
+
+        Build a string providing the `process_angle`, `process_channel`,
+        `process_illumination`, `process_tile` and `process_timepoint` options
+        that can be used in a BDV-related `IJ.run` call.
+
+        Returns
+        -------
+        str
+        """
+        parameters = [
+            "process_angle=" + self._angle_processing_option,
+            "process_channel=" + self._channel_processing_option,
+            "process_illumination=" + self._illumination_processing_option,
+            "process_tile=" + self._tile_processing_option,
+            "process_timepoint=" + self._timepoint_processing_option,
+        ]
+        parameter_string = " ".join(parameters) + " "
+        log.debug("Formatted ACITT options: <%s>", parameter_string)
+        return parameter_string
+
+    def format_acitt_selectors(self):
+        """Format Angle / Channel / Illumination / Tile / Timepoint selectors.
+
+        Build a string providing the `angle_select`, `channel_select`,
+        `illumination_select`, `tile_select` and `timepoint_select` options
+        that can be used in a BDV-related `IJ.run` call.
+
+        Returns
+        -------
+        str
+        """
+        parameters = [
+            "angle_select=" + self._angle_select,
+            "channel_select=" + self._channel_select,
+            "illumination_select=" + self._illumination_select,
+            "tile_select=" + self._tile_select,
+            "timepoint_select=" + self._timepoint_select,
+        ]
+        parameter_string = " ".join(parameters) + " "
+        log.debug("Formatted ACITT selectors: <%s>", parameter_string)
+        return parameter_string
+
     @property
     def use_channel(self):
         return self._use_channel
@@ -574,21 +618,8 @@ def phase_correlation_pairwise_shifts_calculation(
         "select=["
         + project_path
         + "] "
-        + "process_angle="
-        + processing_opts.angle_processing_option
-        + "process_channel="
-        + processing_opts.channel_processing_option
-        + "process_illumination="
-        + processing_opts.illumination_processing_option
-        + "process_tile="
-        + processing_opts.tile_processing_option
-        + "process_timepoint="
-        + processing_opts.timepoint_processing_option
-        + processing_opts.timepoint_select
-        + processing_opts.angle_select
-        + processing_opts.channel_select
-        + processing_opts.illumination_select
-        + processing_opts.tile_select
+        + processing_opts.format_acitt_options()
+        + processing_opts.format_acitt_selectors()
         # + options_dict["timepoint_select"]  # FIXME: is this duplication intended??
         + " "
         + "method=[Phase Correlation] "
@@ -749,21 +780,8 @@ def optimize_and_apply_shifts(
         "select=["
         + project_path
         + "] "
-        + "process_angle="
-        + processing_opts.angle_processing_option
-        + "process_channel="
-        + processing_opts.channel_processing_option
-        + "process_illumination="
-        + processing_opts.illumination_processing_option
-        + "process_tile="
-        + processing_opts.tile_processing_option
-        + "process_timepoint="
-        + processing_opts.timepoint_processing_option
-        + processing_opts.timepoint_select
-        + processing_opts.angle_select
-        + processing_opts.channel_select
-        + processing_opts.illumination_select
-        + processing_opts.tile_select
+        + processing_opts.format_acitt_options()
+        + processing_opts.format_acitt_selectors()
         + " "  # WARNING: original code had another "timepoint_select" option here!
         + "relative="
         + str(relative_error)
@@ -1129,16 +1147,7 @@ def fuse_dataset(
         "select=["
         + project_path
         + "] "
-        + "process_angle="
-        + processing_opts.angle_processing_option
-        + "process_channel="
-        + processing_opts.channel_processing_option
-        + "process_illumination="
-        + processing_opts.illumination_processing_option
-        + "process_tile="
-        + processing_opts.tile_processing_option
-        + "process_timepoint="
-        + processing_opts.timepoint_processing_option
+        + processing_opts.format_acitt_options()
         + "bounding_box=[All Views] "
         + "downsampling="
         + str(downsampling)
