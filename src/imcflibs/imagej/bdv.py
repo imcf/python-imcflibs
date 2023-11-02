@@ -19,6 +19,25 @@ from ..log import LOG as log
 
 
 class ProcessingOptions(object):
+
+    """Helper to store processing options and generate parameter strings.
+
+    Attributes
+    ----------
+    use_channel : str
+    use_tiles : str
+    channel_processing_option : str
+    channel_select : str
+    illumination_processing_option : str
+    illumination_select : str
+    tile_processing_option : str
+    tile_select : str
+    timepoint_processing_option : str
+    timepoint_select : str
+    angle_processing_option : str
+    angle_select : str
+    """
+
     def __init__(self):
         self._use_channel = "channels=[Average Channels]"
         self._use_tiles = "tiles=[Average Tiles]"
