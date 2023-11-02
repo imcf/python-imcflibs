@@ -98,10 +98,12 @@ class ProcessingOptions(object):
 
     @property
     def use_channel(self):
+        """The channels parameter (default: `channels=[Average Channels]`)."""
         return self._use_channel
 
     @property
     def use_tiles(self):
+        """The tiles parameter (default: `tiles=[Average Tiles]`)."""
         return self._use_tiles
 
     @property
