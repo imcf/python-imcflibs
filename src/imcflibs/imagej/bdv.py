@@ -534,14 +534,12 @@ def phase_correlation_pairwise_shifts_calculation(
 
     use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
     use_channel = processing_opts.use_channel if treat_channels == "group" else ""
-    use_illumination = (
-        "illuminations=[Average Illuminations]"
-        if treat_illuminations == "group"
-        else ""
-    )
-    use_timepoint = (
-        "timepoints=[Average Timepoints]" if treat_timepoints == "group" else ""
-    )
+    use_illumination = ""
+    if treat_illuminations == "group":
+        use_illumination = "illuminations=[Average Illuminations]"
+    use_timepoint = ""
+    if treat_timepoints == "group":
+        use_timepoint = "timepoints=[Average Timepoints]"
     use_tile = processing_opts.use_tiles if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
