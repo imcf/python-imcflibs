@@ -141,7 +141,7 @@ class ProcessingOptions(object):
     def angle_select(self, value):
         # NOTE: also requires `angle_processing_option` to be adjusted
         self.angle_processing_option = "[Single angle (Select from List)] "
-        self._angle_select = "processing_angle=[angle ] " % value
+        self._angle_select = "processing_angle=[angle %s] " % value
 
 
 def backup_xml_files(source_directory, subfolder_name):
