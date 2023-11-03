@@ -38,12 +38,12 @@ def parse_image_ids(input_string):
 
 
 def connect(host, port, username, password):
-    """Connect to OMERO using the credentials entered.
+    """Connect to OMERO using the credentials provided.
 
     Parameters
     ----------
     host : str
-        The address of the OMERO server.
+        The address (FQDN or IP) of the OMERO server.
     port : int
         The port number for the OMERO server.
     username : str
@@ -55,9 +55,7 @@ def connect(host, port, username, password):
     -------
     omero.gateway.Gateway
         A Gateway object representing the connection to the OMERO server.
-
     """
-
     # Omero Connect with credentials and simpleLogger
     cred = LoginCredentials()
     cred.getServer().setHostname(host)
