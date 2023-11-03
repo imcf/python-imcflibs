@@ -3,13 +3,14 @@
 import os.path
 import platform
 from os import sep
+import re
 
 from . import strtools
 from .log import LOG as log
 
 
 def parse_path(path, prefix=""):
-    r"""Parse a path into its components.
+    """Parse a path into its components.
 
     If the path doesn't end with the pathsep, it is assumed being a file!
     No tests based on existing files are done, as this is supposed to also work
@@ -36,6 +37,7 @@ def parse_path(path, prefix=""):
           combined with the prefix in case one was specified).
         - `full` : The same as `orig` with separators adjusted to the current
           platform.
+        - `parent` : The parent folder of the selected file.
         - `path` : The same as `full`, up to (including) the last separator.
         - `dname` : The segment between the last two separators (directory).
         - `fname` : The segment after the last separator (filename).
@@ -59,6 +61,7 @@ def parse_path(path, prefix=""):
      'full': '/tmp/foo/file',
      'basename': 'file',
      'orig': '/tmp/foo/file',
+     'parent': '/tmp/',
      'path': '/tmp/foo/'}
 
     POSIX-style path to a directory:
@@ -70,6 +73,7 @@ def parse_path(path, prefix=""):
      'full': '/tmp/foo/',
      'basename': '',
      'orig': '/tmp/foo/',
+     'parent': '/tmp/',
      'path': '/tmp/foo/'}
 
     Windows-style path to a file:
@@ -81,6 +85,7 @@ def parse_path(path, prefix=""):
      'full': 'C:/Temp/foo/file.ext',
      'basename': 'file',
      'orig': 'C:\\Temp\\foo\\file.ext',
+     'parent': 'C:/Temp/',
      'path': 'C:/Temp/foo/'}
 
     Special treatment for *OME-TIFF* suffixes:
@@ -92,6 +97,7 @@ def parse_path(path, prefix=""):
     'fname': 'nice.OME.tIf',
     'full': '/path/to/some/nice.OME.tIf',
     'orig': '/path/to/some/nice.OME.tIf',
+    'parent': '/path/to/',
     'path': '/path/to/some/'}
     """
     path = str(path)
@@ -104,7 +110,9 @@ def parse_path(path, prefix=""):
     parsed["orig"] = path
     path = path.replace("\\", sep)
     parsed["full"] = path
-    parsed["path"] = os.path.dirname(path) + sep
+    folder = os.path.dirname(path)
+    parsed["path"] = folder + sep
+    parsed["parent"] = os.path.dirname(folder)
     parsed["fname"] = os.path.basename(path)
     parsed["dname"] = os.path.basename(os.path.dirname(parsed["path"]))
     base, ext = os.path.splitext(parsed["fname"])
@@ -156,7 +164,7 @@ def jython_fiji_exists(path):
         return False
 
 
-def listdir_matching(path, suffix, fullpath=False, sort=False):
+def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -172,6 +180,9 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
     sort : bool, optional
         If set to True, the returned list will be sorted using
         `imcflibs.strtools.sort_alphanumerically()`.
+    regex : bool, optional
+        If set to True, uses the suffix-string as regular expression to match
+        filenames. By default False.
 
     Returns
     -------
@@ -180,8 +191,13 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
     """
     matching_files = list()
     for candidate in os.listdir(path):
-        if candidate.lower().endswith(suffix.lower()):
+        if not regex and candidate.lower().endswith(suffix.lower()):
             # log.debug("Found file %s", candidate)
+            if fullpath:
+                matching_files.append(os.path.join(path, candidate))
+            else:
+                matching_files.append(candidate)
+        if regex and re.match(suffix.lower(), candidate.lower()):
             if fullpath:
                 matching_files.append(os.path.join(path, candidate))
             else:
@@ -323,6 +339,18 @@ def folder_size(source):
                 total_size += os.path.getsize(fpath)
 
     return total_size
+
+
+def create_directory(new_path):
+    """create a new directory if it does not already exist
+
+    Parameters
+    ----------
+    new_path : str
+        Path to the new directory
+    """
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
 
 
 # pylint: disable-msg=C0103

@@ -85,7 +85,7 @@ def import_image(
 
     Returns
     -------
-    ij.ImagePlus[]
+    list(ij.ImagePlus)
         A list of ImagePlus objects resulting from the import.
     """
     options = ImporterOptions()
@@ -195,7 +195,7 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
 
     Returns
     -------
-    out_file : str
+    str
         The full name of the exported file.
     """
     out_file = gen_name_from_orig(path, orig_name, tag, suffix)
@@ -236,7 +236,7 @@ def write_bf_memoryfile(path_to_file):
 
     Parameters
     ----------
-    path_to_file : string
+    string
         The full path to the image file.
     """
     reader = Memoizer(ImageReader())

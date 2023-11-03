@@ -2,6 +2,7 @@
 
 import sys
 import time
+import os
 
 from ij import IJ  # pylint: disable-msg=import-error
 
@@ -221,4 +222,22 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
     prefs.fix_ij_options()
 
-    return
+
+def sanitize_image_title(imp):
+    """Remove special chars and various suffixes from an open ImagePlus.
+
+    Parameters
+    ----------
+    imp : ImagePlus
+        The ImagePlus to be renamed.
+    """
+    # sometimes (unclear when) the title contains the full path, therefore we
+    # simply call `os.path.basename()` on it to remove all up to the last "/":
+    image_title = os.path.basename(imp.getTitle())
+    image_title = image_title.replace(".czi", "")
+    image_title = image_title.replace(" ", "_")
+    image_title = image_title.replace("_-_", "")
+    image_title = image_title.replace("__", "_")
+    image_title = image_title.replace("#", "Series")
+
+    imp.setTitle(image_title)
