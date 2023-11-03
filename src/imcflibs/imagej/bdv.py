@@ -52,7 +52,7 @@ class ProcessingOptions(object):
         self._angle_processing_option = "[All angles] "
         self._angle_select = ""
 
-    def format_acitt_options(self):
+    def fmt_acitt_options(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
 
         Build a string providing the `process_angle`, `process_channel`,
@@ -74,7 +74,7 @@ class ProcessingOptions(object):
         log.debug("Formatted ACITT options: <%s>", parameter_string)
         return parameter_string
 
-    def format_acitt_selectors(self):
+    def fmt_acitt_selectors(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint selectors.
 
         Build a string providing the `angle_select`, `channel_select`,
@@ -620,8 +620,8 @@ def phase_correlation_pairwise_shifts_calculation(
         "select=["
         + project_path
         + "] "
-        + processing_opts.format_acitt_options()
-        + processing_opts.format_acitt_selectors()
+        + processing_opts.fmt_acitt_options()
+        + processing_opts.fmt_acitt_selectors()
         # + options_dict["timepoint_select"]  # FIXME: is this duplication intended??
         + " "
         + "method=[Phase Correlation] "
@@ -782,8 +782,8 @@ def optimize_and_apply_shifts(
         "select=["
         + project_path
         + "] "
-        + processing_opts.format_acitt_options()
-        + processing_opts.format_acitt_selectors()
+        + processing_opts.fmt_acitt_options()
+        + processing_opts.fmt_acitt_selectors()
         + " "  # WARNING: original code had another "timepoint_select" option here!
         + "relative="
         + str(relative_error)
@@ -1149,7 +1149,7 @@ def fuse_dataset(
         "select=["
         + project_path
         + "] "
-        + processing_opts.format_acitt_options()
+        + processing_opts.fmt_acitt_options()
         + "bounding_box=[All Views] "
         + "downsampling="
         + str(downsampling)
