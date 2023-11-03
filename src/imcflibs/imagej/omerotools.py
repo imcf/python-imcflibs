@@ -88,24 +88,41 @@ def fetch_image(host, username, password, image_id, group_id=-1):
     group_id : int, optional
         The OMERO group ID, by default -1 meaning the user's default group.
     """
-
     stackview = "viewhyperstack=true stackorder=XYCZT "
-    dataset_org = "groupfiles=false swapdimensions=false openallseries=false concatenate=false stitchtiles=false"
+    dataset_org = " ".join(
+        [
+            "groupfiles=false",
+            "swapdimensions=false",
+            "openallseries=false",
+            "concatenate=false",
+            "stitchtiles=false",
+        ]
+    )
     color_opt = "colormode=Default autoscale=true"
-    metadata_view = (
-        "showmetadata=false showomexml=false showrois=true setroismode=roimanager"
+    metadata_view = " ".join(
+        [
+            "showmetadata=false",
+            "showomexml=false",
+            "showrois=true",
+            "setroismode=roimanager",
+        ]
     )
     memory_manage = "virtual=false specifyranges=false setcrop=false"
-    split = " splitchannels=false splitfocalplanes=false splittimepoints=false"
+    split = "splitchannels=false splitfocalplanes=false splittimepoints=false"
     other = "windowless=true"
-    options = (
-        "location=[OMERO] open=[omero:server=%s\nuser=%s\npass=%s\ngroupID=%s\niid=%s] %s %s %s %s %s %s %s "
-        % (
-            host,
-            username,
-            password,
-            group_id,
-            image_id,
+    open_options = "\n".join(
+        [
+            "open=[omero:server=" + host,
+            "user=" + username,
+            "pass=" + password,
+            "groupID=" + group_id,
+            "iid=" + image_id + "]",
+        ]
+    )
+    options = " ".join(
+        [
+            "location=[OMERO]",
+            open_options,
             stackview,
             dataset_org,
             color_opt,
@@ -113,6 +130,6 @@ def fetch_image(host, username, password, image_id, group_id=-1):
             memory_manage,
             split,
             other,
-        )
+        ]
     )
     IJ.runPlugIn("loci.plugins.LociImporter", options)
