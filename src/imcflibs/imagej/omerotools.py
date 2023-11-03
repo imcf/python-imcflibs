@@ -69,20 +69,24 @@ def connect(host, port, username, password):
 
 
 def fetch_image(host, username, password, image_id, group_id=-1):
-    """Open an image as an ImagePlus object from an OMERO server
+    """Fetch an image from an OMERO server and open it as an ImagePlus.
+
+    NOTE: the function does **NOT** return the ImagePlus (nor its ID) as this
+    information is not provided by the underlying `loci.plugins.LociImporter`
+    call - it simply opens it in the running ImageJ instance.
 
     Parameters
     ----------
     host : str
-        Address of your OMERO server.
+        The address (FQDN or IP) of the OMERO server.
     username : str
-        Username to use in OMERO.
+        The username for authentication.
     password : str
-        Password for authentication.
+        The password for authentication.
     image_id: int
-        ID of the image to open.
-    group_id : double
-        OMERO group ID, set to -1, signified the user's default group.
+        ID of the image to fetch.
+    group_id : int, optional
+        The OMERO group ID, by default -1 meaning the user's default group.
     """
 
     stackview = "viewhyperstack=true stackorder=XYCZT "
