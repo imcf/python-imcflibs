@@ -5,7 +5,7 @@ fetch images from the server.
 """
 
 # ImageJ Import
-from ij import IJ, Prefs
+from ij import IJ
 
 # Omero Dependencies
 from omero.gateway import Gateway
