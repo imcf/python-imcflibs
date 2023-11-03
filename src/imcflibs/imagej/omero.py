@@ -96,20 +96,20 @@ def fetch_image(host, username, password, image_id, group_id=-1):
     split = " splitchannels=false splitfocalplanes=false splittimepoints=false"
     other = "windowless=true"
     options = (
-            "location=[OMERO] open=[omero:server=%s\nuser=%s\npass=%s\ngroupID=%s\niid=%s] %s %s %s %s %s %s %s "
-            % (
-                host,
-                username,
-                password,
-                group_id,
-                image_id,
-                stackview,
-                dataset_org,
-                color_opt,
-                metadata_view,
-                memory_manage,
-                split,
-                other,
-            )
+        "location=[OMERO] open=[omero:server=%s\nuser=%s\npass=%s\ngroupID=%s\niid=%s] %s %s %s %s %s %s %s "
+        % (
+            host,
+            username,
+            password,
+            group_id,
+            image_id,
+            stackview,
+            dataset_org,
+            color_opt,
+            metadata_view,
+            memory_manage,
+            split,
+            other,
+        )
     )
     IJ.runPlugIn("loci.plugins.LociImporter", options)
