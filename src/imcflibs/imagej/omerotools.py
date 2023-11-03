@@ -1,9 +1,9 @@
-"""
-Functions related to connecting OMERO to Fiji for connecting and fetching images directly.
+"""Functions allowing to interact with an OMERO server.
 
-Contains functions to parse URL, connect to OMERO and fetch image.
-
+Contains helpers to parse URLs and / or OMERO image IDs, connect to OMERO and
+fetch images from the server.
 """
+
 # ImageJ Import
 from ij import IJ, Prefs
 
