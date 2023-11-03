@@ -13,9 +13,6 @@ from omero.gateway import LoginCredentials
 from omero.log import SimpleLogger
 
 
-
-# ─── FUNCTIONS ──────────────────────────────────────────────────────────────────
-
 def parse_url(omero_str):
     """Parse an OMERO URL with one or multiple images selected
 
