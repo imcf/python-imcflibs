@@ -14,18 +14,19 @@ from omero.log import SimpleLogger
 
 
 def parse_image_ids(input_string):
-    """Parse an OMERO URL with one or multiple images selected
+    """Parse an OMERO URL or a string with image IDs into a list.
 
     Parameters
     ----------
     input_string : str
-        String which is either the direct image link gotten from OMERO or
-        image IDs separated by commas
+        String which is either the direct image link (URL) from OMERO.web
+        (which may contain multiple images selected) or a sequence of OMERO
+        image IDs separated by commas.
 
     Returns
     -------
     str[]
-        List of all the images IDs parsed from the string
+        List of all the image IDs parsed from the input string.
     """
     if input_string.startswith("https"):
         image_ids = input_string.split("image-")
