@@ -13,12 +13,12 @@ from omero.gateway import LoginCredentials
 from omero.log import SimpleLogger
 
 
-def parse_url(omero_str):
+def parse_image_ids(input_string):
     """Parse an OMERO URL with one or multiple images selected
 
     Parameters
     ----------
-    omero_str : str
+    input_string : str
         String which is either the direct image link gotten from OMERO or
         image IDs separated by commas
 
@@ -27,12 +27,12 @@ def parse_url(omero_str):
     str[]
         List of all the images IDs parsed from the string
     """
-    if omero_str.startswith("https"):
-        image_ids = omero_str.split("image-")
+    if input_string.startswith("https"):
+        image_ids = input_string.split("image-")
         image_ids.pop(0)
         image_ids = [s.split("%")[0].replace("|", "") for s in image_ids]
     else:
-        image_ids = omero_str.split(",")
+        image_ids = input_string.split(",")
     return image_ids
 
 
