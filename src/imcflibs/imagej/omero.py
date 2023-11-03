@@ -6,15 +6,11 @@ Contains functions to parse URL, connect to OMERO and fetch image.
 """
 # ImageJ Import
 from ij import IJ, Prefs
+
 # Omero Dependencies
 from omero.gateway import Gateway
 from omero.gateway import LoginCredentials
 from omero.log import SimpleLogger
-
-from loci.plugins import LociExporter
-
-from loci.plugins. in import ImporterOptions
-from loci.plugins.out import Exporter
 
 
 
