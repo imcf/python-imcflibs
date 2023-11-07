@@ -58,9 +58,9 @@ class ProcessingOptions(object):
 
         self._use_angle = ""
         self._use_channel = ""
-        self._use_illuminations = ""
-        self._use_tiles = "tiles=[Average Tiles]"
-        # FIXME: why is there no `use_timepoints` attribute?
+        self._use_illumination = ""
+        self._use_tile = "tiles=[Average Tiles]"
+        self._use_timepoint = ""
 
         # 'treat_*' values are: "group", "compare" or "[treat individually]"
         self._treat_angles = "[treat individually]"
@@ -82,11 +82,11 @@ class ProcessingOptions(object):
     @property
     def use_tiles(self):
         """The tiles parameter (default: `tiles=[Average Tiles]`)."""
-        return self._use_tiles
+        return self._use_tile
 
     @use_tiles.setter
     def use_tiles(self, value):
-        self._use_tiles = "tiles=[use Tile %s] " % value
+        self._use_tile = "tiles=[use Tile %s] " % value
 
     @property
     def channel_select(self):
