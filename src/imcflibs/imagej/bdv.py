@@ -3,12 +3,9 @@
 Mostly convenience wrappers with simplified calls and default values.
 """
 
-# The pylint on Python 2.7 is too old to play nicely with black:
-# pylint: disable-msg=bad-continuation
-# There are no such things as f-strings in Python 2.7:
-# pylint: disable-msg=consider-using-f-string
 # Some function names just need to be longer than 30 chars:
 # pylint: disable-msg=invalid-name
+
 import os
 import sys
 import shutil
