@@ -27,20 +27,37 @@ class ProcessingOptions(object):
 
     """Helper to store processing options and generate parameter strings.
 
-    Attributes
-    ----------
-    use_channel : str
-    use_tiles : str
-    channel_processing_option : str
-    channel_select : str
-    illumination_processing_option : str
-    illumination_select : str
-    tile_processing_option : str
-    tile_select : str
-    timepoint_processing_option : str
-    timepoint_select : str
-    angle_processing_option : str
-    angle_select : str
+    Example
+    -------
+    NOTE: for readability reasons the output has been split into multiple lines
+    even though the formatters are returning a single-line string.
+
+    >>> opts = ProcessingOptions()
+    >>> opts.process_channel(2)
+    >>> opts.reference_tile(1)
+    >>> opts.treat_timepoints("compare")
+
+    >>> opts.fmt_acitt_options()
+    ... process_angle=[All angles]
+    ... process_channel=[Single channel (Select from List)]
+    ... process_illumination=[All illuminations]
+    ... process_tile=[All tiles]
+    ... process_timepoint=[All Timepoints]
+
+    >>> opts.fmt_acitt_selectors()
+    ... processing_channel=[channel 1]
+
+    >>> opts.fmt_use_acitt()
+    ... channels=[Average Channels]
+    ... illuminations=[Average Illuminations]
+    ... tiles=[use Tile 1]
+
+    >>> opts.fmt_how_to_treat()
+    ... how_to_treat_angles=[treat individually]
+    ... how_to_treat_channels=group
+    ... how_to_treat_illuminations=group
+    ... how_to_treat_tiles=group
+    ... how_to_treat_timepoints=compare
     """
 
     def __init__(self):
