@@ -6,6 +6,9 @@ Mostly convenience wrappers with simplified calls and default values.
 # Some function names just need to be longer than 30 chars:
 # pylint: disable-msg=invalid-name
 
+# The attribute count is not really our choice:
+# pylint: disable-msg=too-many-instance-attributes
+
 import os
 import sys
 import shutil
