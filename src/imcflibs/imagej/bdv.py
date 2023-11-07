@@ -78,40 +78,20 @@ class ProcessingOptions(object):
         return self._use_tiles
 
     @property
-    def channel_processing_option(self):
-        return self._channel_processing_option
-
-    @property
     def channel_select(self):
         return self._channel_select
-
-    @property
-    def illumination_processing_option(self):
-        return self._illumination_processing_option
 
     @property
     def illumination_select(self):
         return self._illumination_select
 
     @property
-    def tile_processing_option(self):
-        return self._tile_processing_option
-
-    @property
     def tile_select(self):
         return self._tile_select
 
     @property
-    def timepoint_processing_option(self):
-        return self._timepoint_processing_option
-
-    @property
     def timepoint_select(self):
         return self._timepoint_select
-
-    @property
-    def angle_processing_option(self):
-        return self._angle_processing_option
 
     @property
     def angle_select(self):
@@ -126,57 +106,37 @@ class ProcessingOptions(object):
     def use_tiles(self, value):
         self._use_tiles = "tiles=[use Tile %s] " % value
 
-    @channel_processing_option.setter
-    def channel_processing_option(self, value):
-        self._channel_processing_option = value
-
     @channel_select.setter
     def channel_select(self, value):
-        # NOTE: also requires `channel_processing_option` to be adjusted
-        self.channel_processing_option = "[Single channel (Select from List)] "
+        # NOTE: also requires `_channel_processing_option` to be adjusted
+        self._channel_processing_option = "[Single channel (Select from List)] "
         channel = int(value) - 1
         self._channel_select = "processing_channel=[channel %s] " % channel
 
-    @illumination_processing_option.setter
-    def illumination_processing_option(self, value):
-        self._illumination_processing_option = value
-
     @illumination_select.setter
     def illumination_select(self, value):
-        # NOTE: also requires `illumination_processing_option` to be adjusted
-        self.illumination_processing_option = (
+        # NOTE: also requires `_illumination_processing_option` to be adjusted
+        self._illumination_processing_option = (
             "[Single illumination (Select from List)] "
         )
         self._illumination_select = "processing_illumination=[illumination %s] " % value
 
-    @tile_processing_option.setter
-    def tile_processing_option(self, value):
-        self._tile_processing_option = value
-
     @tile_select.setter
     def tile_select(self, value):
-        # NOTE: also requires `tile_processing_option` to be adjusted
-        self.tile_processing_option = "[Single tile (Select from List)] "
+        # NOTE: also requires `_tile_processing_option` to be adjusted
+        self._tile_processing_option = "[Single tile (Select from List)] "
         self._tile_select = "processing_tile=[tile %s] " % value
-
-    @timepoint_processing_option.setter
-    def timepoint_processing_option(self, value):
-        self._timepoint_processing_option = value
 
     @timepoint_select.setter
     def timepoint_select(self, value):
-        # NOTE: also requires `timepoint_processing_option` to be adjusted
-        self.timepoint_processing_option = "[Single timepoint (Select from List)] "
+        # NOTE: also requires `_timepoint_processing_option` to be adjusted
+        self._timepoint_processing_option = "[Single timepoint (Select from List)] "
         self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
-
-    @angle_processing_option.setter
-    def angle_processing_option(self, value):
-        self._angle_processing_option = value
 
     @angle_select.setter
     def angle_select(self, value):
-        # NOTE: also requires `angle_processing_option` to be adjusted
-        self.angle_processing_option = "[Single angle (Select from List)] "
+        # NOTE: also requires `_angle_processing_option` to be adjusted
+        self._angle_processing_option = "[Single angle (Select from List)] "
         self._angle_select = "processing_angle=[angle %s] " % value
 
     def fmt_acitt_options(self):
