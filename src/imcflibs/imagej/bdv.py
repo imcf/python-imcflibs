@@ -17,7 +17,7 @@ from .. import pathtools
 from ..log import LOG as log
 
 # template strings:
-SINGLE = "[Single %s (Select from List)] "
+SINGLE = "[Single %s (Select from List)]"
 
 
 class ProcessingOptions(object):
@@ -41,19 +41,19 @@ class ProcessingOptions(object):
     """
 
     def __init__(self):
-        self._angle_processing_option = "[All angles] "
+        self._angle_processing_option = "[All angles]"
         self._angle_select = ""
 
-        self._channel_processing_option = "[All channels] "
+        self._channel_processing_option = "[All channels]"
         self._channel_select = ""
 
-        self._illumination_processing_option = "[All illuminations] "
+        self._illumination_processing_option = "[All illuminations]"
         self._illumination_select = ""
 
-        self._tile_processing_option = "[All tiles] "
+        self._tile_processing_option = "[All tiles]"
         self._tile_select = ""
 
-        self._timepoint_processing_option = "[All Timepoints] "
+        self._timepoint_processing_option = "[All Timepoints]"
         self._timepoint_select = ""
 
         # by default `angles` is empty as the "sane" default value for
@@ -86,7 +86,7 @@ class ProcessingOptions(object):
         value : str
             The tile to use for the grouping.
         """
-        self._use_angle = "angles=[use Angle %s] " % str(value)
+        self._use_angle = "angles=[use Angle %s]" % str(value)
         log.debug("New reference angle setting: %s", self._use_angle)
 
     def reference_channel(self, value):
@@ -107,7 +107,7 @@ class ProcessingOptions(object):
             effectively used value will be the given one minus 1).
         """
         channel = int(value) - 1  # will raise a ValueError if cast fails
-        self._use_channel = "channels=[use Channel %s] " % channel
+        self._use_channel = "channels=[use Channel %s]" % channel
         log.debug("New reference channel setting: %s", self._use_channel)
 
     def reference_illumination(self, value):
@@ -124,7 +124,7 @@ class ProcessingOptions(object):
         ----------
         value : int or int-like
         """
-        self._use_illumination = "illuminations=[use Illumination %s] " % value
+        self._use_illumination = "illuminations=[use Illumination %s]" % value
         log.debug("New reference illumination setting: %s", self._use_illumination)
 
     def reference_tile(self, value):
@@ -143,7 +143,7 @@ class ProcessingOptions(object):
         value : str
             The tile to use for the grouping.
         """
-        self._use_tile = "tiles=[use Tile %s] " % str(value)
+        self._use_tile = "tiles=[use Tile %s]" % str(value)
         log.debug("New reference tile setting: %s", self._use_tile)
 
     def reference_timepoint(self, value):
@@ -160,7 +160,7 @@ class ProcessingOptions(object):
         ----------
         value : int or int-like
         """
-        self._use_timepoint = "timepoints=[use Timepoint %s] " % value
+        self._use_timepoint = "timepoints=[use Timepoint %s]" % value
         log.debug("New reference timepoint setting: %s", self._use_timepoint)
 
     def process_angle(self, value):  # def angle_select(self, value):
@@ -171,7 +171,7 @@ class ProcessingOptions(object):
         value : int or int-like
         """
         self._angle_processing_option = SINGLE % "angle"
-        self._angle_select = "processing_angle=[angle %s] " % value
+        self._angle_select = "processing_angle=[angle %s]" % value
 
     def process_channel(self, value):  # def channel_select(self, value):
         """Select a single channel to use for processing.
@@ -182,7 +182,7 @@ class ProcessingOptions(object):
         """
         self._channel_processing_option = SINGLE % "channel"
         channel = int(value) - 1
-        self._channel_select = "processing_channel=[channel %s] " % channel
+        self._channel_select = "processing_channel=[channel %s]" % channel
 
     def process_illumination(self, value):  # def illumination_select(self, value):
         """Select a single illumination to use for processing.
@@ -192,7 +192,7 @@ class ProcessingOptions(object):
         value : int or int-like
         """
         self._illumination_processing_option = SINGLE % "illumination"
-        self._illumination_select = "processing_illumination=[illumination %s] " % value
+        self._illumination_select = "processing_illumination=[illumination %s]" % value
 
     def process_tile(self, value):  # def tile_select(self, value):
         """Select a single tile to use for processing.
@@ -202,7 +202,7 @@ class ProcessingOptions(object):
         value : int or int-like
         """
         self._tile_processing_option = SINGLE % "tile"
-        self._tile_select = "processing_tile=[tile %s] " % value
+        self._tile_select = "processing_tile=[tile %s]" % value
 
     def process_timepoint(self, value):  # def timepoint_select(self, value):
         """Select a single timepoint to use for processing.
@@ -212,7 +212,7 @@ class ProcessingOptions(object):
         value : int or int-like
         """
         self._timepoint_processing_option = SINGLE % "timepoint"
-        self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
+        self._timepoint_select = "processing_timepoint=[timepoint %s]" % value
 
     def treat_angles(self, value):
         """Set the value for the `how_to_treat_angles` option.
