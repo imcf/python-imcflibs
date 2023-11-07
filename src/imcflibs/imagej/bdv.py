@@ -109,6 +109,23 @@ class ProcessingOptions(object):
         self._use_channel = "channels=[use Channel %s] " % channel
         log.debug("New reference channel setting: %s", self._use_channel)
 
+    def reference_illumination(self, value):
+        # FIXME: is the "expert grouping" statement correct?
+        """Select reference illumination when using *Expert Grouping Options*.
+
+        Select the illumination(s) to use for the operation, by default the averaging
+        mode will be used (`illuminations=[Average Illuminations]`).
+
+        NOTE: this value will be used to render `illuminations=[use Illumination VALUE]`
+        when calling the `fmt_use_acitt()` method.
+
+        Parameters
+        ----------
+        value : int or int-like
+        """
+        self._use_illumination = "illuminations=[use Illumination %s] " % value
+        log.debug("New reference illumination setting: %s", self._use_illumination)
+
     def reference_tile(self, value):
         # FIXME: is the "expert grouping" statement correct?
         # FIXME: what are possible types for the parameter, is it int?
@@ -127,6 +144,23 @@ class ProcessingOptions(object):
         """
         self._use_tile = "tiles=[use Tile %s] " % str(value)
         log.debug("New reference tile setting: %s", self._use_tile)
+
+    def reference_timepoint(self, value):
+        # FIXME: is the "expert grouping" statement correct?
+        """Select reference timepoint when using *Expert Grouping Options*.
+
+        Select the timepoint(s) to use for the operation, by default the averaging mode
+        will be used (`illuminations=[Average Illuminations]`).
+
+        NOTE: this value will be used to render `timepoints=[use Timepoint VALUE]` when
+        calling the `fmt_use_acitt()` method.
+
+        Parameters
+        ----------
+        value : int or int-like
+        """
+        self._use_timepoint = "timepoints=[use Timepoint %s] " % value
+        log.debug("New reference timepoint setting: %s", self._use_timepoint)
 
     def process_angle(self, value):  # def angle_select(self, value):
         self._angle_processing_option = SINGLE % "angle"
