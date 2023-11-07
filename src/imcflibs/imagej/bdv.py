@@ -200,6 +200,27 @@ class ProcessingOptions(object):
         log.debug("Formatted 'how_to_treat_' options: <%s>", parameter_string)
         return parameter_string
 
+    def fmt_use_acitt(self):
+        """Format expert grouping options, e.g. `channels=[use Channel 2]`.
+
+        Generate a parameter string using the configured expert grouping options
+        for ACITT. Please note that this may be an empty string (`""`).
+
+        Returns
+        -------
+        str
+        """
+        parameters = [
+            self._use_angle,
+            self._use_channel,
+            self._use_illumination,
+            self._use_tile,
+            self._use_timepoint,
+        ]
+        parameter_string = " ".join(parameters) + " "
+        log.debug("Formatted expert grouping 'use' options: <%s>", parameter_string)
+        return parameter_string
+
 
 def backup_xml_files(source_directory, subfolder_name):
     """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
