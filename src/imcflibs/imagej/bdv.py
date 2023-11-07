@@ -306,9 +306,9 @@ class ProcessingOptions(object):
             "process_tile=" + self._tile_processing_option,
             "process_timepoint=" + self._timepoint_processing_option,
         ]
-        parameter_string = " ".join(parameters) + " "
-        log.debug("Formatted ACITT options: <%s>", parameter_string)
-        return parameter_string
+        parameter_string = " ".join(parameters).strip()
+        log.debug("Formatted 'process_X' options: <%s>", parameter_string)
+        return parameter_string + " "
 
     def fmt_acitt_selectors(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint selectors.
@@ -332,9 +332,9 @@ class ProcessingOptions(object):
             if self._timepoint_select
             else "",
         ]
-        parameter_string = " ".join(parameters) + " "
-        log.debug("Formatted ACITT selectors: <%s>", parameter_string)
-        return parameter_string
+        parameter_string = " ".join(parameters).strip()
+        log.debug("Formatted 'processing_X' selectors: <%s>", parameter_string)
+        return parameter_string + " "
 
     def fmt_how_to_treat(self):
         """Format a parameter string with all `how_to_treat_` options.
@@ -350,9 +350,9 @@ class ProcessingOptions(object):
             "how_to_treat_tiles=" + self._treat_tiles,
             "how_to_treat_timepoints=" + self._treat_timepoints,
         ]
-        parameter_string = " ".join(parameters) + " "
-        log.debug("Formatted 'how_to_treat_' options: <%s>", parameter_string)
-        return parameter_string
+        parameter_string = " ".join(parameters).strip()
+        log.debug("Formatted 'how_to_treat_X' options: <%s>", parameter_string)
+        return parameter_string + " "
 
     def fmt_use_acitt(self):
         """Format expert grouping options, e.g. `channels=[use Channel 2]`.
@@ -371,9 +371,9 @@ class ProcessingOptions(object):
             self._use_tile if self._treat_tiles == "group" else "",
             self._use_timepoint if self._treat_timepoints == "group" else "",
         ]
-        parameter_string = " ".join(parameters) + " "
+        parameter_string = " ".join(parameters).strip()
         log.debug("Formatted expert grouping 'use' options: <%s>", parameter_string)
-        return parameter_string
+        return parameter_string + " "
 
 
 def backup_xml_files(source_directory, subfolder_name):
