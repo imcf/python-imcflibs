@@ -214,6 +214,66 @@ class ProcessingOptions(object):
         self._timepoint_processing_option = SINGLE % "timepoint"
         self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
 
+    def treat_angles(self, value):
+        """Set the value for the `how_to_treat_angles` option.
+
+        If the value is set to `group` also the `reference_angle` setting will
+        be adjusted to `angles=[Average Angles]`.
+
+        Parameters
+        ----------
+        value : str
+            One of `group`, `compare` or `[treat individually]`.
+        """
+        self._treat_angles = value
+        log.debug("New 'treat_angles' setting: %s", value)
+        if value == "group":
+            self._use_angle = "angles=[Average Angles]"
+            log.debug("New 'use_angle' setting: %s", self._use_angle)
+
+    def treat_channels(self, value):
+        """Set the value for the `how_to_treat_channels` option.
+
+        Parameters
+        ----------
+        value : str
+            One of `group`, `compare` or `[treat individually]`.
+        """
+        self._treat_channels = value
+        log.debug("New 'treat_channels' setting: %s", value)
+
+    def treat_illuminations(self, value):
+        """Set the value for the `how_to_treat_illuminations` option.
+
+        Parameters
+        ----------
+        value : str
+            One of `group`, `compare` or `[treat individually]`.
+        """
+        self._treat_illuminations = value
+        log.debug("New 'treat_illuminations' setting: %s", value)
+
+    def treat_tiles(self, value):
+        """Set the value for the `how_to_treat_tiles` option.
+
+        Parameters
+        ----------
+        value : str
+            One of `group`, `compare` or `[treat individually]`.
+        """
+        self._treat_tiles = value
+        log.debug("New 'treat_tiles' setting: %s", value)
+
+    def treat_timepoints(self, value):
+        """Set the value for the `how_to_treat_timepoints` option.
+
+        Parameters
+        ----------
+        value : str
+            One of `group`, `compare` or `[treat individually]`.
+        """
+        self._treat_timepoints = value
+        log.debug("New 'treat_timepoints' setting: %s", value)
 
     def fmt_acitt_options(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
