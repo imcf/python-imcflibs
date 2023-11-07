@@ -39,18 +39,23 @@ class ProcessingOptions(object):
     """
 
     def __init__(self):
-        self._use_channel = "channels=[Average Channels]"
-        self._use_tiles = "tiles=[Average Tiles]"
-        self._channel_processing_option = "[All channels] "
-        self._channel_select = ""
-        self._illumination_processing_option = "[All illuminations] "
-        self._illumination_select = ""
-        self._tile_processing_option = "[All tiles] "
-        self._tile_select = ""
-        self._timepoint_processing_option = "[All Timepoints] "
-        self._timepoint_select = ""
         self._angle_processing_option = "[All angles] "
         self._angle_select = ""
+
+        self._channel_processing_option = "[All channels] "
+        self._channel_select = ""
+
+        self._illumination_processing_option = "[All illuminations] "
+        self._illumination_select = ""
+
+        self._tile_processing_option = "[All tiles] "
+        self._tile_select = ""
+
+        self._timepoint_processing_option = "[All Timepoints] "
+        self._timepoint_select = ""
+
+        self._use_channel = ""
+        self._use_tiles = "tiles=[Average Tiles]"
 
     def fmt_acitt_options(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
