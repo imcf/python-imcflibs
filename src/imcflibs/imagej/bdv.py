@@ -75,6 +75,8 @@ class ProcessingOptions(object):
         self._treat_tiles = "group"
         self._treat_timepoints = "group"
 
+    ### reference-X methods
+
     def reference_angle(self, value):
         # FIXME: is the "expert grouping" statement correct?
         """Set the reference angle when using *Expert Grouping Options*.
@@ -166,6 +168,8 @@ class ProcessingOptions(object):
         self._use_timepoint = "timepoints=[use Timepoint %s]" % value
         log.debug("New reference timepoint setting: %s", self._use_timepoint)
 
+    ### process-X methods
+
     def process_angle(self, value):  # def angle_select(self, value):
         """Select a single angle to use for processing.
 
@@ -216,6 +220,8 @@ class ProcessingOptions(object):
         """
         self._timepoint_processing_option = SINGLE % "timepoint"
         self._timepoint_select = "processing_timepoint=[timepoint %s]" % value
+
+    ### treat-X methods
 
     def treat_angles(self, value):
         """Set the value for the `how_to_treat_angles` option.
@@ -287,6 +293,8 @@ class ProcessingOptions(object):
         """
         self._treat_timepoints = value
         log.debug("New 'treat_timepoints' setting: %s", value)
+
+    ### formatter methods
 
     def fmt_acitt_options(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
