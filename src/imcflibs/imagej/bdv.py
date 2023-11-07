@@ -74,12 +74,12 @@ class ProcessingOptions(object):
 
     def reference_angle(self, value):
         # FIXME: is the "expert grouping" statement correct?
-        """Select an angle when using *Expert Grouping Options*.
+        """Set the reference angle when using *Expert Grouping Options*.
 
         Select the angle(s) to use for the operation, by default empty (`""`).
 
-        NOTE: this value will be used to render `angles=[use Angle VALUE]`
-        when calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `angles=[use Angle VALUE]` when calling
+        the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -92,12 +92,13 @@ class ProcessingOptions(object):
     def reference_channel(self, value):
         # FIXME: is the "expert grouping" statement correct?
         # FIXME: explain the "-1", why is it done?
-        """Select reference channel when using *Expert Grouping Options*.
+        """Set the reference channel when using *Expert Grouping Options*.
 
-        Select the channel(s) to use for the operation, by default empty (`""`).
+        Select the channel(s) to use for the operation, by default the averaging mode
+        will be used (`channels=[Average Channels]`).
 
-        NOTE: this value will be used to render `channels=[use Channel VALUE]`
-        when calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `channels=[use Channel VALUE]` when
+        calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -111,7 +112,7 @@ class ProcessingOptions(object):
 
     def reference_illumination(self, value):
         # FIXME: is the "expert grouping" statement correct?
-        """Select reference illumination when using *Expert Grouping Options*.
+        """Set the reference illumination when using *Expert Grouping Options*.
 
         Select the illumination(s) to use for the operation, by default the averaging
         mode will be used (`illuminations=[Average Illuminations]`).
@@ -129,13 +130,13 @@ class ProcessingOptions(object):
     def reference_tile(self, value):
         # FIXME: is the "expert grouping" statement correct?
         # FIXME: what are possible types for the parameter, is it int?
-        """Select the reference tile when using *Expert Grouping Options*.
+        """Set the reference tile when using *Expert Grouping Options*.
 
-        Select the tile(s) to use for the operation, by default the averaging
-        mode will be used (`tiles=[Average Tiles]`).
+        Select the tile(s) to use for the operation, by default the averaging mode will
+        be used (`tiles=[Average Tiles]`).
 
-        NOTE: this value will be used to render `tiles=[use Tile VALUE]`
-        when calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `tiles=[use Tile VALUE]` when calling
+        the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -147,10 +148,10 @@ class ProcessingOptions(object):
 
     def reference_timepoint(self, value):
         # FIXME: is the "expert grouping" statement correct?
-        """Select reference timepoint when using *Expert Grouping Options*.
+        """Set the reference timepoint when using *Expert Grouping Options*.
 
         Select the timepoint(s) to use for the operation, by default the averaging mode
-        will be used (`illuminations=[Average Illuminations]`).
+        will be used (`timepoints=[Average Timepoints]`).
 
         NOTE: this value will be used to render `timepoints=[use Timepoint VALUE]` when
         calling the `fmt_use_acitt()` method.
@@ -163,23 +164,53 @@ class ProcessingOptions(object):
         log.debug("New reference timepoint setting: %s", self._use_timepoint)
 
     def process_angle(self, value):  # def angle_select(self, value):
+        """Select a single angle to use for processing.
+
+        Parameters
+        ----------
+        value : int or int-like
+        """
         self._angle_processing_option = SINGLE % "angle"
         self._angle_select = "processing_angle=[angle %s] " % value
 
     def process_channel(self, value):  # def channel_select(self, value):
+        """Select a single channel to use for processing.
+
+        Parameters
+        ----------
+        value : int or int-like
+        """
         self._channel_processing_option = SINGLE % "channel"
         channel = int(value) - 1
         self._channel_select = "processing_channel=[channel %s] " % channel
 
     def process_illumination(self, value):  # def illumination_select(self, value):
+        """Select a single illumination to use for processing.
+
+        Parameters
+        ----------
+        value : int or int-like
+        """
         self._illumination_processing_option = SINGLE % "illumination"
         self._illumination_select = "processing_illumination=[illumination %s] " % value
 
     def process_tile(self, value):  # def tile_select(self, value):
+        """Select a single tile to use for processing.
+
+        Parameters
+        ----------
+        value : int or int-like
+        """
         self._tile_processing_option = SINGLE % "tile"
         self._tile_select = "processing_tile=[tile %s] " % value
 
     def process_timepoint(self, value):  # def timepoint_select(self, value):
+        """Select a single timepoint to use for processing.
+
+        Parameters
+        ----------
+        value : int or int-like
+        """
         self._timepoint_processing_option = SINGLE % "timepoint"
         self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
 
