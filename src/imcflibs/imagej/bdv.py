@@ -72,39 +72,23 @@ class ProcessingOptions(object):
         """The channels parameter (default: `channels=[Average Channels]`)."""
         return self._use_channel
 
-    @property
-    def use_tiles(self):
-        """The tiles parameter (default: `tiles=[Average Tiles]`)."""
-        return self._use_tiles
-
-    @property
-    def channel_select(self):
-        return self._channel_select
-
-    @property
-    def illumination_select(self):
-        return self._illumination_select
-
-    @property
-    def tile_select(self):
-        return self._tile_select
-
-    @property
-    def timepoint_select(self):
-        return self._timepoint_select
-
-    @property
-    def angle_select(self):
-        return self._angle_select
-
     @use_channel.setter
     def use_channel(self, value):
         channel = int(value) - 1
         self._use_channel = "channels=[use Channel %s] " % channel
 
+    @property
+    def use_tiles(self):
+        """The tiles parameter (default: `tiles=[Average Tiles]`)."""
+        return self._use_tiles
+
     @use_tiles.setter
     def use_tiles(self, value):
         self._use_tiles = "tiles=[use Tile %s] " % value
+
+    @property
+    def channel_select(self):
+        return self._channel_select
 
     @channel_select.setter
     def channel_select(self, value):
@@ -112,6 +96,10 @@ class ProcessingOptions(object):
         self._channel_processing_option = "[Single channel (Select from List)] "
         channel = int(value) - 1
         self._channel_select = "processing_channel=[channel %s] " % channel
+
+    @property
+    def illumination_select(self):
+        return self._illumination_select
 
     @illumination_select.setter
     def illumination_select(self, value):
@@ -121,17 +109,29 @@ class ProcessingOptions(object):
         )
         self._illumination_select = "processing_illumination=[illumination %s] " % value
 
+    @property
+    def tile_select(self):
+        return self._tile_select
+
     @tile_select.setter
     def tile_select(self, value):
         # NOTE: also requires `_tile_processing_option` to be adjusted
         self._tile_processing_option = "[Single tile (Select from List)] "
         self._tile_select = "processing_tile=[tile %s] " % value
 
+    @property
+    def timepoint_select(self):
+        return self._timepoint_select
+
     @timepoint_select.setter
     def timepoint_select(self, value):
         # NOTE: also requires `_timepoint_processing_option` to be adjusted
         self._timepoint_processing_option = "[Single timepoint (Select from List)] "
         self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
+
+    @property
+    def angle_select(self):
+        return self._angle_select
 
     @angle_select.setter
     def angle_select(self, value):
