@@ -223,6 +223,8 @@ class ProcessingOptions(object):
         If the value is set to `group` also the `reference_angle` setting will
         be adjusted to `angles=[Average Angles]`.
 
+        The default setting is `[treat individually]`.
+
         Parameters
         ----------
         value : str
@@ -237,6 +239,8 @@ class ProcessingOptions(object):
     def treat_channels(self, value):
         """Set the value for the `how_to_treat_channels` option.
 
+        The default setting is `group`.
+
         Parameters
         ----------
         value : str
@@ -247,6 +251,8 @@ class ProcessingOptions(object):
 
     def treat_illuminations(self, value):
         """Set the value for the `how_to_treat_illuminations` option.
+
+        The default setting is `group`.
 
         Parameters
         ----------
@@ -259,6 +265,8 @@ class ProcessingOptions(object):
     def treat_tiles(self, value):
         """Set the value for the `how_to_treat_tiles` option.
 
+        The default setting is `group`.
+
         Parameters
         ----------
         value : str
@@ -269,6 +277,8 @@ class ProcessingOptions(object):
 
     def treat_timepoints(self, value):
         """Set the value for the `how_to_treat_timepoints` option.
+
+        The default setting is `group`.
 
         Parameters
         ----------
