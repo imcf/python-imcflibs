@@ -56,10 +56,11 @@ class ProcessingOptions(object):
         # by default `angles` is empty as the "sane" default value for
         # "treat_angles" is "[treat individually]"
         self._use_angle = ""
-        self._use_channel = ""
-        self._use_illumination = ""
+        # all other "use" options are set to averaging by default:
+        self._use_channel = "channels=[Average Channels]"
+        self._use_illumination = "illuminations=[Average Illuminations]"
         self._use_tile = "tiles=[Average Tiles]"
-        self._use_timepoint = ""
+        self._use_timepoint = "timepoints=[Average Timepoints]"
 
         # 'treat_*' values are: "group", "compare" or "[treat individually]"
         self._treat_angles = "[treat individually]"
