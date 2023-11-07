@@ -69,25 +69,61 @@ class ProcessingOptions(object):
         self._treat_tiles = "group"
         self._treat_timepoints = "group"
 
-    @property
-    def use_channel(self):
-        """The channels parameter (default: `channels=[Average Channels]`)."""
-        return self._use_channel
+    def reference_angle(self, value):
+        # FIXME: is the "expert grouping" statement correct?
+        """Select an angle when using *Expert Grouping Options*.
 
-    @use_channel.setter
-    def use_channel(self, value):
-        channel = int(value) - 1
+        Select the angle(s) to use for the operation, by default empty (`""`).
+
+        NOTE: this value will be used to render `angles=[use Angle VALUE]`
+        when calling the `fmt_use_acitt()` method.
+
+        Parameters
+        ----------
+        value : str
+            The tile to use for the grouping.
+        """
+        self._use_angle = "angles=[use Angle %s] " % str(value)
+        log.debug("New reference angle setting: %s", self._use_angle)
+
+    def reference_channel(self, value):
+        # FIXME: is the "expert grouping" statement correct?
+        # FIXME: explain the "-1", why is it done?
+        """Select reference channel when using *Expert Grouping Options*.
+
+        Select the channel(s) to use for the operation, by default empty (`""`).
+
+        NOTE: this value will be used to render `channels=[use Channel VALUE]`
+        when calling the `fmt_use_acitt()` method.
+
+        Parameters
+        ----------
+        value : int or int-like
+            The channel number + 1 to use for the grouping (in other words: the
+            effectively used value will be the given one minus 1).
+        """
+        channel = int(value) - 1  # will raise a ValueError if cast fails
         self._use_channel = "channels=[use Channel %s] " % channel
+        log.debug("New reference channel setting: %s", self._use_channel)
 
-    @property
-    def use_tiles(self):
-        """The tiles parameter (default: `tiles=[Average Tiles]`)."""
-        return self._use_tile
+    def reference_tile(self, value):
+        # FIXME: is the "expert grouping" statement correct?
+        # FIXME: what are possible types for the parameter, is it int?
+        """Select the reference tile when using *Expert Grouping Options*.
 
-    @use_tiles.setter
-    def use_tiles(self, value):
-        self._use_tile = "tiles=[use Tile %s] " % value
+        Select the tile(s) to use for the operation, by default the averaging
+        mode will be used (`tiles=[Average Tiles]`).
 
+        NOTE: this value will be used to render `tiles=[use Tile VALUE]`
+        when calling the `fmt_use_acitt()` method.
+
+        Parameters
+        ----------
+        value : str
+            The tile to use for the grouping.
+        """
+        self._use_tile = "tiles=[use Tile %s] " % str(value)
+        log.debug("New reference tile setting: %s", self._use_tile)
 
     def channel_select(self, value):
         # NOTE: also requires `_channel_processing_option` to be adjusted
