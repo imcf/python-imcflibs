@@ -67,50 +67,6 @@ class ProcessingOptions(object):
         self._treat_tiles = "group"
         self._treat_timepoints = "group"
 
-    def fmt_acitt_options(self):
-        """Format Angle / Channel / Illumination / Tile / Timepoint options.
-
-        Build a string providing the `process_angle`, `process_channel`,
-        `process_illumination`, `process_tile` and `process_timepoint` options
-        that can be used in a BDV-related `IJ.run` call.
-
-        Returns
-        -------
-        str
-        """
-        parameters = [
-            "process_angle=" + self._angle_processing_option,
-            "process_channel=" + self._channel_processing_option,
-            "process_illumination=" + self._illumination_processing_option,
-            "process_tile=" + self._tile_processing_option,
-            "process_timepoint=" + self._timepoint_processing_option,
-        ]
-        parameter_string = " ".join(parameters) + " "
-        log.debug("Formatted ACITT options: <%s>", parameter_string)
-        return parameter_string
-
-    def fmt_acitt_selectors(self):
-        """Format Angle / Channel / Illumination / Tile / Timepoint selectors.
-
-        Build a string providing the `angle_select`, `channel_select`,
-        `illumination_select`, `tile_select` and `timepoint_select` options
-        that can be used in a BDV-related `IJ.run` call.
-
-        Returns
-        -------
-        str
-        """
-        parameters = [
-            "angle_select=" + self._angle_select,
-            "channel_select=" + self._channel_select,
-            "illumination_select=" + self._illumination_select,
-            "tile_select=" + self._tile_select,
-            "timepoint_select=" + self._timepoint_select,
-        ]
-        parameter_string = " ".join(parameters) + " "
-        log.debug("Formatted ACITT selectors: <%s>", parameter_string)
-        return parameter_string
-
     @property
     def use_channel(self):
         """The channels parameter (default: `channels=[Average Channels]`)."""
@@ -223,6 +179,49 @@ class ProcessingOptions(object):
         self.angle_processing_option = "[Single angle (Select from List)] "
         self._angle_select = "processing_angle=[angle %s] " % value
 
+    def fmt_acitt_options(self):
+        """Format Angle / Channel / Illumination / Tile / Timepoint options.
+
+        Build a string providing the `process_angle`, `process_channel`,
+        `process_illumination`, `process_tile` and `process_timepoint` options
+        that can be used in a BDV-related `IJ.run` call.
+
+        Returns
+        -------
+        str
+        """
+        parameters = [
+            "process_angle=" + self._angle_processing_option,
+            "process_channel=" + self._channel_processing_option,
+            "process_illumination=" + self._illumination_processing_option,
+            "process_tile=" + self._tile_processing_option,
+            "process_timepoint=" + self._timepoint_processing_option,
+        ]
+        parameter_string = " ".join(parameters) + " "
+        log.debug("Formatted ACITT options: <%s>", parameter_string)
+        return parameter_string
+
+    def fmt_acitt_selectors(self):
+        """Format Angle / Channel / Illumination / Tile / Timepoint selectors.
+
+        Build a string providing the `angle_select`, `channel_select`,
+        `illumination_select`, `tile_select` and `timepoint_select` options
+        that can be used in a BDV-related `IJ.run` call.
+
+        Returns
+        -------
+        str
+        """
+        parameters = [
+            "angle_select=" + self._angle_select,
+            "channel_select=" + self._channel_select,
+            "illumination_select=" + self._illumination_select,
+            "tile_select=" + self._tile_select,
+            "timepoint_select=" + self._timepoint_select,
+        ]
+        parameter_string = " ".join(parameters) + " "
+        log.debug("Formatted ACITT selectors: <%s>", parameter_string)
+        return parameter_string
 
 def backup_xml_files(source_directory, subfolder_name):
     """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
