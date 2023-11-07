@@ -16,6 +16,9 @@ from .. import pathtools
 
 from ..log import LOG as log
 
+# template strings:
+SINGLE = "[Single %s (Select from List)] "
+
 
 class ProcessingOptions(object):
 
@@ -127,30 +130,28 @@ class ProcessingOptions(object):
 
     def angle_select(self, value):
         # NOTE: also requires `_angle_processing_option` to be adjusted
-        self._angle_processing_option = "[Single angle (Select from List)] "
+        self._angle_processing_option = SINGLE % "angle"
         self._angle_select = "processing_angle=[angle %s] " % value
 
     def channel_select(self, value):
         # NOTE: also requires `_channel_processing_option` to be adjusted
-        self._channel_processing_option = "[Single channel (Select from List)] "
+        self._channel_processing_option = SINGLE % "channel"
         channel = int(value) - 1
         self._channel_select = "processing_channel=[channel %s] " % channel
 
     def illumination_select(self, value):
         # NOTE: also requires `_illumination_processing_option` to be adjusted
-        self._illumination_processing_option = (
-            "[Single illumination (Select from List)] "
-        )
+        self._illumination_processing_option = SINGLE % "illumination"
         self._illumination_select = "processing_illumination=[illumination %s] " % value
 
     def tile_select(self, value):
         # NOTE: also requires `_tile_processing_option` to be adjusted
-        self._tile_processing_option = "[Single tile (Select from List)] "
+        self._tile_processing_option = SINGLE % "tile"
         self._tile_select = "processing_tile=[tile %s] " % value
 
     def timepoint_select(self, value):
         # NOTE: also requires `_timepoint_processing_option` to be adjusted
-        self._timepoint_processing_option = "[Single timepoint (Select from List)] "
+        self._timepoint_processing_option = SINGLE % "timepoint"
         self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
 
 
