@@ -128,29 +128,24 @@ class ProcessingOptions(object):
         self._use_tile = "tiles=[use Tile %s] " % str(value)
         log.debug("New reference tile setting: %s", self._use_tile)
 
-    def angle_select(self, value):
-        # NOTE: also requires `_angle_processing_option` to be adjusted
+    def process_angle(self, value):  # def angle_select(self, value):
         self._angle_processing_option = SINGLE % "angle"
         self._angle_select = "processing_angle=[angle %s] " % value
 
-    def channel_select(self, value):
-        # NOTE: also requires `_channel_processing_option` to be adjusted
+    def process_channel(self, value):  # def channel_select(self, value):
         self._channel_processing_option = SINGLE % "channel"
         channel = int(value) - 1
         self._channel_select = "processing_channel=[channel %s] " % channel
 
-    def illumination_select(self, value):
-        # NOTE: also requires `_illumination_processing_option` to be adjusted
+    def process_illumination(self, value):  # def illumination_select(self, value):
         self._illumination_processing_option = SINGLE % "illumination"
         self._illumination_select = "processing_illumination=[illumination %s] " % value
 
-    def tile_select(self, value):
-        # NOTE: also requires `_tile_processing_option` to be adjusted
+    def process_tile(self, value):  # def tile_select(self, value):
         self._tile_processing_option = SINGLE % "tile"
         self._tile_select = "processing_tile=[tile %s] " % value
 
-    def timepoint_select(self, value):
-        # NOTE: also requires `_timepoint_processing_option` to be adjusted
+    def process_timepoint(self, value):  # def timepoint_select(self, value):
         self._timepoint_processing_option = SINGLE % "timepoint"
         self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
 
