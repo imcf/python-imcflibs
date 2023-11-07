@@ -19,8 +19,8 @@ from .. import pathtools
 
 from ..log import LOG as log
 
-# template strings:
 SINGLE = "[Single %s (Select from List)]"
+"""@private template string"""
 
 
 class ProcessingOptions(object):
