@@ -183,6 +183,25 @@ class ProcessingOptions(object):
         log.debug("Formatted ACITT selectors: <%s>", parameter_string)
         return parameter_string
 
+    def fmt_how_to_treat(self):
+        """Format a parameter string with all `how_to_treat_` options.
+
+        Returns
+        -------
+        str
+        """
+        parameters = [
+            "how_to_treat_angles=" + self._treat_angles,
+            "how_to_treat_channels=" + self._treat_channels,
+            "how_to_treat_illuminations=" + self._treat_illuminations,
+            "how_to_treat_tiles=" + self._treat_tiles,
+            "how_to_treat_timepoints=" + self._treat_timepoints,
+        ]
+        parameter_string = " ".join(parameters) + " "
+        log.debug("Formatted 'how_to_treat_' options: <%s>", parameter_string)
+        return parameter_string
+
+
 def backup_xml_files(source_directory, subfolder_name):
     """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
 
