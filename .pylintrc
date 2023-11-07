@@ -2,3 +2,4 @@
 # Good variable names which should always be accepted, separated by a comma
 good-names=i,j,k,ex,Run,_,x,y,z,rm,rt
 
+disable=consider-using-f-string,too-many-lines
