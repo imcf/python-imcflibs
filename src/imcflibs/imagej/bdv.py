@@ -54,7 +54,9 @@ class ProcessingOptions(object):
         self._timepoint_processing_option = "[All Timepoints] "
         self._timepoint_select = ""
 
+        self._use_angle = ""
         self._use_channel = ""
+        self._use_illuminations = ""
         self._use_tiles = "tiles=[Average Tiles]"
 
     def fmt_acitt_options(self):
