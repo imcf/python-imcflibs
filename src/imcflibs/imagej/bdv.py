@@ -58,6 +58,7 @@ class ProcessingOptions(object):
         self._use_channel = ""
         self._use_illuminations = ""
         self._use_tiles = "tiles=[Average Tiles]"
+        # FIXME: why is there no `use_timepoints` attribute?
 
         # 'treat_*' values are: "group", "compare" or "[treat individually]"
         self._treat_angles = "[treat individually]"
