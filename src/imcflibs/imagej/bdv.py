@@ -125,6 +125,11 @@ class ProcessingOptions(object):
         self._use_tile = "tiles=[use Tile %s] " % str(value)
         log.debug("New reference tile setting: %s", self._use_tile)
 
+    def angle_select(self, value):
+        # NOTE: also requires `_angle_processing_option` to be adjusted
+        self._angle_processing_option = "[Single angle (Select from List)] "
+        self._angle_select = "processing_angle=[angle %s] " % value
+
     def channel_select(self, value):
         # NOTE: also requires `_channel_processing_option` to be adjusted
         self._channel_processing_option = "[Single channel (Select from List)] "
@@ -148,10 +153,6 @@ class ProcessingOptions(object):
         self._timepoint_processing_option = "[Single timepoint (Select from List)] "
         self._timepoint_select = "processing_timepoint=[timepoint %s] " % value
 
-    def angle_select(self, value):
-        # NOTE: also requires `_angle_processing_option` to be adjusted
-        self._angle_processing_option = "[Single angle (Select from List)] "
-        self._angle_select = "processing_angle=[angle %s] " % value
 
     def fmt_acitt_options(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
