@@ -322,15 +322,11 @@ class ProcessingOptions(object):
         str
         """
         parameters = [
-            "angle_select=" + self._angle_select if self._angle_select else "",
-            "channel_select=" + self._channel_select if self._channel_select else "",
-            "illumination_select=" + self._illumination_select
-            if self._illumination_select
-            else "",
-            "tile_select=" + self._tile_select if self._tile_select else "",
-            "timepoint_select=" + self._timepoint_select
-            if self._timepoint_select
-            else "",
+            self._angle_select if self._angle_select else "",
+            self._channel_select if self._channel_select else "",
+            self._illumination_select if self._illumination_select else "",
+            self._tile_select if self._tile_select else "",
+            self._timepoint_select if self._timepoint_select else "",
         ]
         parameter_string = " ".join(parameters).strip()
         log.debug("Formatted 'processing_X' selectors: <%s>", parameter_string)
