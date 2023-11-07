@@ -53,6 +53,8 @@ class ProcessingOptions(object):
         self._timepoint_processing_option = "[All Timepoints] "
         self._timepoint_select = ""
 
+        # by default `angles` is empty as the "sane" default value for
+        # "treat_angles" is "[treat individually]"
         self._use_angle = ""
         self._use_channel = ""
         self._use_illumination = ""
