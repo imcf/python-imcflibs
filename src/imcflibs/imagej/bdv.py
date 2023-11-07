@@ -190,11 +190,11 @@ class ProcessingOptions(object):
         str
         """
         parameters = [
-            self._use_angle,
-            self._use_channel,
-            self._use_illumination,
-            self._use_tile,
-            self._use_timepoint,
+            self._use_angle if self._treat_angles == "group" else "",
+            self._use_channel if self._treat_channels == "group" else "",
+            self._use_illumination if self._treat_illuminations == "group" else "",
+            self._use_tile if self._treat_tiles == "group" else "",
+            self._use_timepoint if self._treat_timepoints == "group" else "",
         ]
         parameter_string = " ".join(parameters) + " "
         log.debug("Formatted expert grouping 'use' options: <%s>", parameter_string)
