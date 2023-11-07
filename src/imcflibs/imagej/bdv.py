@@ -309,11 +309,15 @@ class ProcessingOptions(object):
         str
         """
         parameters = [
-            "angle_select=" + self._angle_select,
-            "channel_select=" + self._channel_select,
-            "illumination_select=" + self._illumination_select,
-            "tile_select=" + self._tile_select,
-            "timepoint_select=" + self._timepoint_select,
+            "angle_select=" + self._angle_select if self._angle_select else "",
+            "channel_select=" + self._channel_select if self._channel_select else "",
+            "illumination_select=" + self._illumination_select
+            if self._illumination_select
+            else "",
+            "tile_select=" + self._tile_select if self._tile_select else "",
+            "timepoint_select=" + self._timepoint_select
+            if self._timepoint_select
+            else "",
         ]
         parameter_string = " ".join(parameters) + " "
         log.debug("Formatted ACITT selectors: <%s>", parameter_string)
