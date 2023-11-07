@@ -59,6 +59,13 @@ class ProcessingOptions(object):
         self._use_illuminations = ""
         self._use_tiles = "tiles=[Average Tiles]"
 
+        # 'treat_*' values are: "group", "compare" or "[treat individually]"
+        self._treat_angles = "[treat individually]"
+        self._treat_channels = "group"
+        self._treat_illuminations = "group"
+        self._treat_tiles = "group"
+        self._treat_timepoints = "group"
+
     def fmt_acitt_options(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
 
