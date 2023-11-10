@@ -23,9 +23,18 @@ from ._loci import ImporterOptions  # pdoc: skip
 ```
 """
 
+# mock-preproc: fix-invalid-keyword
+
 from loci.plugins import BF
 
-from loci.plugins.in import ImporterOptions # mock-preproc: fix-invalid-keyword
-from loci.formats.in import ZeissCZIReader, DefaultMetadataOptions, MetadataLevel, DynamicMetadataOptions, MetadataOptions # mock-preproc: fix-invalid-keyword
+from loci.plugins.in import ImporterOptions
+
+from loci.formats.in import (
+    ZeissCZIReader,
+    DefaultMetadataOptions,
+    MetadataLevel,
+    DynamicMetadataOptions,
+    MetadataOptions,
+)
 
 from loci.formats import ImageReader, Memoizer
