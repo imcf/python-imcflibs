@@ -25,7 +25,7 @@ from ._loci import ImporterOptions  # pdoc: skip
 
 from loci.plugins import BF
 
-from loci.plugins.in import ImporterOptions # pdoc: skip
-from loci.formats.in import ZeissCZIReader, DefaultMetadataOptions, MetadataLevel, DynamicMetadataOptions, MetadataOptions # pdoc: skip
+from loci.plugins.in import ImporterOptions # mock-preproc: fix-invalid-keyword
+from loci.formats.in import ZeissCZIReader, DefaultMetadataOptions, MetadataLevel, DynamicMetadataOptions, MetadataOptions # mock-preproc: fix-invalid-keyword
 
 from loci.formats import ImageReader, Memoizer
