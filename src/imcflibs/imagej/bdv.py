@@ -432,7 +432,7 @@ def phase_correlation_pairwise_shifts_calculation(
         "select=["
         + project_path
         + "] "
-        + +"process_angle="
+        + "process_angle="
         + options_dict["angle_processing_option"]
         + "process_channel="
         + options_dict["channel_processing_option"]
