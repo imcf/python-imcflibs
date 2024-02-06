@@ -785,15 +785,15 @@ def phase_correlation_pairwise_shifts_calculation(
 
     file_info = pathtools.parse_path(project_path)
 
-    use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
-    use_channel = processing_opts.use_channel if treat_channels == "group" else ""
+    processing_opts.treat_angles(treat_angles)
+    processing_opts.treat_channels(treat_channels)
     use_illumination = ""
     if treat_illuminations == "group":
         use_illumination = "illuminations=[Average Illuminations]"
     use_timepoint = ""
     if treat_timepoints == "group":
         use_timepoint = "timepoints=[Average Timepoints]"
-    use_tile = processing_opts.use_tiles if treat_tiles == "group" else ""
+    use_tile = processing_opts.use_tile if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
         downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (
@@ -825,21 +825,7 @@ def phase_correlation_pairwise_shifts_calculation(
         + " "
         + use_tile
         + " "
-        + "how_to_treat_angles="
-        + treat_angles
-        + " "
-        + "how_to_treat_channels="
-        + treat_channels
-        + " "
-        + "how_to_treat_illuminations="
-        + treat_illuminations
-        + " "
-        + "how_to_treat_tiles="
-        + treat_tiles
-        + " "
-        + "how_to_treat_timepoints="
-        + treat_timepoints
-        + " "
+        + processing_opts.fmt_how_to_treat()
         + downsampling
         + "subpixel_accuracy"
     )
@@ -956,7 +942,7 @@ def optimize_and_apply_shifts(
 
     file_info = pathtools.parse_path(project_path)
 
-    use_angle = "angles=[Average Angles]" if treat_angles == "group" else ""
+    processing_opts.treat_angles(treat_angles)
     use_channel = processing_opts.use_channel if treat_channels == "group" else ""
     use_illumination = ""
     if treat_illuminations == "group":
@@ -964,7 +950,7 @@ def optimize_and_apply_shifts(
     use_timepoint = ""
     if treat_timepoints == "group":
         use_timepoint = "timepoints=[Average Timepoints]"
-    use_tile = processing_opts.use_tiles if treat_tiles == "group" else ""
+    use_tile = processing_opts.use_tile if treat_tiles == "group" else ""
 
     options = (
         "select=["
