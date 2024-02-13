@@ -9,14 +9,13 @@ Mostly convenience wrappers with simplified calls and default values.
 # The attribute count is not really our choice:
 # pylint: disable-msg=too-many-instance-attributes
 
-import os
 import sys
+import os
 import shutil
 
-from ij import IJ  # pylint: disable-msg=import-error
+from ij import IJ
 
 from .. import pathtools
-
 from ..log import LOG as log
 
 SINGLE = "[Single %s (Select from List)]"
@@ -95,7 +94,6 @@ class ProcessingOptions(object):
     ### reference-X methods
 
     def reference_angle(self, value):
-        # FIXME: is the "expert grouping" statement correct?
         """Set the reference angle when using *Expert Grouping Options*.
 
         Select the angle(s) to use for the operation, by default empty (`""`).
@@ -112,8 +110,6 @@ class ProcessingOptions(object):
         log.debug("New reference angle setting: %s", self._use_angle)
 
     def reference_channel(self, value):
-        # FIXME: is the "expert grouping" statement correct?
-        # FIXME: explain the "-1", why is it done?
         """Set the reference channel when using *Expert Grouping Options*.
 
         Select the channel(s) to use for the operation, by default the averaging mode
@@ -133,7 +129,6 @@ class ProcessingOptions(object):
         log.debug("New reference channel setting: %s", self._use_channel)
 
     def reference_illumination(self, value):
-        # FIXME: is the "expert grouping" statement correct?
         """Set the reference illumination when using *Expert Grouping Options*.
 
         Select the illumination(s) to use for the operation, by default the averaging
@@ -150,8 +145,6 @@ class ProcessingOptions(object):
         log.debug("New reference illumination setting: %s", self._use_illumination)
 
     def reference_tile(self, value):
-        # FIXME: is the "expert grouping" statement correct?
-        # FIXME: what are possible types for the parameter, is it int?
         """Set the reference tile when using *Expert Grouping Options*.
 
         Select the tile(s) to use for the operation, by default the averaging mode will
@@ -162,14 +155,13 @@ class ProcessingOptions(object):
 
         Parameters
         ----------
-        value : str
-            The tile to use for the grouping.
+        value : int
+            The tile number to use for the grouping.
         """
         self._use_tile = "tiles=[use Tile %s]" % str(value)
         log.debug("New reference tile setting: %s", self._use_tile)
 
     def reference_timepoint(self, value):
-        # FIXME: is the "expert grouping" statement correct?
         """Set the reference timepoint when using *Expert Grouping Options*.
 
         Select the timepoint(s) to use for the operation, by default the averaging mode
@@ -578,7 +570,10 @@ def define_dataset_auto(
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
 ):
-    """Run "Define Multi-View Dataset" using the "Auto-Loader" option.
+    """Will run the corresponding "Define Dataset" using the "Auto-Loader"
+    option.
+    If the series is tiles, will run "Define Dataset...", otherwise will run
+    "Define Multi-View Dataset...".
 
     Parameters
     ----------
@@ -592,7 +587,9 @@ def define_dataset_auto(
     bf_series_type : str
         One of "Angles" or "Tiles", specifying how Bio-Formats interprets the series.
     timepoints_per_partition : int, optional
-        Split the output by timepoints. Use `0` for no split, by default `1`.
+        Split the output dataset by timepoints. Use `0` for no split, resulting
+        in a single HDF5 file containing all timepoints. By default `1`,
+        resulting in a HDF5 per timepoints.
     resave : str, optional
         Allow the function to either re-save the images or simply create a
         merged xml. Use `Load raw data` to avoid re-saving, by default `Re-save
@@ -604,10 +601,6 @@ def define_dataset_auto(
         Specify hdf5_chunk_sizes factors explicitly, for example
         `[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]`.
     """
-    # FIXME: the docstring is actually not corrct, in the sense that the function will
-    # switch to `Define dataset ...` in case the `bf_series_type` is `Tiles`
-
-    # FIXME: improve the timepoints_per_partition parameter description!
 
     file_info = pathtools.parse_path(file_path)
 
@@ -695,7 +688,6 @@ def define_dataset_auto(
         IJ.run("Define Multi-View Dataset", str(options))
     else:
         raise ValueError("Wrong answer for series type")
-    return
 
 
 def define_dataset_manual(
@@ -703,7 +695,7 @@ def define_dataset_manual(
     source_directory,
     image_file_pattern,
     dataset_organisation,
-    file_definition,
+    definition_opts=None,
 ):
     """Run "Define Multi-View Dataset" using the "Manual Loader" option.
 
@@ -714,18 +706,20 @@ def define_dataset_manual(
     source_directory : str
         Path to the folder containing the file(s).
     image_file_pattern : str
-        Pattern corresponding to the names of your files separating the
+        Regular expression corresponding to the names of your files and how to read the
         different dimensions.
     dataset_organisation : str
         Organisation of the dataset and the dimensions to process.
-    file_definition : dict
+        Allows for defining the range of interest of the different dimensions.
+        Looks like "timepoints_=%s-%s channels_=0-%s tiles_=%s-%s"
+    definition_opts : dict
         Dictionary containing the details about the file repartitions.
     """
 
-    # FIXME: explain image_file_pattern, dataset_organisation and
-    # file_definition with more details / examples
-
     xml_filename = project_filename + ".xml"
+
+    if definition_opts is None:
+        definition_opts = DefinitionOptions()
 
     temp = os.path.join(source_directory, project_filename + "_temp")
     os.path.join(temp, project_filename)
@@ -735,20 +729,7 @@ def define_dataset_manual(
         + "project_filename=["
         + xml_filename
         + "] "
-        + "multiple_timepoints="
-        + file_definition["multiple_timepoints"]
-        + " "
-        + "multiple_channels="
-        + file_definition["multiple_channels"]
-        + " "
-        + "multiple_illumination_directions="
-        + file_definition["multiple_illuminations"]
-        + " "
-        + "multiple_angles="
-        + file_definition["multiple_angles"]
-        + " "
-        + "multiple_tiles="
-        + file_definition["multiple_tiles"]
+        + definition_opts.fmt_acitt_options()
         + " "
         + "image_file_directory="
         + source_directory
@@ -762,14 +743,14 @@ def define_dataset_manual(
         + "imglib2_data_container=[ArrayImg (faster)]"
     )
 
-    log.debug(options)
+    log.debug("Manual dataset defintion options: <%s>", options)
     IJ.run("Define dataset ...", str(options))
 
 
 def resave_as_h5(
     source_xml_file,
     output_h5_file_path,
-    timepoints="All Timepoints",
+    processing_opts=None,
     timepoints_per_partition=1,
     use_deflate_compression=True,
     subsampling_factors=None,
@@ -799,16 +780,9 @@ def resave_as_h5(
         Specify hdf5_chunk_sizes factors explicitly, for example
         `[{ {32,16,8}, {16,16,16}, {16,16,16}, {16,16,16} }]`.
     """
-    # save all timepoints or a single one:
-    if timepoints == "All Timepoints":
-        timepoints = "resave_timepoint=[All Timepoints] "
-    else:
-        timepoints = (
-            "resave_timepoint=[Single Timepoint (Select from List)] "
-            + "processing_timepoint=[Timepoint "
-            + str(timepoints)
-            + "] "
-        )
+
+    if not processing_opts:
+        processing_opts = ProcessingOptions()
 
     if use_deflate_compression:
         use_deflate_compression_arg = "use_deflate_compression "
@@ -834,11 +808,8 @@ def resave_as_h5(
         "select="
         + str(source_xml_file)
         + " "
-        + "resave_angle=[All angles] "
-        + "resave_channel=[All channels] "
-        + "resave_illumination=[All illuminations] "
-        + "resave_tile=[All tiles] "
-        + timepoints
+        + processing_opts.fmt_acitt_options("resave")
+        + processing_opts.fmt_acitt_selectors()
         + subsampling_factors
         + hdf5_chunk_sizes
         + "timepoints_per_partition="
@@ -851,10 +822,8 @@ def resave_as_h5(
         + output_h5_file_path
     )
 
-    log.debug(options)
+    log.debug("Resave as HDF5 options: <%s>", options)
     IJ.run("As HDF5", str(options))
-
-    return
 
 
 def flip_axes(source_xml_file, x=False, y=True, z=False):
@@ -894,11 +863,6 @@ def flip_axes(source_xml_file, x=False, y=True, z=False):
 def phase_correlation_pairwise_shifts_calculation(
     project_path,
     processing_opts=None,
-    treat_timepoints="group",
-    treat_channels="group",
-    treat_illuminations="group",
-    treat_angles="[treat individually]",
-    treat_tiles="group",
     downsampling_xyz="",
 ):
     """Calculate pairwise shifts using Phase Correlation.
@@ -911,35 +875,15 @@ def phase_correlation_pairwise_shifts_calculation(
         The `ProcessingOptinos` object defining parameters for the run. Will
         fall back to the defaults defined in the corresponding class if the
         parameter is `None` or skipped.
-    treat_timepoints : str, optional
-        How to deal with the timepoints, by default `group`.
-    treat_channels : str, optional
-        How to deal with the channels, by default `group`.
-    treat_illuminations : str, optional
-        How to deal with the illuminations, by default `group`.
-    treat_angles : str, optional
-        How to deal with the angles, by default `[treat individually]`.
-    treat_tiles : str, optional
-        How to deal with the tiles, by default `group`.
     downsampling_xyz : list of int, optional
         Downsampling factors in X, Y and Z, for example `[4,4,4]`. By default
         empty which will result in BigStitcher choosing the factors.
     """
 
-    if processing_opts is None:
+    if not processing_opts:
         processing_opts = ProcessingOptions()
 
     file_info = pathtools.parse_path(project_path)
-
-    processing_opts.treat_angles(treat_angles)
-    processing_opts.treat_channels(treat_channels)
-    use_illumination = ""
-    if treat_illuminations == "group":
-        use_illumination = "illuminations=[Average Illuminations]"
-    use_timepoint = ""
-    if treat_timepoints == "group":
-        use_timepoint = "timepoints=[Average Timepoints]"
-    use_tile = processing_opts.use_tile if treat_tiles == "group" else ""
 
     if downsampling_xyz != "":
         downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (
@@ -956,31 +900,20 @@ def phase_correlation_pairwise_shifts_calculation(
         + "] "
         + processing_opts.fmt_acitt_options()
         + processing_opts.fmt_acitt_selectors()
-        # + options_dict["timepoint_select"]  # FIXME: is this duplication intended??
         + " "
         + "method=[Phase Correlation] "
         + "show_expert_grouping_options "
         + "show_expert_algorithm_parameters "
-        + use_angle
-        + " "
-        + use_channel
-        + " "
-        + use_illumination
-        + " "
-        + use_timepoint
-        + " "
-        + use_tile
-        + " "
+        + processing_opts.fmt_use_acitt()
         + processing_opts.fmt_how_to_treat()
         + downsampling
         + "subpixel_accuracy"
     )
 
-    log.debug(options)
+    log.debug("Calculate pairwise shifts options: <%s>", options)
     IJ.run("Calculate pairwise shifts ...", str(options))
 
     backup_xml_files(file_info["path"], "phase_correlation_shift_calculation")
-    return
 
 
 def filter_pairwise_shifts(
@@ -1039,21 +972,15 @@ def filter_pairwise_shifts(
         + filter_by_max_displacement
     )
 
-    log.debug(options)
+    log.debug("Filter pairwise options: <%s>", options)
     IJ.run("Filter pairwise shifts ...", str(options))
 
     backup_xml_files(file_info["path"], "filter_pairwise_shifts")
-    return
 
 
 def optimize_and_apply_shifts(
     project_path,
     processing_opts=None,
-    treat_timepoints="group",
-    treat_channels="group",
-    treat_illuminations="group",
-    treat_angles="[treat individually]",
-    treat_tiles="group",
     relative_error=2.5,
     absolute_error=3.5,
 ):
@@ -1067,36 +994,16 @@ def optimize_and_apply_shifts(
         The `ProcessingOptinos` object defining parameters for the run. Will
         fall back to the defaults defined in the corresponding class if the
         parameter is `None` or skipped.
-    treat_timepoints : str, optional
-        How to treat the timepoints, by default `group`.
-    treat_channels : str, optional
-        How to treat the channels, by default `group`.
-    treat_illuminations : str, optional
-        How to treat the illuminations, by default `group`.
-    treat_angles : str, optional
-        How to treat the angles, by default `[treat individually]`.
-    treat_tiles : str, optional
-        How to treat the tiles, by default `group`.
     relative_error : float, optional
         Relative alignment error (in px) to accept, by default `2.5`.
     absolute_error : float, optional
         Absolute alignment error (in px) to accept, by default `3.5`.
     """
 
-    if processing_opts is None:
+    if not processing_opts:
         processing_opts = ProcessingOptions()
 
     file_info = pathtools.parse_path(project_path)
-
-    processing_opts.treat_angles(treat_angles)
-    use_channel = processing_opts.use_channel if treat_channels == "group" else ""
-    use_illumination = ""
-    if treat_illuminations == "group":
-        use_illumination = "illuminations=[Average Illuminations]"
-    use_timepoint = ""
-    if treat_timepoints == "group":
-        use_timepoint = "timepoints=[Average Timepoints]"
-    use_tile = processing_opts.use_tile if treat_tiles == "group" else ""
 
     options = (
         "select=["
@@ -1104,7 +1011,7 @@ def optimize_and_apply_shifts(
         + "] "
         + processing_opts.fmt_acitt_options()
         + processing_opts.fmt_acitt_selectors()
-        + " "  # WARNING: original code had another "timepoint_select" option here!
+        + " "
         + "relative="
         + str(relative_error)
         + " "
@@ -1114,33 +1021,11 @@ def optimize_and_apply_shifts(
         + "global_optimization_strategy=[Two-Round using Metadata to align unconnected "
         + "Tiles and iterative dropping of bad links] "
         + "show_expert_grouping_options "
-        + use_angle
-        + " "
-        + use_channel
-        + " "
-        + use_illumination
-        + " "
-        + use_timepoint
-        + " "
-        + use_tile
-        + " "
-        + "how_to_treat_angles="
-        + treat_angles
-        + " "
-        + "how_to_treat_channels="
-        + treat_channels
-        + " "
-        + "how_to_treat_illuminations="
-        + treat_illuminations
-        + " "
-        + "how_to_treat_tiles="
-        + treat_tiles
-        + " "
-        + "how_to_treat_timepoints="
-        + treat_timepoints
+        + processing_opts.fmt_use_acitt()
+        + processing_opts.fmt_how_to_treat()
     )
 
-    log.debug(options)
+    log.debug("Optimization and shifts application options: <%s>", options)
     IJ.run("Optimize globally and apply shifts ...", str(options))
 
     backup_xml_files(file_info["path"], "optimize_and_apply_shifts")
@@ -1148,8 +1033,7 @@ def optimize_and_apply_shifts(
 
 def detect_interest_points(
     project_path,
-    process_timepoint="All Timepoints",
-    process_channel="All channels",
+    processing_opts=None,
     sigma=1.8,
     threshold=0.008,
     maximum_number=3000,
@@ -1172,40 +1056,14 @@ def detect_interest_points(
         Maximum number of interest points to use, by default `3000`.
     """
 
-    # If not process all channels at once, then adapt the option
-    if process_channel == "All channels":
-        process_channel_arg = "[" + process_channel + "] "
-    else:
-        process_channel_arg = (
-            "[Single channel (Select from List)] "
-            + "processing_channel=[channel "
-            + process_channel
-            + "] "
-        )
-    # FIXME look into the actual call! @sebastien
-    # save all timepoints or a single one:
-    if process_timepoint == "All Timepoints":
-        process_timepoint = "resave_timepoint=[All Timepoints] "
-    else:
-        process_timepoint = (
-            "resave_timepoint=[Single Timepoint (Select from List)] "
-            + "processing_timepoint=[Timepoint "
-            + str(process_timepoint)
-            + "] "
-        )
+    if not processing_opts:
+        processing_opts = ProcessingOptions()
 
     options = (
         "select=["
         + project_path
         + "] "
-        + "process_angle=[All angles] "
-        + "process_channel="
-        + process_channel_arg
-        + "process_illumination=[All illuminations] "
-        + "process_tile=[All tiles] "
-        + "process_timepoint=["
-        + process_timepoint
-        + "] "
+        + processing_opts.fmt_acitt_options()
         + "type_of_interest_point_detection=Difference-of-Gaussian "
         + "label_interest_points=beads "
         + "limit_amount_of_detections "
@@ -1213,8 +1071,8 @@ def detect_interest_points(
         + "group_illuminations "
         + "subpixel_localization=[3-dimensional quadratic fit] "
         + "interest_point_specification=[Advanced ...] "
-        + "downsample_xy=[Match Z Resolution (less downsampling)] "
-        + "downsample_z=1x "
+        + "downsample_xy=8x "
+        + "downsample_z=2x "
         + "sigma="
         + str(sigma)
         + " "
@@ -1229,9 +1087,8 @@ def detect_interest_points(
         + "compute_on=[CPU (Java)]"
     )
 
-    log.debug(options)
+    log.debug("Interest points detection options: <%s>", options)
     IJ.run("Detect Interest Points for Registration", str(options))
-    return
 
 
 def interest_points_registration(
@@ -1410,13 +1267,12 @@ def duplicate_transformations(
         + " "
     )
 
-    log.debug(options)
+    log.debug("Transformation duplication options: <%s>", options)
     IJ.run("Duplicate Transformations", str(options))
 
     backup_xml_files(
         file_info["path"], "duplicate_transformation_" + transformation_type
     )
-    return
 
 
 def fuse_dataset(
@@ -1528,5 +1384,5 @@ def fuse_dataset(
             + "block_size_factor_z=1"
         )
 
-    log.debug(options)
+    log.debug("Dataset fusion options: <%s>", options)
     IJ.run("Fuse dataset ...", str(options))
