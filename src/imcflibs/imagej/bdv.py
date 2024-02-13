@@ -1186,7 +1186,6 @@ def duplicate_transformations(
         One of `[Replace all transformations]` (default) and `[Add last
         transformation only]` to specify which transformations to propagate.
     """
-    # FIXME: transformation_to_use requires explanations of possible values!
 
     file_info = pathtools.parse_path(project_path)
 
@@ -1199,16 +1198,10 @@ def duplicate_transformations(
     chnl_apply = ""
     chnl_process = ""
 
-    # FIXME: invalid parameter combinations!
-    # Calling the function with transformation_type="channel" and
-    # channel_source=None (the default) will lead to an invalid combination!
-    # Same for transformation_type="tile" / tile_source=None, in both cases the
-    # resulting call will contain the sequence ` source= `.
     if transformation_type == "channel":
         apply = "[One channel to other channels]"
         target = "[All Channels]"
-        if channel_source:
-            source = str(channel_source - 1)
+        source = str(channel_source - 1)
         if tile_source:
             tile_apply = "apply_to_tile=[Single tile (Select from List)] "
             tile_process = "processing_tile=[tile " + str(tile_source) + "] "
@@ -1217,8 +1210,7 @@ def duplicate_transformations(
     elif transformation_type == "tile":
         apply = "[One tile to other tiles]"
         target = "[All Tiles]"
-        if tile_source:
-            source = str(tile_source)
+        source = str(tile_source)
         if channel_source:
             chnl_apply = "apply_to_channel=[Single channel (Select from List)] "
             chnl_process = (
