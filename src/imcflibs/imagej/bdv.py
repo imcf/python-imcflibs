@@ -397,6 +397,149 @@ class ProcessingOptions(object):
         return parameter_string + " "
 
 
+SINGLE_FILE = "[NO (one %s)]"
+MULTI_SINGLE_FILE = "[YES (all %ss in one file)]"
+MULTI_MULTI_FILE = "[YES (one file per %s)]"
+
+
+class DefinitionOptions(object):
+
+    """Helper to store definition options and generate parameters strings.
+
+    Example
+    -------
+    NOTE: for readability reasons the output has been split into multiple lines
+    even though the formatters are returning a single-line string.
+
+    >>> opts = DefinitionOptions()
+    >>> opts.set_angle_definition("single")
+    >>> opts.set_channel_definition("multi_single")
+
+    >>> opts.fmt_acitt_options()
+    ... multiple_angles=[NO (one angle)]
+    ... multiple_channels=[YES (all channels in one file)]
+    ... multiple_illuminations=[NO (one illumination direction)]
+    ... multiple_tiles=[YES (all tiles in one file)]
+    ... multiple_timepoints=[NO (one time-point)]
+    """
+
+    def __init__(self):
+        self._angle_definition = SINGLE_FILE % "angle"
+        self._channel_definition = MULTI_SINGLE_FILE % "channel"
+        self._illumination_definition = SINGLE_FILE % "illumination"
+        self._tile_definition = MULTI_SINGLE_FILE % "tile"
+        self._timepoint_definition = SINGLE_FILE % "time-point"
+
+    def check_definition_option(self, value):
+        """Check if the value is a valid definition option.
+
+        Parameters
+        ----------
+        value : str
+            Entered value by the user.
+
+        Returns
+        -------
+        dict(str, str): dictionary containing the correct string definition.
+        """
+        if value not in [
+            "single",
+            "multi_single",
+            "multi_multi",
+        ]:
+            raise ValueError("Value must be one of single, multi_multi or multi_single")
+
+        return {
+            "single": SINGLE_FILE,
+            "multi_single": MULTI_SINGLE_FILE,
+            "multi_multi": MULTI_MULTI_FILE,
+        }
+
+    def set_angle_definition(self, value):
+        """Set the value for the angle definition
+
+        Parameters
+        ----------
+        value : str
+            One of `single`, `multi_single` or `multi_multi`.
+        """
+        choices = self.check_definition_option(value)
+        self._angle_definition = choices[value] % "angle"
+        log.debug("New 'angle_definition' setting: %s", self._angle_definition)
+
+    def set_channel_definition(self, value):
+        """Set the value for the channel definition
+
+        Parameters
+        ----------
+        value : str
+            One of `single`, `multi_single` or `multi_multi`.
+        """
+        choices = self.check_definition_option(value)
+        self._channel_definition = choices[value] % "channel"
+        log.debug("New 'channel_definition' setting: %s", self._channel_definition)
+
+    def set_illumination_definition(self, value):
+        """Set the value for the illumination definition
+
+        Parameters
+        ----------
+        value : str
+            One of `single`, `multi_single` or `multi_multi`.
+        """
+        choices = self.check_definition_option(value)
+        self._illumination_definition = choices[value] % "illumination direction"
+        log.debug(
+            "New 'illumination_definition' setting: %s", self._illumination_definition
+        )
+
+    def set_tile_definition(self, value):
+        """Set the value for the tile_definition
+
+        Parameters
+        ----------
+        value : str
+            One of `single`, `multi_single` or `multi_multi`.
+        """
+        choices = self.check_definition_option(value)
+        self._tile_definition = choices[value] % "tile"
+        log.debug("New 'tile_definition' setting: %s", self._tile_definition)
+
+    def set_timepoint_definition(self, value):
+        """Set the value for the time_point_definition
+
+        Parameters
+        ----------
+        value : str
+            One of `single`, `multi_single` or `multi_multi`.
+        """
+        choices = self.check_definition_option(value)
+        self._timepoint_definition = choices[value] % "time-point"
+        log.debug("New 'timepoint_definition' setting: %s", self._timepoint_definition)
+
+    def fmt_acitt_options(self):
+        """Format Angle / Channel / Illumination / Tile / Timepoint options.
+
+        Build a string providing the `multiple_angles`, `multiple_channels`,
+        `multiple_illuminations`, `multiple_tiles` and `multiple_timepoints` options
+        that can be used in a BDV-related `IJ.run` call.
+
+        Returns
+        -------
+        str
+        """
+        parameters = [
+            "multiple_angles=" + self._angle_definition,
+            "multiple_channels=" + self._channel_definition,
+            "multiple_illuminations=" + self._illumination_definition,
+            "multiple_tiles=" + self._tile_definition,
+            "multiple_timepoints=" + self._timepoint_definition,
+        ]
+        parameter_string = " ".join(parameters).strip()
+        log.debug("Formatted 'multiple_X' options: <%s>", parameter_string)
+        return parameter_string + " "
+
+
 def backup_xml_files(source_directory, subfolder_name):
     """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
 
