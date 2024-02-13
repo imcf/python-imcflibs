@@ -1093,8 +1093,7 @@ def detect_interest_points(
 
 def interest_points_registration(
     project_path,
-    process_timepoint="All Timepoints",
-    process_channel="All channels",
+    processing_opts = None,
     rigid_timepoints=False,
 ):
     """Run the "Register Dataset based on Interest Points" command.
@@ -1117,15 +1116,8 @@ def interest_points_registration(
         By default `False`.
     """
 
-    # If not process all channels at once, then adapt the option
-    if process_channel == "All channels":
-        process_channel_arg = "[All channels] "
-    else:
-        process_channel_arg = (
-            "[Single channel (Select from List)] processing_channel=[channel "
-            + process_channel
-            + "] "
-        )
+    if not processing_opts:
+        processing_opts = ProcessingOptions()
 
     if rigid_timepoints:
         rigid_timepoints_arg = "consider_each_timepoint_as_rigid_unit "
@@ -1136,47 +1128,42 @@ def interest_points_registration(
         "select=["
         + project_path
         + "] "
-        + "process_angle=[All angles] "
-        + "process_channel="
-        + process_channel_arg
-        + "process_illumination=[All illuminations] "
-        + "process_tile=[All tiles] "
-        + "process_timepoint=["
-        + process_timepoint
-        + "] "
+        + processing_opts.fmt_acitt_options()
         + "registration_algorithm=[Precise descriptor-based (translation invariant)] "
-        + "registration_in_between_views=[Compare all views against each other] "
+        + "registration_over_time=[Match against one reference timepoint (no global optimization)] "
+        + "registration_in_between_views=[Only compare overlapping views (according to current transformations)] "
         + "interest_points=beads "
         + "group_tiles "
         + "group_illuminations "
         + "group_channels "
+        + "reference=1 "
         + rigid_timepoints_arg
-        + "fix_views=[Fix first view] "
-        + "map_back_views=[Do not map back (use this if views are fixed)] "
+        # + "fix_views=[Fix first view] "
+        # + "map_back_views=[Do not map back (use this if views are fixed)] "
         + "transformation=Affine "
         + "regularize_model "
-        + "model_to_regularize_with=Rigid "
+        + "model_to_regularize_with=Affine "
         + "lamba=0.10 "
         + "number_of_neighbors=3 "
-        + "redundancy=2 "
-        + "significance=1 "
+        + "redundancy=1 "
+        + "significance=3 "
         + "allowed_error_for_ransac=5 "
         + "ransac_iterations=Normal "
+        + "global_optimization_strategy=[Two-Round: Handle unconnected tiles, remove wrong links RELAXED (5.0x / 7.0px)] "
         + "interestpoint_grouping=[Group interest points (simply combine all in one virtual view)] "
         + "interest=5"
     )
 
-    log.debug(options)
+    log.debug("Interest points registration options: <%s>", options)
     # register using interest points
     IJ.run("Register Dataset based on Interest Points", options)
-    return
 
 
 def duplicate_transformations(
     project_path,
     transformation_type="channel",
-    channel_source=None,
-    tile_source=None,
+    channel_source=1,
+    tile_source=1,
     transformation_to_use="[Replace all transformations]",
 ):
     """Duplicate / propagate transformation parameters to other channels.
