@@ -313,7 +313,7 @@ class ProcessingOptions(object):
 
     ### formatter methods
 
-    def fmt_acitt_options(self):
+    def fmt_acitt_options(self, input="process"):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
 
         Build a string providing the `process_angle`, `process_channel`,
@@ -324,12 +324,15 @@ class ProcessingOptions(object):
         -------
         str
         """
+        input_type = ['process','resave']
+        if input not in input_type:
+            raise ValueError("Invalue input type. Expected one of: %s" % input_type)
         parameters = [
-            "process_angle=" + self._angle_processing_option,
-            "process_channel=" + self._channel_processing_option,
-            "process_illumination=" + self._illumination_processing_option,
-            "process_tile=" + self._tile_processing_option,
-            "process_timepoint=" + self._timepoint_processing_option,
+            input + "_angle=" + self._angle_processing_option,
+            input + "_channel" + self._channel_processing_option,
+            input + "_illumination" + self._illumination_processing_option,
+            input + "_tile" + self._tile_processing_option,
+            input + "_timepoint" + self._timepoint_processing_option,
         ]
         parameter_string = " ".join(parameters).strip()
         log.debug("Formatted 'process_X' options: <%s>", parameter_string)
