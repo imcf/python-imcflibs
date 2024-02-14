@@ -7,11 +7,32 @@ fetch images from the server.
 # ImageJ Import
 from ij import IJ
 
+# Bioformats imports
+from loci.formats import FormatTools, ImageTools
+from loci.common import DataTools
+from loci.plugins import LociExporter
+from loci.plugins.in import ImporterOptions
+from loci.plugins.out import Exporter
+
 # Omero Dependencies
 from omero.gateway import Gateway
 from omero.gateway import LoginCredentials
+from omero.gateway import SecurityContext
+from omero.gateway.facility import BrowseFacility
+from omero.gateway.facility import DataManagerFacility
+from omero.gateway.model import DatasetData, MapAnnotationData
 from omero.log import SimpleLogger
+from omero.sys import ParametersI
 
+from ome.formats.importer import ImportConfig
+from ome.formats.importer import OMEROWrapper
+from ome.formats.importer import ImportLibrary
+from ome.formats.importer import ImportCandidates
+from ome.formats.importer.cli import ErrorHandler
+from ome.formats.importer.cli import LoggingImportMonitor
+import loci.common
+from loci.formats.in import DefaultMetadataOptions
+from loci.formats.in import MetadataLevel
 
 def parse_image_ids(input_string):
     """Parse an OMERO URL or a string with image IDs into a list.
@@ -133,3 +154,111 @@ def fetch_image(host, username, password, image_id, group_id=-1):
         ]
     )
     IJ.runPlugIn("loci.plugins.LociImporter", options)
+
+
+def upload_image(path, gateway, dataset_id):
+    """Upload the image back to OMERO
+
+    Parameters
+    ----------
+    path : str
+        Path of the file to upload back to OMERO
+    gateway : omero.gateway.Gateway
+        Gateway to the OMERO server
+
+    Returns
+    -------
+    list[int]
+        List of IDs of the imported images
+    """
+
+    user = gateway.getLoggedInUser()
+    ctx = SecurityContext(user.getGroupId())
+    sessionKey = gateway.getSessionId(user)
+
+    config = ImportConfig()
+
+    config.email.set("")
+    config.sendFiles.set("true")
+    config.sendReport.set("false")
+    config.contOnError.set("false")
+    config.debug.set("false")
+    config.hostname.set(HOST)
+    config.sessionKey.set(sessionKey)
+    dataset = find_dataset(gateway, dataset_id)
+
+    loci.common.DebugTools.enableLogging("DEBUG")
+
+    store = config.createStore()
+    reader = OMEROWrapper(config)
+
+    library = ImportLibrary(store, reader)
+    errorHandler = ErrorHandler(config)
+
+    library.addObserver(LoggingImportMonitor())
+    str2d = java.lang.reflect.Array.newInstance(java.lang.String, [1])
+    str2d[0] = path
+
+    candidates = ImportCandidates(reader, str2d, errorHandler)
+
+    reader.setMetadataOptions(DefaultMetadataOptions(MetadataLevel.ALL))
+
+    container_list = candidates.getContainers()
+    num_done = 0
+    ids_list = []
+    for i in range(len(container_list)):
+        container = container_list[i]
+        container.setTarget(dataset)
+        pixels = library.importImage(container, i, num_done, len(container_list))
+        ids_list.append(pixels[0].getImage().getId().getValue())
+        num_done += 1
+
+    return ids_list
+
+def upload_kv(gateway, dict, header, image_id):
+    """Add annotation to OMERO object
+
+    Parameters
+    ----------
+    gateway : omero.gateway.Gateway
+        Gateway to the OMERO server
+    dict : dict
+        Dictionary with the annotation to add
+    header : str
+        Name for the annotation header
+    image_id : int
+        Image ID on the OMERO server
+    """
+    browse = gateway.getFacility(BrowseFacility)
+    user = gateway.getLoggedInUser()
+    ctx = SecurityContext(user.getGroupId())
+    image = browse.getImage(ctx, long(image_id))
+
+    data = MapAnnotationData()
+    data.setContent(dict)
+    data.setDescription(header)
+    data.setNameSpace(MapAnnotationData.NS_CLIENT_CREATED)
+
+    fac = gateway.getFacility(DataManagerFacility)
+    fac.attachAnnotation(ctx, data, image)
+
+def find_dataset(gateway, dataset_id):
+    """Returns the dataset object associated with the given dataset ID
+
+    Parameters
+    ----------
+    gateway : omero.gateway.Gateway
+        Gateway to the OMERO server
+    dataset_id : int
+        Image ID of the dataset
+
+    Returns
+    -------
+    omero.model.Dataset
+        Dataset object corresponding to the ID
+
+    """
+    browse = gateway.getFacility(BrowseFacility)
+    user = gateway.getLoggedInUser()
+    ctx = SecurityContext(user.getGroupId())
+    return browse.findIObject(ctx, "omero.model.Dataset", dataset_id)
