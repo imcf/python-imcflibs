@@ -422,7 +422,7 @@ class DefinitionOptions(object):
         self._angle_definition = SINGLE_FILE % "angle"
         self._channel_definition = MULTI_SINGLE_FILE % "channel"
         self._illumination_definition = SINGLE_FILE % "illumination"
-        self._tile_definition = MULTI_SINGLE_FILE % "tile"
+        self._tile_definition = MULTI_MULTI_FILE % "tile"
         self._timepoint_definition = SINGLE_FILE % "time-point"
 
     def check_definition_option(self, value):
