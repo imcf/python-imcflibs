@@ -316,15 +316,15 @@ class ProcessingOptions(object):
         -------
         str
         """
-        input_type = ['process','resave']
+        input_type = ["process", "resave"]
         if input not in input_type:
             raise ValueError("Invalue input type. Expected one of: %s" % input_type)
         parameters = [
             input + "_angle=" + self._angle_processing_option,
-            input + "_channel" + self._channel_processing_option,
-            input + "_illumination" + self._illumination_processing_option,
-            input + "_tile" + self._tile_processing_option,
-            input + "_timepoint" + self._timepoint_processing_option,
+            input + "_channel=" + self._channel_processing_option,
+            input + "_illumination=" + self._illumination_processing_option,
+            input + "_tile=" + self._tile_processing_option,
+            input + "_timepoint=" + self._timepoint_processing_option,
         ]
         parameter_string = " ".join(parameters).strip()
         log.debug("Formatted 'process_X' options: <%s>", parameter_string)
@@ -1093,7 +1093,7 @@ def detect_interest_points(
 
 def interest_points_registration(
     project_path,
-    processing_opts = None,
+    processing_opts=None,
     rigid_timepoints=False,
 ):
     """Run the "Register Dataset based on Interest Points" command.
@@ -1162,8 +1162,8 @@ def interest_points_registration(
 def duplicate_transformations(
     project_path,
     transformation_type="channel",
-    channel_source=1,
-    tile_source=1,
+    channel_source=None,
+    tile_source=None,
     transformation_to_use="[Replace all transformations]",
 ):
     """Duplicate / propagate transformation parameters to other channels.
