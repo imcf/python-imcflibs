@@ -20,7 +20,7 @@ sjlogging = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.17.2"
-pytest = "^7.4.3"
+pytest = "^8.0.1"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
