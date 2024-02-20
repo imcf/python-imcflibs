@@ -1062,6 +1062,7 @@ def detect_interest_points(
         + project_path
         + "] "
         + processing_opts.fmt_acitt_options()
+        + processing_opts.fmt_acitt_selectors()
         + "type_of_interest_point_detection=Difference-of-Gaussian "
         + "label_interest_points=beads "
         + "limit_amount_of_detections "
@@ -1126,6 +1127,7 @@ def interest_points_registration(
         + project_path
         + "] "
         + processing_opts.fmt_acitt_options()
+        + processing_opts.fmt_acitt_selectors()
         + "registration_algorithm=[Precise descriptor-based (translation invariant)] "
         + "registration_over_time=[Match against one reference timepoint (no global optimization)] "
         + "registration_in_between_views=[Only compare overlapping views (according to current transformations)] "
