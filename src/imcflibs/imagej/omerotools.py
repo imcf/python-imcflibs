@@ -34,28 +34,63 @@ import loci.common
 from loci.formats.in import DefaultMetadataOptions
 from loci.formats.in import MetadataLevel
 
-def parse_image_ids(input_string):
-    """Parse an OMERO URL or a string with image IDs into a list.
+def parse_image_ids(omero_str, gateway=None, ctx=None):
+    """Parse an OMERO URL with one or multiple images selected, or a link to one or more datasets where all images in
+    the datasets will be projected. Gateway and ctx are optional - only necessary if parsing a dataset link; if only images,
+    can be ignored.
 
     Parameters
     ----------
-    input_string : str
-        String which is either the direct image link (URL) from OMERO.web
-        (which may contain multiple images selected) or a sequence of OMERO
-        image IDs separated by commas.
+    omero_str : str
+        String which is either the dataset link from OMERO, the image link from OMERO or image IDs separated by commas
+    gateway : omero.gateway.Gateway, optional
+        An instance of OMERO gateway to use for retrieving dataset children
+    ctx: omero.gateway.SecurityContext, optional
+        A security context object that hosts information about the correct connector
 
     Returns
     -------
-    str[]
-        List of all the image IDs parsed from the input string.
+    images: str[]
+        List of all the images IDs parsed from the string
     """
-    if input_string.startswith("https"):
-        image_ids = input_string.split("image-")
+    dataset_ids = java.util.ArrayList() # Has to be an ArrayList due to how the wrapper works, cannot be a Python list
+    image_ids = []
+    project_string = "_" + projection_type + "_project"
+
+    if "dataset-" in omero_str:
+        if "|" in omero_str:    # If multiple datasets, split by "|"
+            parts = omero_str.split("|")
+            for part in parts:
+                if "dataset-" in part:
+                    dataset_id = java.lang.Long(part.split("dataset-")[1].split("/")[0])
+                    dataset_ids.add(dataset_id)
+        else:   # not multiple, single dataset
+            dataset_id = java.lang.Long(omero_str.split("dataset-")[1].split("/")[0])
+            dataset_ids.add(dataset_id) # Add dataset ID to the ArrayList
+
+        if gateway:
+            browse = gateway.getFacility(BrowseFacility)
+            datasets = browse.getDatasets(ctx, dataset_ids)
+
+            for dataset in datasets:
+                images = dataset.getImages()
+                for im in images:
+                    if project_string not in im.getName():
+                        image_ids.append(str(im.getId()))
+            return image_ids
+        else:
+            raise ValueError("An OMERO gateway instance is required to retrieve dataset children.")
+
+    elif "image-" in omero_str:
+        image_ids = omero_str.split("image-")
         image_ids.pop(0)
-        image_ids = [s.split("%")[0].replace("|", "") for s in image_ids]
+        image_ids = [s.split('%')[0].replace("|", "") for s in image_ids]
+        return image_ids
+
     else:
-        image_ids = input_string.split(",")
-    return image_ids
+        image_ids = omero_str.split(",")
+        return image_ids
+
 
 
 def connect(host, port, username, password):
@@ -74,8 +109,10 @@ def connect(host, port, username, password):
 
     Returns
     -------
-    omero.gateway.Gateway
+    gateway: omero.gateway.Gateway
         A Gateway object representing the connection to the OMERO server.
+    ctx: omero.gateway.SecurityContext
+        object that hosts information required to access correct connector.
     """
     # Omero Connect with credentials and simpleLogger
     cred = LoginCredentials()
@@ -86,7 +123,10 @@ def connect(host, port, username, password):
     simple_logger = SimpleLogger()
     gateway = Gateway(simple_logger)
     gateway.connect(cred)
-    return gateway
+    # Get user for SecurityContext object
+    user = gateway.getLoggedInUser()
+    ctx = SecurityContext(user.getGroupId())
+    return gateway, ctx
 
 
 def fetch_image(host, username, password, image_id, group_id=-1):
