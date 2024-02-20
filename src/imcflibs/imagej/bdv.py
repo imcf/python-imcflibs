@@ -23,7 +23,6 @@ SINGLE = "[Single %s (Select from List)]"
 
 
 class ProcessingOptions(object):
-
     """Helper to store processing options and generate parameter strings.
 
     Example
@@ -398,7 +397,6 @@ MULTI_MULTI_FILE = "[YES (one file per %s)]"
 
 
 class DefinitionOptions(object):
-
     """Helper to store definition options and generate parameters strings.
 
     Example
@@ -1068,7 +1066,6 @@ def detect_interest_points(
         + "label_interest_points=beads "
         + "limit_amount_of_detections "
         + "group_tiles "
-        + "group_illuminations "
         + "subpixel_localization=[3-dimensional quadratic fit] "
         + "interest_point_specification=[Advanced ...] "
         + "downsample_xy=8x "
@@ -1132,14 +1129,13 @@ def interest_points_registration(
         + "registration_algorithm=[Precise descriptor-based (translation invariant)] "
         + "registration_over_time=[Match against one reference timepoint (no global optimization)] "
         + "registration_in_between_views=[Only compare overlapping views (according to current transformations)] "
+        + "interest_point_inclusion=[Compare all interest point of overlapping views] "
         + "interest_points=beads "
         + "group_tiles "
         + "group_illuminations "
         + "group_channels "
         + "reference=1 "
         + rigid_timepoints_arg
-        # + "fix_views=[Fix first view] "
-        # + "map_back_views=[Do not map back (use this if views are fixed)] "
         + "transformation=Affine "
         + "regularize_model "
         + "model_to_regularize_with=Affine "
