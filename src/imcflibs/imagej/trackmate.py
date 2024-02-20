@@ -5,17 +5,17 @@ from ij import IJ
 
 from fiji.plugin.trackmate import Logger, Model, SelectionModel, Settings, TrackMate
 from fiji.plugin.trackmate.action import LabelImgExporter
-from fiji.plugin.trackmate.cellpose import (
-    CellposeDetectorFactory,
-    LogDetectorFactory,
-    StarDistDetectorFactory,
-)
+from fiji.plugin.trackmate.detection import LogDetectorFactory
+from fiji.plugin.trackmate.cellpose import CellposeDetectorFactory
+from fiji.plugin.trackmate.stardist import StarDistDetectorFactory
+from fiji.plugin.trackmate.cellpose.CellposeSettings import PretrainedModel
+
 from fiji.plugin.trackmate.features import FeatureFilter
 from fiji.plugin.trackmate.tracking import LAPUtils
 from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
 from java.lang import Double
 
-from . import pathtools
+from .. import pathtools
 
 
 def cellpose_detector(
@@ -23,8 +23,8 @@ def cellpose_detector(
     cellpose_env_path,
     model_to_use,
     obj_diameter,
-    target_chnl,
-    optional_chnl=None,
+    target_channel,
+    optional_channel=0,
     use_gpu=True,
     simplify_contours=True,
 ):
@@ -41,10 +41,10 @@ def cellpose_detector(
     obj_diameter : float
         Diameter of the objects to detect in the image.
         This will be calibrated to the unit used in the image.
-    target_chnl : int
+    target_channel : int
         Index of the channel to use for segmentation.
-    optional_chnl : int, optional
-        Index of the secondary channel to use for segmentation, by default None.
+    optional_channel : int, optional
+        Index of the secondary channel to use for segmentation, by default 0.
     use_gpu : bool, optional
         Boolean for GPU usage, by default True.
     simplify_contours : bool, optional
@@ -55,19 +55,33 @@ def cellpose_detector(
     fiji.plugin.trackmate.Settings
         Dictionary containing all the settings to use for TrackMate.
     """
+
+    # Example Usage: settings = cellpose_detector(imp, "S:\cellpose_env", "NUCLEI", 23.0, 1, 0)
     settings = Settings(imageplus)
 
     settings.detectorFactory = CellposeDetectorFactory()
-    settings.detectorSettings["TARGET_CHANNEL"] = target_chnl
-    if optional_chnl:
-        settings.detectorSettings["OPTIONAL_CHANNEL_2"] = optional_chnl
+    settings.detectorSettings["TARGET_CHANNEL"] = target_channel
+    settings.detectorSettings["OPTIONAL_CHANNEL_2"] = optional_channel # Set optional channel to 0, will be
+    # overwritten if needed
+
     settings.detectorSettings["CELLPOSE_PYTHON_FILEPATH"] = pathtools.join2(
         cellpose_env_path, "python.exe"
     )
     settings.detectorSettings["CELLPOSE_MODEL_FILEPATH"] = os.path.join(
         os.environ["USERPROFILE"], ".cellpose", "models"
     )
-    settings.detectorSettings["CELLPOSE_MODEL"] = model_to_use
+    input_to_model = {
+        "nuclei": PretrainedModel.NUCLEI,
+        "cyto": PretrainedModel.CYTO,
+        "cyto2": PretrainedModel.CYTO2
+    }
+    if model_to_use.lower() in input_to_model:
+        selected_model = input_to_model[model_to_use.lower()]
+    else:
+        print("Selected Model Does Not Exist")
+        return
+
+    settings.detectorSettings["CELLPOSE_MODEL"] = selected_model
     settings.detectorSettings["CELL_DIAMETER"] = obj_diameter
     settings.detectorSettings["USE_GPU"] = use_gpu
     settings.detectorSettings["SIMPLIFY_CONTOURS"] = simplify_contours
@@ -101,7 +115,7 @@ def stardist_detector(imageplus, target_chnl):
 def log_detector(
     imageplus,
     radius,
-    target_chnl,
+    target_channel,
     quality_threshold=0.0,
     median_filtering=True,
     subpix_localization=True,
@@ -114,7 +128,7 @@ def log_detector(
         Image on which to do the segmentation.
     radius : float
         Radius of the objects to detect.
-    target_chnl : int
+    target_channel : int
         Index of the channel on which to do the segmentation.
     quality_threshold : int, optional
         Threshold to use for excluding the spots by quality, by default 0.
@@ -133,7 +147,7 @@ def log_detector(
     settings.detectorFactory = LogDetectorFactory()
 
     settings.detectorSettings["RADIUS"] = Double(radius)
-    settings.detectorSettings["TARGET_CHANNEL"] = target_chnl
+    settings.detectorSettings["TARGET_CHANNEL"] = target_channel
     settings.detectorSettings["THRESHOLD"] = Double(quality_threshold)
     settings.detectorSettings["DO_MEDIAN_FILTERING"] = median_filtering
     settings.detectorSettings["DO_SUBPIXEL_LOCALIZATION"] = subpix_localization
