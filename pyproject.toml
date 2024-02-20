@@ -15,8 +15,8 @@ version = "1.5.0.a0"
 imcf-fiji-mocks = {path = "./local-packages/imcf-fiji-mocks/dist/imcf_fiji_mocks-0.1.0-py3-none-any.whl"}
 micrometa = {path = "./local-packages/micrometa/dist/micrometa-15.2.2-py3-none-any.whl"}
 olefile = "==0.46"
-python = "^3.10"
 sjlogging = {path = "./local-packages/sjlogging/dist/sjlogging-0.1.0-py3-none-any.whl"}
+python = ">=2.7"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.17.2"
