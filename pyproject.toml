@@ -15,7 +15,6 @@ version = "1.5.0.a0"
 [tool.poetry.dependencies]
 imcf-fiji-mocks = "^0.1.1"
 micrometa = "^15.2.2"
-olefile = "==0.46"
 python = ">=2.7"
 sjlogging = ">=0.5.2"
 
