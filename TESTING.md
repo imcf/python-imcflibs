@@ -1,5 +1,34 @@
 # Testing 🧪 in Fiji / ImageJ2
 
+## Using `pytest` for plain Python code
+
+Those parts of the package that do not interact / depend on ImageJ objects can
+be tested via [`pytest`][pytest] up to a certain level, some (most?) of them
+should even work in a Python 3 environment.
+
+To perform those tests, the packges otherwise provided by ImageJ need to be
+mocked using the `imcf-fiji-mocks` package. For seting up a _venv_ use the steps
+described here:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+MOCKS_REL="0.1.1"
+URL_PFX="https://github.com/imcf/imcf-fiji-mocks/releases/download/v$MOCKS_REL"
+pip install --upgrade \
+    $URL_PFX/imcf_fiji_mocks-0.1.1-py2.py3-none-any.whl \
+    $URL_PFX/micrometa-15.2.2-py2.py3-none-any.whl \
+    $URL_PFX/sjlogging-0.5.2-py2.py3-none-any.whl \
+    olefile \
+    pytest \
+    pip
+
+# now install the 'imcflibs' package in editable mode:
+pip install -e .
+```
+
+## Common testing with ImageJ2 / Fiji
+
 Unfortunately there is nothing like `pytest` available for the parts that are
 running exclusively in a ImageJ2 / Fiji context. So in order to provide at least
 some basic, semi-interactive tests the following conventions are being used:
@@ -35,7 +64,7 @@ some basic, semi-interactive tests the following conventions are being used:
     Parameter_ `IMCF_TESTDATA` will remember this selection, so it will be
     sufficient to just confirm the dialog by pressing `Enter`.
 
-## Quick Workflow Summary
+### Quick Workflow Summary
 
 First, make sure to have the test data 🔬🔭around (or some mocks 🪨🪵), then:
 
@@ -48,7 +77,7 @@ First, make sure to have the test data 🔬🔭around (or some mocks 🪨🪵), 
 1. Inspect the output 🔎👀
 1. Repeat 🔁
 
-## Test Script Template 🏗
+### Test Script Template 🏗
 
 As described above, each test script should use the `IMCF_TESTDATA` parameter to
 facilitate the manual testing approach. Simply use this template header for
@@ -76,3 +105,5 @@ from imcflibs.pathtools import parse_path
 components = parse_path("systems/lsm700/beads/10x_phmax.czi", IMCF_TESTDATA)
 assert os.path.exists(components["full"])
 ```
+
+[pytest]: https://pytest.org
