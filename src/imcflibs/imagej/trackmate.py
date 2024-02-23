@@ -303,6 +303,14 @@ def run_trackmate(
 
     model.setLogger(Logger.IJTOOLBAR_LOGGER)
 
+    # Configure tracker
+    settings.trackerFactory = SparseLAPTrackerFactory()
+    settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap()
+    # settings.addTrackAnalyzer(TrackDurationAnalyzer())
+    settings.trackerSettings['LINKING_MAX_DISTANCE'] = 15.0
+    settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = 15.0
+    settings.trackerSettings['MAX_FRAME_GAP'] = 3
+    settings.initialSpotFilterValue = -1.
 
     trackmate = TrackMate(model, settings)
     trackmate.computeSpotFeatures(True)
