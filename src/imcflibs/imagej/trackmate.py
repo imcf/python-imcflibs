@@ -111,6 +111,7 @@ def stardist_detector(imageplus, target_chnl):
 
     return settings
 
+# TODO: check all filters and test
 
 def log_detector(
     imageplus,
@@ -249,7 +250,7 @@ def track_filtering(
     """
 
     settings.trackerFactory = SparseLAPTrackerFactory()
-    settings.trackerSettings = LAPUtils.getDefaultLAPSettingsMap()
+    settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap()
     settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist  # must be double
     settings.trackerSettings[
         "GAP_CLOSING_MAX_DISTANCE"
@@ -265,7 +266,7 @@ def track_filtering(
     return settings
 
 
-def run_tm(
+def run_trackmate(
     implus,
     settings,
     crop_roi=None,
@@ -276,9 +277,9 @@ def run_tm(
     Parameters
     ----------
     implus : ij.ImagePlus
-        ImagePlus on which to run image
+        ImagePlus image on which to run Trackmate
     settings : fiji.plugin.trackmate.Settings
-        Settings to use for TrackMate
+        Settings to use for TrackMate, see detector methods for different settings
     crop_roi : ij.gui.Roi, optional
         ROI to crop on the image, by default None
 
@@ -301,6 +302,7 @@ def run_tm(
     model = Model()
 
     model.setLogger(Logger.IJTOOLBAR_LOGGER)
+
 
     trackmate = TrackMate(model, settings)
     trackmate.computeSpotFeatures(True)
