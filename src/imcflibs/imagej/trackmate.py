@@ -1,32 +1,30 @@
 import os
 import sys
 
-from ij import IJ
-
 from fiji.plugin.trackmate import Logger, Model, SelectionModel, Settings, TrackMate
 from fiji.plugin.trackmate.action import LabelImgExporter
-from fiji.plugin.trackmate.detection import LogDetectorFactory
 from fiji.plugin.trackmate.cellpose import CellposeDetectorFactory
-from fiji.plugin.trackmate.stardist import StarDistDetectorFactory
 from fiji.plugin.trackmate.cellpose.CellposeSettings import PretrainedModel
-
+from fiji.plugin.trackmate.detection import LogDetectorFactory
 from fiji.plugin.trackmate.features import FeatureFilter
+from fiji.plugin.trackmate.stardist import StarDistDetectorFactory
 from fiji.plugin.trackmate.tracking import LAPUtils
 from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
+from ij import IJ
 from java.lang import Double
 
 from .. import pathtools
 
 
 def cellpose_detector(
-    imageplus,
-    cellpose_env_path,
-    model_to_use,
-    obj_diameter,
-    target_channel,
-    optional_channel=0,
-    use_gpu=True,
-    simplify_contours=True,
+        imageplus,
+        cellpose_env_path,
+        model_to_use,
+        obj_diameter,
+        target_channel,
+        optional_channel=0,
+        use_gpu=True,
+        simplify_contours=True,
 ):
     """Create a dictionary with all settings for TrackMate using Cellpose.
 
@@ -61,7 +59,7 @@ def cellpose_detector(
 
     settings.detectorFactory = CellposeDetectorFactory()
     settings.detectorSettings["TARGET_CHANNEL"] = target_channel
-    settings.detectorSettings["OPTIONAL_CHANNEL_2"] = optional_channel # Set optional channel to 0, will be
+    settings.detectorSettings["OPTIONAL_CHANNEL_2"] = optional_channel  # Set optional channel to 0, will be
     # overwritten if needed
 
     settings.detectorSettings["CELLPOSE_PYTHON_FILEPATH"] = pathtools.join2(
@@ -111,15 +109,14 @@ def stardist_detector(imageplus, target_chnl):
 
     return settings
 
-# TODO: check all filters and test
 
 def log_detector(
-    imageplus,
-    radius,
-    target_channel,
-    quality_threshold=0.0,
-    median_filtering=True,
-    subpix_localization=True,
+        imageplus,
+        radius,
+        target_channel,
+        quality_threshold=0.0,
+        median_filtering=True,
+        subpix_localization=True,
 ):
     """Create a dictionary with all settings for TrackMate using the LogDetector.
 
@@ -157,11 +154,11 @@ def log_detector(
 
 
 def spot_filtering(
-    settings,
-    quality_thresh=None,
-    area_thresh=None,
-    circularity_thresh=None,
-    intensity_dict_thresh=None,
+        settings,
+        quality_thresh=None,
+        area_thresh=None,
+        circularity_thresh=None,
+        intensity_dict_thresh=None,
 ):
     """Add spot filtering for different features to the settings dictionary.
 
@@ -219,12 +216,12 @@ def spot_filtering(
 
 
 def track_filtering(
-    settings,
-    link_max_dist=0.5,
-    gap_closing_dist=0.5,
-    max_frame_gap=2,
-    track_splitting_max_dist=None,
-    track_merging_max_distance=None,
+        settings,
+        link_max_dist=0.5,
+        gap_closing_dist=0.5,
+        max_frame_gap=2,
+        track_splitting_max_dist=None,
+        track_merging_max_distance=None,
 ):
     """Add track filtering for different features to the settings dictionary.
 
@@ -267,9 +264,9 @@ def track_filtering(
 
 
 def run_trackmate(
-    implus,
-    settings,
-    crop_roi=None,
+        implus,
+        settings,
+        crop_roi=None,
 ):
     # sourcery skip: merge-else-if-into-elif, swap-if-else-branches
     """Function to run TrackMate on open data. Has some specific input
@@ -324,9 +321,9 @@ def run_trackmate(
     ok = trackmate.process()
     if not ok:
         if "[SparseLAPTracker] The spot collection is empty." in str(
-            trackmate.getErrorMessage()
+                trackmate.getErrorMessage()
         ):
-            new_imp =  IJ.createImage(
+            new_imp = IJ.createImage(
                 "Untitled",
                 "16-bit black",
                 implus.getWidth(),
