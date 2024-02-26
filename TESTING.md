@@ -1,4 +1,4 @@
-# Testing 🧪 in Fiji / ImageJ2
+# Testing 🧪🧫 in Fiji / ImageJ2
 
 ## Using `pytest` for plain Python code
 
@@ -25,6 +25,13 @@ pip install --upgrade \
 
 # now install the 'imcflibs' package in editable mode:
 pip install -e .
+```
+
+Using this _venv_, tests can be triggered just the usual way. To run only
+specific tests, use e.g.
+
+```bash
+pytest tests/bdv/test_processingoptions.py
 ```
 
 ## Common testing with ImageJ2 / Fiji
