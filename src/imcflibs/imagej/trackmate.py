@@ -320,7 +320,7 @@ def run_trackmate(
         ):
             new_imp = IJ.createImage(
                 "Untitled",
-                "16-bit black",
+                str(implus.getBitDepth()) + "-bit black",
                 implus.getWidth(),
                 implus.getHeight(),
                 implus.getNFrames(),
