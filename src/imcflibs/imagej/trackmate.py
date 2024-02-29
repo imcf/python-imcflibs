@@ -217,9 +217,9 @@ def spot_filtering(
 
 def track_filtering(
         settings,
-        link_max_dist=0.5,
-        gap_closing_dist=0.5,
-        max_frame_gap=2,
+        link_max_dist=15,
+        gap_closing_dist=15,
+        max_frame_gap=3,
         track_splitting_max_dist=None,
         track_merging_max_distance=None,
 ):
@@ -301,12 +301,7 @@ def run_trackmate(
     model.setLogger(Logger.IJTOOLBAR_LOGGER)
 
     # Configure tracker
-    settings.trackerFactory = SparseLAPTrackerFactory()
-    settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap()
     # settings.addTrackAnalyzer(TrackDurationAnalyzer())
-    settings.trackerSettings['LINKING_MAX_DISTANCE'] = 15.0
-    settings.trackerSettings['GAP_CLOSING_MAX_DISTANCE'] = 15.0
-    settings.trackerSettings['MAX_FRAME_GAP'] = 3
     settings.initialSpotFilterValue = -1.
 
     trackmate = TrackMate(model, settings)
