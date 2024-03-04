@@ -1,0 +1,5 @@
+[run]
+omit =
+    # omit anything in a venv / venv2 directory
+    ./venv/*
+    ./venv2/*
