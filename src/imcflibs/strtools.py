@@ -1,7 +1,14 @@
 """String related helper functions."""
 
+import io
 import re
 
+try:
+    # Python 2: "file" is built-in
+    file_types = file, io.IOBase
+except NameError:
+    # Python 3: "file" fully replaced with IOBase
+    file_types = (io.IOBase,)
 
 # this is taken from numpy's iotools:
 def _is_string_like(obj):
@@ -62,7 +69,7 @@ def filename(name):
         # likely we are not running under Jython
         pass
 
-    if isinstance(name, file):
+    if isinstance(name, file_types):
         return name.name
     elif _is_string_like(name):
         return name
