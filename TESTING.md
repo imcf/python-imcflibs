@@ -44,6 +44,24 @@ specific tests, use e.g.
 pytest tests/bdv/test_processingoptions.py
 ```
 
+## Using `pytest` 🐍🔬 and Python 2 for plain Python code
+
+For running [`pytest`][pytest] in a C-Python 2 environment, things are slightly
+more complicated than the approach described for Python 3 above as `pip` for
+Python 2 cannot install a project in _editable_ mode unless it has a `setup.py`
+file (which we don't have and don't want).
+
+Therefore, a wheel needs to be built (e.g. using [`poetry`][poetry]) and
+installed (every time) into the corresponding virtualenv when performing the
+tests. Assuming you're having a working _poetry_ setup on your machine, you can
+simply use the provided `scripts/py2-pytest.sh` wrapper that will create the
+virtualenv, build and install the `imcflibs` wheel and launch `pytest` with the
+parameters specified, e.g.
+
+```bash
+bash scripts/py2-pytest.sh -rv --cov --cov-report html
+```
+
 ## Common testing with ImageJ2 / Fiji
 
 Unfortunately there is nothing like `pytest` available for the parts that are
@@ -124,3 +142,4 @@ assert os.path.exists(components["full"])
 ```
 
 [pytest]: https://pytest.org
+[poetry]: https://python-poetry.org
