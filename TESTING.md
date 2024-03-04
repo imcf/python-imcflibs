@@ -1,6 +1,6 @@
 # Testing 🧪🧫 in Fiji / ImageJ2
 
-## Using `pytest` for plain Python code
+## Using `pytest` 🐍🔬 and Python 3 for plain Python code
 
 Those parts of the package that do not interact / depend on ImageJ objects can
 be tested via [`pytest`][pytest] up to a certain level, some (most?) of them
@@ -11,8 +11,17 @@ mocked using the `imcf-fiji-mocks` package. For seting up a _venv_ use the steps
 described here:
 
 ```bash
-python3 -m venv venv
+# check if we're "inside" the repo already, otherwise clone it here:
+git remote -v 2>/dev/null | grep -q imcf/python-imcflibs || {
+  git clone https://github.com/imcf/python-imcflibs/
+  cd python-imcflibs
+  git checkout -b pytest origin/pytest
+}
+# create and activate a new venv:
+test -d "venv" || python3 -m venv venv
 source venv/bin/activate
+
+# install dependencies / requirements:
 MOCKS_REL="0.1.1"
 URL_PFX="https://github.com/imcf/imcf-fiji-mocks/releases/download/v$MOCKS_REL"
 pip install --upgrade \
@@ -21,6 +30,7 @@ pip install --upgrade \
     $URL_PFX/sjlogging-0.5.2-py2.py3-none-any.whl \
     olefile \
     pytest \
+    pytest-cov \
     pip
 
 # now install the 'imcflibs' package in editable mode:
