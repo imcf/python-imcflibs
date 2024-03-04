@@ -333,12 +333,15 @@ class ProcessingOptions(object):
         """Format Angle / Channel / Illumination / Tile / Timepoint selectors.
 
         Build a string providing the `angle_select`, `channel_select`,
-        `illumination_select`, `tile_select` and `timepoint_select` options
-        that can be used in a BDV-related `IJ.run` call.
+        `illumination_select`, `tile_select` and `timepoint_select` options that
+        can be used in a BDV-related `IJ.run` call. In case no selectors have
+        been chosen, nothing but a single space will be returned.
 
         Returns
         -------
         str
+            The formatted selector string. Will be a single white-space in case
+            no selectors have been configured for the object.
         """
         parameters = [
             self._angle_select if self._angle_select else "",
