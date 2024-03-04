@@ -3,10 +3,10 @@
 import io
 import re
 
-try:
+try:  # pragma: no cover
     # Python 2: "file" is built-in
     file_types = file, io.IOBase
-except NameError:
+except NameError:  # pragma: no cover
     # Python 3: "file" fully replaced with IOBase
     file_types = (io.IOBase,)
 
