@@ -1,5 +1,7 @@
 """I/O related functions."""
 
+import io
+
 import glob
 import zipfile
 
@@ -8,6 +10,14 @@ from os.path import splitext, join
 
 from .log import LOG as log
 from .strtools import flatten
+
+
+try:
+    # Python 2: "file" is built-in
+    file_types = file, io.IOBase
+except NameError:
+    # Python 3: "file" fully replaced with IOBase
+    file_types = (io.IOBase,)
 
 
 def filehandle(fname, mode="r"):
@@ -44,13 +54,13 @@ def filehandle(fname, mode="r"):
     <type 'file'>
     """
     log.debug(type(fname))
-    if type(fname).__name__ == "str":
+    if isinstance(fname, str):
         try:
             return open(fname, mode)
         except IOError as err:
             message = "can't open '%s': %s"
             raise SystemExit(message % (fname, err))
-    elif type(fname).__name__ == "file":
+    elif isinstance(fname, file_types):
         if fname.mode != mode:
             message = "mode mismatch: %s != %s"
             raise IOError(message % (fname.mode, mode))

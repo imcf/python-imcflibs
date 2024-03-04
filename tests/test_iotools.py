@@ -6,8 +6,18 @@ import zipfile
 
 from os.path import join
 
+import io
+
 from imcflibs.iotools import filehandle
 from imcflibs.iotools import readtxt
+
+try:
+    # Python 2: "file" is built-in
+    file_types = file, io.IOBase
+except NameError:
+    # Python 3: "file" fully replaced with IOBase
+    file_types = (io.IOBase,)
+
 
 __author__ = "Niko Ehrenfeuchter"
 __copyright__ = "Niko Ehrenfeuchter"
@@ -17,12 +27,17 @@ __license__ = "gpl3"
 def test_filehandle(tmpdir):
     tmpfile = tmpdir.join("testfile")
     tmpname = str(tmpfile)
+    # print(tmpname)
     tmphandle = open(str(tmpfile), "w")
     print(type(tmphandle))
-    assert type(tmpname) is str
-    assert type(tmphandle) is file
-    assert type(filehandle(tmpname)) is file
-    assert type(filehandle(tmphandle, "w")) is file
+    assert isinstance(tmpname, str)
+    print("tmpname is str-like 🦋")
+    assert isinstance(tmphandle, file_types)
+    print("tmphandle is file/io-like 🦋")
+    assert isinstance(filehandle(tmpname), file_types)
+    print("filehandle(tmpname) is file/io-like 🦋")
+    assert isinstance(filehandle(tmphandle, "w"), file_types)
+    print("filehandle(tmphandle) is file/io-like 🦋")
 
 
 def test_readtxt(tmpdir):
