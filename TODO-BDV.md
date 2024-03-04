@@ -103,11 +103,11 @@ Selected options:
 - Second block:
   - (N/A)
 - Third block:
-  - How to treat Timepoints: treat individually
+  - How to treat Angles: treat individually
   - How to treat Channels: group
   - How to treat Illuminations: group
-  - How to treat Angles: treat individually
   - How to treat Tiles: compare
+  - How to treat Timepoints: treat individually
 - Fourth block:
   - [use Channel 1]
 
@@ -121,11 +121,11 @@ process_tile=[All tiles]
 process_timepoint=[All Timepoints]
 method=[Phase Correlation]
 show_expert_grouping_options
-how_to_treat_timepoints=[treat individually]
+how_to_treat_angles=[treat individually]
 how_to_treat_channels=group
 how_to_treat_illuminations=group
-how_to_treat_angles=[treat individually]
 how_to_treat_tiles=compare
+how_to_treat_timepoints=[treat individually]
 channels=[use Channel 1]
 ```
 
