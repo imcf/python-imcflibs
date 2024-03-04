@@ -111,6 +111,10 @@ def readtxt(fname, path="", flat=False):
     else:
         fin = open(join(path, fname), "r")
     txt = fin.readlines()  # returns file as a list, one entry per line
+    try:
+        txt = [x.decode("utf-8") for x in txt]
+    except AttributeError:
+        pass  # in Python2 decoding isn't necessary
     if flat:
         txt = flatten(txt)
     fin.close()
