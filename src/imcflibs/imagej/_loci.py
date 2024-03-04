@@ -26,8 +26,10 @@ DynamicMetadataOptions = None
 
 # perform the actual imports when running under Jython using `importlib` calls:
 import platform as _python_platform
+
 if _python_platform.python_implementation() == "Jython":
     import importlib
+
     _loci_plugins_in = importlib.import_module("loci.plugins.in")
     ImporterOptions = _loci_plugins_in.ImporterOptions
 
