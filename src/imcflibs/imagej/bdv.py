@@ -196,7 +196,7 @@ class ProcessingOptions(object):
         """
         self._channel_processing_option = SINGLE % "channel"
         # channel = int(value) - 1
-        self._channel_select = "processing_channel=[channel %s]" % int(value)
+        self._channel_select = "processing_channel=[channel %s]" % value
 
     def process_illumination(self, value):  # def illumination_select(self, value):
         """Select a single illumination to use for processing.
@@ -421,7 +421,7 @@ class DefinitionOptions(object):
     def __init__(self):
         self._angle_definition = SINGLE_FILE % "angle"
         self._channel_definition = MULTI_SINGLE_FILE % "channel"
-        self._illumination_definition = SINGLE_FILE % "illumination"
+        self._illumination_definition = SINGLE_FILE % "illumination direction"
         self._tile_definition = MULTI_MULTI_FILE % "tile"
         self._timepoint_definition = SINGLE_FILE % "time-point"
 
@@ -661,7 +661,7 @@ def define_dataset_auto(
         + resave
         + "] "
         + "dataset_save_path=["
-        + result_folder
+        + dataset_save_path
         + "] "
         + "check_stack_sizes "
         + angle_rotation
