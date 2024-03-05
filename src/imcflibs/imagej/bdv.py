@@ -120,11 +120,10 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : int or int-like
-            The channel number + 1 to use for the grouping (in other words: the
-            effectively used value will be the given one minus 1).
+            The channel number to use for the grouping.
         """
-        channel = int(value) - 1  # will raise a ValueError if cast fails
-        self._use_channel = "channels=[use Channel %s]" % channel
+        # channel = int(value) - 1  # will raise a ValueError if cast fails
+        self._use_channel = "channels=[use Channel %s]" % int(value)
         log.debug("New reference channel setting: %s", self._use_channel)
 
     def reference_illumination(self, value):
