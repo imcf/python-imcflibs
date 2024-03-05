@@ -120,11 +120,10 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : int or int-like
-            The channel number + 1 to use for the grouping (in other words: the
-            effectively used value will be the given one minus 1).
+            The channel number to use for the grouping.
         """
-        channel = int(value) - 1  # will raise a ValueError if cast fails
-        self._use_channel = "channels=[use Channel %s]" % channel
+        # channel = int(value) - 1  # will raise a ValueError if cast fails
+        self._use_channel = "channels=[use Channel %s]" % int(value)
         log.debug("New reference channel setting: %s", self._use_channel)
 
     def reference_illumination(self, value):
@@ -333,12 +332,15 @@ class ProcessingOptions(object):
         """Format Angle / Channel / Illumination / Tile / Timepoint selectors.
 
         Build a string providing the `angle_select`, `channel_select`,
-        `illumination_select`, `tile_select` and `timepoint_select` options
-        that can be used in a BDV-related `IJ.run` call.
+        `illumination_select`, `tile_select` and `timepoint_select` options that
+        can be used in a BDV-related `IJ.run` call. In case no selectors have
+        been chosen, nothing but a single space will be returned.
 
         Returns
         -------
         str
+            The formatted selector string. Will be a single white-space in case
+            no selectors have been configured for the object.
         """
         parameters = [
             self._angle_select if self._angle_select else "",
@@ -552,7 +554,7 @@ def backup_xml_files(source_directory, subfolder_name):
     pathtools.create_directory(xml_backup_directory)
     backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
     pathtools.create_directory(backup_subfolder)
-    all_xml_files = pathtools.listdir_matching(source_directory, ".*\.xml", regex=True)
+    all_xml_files = pathtools.listdir_matching(source_directory, ".*\\.xml", regex=True)
     os.chdir(source_directory)
     for xml_file in all_xml_files:
         shutil.copy2(xml_file, backup_subfolder)
