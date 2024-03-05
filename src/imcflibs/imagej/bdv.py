@@ -19,7 +19,7 @@ from .. import pathtools
 from ..log import LOG as log
 
 SINGLE = "[Single %s (Select from List)]"
-MULTIPLE = "[Multiple %ss (Select from List)] "
+MULTIPLE = "[Multiple %ss (Select from List)]"
 RANGE = "[Range of %ss (Specify by Name)]"
 """@private template string"""
 
