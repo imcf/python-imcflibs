@@ -675,7 +675,7 @@ def get_processing_settings(dimension, selection, value, range_end):
         dimension_list = ""
         for dimension_name in value:
             dimension_list += dimension + "_%s " % dimension_name
-        dimension_select = dimension_list
+        dimension_select = dimension_list.rstrip()
 
     if selection == "range":
         processing_option = RANGE % dimension
