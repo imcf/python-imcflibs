@@ -218,8 +218,8 @@ def spot_filtering(
 
 def track_filtering(
         settings,
-        link_max_dist=15,
-        gap_closing_dist=15,
+        link_max_dist=15.0,
+        gap_closing_dist=15.0,
         max_frame_gap=3,
         track_splitting_max_dist=None,
         track_merging_max_distance=None,
