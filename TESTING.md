@@ -15,7 +15,7 @@ described here:
 git remote -v 2>/dev/null | grep -q imcf/python-imcflibs || {
   git clone https://github.com/imcf/python-imcflibs/
   cd python-imcflibs
-  git checkout -b pytest origin/pytest
+  git checkout -b processing-options-class origin/processing-options-class
 }
 # create and activate a new venv:
 test -d "venv" || python3 -m venv venv
