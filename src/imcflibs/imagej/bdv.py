@@ -195,8 +195,8 @@ class ProcessingOptions(object):
         value : int or int-like
         """
         self._channel_processing_option = SINGLE % "channel"
-        channel = int(value) - 1
-        self._channel_select = "processing_channel=[channel %s]" % channel
+        # channel = int(value) - 1
+        self._channel_select = "processing_channel=[channel %s]" % int(value)
 
     def process_illumination(self, value):  # def illumination_select(self, value):
         """Select a single illumination to use for processing.
