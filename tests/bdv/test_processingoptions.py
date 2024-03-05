@@ -5,6 +5,7 @@ from imcflibs.imagej.bdv import ProcessingOptions
 
 def test_defaults():
     """Test the default options by calling all fomatters on a "raw" object."""
+    """Test the default options by calling all formatters on a "raw" object."""
     acitt_options = (
         "process_angle=[All angles] "
         "process_channel=[All channels] "
