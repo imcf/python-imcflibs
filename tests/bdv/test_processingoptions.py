@@ -35,7 +35,7 @@ def test_defaults():
     assert proc_opts.fmt_use_acitt() == use_acitt
 
 
-def test__treat_tc_ti__ref_c2():
+def test__treat_tc_ti__ref_c1():
     """Test an example setting how to treat components using a reference channel."""
     # refers to "Example 1" from the BDV TODO list
     # FIXME: what are the actual inputs and the correct output string??
@@ -57,14 +57,17 @@ def test__treat_tc_ti__ref_c2():
     use_acitt = (
         "channels=[use Channel 1] "
         "illuminations=[Average Illuminations] "
-        "tiles=[Average Tiles] "
-        "timepoints=[Average Timepoints] "
     )
 
     proc_opts = ProcessingOptions()
     proc_opts.treat_tiles("compare")
     proc_opts.treat_timepoints("[treat individually]")
-    proc_opts.reference_channel(2)
+    proc_opts.reference_channel(1)
+
+    assert proc_opts.fmt_acitt_options() == acitt_options
+    assert proc_opts.fmt_acitt_selectors() == acitt_selectors
+    assert proc_opts.fmt_use_acitt() == use_acitt
+    assert proc_opts.fmt_how_to_treat() == how_to_treat
 
     assert proc_opts.fmt_acitt_options() == acitt_options
     assert proc_opts.fmt_acitt_selectors() == acitt_selectors
