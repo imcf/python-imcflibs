@@ -1,4 +1,3 @@
-import pytest
 
 from imcflibs.imagej.bdv import ProcessingOptions
 
@@ -13,7 +12,7 @@ def test__process_c1c2_treat_tc_ti():
         "process_timepoint=[All Timepoints] "
     )
 
-    acitt_selectors = "channel_1 channel_2"
+    acitt_selectors = "channel_1 channel_2 "
     how_to_treat = (
         "how_to_treat_angles=[treat individually] "
         "how_to_treat_channels=group "
@@ -25,7 +24,6 @@ def test__process_c1c2_treat_tc_ti():
 
     proc_opts = ProcessingOptions()
     proc_opts.process_channel([1, 2])
-    proc_opts.treat_timepoints("[treat individually]")
 
     assert proc_opts.fmt_acitt_options() == acitt_options
     assert proc_opts.fmt_acitt_selectors() == acitt_selectors

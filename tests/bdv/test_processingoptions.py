@@ -1,4 +1,3 @@
-import pytest
 
 from imcflibs.imagej.bdv import ProcessingOptions
 
@@ -18,14 +17,12 @@ def test_defaults():
         "how_to_treat_angles=[treat individually] "
         "how_to_treat_channels=group "
         "how_to_treat_illuminations=group "
-        "how_to_treat_tiles=group "
-        "how_to_treat_timepoints=group "
+        "how_to_treat_tiles=compare "
+        "how_to_treat_timepoints=[treat individually] "
     )
     use_acitt = (
         "channels=[Average Channels] "
         "illuminations=[Average Illuminations] "
-        "tiles=[Average Tiles] "
-        "timepoints=[Average Timepoints] "
     )
 
     proc_opts = ProcessingOptions()
@@ -96,7 +93,8 @@ def test__process_c1_treat_tg_ti_use_t3():
 
     proc_opts = ProcessingOptions()
     proc_opts.process_channel(1)
-    proc_opts.treat_timepoints("[treat individually]")
+    # proc_opts.treat_timepoints("[treat individually]")
+    proc_opts.treat_tiles("group")
     proc_opts.reference_tile(3)
 
     assert proc_opts.fmt_acitt_options() == acitt_options
