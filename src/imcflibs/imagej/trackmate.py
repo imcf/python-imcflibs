@@ -215,6 +215,25 @@ def spot_filtering(
 
     return settings
 
+def sparseLAP_tracker(settings):
+    """
+    Create a Sparse LAP Tracker with default settings. Necessary for trackmate to run
+    Parameters
+    ----------
+    settings : fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+
+    settings.trackerFactory = SparseLAPTrackerFactory()
+    settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
+
+    return settings
+
 
 def track_filtering(
         settings,
@@ -247,8 +266,7 @@ def track_filtering(
         Dictionary containing all the settings to use for TrackMate.
     """
 
-    settings.trackerFactory = SparseLAPTrackerFactory()
-    settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap()
+    # settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap() # Not necessary anymore
     settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist  # must be double
     settings.trackerSettings[
         "GAP_CLOSING_MAX_DISTANCE"
@@ -259,7 +277,7 @@ def track_filtering(
         settings.trackerSettings["SPLITTING_MAX_DISTANCE"] = track_splitting_max_dist
     if track_merging_max_distance:
         settings.trackerSettings["ALLOW_TRACK_MERGING"] = True
-        settings.trackerSettings["MERGING_MAX_DISTANCE"] = True
+        settings.trackerSettings["MERGING_MAX_DISTANCE"] = track_merging_max_distance
 
     return settings
 
@@ -308,6 +326,10 @@ def run_trackmate(
     trackmate = TrackMate(model, settings)
     trackmate.computeSpotFeatures(True)
     trackmate.computeTrackFeatures(True)
+
+    if not settings.trackerFactory:
+        # Create a Sparse LAP Tracker if no Tracker has been created
+        settings = sparseLAP_tracker(settings)
 
     ok = trackmate.checkInput()
     if not ok:
