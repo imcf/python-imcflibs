@@ -89,8 +89,8 @@ class ProcessingOptions(object):
         self._treat_angles = "[treat individually]"
         self._treat_channels = "group"
         self._treat_illuminations = "group"
-        self._treat_tiles = "group"
-        self._treat_timepoints = "group"
+        self._treat_tiles = "compare"
+        self._treat_timepoints = "[treat individually]"
 
     ### reference-X methods
 
