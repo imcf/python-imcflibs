@@ -9,9 +9,9 @@ Mostly convenience wrappers with simplified calls and default values.
 # The attribute count is not really our choice:
 # pylint: disable-msg=too-many-instance-attributes
 
-import sys
 import os
 import shutil
+import sys
 
 from ij import IJ
 
@@ -350,7 +350,7 @@ class ProcessingOptions(object):
     def treat_tiles(self, value):
         """Set the value for the `how_to_treat_tiles` option.
 
-        The default setting is `group`.
+        The default setting is `compare`.
 
         Parameters
         ----------
@@ -363,7 +363,7 @@ class ProcessingOptions(object):
     def treat_timepoints(self, value):
         """Set the value for the `how_to_treat_timepoints` option.
 
-        The default setting is `group`.
+        The default setting is `[treat individually]`.
 
         Parameters
         ----------
