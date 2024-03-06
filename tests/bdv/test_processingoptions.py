@@ -1,9 +1,7 @@
-
 from imcflibs.imagej.bdv import ProcessingOptions
 
 
 def test_defaults():
-    """Test the default options by calling all fomatters on a "raw" object."""
     """Test the default options by calling all formatters on a "raw" object."""
     acitt_options = (
         "process_angle=[All angles] "
@@ -20,10 +18,7 @@ def test_defaults():
         "how_to_treat_tiles=compare "
         "how_to_treat_timepoints=[treat individually] "
     )
-    use_acitt = (
-        "channels=[Average Channels] "
-        "illuminations=[Average Illuminations] "
-    )
+    use_acitt = "channels=[Average Channels] " "illuminations=[Average Illuminations] "
 
     proc_opts = ProcessingOptions()
 
@@ -52,10 +47,7 @@ def test__treat_tc_ti__ref_c1():
         "how_to_treat_tiles=compare "
         "how_to_treat_timepoints=[treat individually] "
     )
-    use_acitt = (
-        "channels=[use Channel 1] "
-        "illuminations=[Average Illuminations] "
-    )
+    use_acitt = "channels=[use Channel 1] " "illuminations=[Average Illuminations] "
 
     proc_opts = ProcessingOptions()
     proc_opts.treat_tiles("compare")
@@ -66,6 +58,7 @@ def test__treat_tc_ti__ref_c1():
     assert proc_opts.fmt_acitt_selectors() == acitt_selectors
     assert proc_opts.fmt_use_acitt() == use_acitt
     assert proc_opts.fmt_how_to_treat() == how_to_treat
+
 
 def test__process_c1_treat_tg_ti_use_t3():
 
