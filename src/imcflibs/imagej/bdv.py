@@ -765,15 +765,15 @@ def define_dataset_auto(
     if not dataset_save_path:
         dataset_save_path = pathtools.join2(result_folder, project_filename)
     if subsampling_factors:
-        subsampling_factors = "manual_mipmap_setup subsampling_factors=" + subsampling_factors + " "
+        subsampling_factors = (
+            "manual_mipmap_setup subsampling_factors=" + subsampling_factors + " "
+        )
     else:
         subsampling_factors = ""
     if hdf5_chunk_sizes:
         hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
     else:
-        hdf5_chunk_sizes = (
-            ""
-        )
+        hdf5_chunk_sizes = ""
 
     if bf_series_type == "Angles":
         angle_rotation = "apply_angle_rotation "
