@@ -172,11 +172,13 @@ def spot_filtering(
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
     area_thresh : float, optional
-        Threshold to use for area filtering of the spots, by default None.
+        Threshold to use for area filtering of the spots, keep None with LoG Detector -
+        by default also None.
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
-    circularity_thresh : float, optional -
-        Threshold to use for circularity (needs to be between 0 and 1) filtering of the spots, by default None.
+    circularity_thresh : float, optional
+        Threshold to use for circularity thresholding (needs to be between 0 and 1, keep None with LoG Detector)
+        - by default None.
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
     intensity_dict_thresh : dict, optional
@@ -198,10 +200,10 @@ def spot_filtering(
     if quality_thresh:
         filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)), quality_thresh >= 0)
         settings.addSpotFilter(filter_spot)
-    if area_thresh and settings.detectorFactory is not LogDetectorFactory: # area_thresh and detection is not log then go into this
+    if area_thresh: # Keep none for log detector
         filter_spot = FeatureFilter("AREA", Double(abs(area_thresh)), area_thresh >= 0)
         settings.addSpotFilter(filter_spot)
-    if circularity_thresh: # has to be between 0 and 1
+    if circularity_thresh: # has to be between 0 and 1, keep none for log detector
         filter_spot = FeatureFilter(
             "CIRCULARITY", Double(abs(circularity_thresh)), circularity_thresh >= 0
         )
