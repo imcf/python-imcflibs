@@ -278,3 +278,47 @@ def close_images(list_of_imps):
     for imp in list_of_imps:
         imp.changes = False
         imp.close()
+
+
+def get_threshold_from_method(imp, channel, method, dark=True):
+    """Returns the threshold value of an ImagePlus object using the chosen
+    IJ AutoThreshold method in desired channel. ImagePlus Object needs to be 8 or 16 bit, 32 will throw an error.
+
+    Parameters
+    ----------
+    imp : ImagePlus
+        The imp from which to get the threshold value
+    channel : integer
+        The channel in which to get the threshold
+    method : string
+        The AutoThreshold method to use
+    dark: bool
+        Sets background to be dark or not
+
+    Returns
+    -------
+    list
+        the upper and the lower threshold (integer values)
+    """
+    imp.setC(channel)  # starts at 1
+    max_int_val = 2 ** imp.getBitDepth() - 1  # Get maximum intensity value depending on image bit depth
+    if imp.getBitDepth == 32:  # Raise error if 32 bit image
+        raise ValueError("Image is 32-bit; thresholding values will be off.")
+
+    ip = imp.getProcessor()
+    if dark:
+        ip.setAutoThreshold(method + " dark")
+    else:
+        ip.setAutoThreshold(method + "")
+
+    lower_thr = ip.getMinThreshold()
+    upper_thr = ip.getMaxThreshold()
+
+    if lower_thr == 0:
+        threshold = upper_thr
+    elif upper_thr == max_int_val:
+        threshold = lower_thr
+
+    ip.resetThreshold()
+
+    return threshold
