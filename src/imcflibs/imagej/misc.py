@@ -280,7 +280,7 @@ def close_images(list_of_imps):
         imp.close()
 
 
-def get_threshold_from_method(imp, channel, method, dark=True):
+def get_threshold_value_from_method(imp, channel, method, dark=True):
     """Returns the threshold value of an ImagePlus object using the chosen
     IJ AutoThreshold method in desired channel. ImagePlus Object needs to be 8 or 16 bit, 32 will throw an error.
 
