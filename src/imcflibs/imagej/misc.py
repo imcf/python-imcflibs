@@ -8,6 +8,8 @@ from ij import IJ  # pylint: disable-msg=import-error
 
 from . import prefs
 from ..log import LOG as log
+from ij.plugin import ImageCalculator, Concatenator
+from ij.process import StackStatistics, ImageProcessor
 
 
 def show_status(msg):
@@ -241,3 +243,24 @@ def sanitize_image_title(imp):
     image_title = image_title.replace("#", "Series")
 
     imp.setTitle(image_title)
+
+
+def subtract_images(imp1, imp2):
+    """Subtract one image from the other (imp1 - imp2)
+
+    Parameters
+    ----------
+    imp1: ImagePlus
+        The ImagePlus that is to be subtracted from
+    imp2: ImagePlus
+        The ImagePlus that is to be subtracted
+
+    Returns
+    ---------
+    subtract: ImagePlus
+        The result of the subtraction
+    """
+    ic = ImageCalculator()
+    subtracted = ic.run("Subtract create", imp1, imp2)
+
+    return subtracted
