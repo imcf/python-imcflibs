@@ -264,3 +264,17 @@ def subtract_images(imp1, imp2):
     subtracted = ic.run("Subtract create", imp1, imp2)
 
     return subtracted
+
+
+def close_images(list_of_imps):
+    """Closes all open image plus objects given in a list
+
+    Parameters
+    ----------
+    list_of_imps : list
+        A list of open ImagePlus objects
+
+    """
+    for imp in list_of_imps:
+        imp.changes = False
+        imp.close()
