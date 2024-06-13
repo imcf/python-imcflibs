@@ -70,7 +70,9 @@ def relate_label_images(label_image_ref, label_image_to_relate):
 
     ❗ NOTE: Won't work with touching labels ❗
 
-    FIXME: explain with an example what the function is doing!
+    Given two label images, this function will create a new label image
+    with the same labels as the reference image, but with the objects
+    of the second image.
 
     Parameters
     ----------
@@ -90,7 +92,7 @@ def relate_label_images(label_image_ref, label_image_to_relate):
     Prefs.blackBackground = True
     IJ.run(imp_dup, "Convert to Mask", "")
     IJ.run(imp_dup, "Divide...", "value=255")
-    return ImageCalculator.run(label_image_ref, imp_dup, "Multimage_processorly create")
+    return ImageCalculator.run(label_image_ref, imp_dup, "Multiply create")
 
 
 def filter_objects(label_image, table, string, min_val, max_val):
