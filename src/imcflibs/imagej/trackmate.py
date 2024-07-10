@@ -215,6 +215,25 @@ def spot_filtering(
 
     return settings
 
+def sparseLAP_tracker(settings):
+    """
+    Create a Sparse LAP Tracker with default settings. Necessary for trackmate to run
+    Parameters
+    ----------
+    settings : fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+
+    settings.trackerFactory = SparseLAPTrackerFactory()
+    settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
+
+    return settings
+
 
 def track_filtering(
         settings,
