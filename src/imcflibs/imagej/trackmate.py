@@ -175,8 +175,8 @@ def spot_filtering(
         Threshold to use for area filtering of the spots, by default None.
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
-    circularity_thresh : float, optional
-        Threshold to use for circularity filtering of the spots, by default None.
+    circularity_thresh : float, optional -
+        Threshold to use for circularity (needs to be between 0 and 1) filtering of the spots, by default None.
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
     intensity_dict_thresh : dict, optional
