@@ -328,6 +328,10 @@ def run_trackmate(
     trackmate.computeSpotFeatures(True)
     trackmate.computeTrackFeatures(True)
 
+    if not settings.trackerFactory:
+        # Create a Sparse LAP Tracker if no Tracker has been created
+        settings = sparseLAP_tracker(settings)
+
     ok = trackmate.checkInput()
     if not ok:
         sys.exit(str(trackmate.getErrorMessage()))
