@@ -277,7 +277,7 @@ def track_filtering(
         settings.trackerSettings["SPLITTING_MAX_DISTANCE"] = track_splitting_max_dist
     if track_merging_max_distance:
         settings.trackerSettings["ALLOW_TRACK_MERGING"] = True
-        settings.trackerSettings["MERGING_MAX_DISTANCE"] = True
+        settings.trackerSettings["MERGING_MAX_DISTANCE"] = track_merging_max_distance
 
     return settings
 
