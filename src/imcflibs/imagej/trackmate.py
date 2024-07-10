@@ -196,7 +196,7 @@ def spot_filtering(
 
     # Here 'true' takes everything ABOVE the mean_int value
     if quality_thresh:
-        filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)))
+        filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)), quality_thresh >= 0)
         settings.addSpotFilter(filter_spot)
     if area_thresh:
         filter_spot = FeatureFilter("AREA", Double(abs(area_thresh)), area_thresh >= 0)
