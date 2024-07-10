@@ -266,8 +266,7 @@ def track_filtering(
         Dictionary containing all the settings to use for TrackMate.
     """
 
-    settings.trackerFactory = SparseLAPTrackerFactory()
-    settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap()
+    # settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap() # Not necessary anymore
     settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist  # must be double
     settings.trackerSettings[
         "GAP_CLOSING_MAX_DISTANCE"
