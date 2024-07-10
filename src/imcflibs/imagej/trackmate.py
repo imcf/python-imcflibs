@@ -200,10 +200,10 @@ def spot_filtering(
     if quality_thresh:
         filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)), quality_thresh >= 0)
         settings.addSpotFilter(filter_spot)
-    if area_thresh and settings.detectorFactory is not LogDetectorFactory: # area_thresh and detection is not log then go into this
+    if area_thresh: # Keep none for log detector
         filter_spot = FeatureFilter("AREA", Double(abs(area_thresh)), area_thresh >= 0)
         settings.addSpotFilter(filter_spot)
-    if circularity_thresh: # has to be between 0 and 1
+    if circularity_thresh: # has to be between 0 and 1, keep none for log detector
         filter_spot = FeatureFilter(
             "CIRCULARITY", Double(abs(circularity_thresh)), circularity_thresh >= 0
         )
