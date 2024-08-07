@@ -61,12 +61,14 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         Binary 3D stack.
     title : str, optional
         Title of the new image.
     min_thresh : int, optional
         Threshold to do segmentation, also allows for label filtering, by default 1.
+        Since the segmentation is happening on a binary stack, values are either 0 or 255
+        so using 0 allows to discard only the background.
     min_vol : int, optional
         Volume (voxels) under which to filter objects, by default None.
     max_vol : int, optional
@@ -74,7 +76,7 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Segmented 3D labelled ImagePlus.
     """
     cal = imp.getCalibration()
