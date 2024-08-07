@@ -172,11 +172,13 @@ def spot_filtering(
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
     area_thresh : float, optional
-        Threshold to use for area filtering of the spots, by default None.
+        Threshold to use for area filtering of the spots, keep None with LoG Detector -
+        by default also None.
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
     circularity_thresh : float, optional
-        Threshold to use for circularity filtering of the spots, by default None.
+        Threshold to use for circularity thresholding (needs to be between 0 and 1, keep None with LoG Detector)
+        - by default None.
         If the threshold is positive, will exclude everything below the value.
         If the threshold is negative, will exclude everything above the value.
     intensity_dict_thresh : dict, optional
@@ -196,12 +198,12 @@ def spot_filtering(
 
     # Here 'true' takes everything ABOVE the mean_int value
     if quality_thresh:
-        filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)))
+        filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)), quality_thresh >= 0)
         settings.addSpotFilter(filter_spot)
-    if area_thresh:
+    if area_thresh: # Keep none for log detector
         filter_spot = FeatureFilter("AREA", Double(abs(area_thresh)), area_thresh >= 0)
         settings.addSpotFilter(filter_spot)
-    if circularity_thresh:
+    if circularity_thresh: # has to be between 0 and 1, keep none for log detector
         filter_spot = FeatureFilter(
             "CIRCULARITY", Double(abs(circularity_thresh)), circularity_thresh >= 0
         )
@@ -212,6 +214,25 @@ def spot_filtering(
                 "MEAN_INTENSITY_CH" + str(key), abs(value), value >= 0
             )
             settings.addSpotFilter(filter_spot)
+
+    return settings
+
+def sparseLAP_tracker(settings):
+    """
+    Create a Sparse LAP Tracker with default settings. Necessary for trackmate to run
+    Parameters
+    ----------
+    settings : fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+
+    Returns
+    -------
+    fiji.plugin.trackmate.Settings
+        Dictionary containing all the settings to use for TrackMate.
+    """
+
+    settings.trackerFactory = SparseLAPTrackerFactory()
+    settings.trackerSettings = settings.trackerFactory.getDefaultSettings()
 
     return settings
 
@@ -247,8 +268,7 @@ def track_filtering(
         Dictionary containing all the settings to use for TrackMate.
     """
 
-    settings.trackerFactory = SparseLAPTrackerFactory()
-    settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap()
+    # settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap() # Not necessary anymore
     settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist  # must be double
     settings.trackerSettings[
         "GAP_CLOSING_MAX_DISTANCE"
@@ -259,7 +279,7 @@ def track_filtering(
         settings.trackerSettings["SPLITTING_MAX_DISTANCE"] = track_splitting_max_dist
     if track_merging_max_distance:
         settings.trackerSettings["ALLOW_TRACK_MERGING"] = True
-        settings.trackerSettings["MERGING_MAX_DISTANCE"] = True
+        settings.trackerSettings["MERGING_MAX_DISTANCE"] = track_merging_max_distance
 
     return settings
 
@@ -308,6 +328,10 @@ def run_trackmate(
     trackmate = TrackMate(model, settings)
     trackmate.computeSpotFeatures(True)
     trackmate.computeTrackFeatures(True)
+
+    if not settings.trackerFactory:
+        # Create a Sparse LAP Tracker if no Tracker has been created
+        settings = sparseLAP_tracker(settings)
 
     ok = trackmate.checkInput()
     if not ok:
