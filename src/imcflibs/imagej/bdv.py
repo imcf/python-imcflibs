@@ -537,6 +537,86 @@ class DefinitionOptions(object):
         return parameter_string + " "
 
 
+def check_processing_input(value, range_end):
+    """Sanitize and clarifies the acitt input selection.
+
+    Check if the input is valid by checking the type and returning the expected output.
+
+    Parameters
+    ----------
+    value : str, int, list of int or list of str
+        Contains the list of input dimensions, the first input dimension of a range or a single channel
+    range_end : int or None
+        Contains the end of the range if need be
+    Returns
+    -------
+    str
+        Returns the type of selection: single, multiple or range
+    """
+    if type(value) is not list:
+        value = [value]
+    # Check if all the elements of the value list are of the same type
+    if not all(isinstance(x, type(value[0])) for x in value):
+        raise TypeError("Invalid input type. All the values should be of the same type")
+    if type(range_end) is int:
+        if type(value[0]) is not int:
+            raise TypeError("Invalid input type. Expected an int for the range start")
+        elif len(value) != 1:
+            raise ValueError(
+                "Invalid input type. Expected a single number for the range start"
+            )
+        else:
+            return "range"
+    elif len(value) == 1:
+        return "single"
+    else:
+        return "multiple"
+
+
+def get_processing_settings(dimension, selection, value, range_end):
+    """Get the variables corresponding to the dimension selection and processing mode.
+
+    Get the processing option and dimension selection string that corresponds
+    to the selected processing mode.
+
+    Parameters
+    ----------
+    dimension : str
+        "angle", "channel", "illumination", "tile" or "timepoint"
+    selection : str
+        "single", "multiple", or "range"
+    value : str, int, list of int or list of str
+        Contains the list of input dimensions, the first input dimension of a range or a single channel
+    range_end : int or None
+        Contains the end of the range if need be
+
+    Returns
+    -------
+    list of str
+        processing options string, dimension selection string
+    """
+
+    if selection == "single":
+        processing_option = SINGLE % dimension
+        dimension_select = "processing_" + dimension + "=[" + dimension + " %s]" % value
+
+    if selection == "multiple":
+        processing_option = MULTIPLE % dimension
+        dimension_list = ""
+        for dimension_name in value:
+            dimension_list += dimension + "_%s " % dimension_name
+        dimension_select = dimension_list
+
+    if selection == "range":
+        processing_option = RANGE % dimension
+        dimension_select = (
+            "process_following_" + dimension + "s=%s-%s" % value,
+            range_end,
+        )
+
+    return processing_option, dimension_select
+
+
 def backup_xml_files(source_directory, subfolder_name):
     """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
 
