@@ -179,56 +179,126 @@ class ProcessingOptions(object):
 
     ### process-X methods
 
-    def process_angle(self, value):  # def angle_select(self, value):
-        """Select a single angle to use for processing.
+    def process_angle(self, value, range_end=None):  # def angle_select(self, value):
+        """Set the processing option for angles.
+
+        Update the angle processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._angle_processing_option = SINGLE % "angle"
-        self._angle_select = "processing_angle=[angle %s]" % value
+        value : str, int, list of int or list of str
+            Contains the list of input dimensions, the first input dimension of a range or a single channel
+        range_end : int, optional
+            Contains the end of the range, by default None
 
-    def process_channel(self, value):  # def channel_select(self, value):
-        """Select a single channel to use for processing.
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "angle", selection, value, range_end
+        )
+
+        self._angle_processing_option = processing_option
+        self._angle_select = dimension_select
+
+    def process_channel(
+        self, value, range_end=None
+    ):  # def channel_select(self, value):
+        """Set the processing option for channels.
+
+        Update the channel processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._channel_processing_option = SINGLE % "channel"
-        # channel = int(value) - 1
-        self._channel_select = "processing_channel=[channel %s]" % value
+        value : str, int, list of int or list of str
+            Contains the list of input dimensions, the first input dimension of a range or a single channel
+        range_end : int, optional
+            Contains the end of the range, by default None
 
-    def process_illumination(self, value):  # def illumination_select(self, value):
-        """Select a single illumination to use for processing.
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "channel", selection, value, range_end
+        )
+
+        self._channel_processing_option = processing_option
+        self._channel_select = dimension_select
+
+    def process_illumination(
+        self, value, range_end=None
+    ):  # def illumination_select(self, value):
+        """Set the processing option for illuminations.
+
+        Update the illumination processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._illumination_processing_option = SINGLE % "illumination"
-        self._illumination_select = "processing_illumination=[illumination %s]" % value
+        value : str, int, list of int or list of str
+            Contains the list of input dimensions, the first input dimension of a range or a single channel
+        range_end : int, optional
+            Contains the end of the range, by default None
 
-    def process_tile(self, value):  # def tile_select(self, value):
-        """Select a single tile to use for processing.
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "illumination", selection, value, range_end
+        )
+
+        self._illumination_processing_option = processing_option
+        self._illumination_select = dimension_select
+
+    def process_tile(self, value, range_end=None):  # def tile_select(self, value):
+        """Set the processing option for tiles.
+
+        Update the tile processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._tile_processing_option = SINGLE % "tile"
-        self._tile_select = "processing_tile=[tile %s]" % value
+        value : str, int, list of int or list of str
+            Contains the list of input dimensions, the first input dimension of a range or a single channel
+        range_end : int, optional
+            Contains the end of the range, by default None
 
-    def process_timepoint(self, value):  # def timepoint_select(self, value):
-        """Select a single timepoint to use for processing.
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "tile", selection, value, range_end
+        )
+
+        self._tile_processing_option = processing_option
+        self._tile_select = dimension_select
+
+    def process_timepoint(
+        self, value, range_end=None
+    ):  # def timepoint_select(self, value):
+        """Set the processing option for timepoints.
+
+        Update the timepoint processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
+        value : str, int, list of int or list of str
+            Contains the list of input dimensions, the first input dimension of a range or a single channel
+        range_end : int, optional
+            Contains the end of the range, by default None
+
         """
-        self._timepoint_processing_option = SINGLE % "timepoint"
-        self._timepoint_select = "processing_timepoint=[timepoint %s]" % value
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "timepoint", selection, value, range_end
+        )
+
+        self._timepoint_processing_option = processing_option
+        self._timepoint_select = dimension_select
 
     ### treat-X methods
 
