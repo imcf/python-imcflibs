@@ -87,11 +87,7 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     if min_vol:
         labeler.setMinSizeCalibrated(min_vol, img)
     if max_vol:
-        labeler.setMaxSizeCalibrated(max_vol, img)  # Issue with typo an
-        # TODO: this method might not work on older Fiji deployments, needs testing
-        # on newer versions (deprecated .setMaxsize, it's .setMaxSizeCalibrated)
-        # TODO Keep it in mind for next Fiji deployment
-        # labeler.setMaxsize(max_vol)
+        labeler.setMaxSizeCalibrated(max_vol, img)
 
     seg = labeler.getLabels(img)
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
