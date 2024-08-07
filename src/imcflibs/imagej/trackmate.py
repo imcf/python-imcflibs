@@ -301,16 +301,16 @@ def run_trackmate(
     crop_roi=None,
 ):
     # sourcery skip: merge-else-if-into-elif, swap-if-else-branches
-    """Function to run TrackMate on open data. Has some specific input
+    """Function to run TrackMate on already opened data.
 
     Parameters
     ----------
     implus : ij.ImagePlus
-        ImagePlus image on which to run Trackmate
+        ImagePlus image on which to run Trackmate.
     settings : fiji.plugin.trackmate.Settings
-        Settings to use for TrackMate, see detector methods for different settings
+        Settings to use for TrackMate, see detector methods for different settings.
     crop_roi : ij.gui.Roi, optional
-        ROI to crop on the image, by default None
+        ROI to crop on the image, by default None.
 
     Returns
     -------
