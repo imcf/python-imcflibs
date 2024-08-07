@@ -1,6 +1,6 @@
 from ij import IJ
 from mcib3d.geom import Objects3DPopulation
-from mcib3d.image3d import ImageHandler
+from mcib3d.image3d import ImageHandler, ImageLabeller
 
 
 def population3d_to_imgplus(imp, population):
@@ -54,3 +54,45 @@ def imgplus_to_population3d(imp):
     """
     img = ImageHandler.wrap(imp)
     return Objects3DPopulation(img)
+
+
+def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
+    """Segment a 3D binary image to get a labelled stack.
+
+    Parameters
+    ----------
+    imp : ImagePlus
+        Binary 3D stack.
+    title : str, optional
+        Title of the new image.
+    min_thresh : int, optional
+        Threshold to do segmentation, also allows for label filtering, by default 1.
+    min_vol : int, optional
+        Volume (voxels) under which to filter objects, by default None.
+    max_vol : int, optional
+        Volume above which to filter objects, by default None.
+
+    Returns
+    -------
+    ImagePlus
+        Segmented 3D labelled ImagePlus.
+    """
+    cal = imp.getCalibration()
+    img = ImageHandler.wrap(imp)
+    img = img.threshold(min_thresh, False, False)
+
+    labeler = ImageLabeller()
+    if min_vol:
+        labeler.setMinSizeCalibrated(min_vol, img)
+    if max_vol:
+        labeler.setMaxSizeCalibrated(max_vol, img)  # Issue with typo an
+        # TODO: this method might not work on older Fiji deployments, needs testing
+        # on newer versions (deprecated .setMaxsize, it's .setMaxSizeCalibrated)
+        # TODO Keep it in mind for next Fiji deployment
+        # labeler.setMaxsize(max_vol)
+
+    seg = labeler.getLabels(img)
+    seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
+    seg.setTitle(title)
+
+    return seg.getImagePlus()
