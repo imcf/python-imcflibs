@@ -70,7 +70,9 @@ def relate_label_images(label_image_ref, label_image_to_relate):
 
     ❗ NOTE: Won't work with touching labels ❗
 
-    FIXME: explain with an example what the function is doing!
+    Given two label images, this function will create a new label image
+    with the same labels as the reference image, but with the objects
+    of the second image.
 
     Parameters
     ----------
