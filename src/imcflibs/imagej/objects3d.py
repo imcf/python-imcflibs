@@ -91,6 +91,7 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
 
     seg = labeler.getLabels(img)
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
-    seg.setTitle(title)
+    if title:
+        seg.setTitle(title)
 
     return seg.getImagePlus()
