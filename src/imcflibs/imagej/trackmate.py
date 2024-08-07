@@ -231,7 +231,7 @@ def spot_filtering(
     return settings
 
 
-def sparseLAP_tracker(settings):
+def sparse_lap_tracker(settings):
     """
     Create a Sparse LAP Tracker with default settings. Necessary for trackmate to run
     Parameters
