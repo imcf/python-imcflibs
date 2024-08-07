@@ -232,8 +232,8 @@ def spot_filtering(
 
 
 def sparse_lap_tracker(settings):
-    """
-    Create a Sparse LAP Tracker with default settings. Necessary for trackmate to run
+    """Create a sparse LAP tracker with default settings.
+
     Parameters
     ----------
     settings : fiji.plugin.trackmate.Settings
