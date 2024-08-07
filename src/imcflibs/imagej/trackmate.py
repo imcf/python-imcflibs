@@ -283,10 +283,10 @@ def track_filtering(
     """
 
     # settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap() # Not necessary anymore
-    settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist  # must be double
-    settings.trackerSettings[
-        "GAP_CLOSING_MAX_DISTANCE"
-    ] = gap_closing_dist  # must be double
+
+    # NOTE: `link_max_dist` and `gap_closing_dist` must be double!
+    settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist
+    settings.trackerSettings["GAP_CLOSING_MAX_DISTANCE"] = gap_closing_dist
     settings.trackerSettings["MAX_FRAME_GAP"] = max_frame_gap
     if track_splitting_max_dist:
         settings.trackerSettings["ALLOW_TRACK_SPLITTING"] = True
