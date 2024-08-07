@@ -281,9 +281,6 @@ def track_filtering(
     fiji.plugin.trackmate.Settings
         Dictionary containing all the settings to use for TrackMate.
     """
-
-    # settings.trackerSettings = LAPUtils.getDefaultSegmentSettingsMap() # Not necessary anymore
-
     # NOTE: `link_max_dist` and `gap_closing_dist` must be double!
     settings.trackerSettings["LINKING_MAX_DISTANCE"] = link_max_dist
     settings.trackerSettings["GAP_CLOSING_MAX_DISTANCE"] = gap_closing_dist
