@@ -56,7 +56,7 @@ def imgplus_to_population3d(imp):
     return Objects3DPopulation(img)
 
 
-def segment_3D_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
+def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     """Segment a 3D binary image to get a labelled stack.
 
     Parameters
