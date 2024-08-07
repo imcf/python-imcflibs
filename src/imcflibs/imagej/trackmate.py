@@ -18,14 +18,14 @@ from .. import pathtools
 
 
 def cellpose_detector(
-        imageplus,
-        cellpose_env_path,
-        model_to_use,
-        obj_diameter,
-        target_channel,
-        optional_channel=0,
-        use_gpu=True,
-        simplify_contours=True,
+    imageplus,
+    cellpose_env_path,
+    model_to_use,
+    obj_diameter,
+    target_channel,
+    optional_channel=0,
+    use_gpu=True,
+    simplify_contours=True,
 ):
     """Create a dictionary with all settings for TrackMate using Cellpose.
 
@@ -72,7 +72,7 @@ def cellpose_detector(
     input_to_model = {
         "nuclei": PretrainedModel.NUCLEI,
         "cyto": PretrainedModel.CYTO,
-        "cyto2": PretrainedModel.CYTO2
+        "cyto2": PretrainedModel.CYTO2,
     }
     if model_to_use.lower() in input_to_model:
         selected_model = input_to_model[model_to_use.lower()]
@@ -112,12 +112,12 @@ def stardist_detector(imageplus, target_chnl):
 
 
 def log_detector(
-        imageplus,
-        radius,
-        target_channel,
-        quality_threshold=0.0,
-        median_filtering=True,
-        subpix_localization=True,
+    imageplus,
+    radius,
+    target_channel,
+    quality_threshold=0.0,
+    median_filtering=True,
+    subpix_localization=True,
 ):
     """Create a dictionary with all settings for TrackMate using the LogDetector.
 
@@ -155,11 +155,11 @@ def log_detector(
 
 
 def spot_filtering(
-        settings,
-        quality_thresh=None,
-        area_thresh=None,
-        circularity_thresh=None,
-        intensity_dict_thresh=None,
+    settings,
+    quality_thresh=None,
+    area_thresh=None,
+    circularity_thresh=None,
+    intensity_dict_thresh=None,
 ):
     """Add spot filtering for different features to the settings dictionary.
 
@@ -198,12 +198,16 @@ def spot_filtering(
 
     # Here 'true' takes everything ABOVE the mean_int value
     if quality_thresh:
-        filter_spot = FeatureFilter("QUALITY", Double(abs(quality_thresh)), quality_thresh >= 0)
+        filter_spot = FeatureFilter(
+            "QUALITY",
+            Double(abs(quality_thresh)),
+            quality_thresh >= 0,
+        )
         settings.addSpotFilter(filter_spot)
-    if area_thresh: # Keep none for log detector
+    if area_thresh:  # Keep none for log detector
         filter_spot = FeatureFilter("AREA", Double(abs(area_thresh)), area_thresh >= 0)
         settings.addSpotFilter(filter_spot)
-    if circularity_thresh: # has to be between 0 and 1, keep none for log detector
+    if circularity_thresh:  # has to be between 0 and 1, keep none for log detector
         filter_spot = FeatureFilter(
             "CIRCULARITY", Double(abs(circularity_thresh)), circularity_thresh >= 0
         )
@@ -216,6 +220,7 @@ def spot_filtering(
             settings.addSpotFilter(filter_spot)
 
     return settings
+
 
 def sparseLAP_tracker(settings):
     """
@@ -238,12 +243,12 @@ def sparseLAP_tracker(settings):
 
 
 def track_filtering(
-        settings,
-        link_max_dist=15.0,
-        gap_closing_dist=15.0,
-        max_frame_gap=3,
-        track_splitting_max_dist=None,
-        track_merging_max_distance=None,
+    settings,
+    link_max_dist=15.0,
+    gap_closing_dist=15.0,
+    max_frame_gap=3,
+    track_splitting_max_dist=None,
+    track_merging_max_distance=None,
 ):
     """Add track filtering for different features to the settings dictionary.
 
@@ -285,9 +290,9 @@ def track_filtering(
 
 
 def run_trackmate(
-        implus,
-        settings,
-        crop_roi=None,
+    implus,
+    settings,
+    crop_roi=None,
 ):
     # sourcery skip: merge-else-if-into-elif, swap-if-else-branches
     """Function to run TrackMate on open data. Has some specific input
@@ -323,7 +328,7 @@ def run_trackmate(
 
     # Configure tracker
     # settings.addTrackAnalyzer(TrackDurationAnalyzer())
-    settings.initialSpotFilterValue = -1.
+    settings.initialSpotFilterValue = -1.0
 
     trackmate = TrackMate(model, settings)
     trackmate.computeSpotFeatures(True)
@@ -341,7 +346,7 @@ def run_trackmate(
     ok = trackmate.process()
     if not ok:
         if "[SparseLAPTracker] The spot collection is empty." in str(
-                trackmate.getErrorMessage()
+            trackmate.getErrorMessage()
         ):
             new_imp = IJ.createImage(
                 "Untitled",
