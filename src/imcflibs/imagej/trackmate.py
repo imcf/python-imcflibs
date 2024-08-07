@@ -69,8 +69,8 @@ def cellpose_detector(
 
     settings.detectorFactory = CellposeDetectorFactory()
     settings.detectorSettings["TARGET_CHANNEL"] = target_channel
-    settings.detectorSettings["OPTIONAL_CHANNEL_2"] = optional_channel  # Set optional channel to 0, will be
-    # overwritten if needed
+    # set optional channel to 0, will be overwritten if needed:
+    settings.detectorSettings["OPTIONAL_CHANNEL_2"] = optional_channel
 
     settings.detectorSettings["CELLPOSE_PYTHON_FILEPATH"] = pathtools.join2(
         cellpose_env_path, "python.exe"
