@@ -347,7 +347,6 @@ def run_trackmate(
     ok = trackmate.checkInput()
     if not ok:
         sys.exit(str(trackmate.getErrorMessage()))
-        return
 
     ok = trackmate.process()
     if not ok:
@@ -367,8 +366,6 @@ def run_trackmate(
 
         else:
             sys.exit(str(trackmate.getErrorMessage()))
-
-            return
 
     SelectionModel(model)
 
