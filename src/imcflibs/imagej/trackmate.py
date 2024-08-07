@@ -53,9 +53,18 @@ def cellpose_detector(
     -------
     fiji.plugin.trackmate.Settings
         Dictionary containing all the settings to use for TrackMate.
-    """
 
-    # Example Usage: settings = cellpose_detector(imp, "S:\cellpose_env", "NUCLEI", 23.0, 1, 0)
+    Example
+    -------
+    >>> settings = cellpose_detector(
+    ...    imageplus=imp,
+    ...    cellpose_env_path="D:/CondaEnvs/cellpose",
+    ...    model_to_use="NUCLEI",
+    ...    obj_diameter=23.0,
+    ...    target_channel=1,
+    ...    optional_channel=0
+    ... )
+    """
     settings = Settings(imageplus)
 
     settings.detectorFactory = CellposeDetectorFactory()
