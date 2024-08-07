@@ -680,8 +680,13 @@ def get_processing_settings(dimension, selection, value, range_end):
     if selection == "range":
         processing_option = RANGE % dimension
         dimension_select = (
-            "process_following_" + dimension + "s=%s-%s" % value,
-            range_end,
+            "process_following_"
+            + dimension
+            + "s=%s-%s"
+            % (
+                value,
+                range_end,
+            )
         )
 
     return processing_option, dimension_select
