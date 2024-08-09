@@ -183,16 +183,17 @@ def process_files(files, outpath, model_file, fmt):
         model.close()
 
 def simple_flatfield_correction(imp, sigma=20.0):
-    """
-    Performs a simple flatfield correction to a given ImagePlus stack.
+    """Performs a simple flatfield correction to a given ImagePlus stack.
 
     The function returns a 32-bit corrected flatfield image.
+
     Parameters
     ----------
     imp : ij.ImagePlus
         The input stack to be projected.
     sigma: float, optional
         The sigma value for the Gaussian blur, default=20.0
+
     Returns
     -------
     ij.ImagePlus
