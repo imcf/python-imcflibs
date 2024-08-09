@@ -183,26 +183,35 @@ def process_files(files, outpath, model_file, fmt):
         model.close()
 
 def simple_flatfield_correction(imp, sigma=20.0):
-    """
-    Performs a simple flatfield correction to a given ImagePlus stack and returns a 32-bit corrected flatfield image.
+    """Performs a simple flatfield correction to a given ImagePlus stack.
+
+    The function returns a 32-bit corrected flatfield image.
+
     Parameters
     ----------
     imp : ij.ImagePlus
         The input stack to be projected.
-    sigma: double, default 20.0
-        The sigma value for the Gaussian blur, default = 20.0
+    sigma: float, optional
+        The sigma value for the Gaussian blur, default=20.0
+
     Returns
     -------
     ij.ImagePlus
-        The 32-bit image result of the flatfield correction
+        The 32-bit image result of flatfield correction
 
     """
     flatfield = imp.duplicate()
     sigma_str = "sigma=" + str(sigma)
-    IJ.run(flatfield, "Gaussian Blur...", sigma_str) # Apply a gaussian blur
+
+    IJ.run(flatfield, "Gaussian Blur...", sigma_str)
     stats = StackStatistics(flatfield)
-    IJ.run(flatfield, "32-bit", "") # Make a 32 bit version of the image
-    IJ.run(flatfield, "Divide...", "value=" + str(stats.max)) # Normalize 32 bit image to the highest value of original
+
+    # Normalize image to the highest value of original (requires 32-bit image)
+    IJ.run(flatfield, "32-bit", "")
+    IJ.run(
+        flatfield,
+        "Divide...",
+        "value=" + str(stats.max))
     ic = ImageCalculator()
     flatfield_corrected = ic.run("Divide create", imp, flatfield)
 
