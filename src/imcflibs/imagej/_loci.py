@@ -28,4 +28,4 @@ from loci.plugins import BF
 from loci.plugins.in import ImporterOptions # pdoc: skip
 from loci.formats.in import ZeissCZIReader, DefaultMetadataOptions, MetadataLevel, DynamicMetadataOptions, MetadataOptions # pdoc: skip
 
-from loci.formats import ImageReader, Memoizer
+from loci.formats import ImageReader, Memoizer, MetadataTools
