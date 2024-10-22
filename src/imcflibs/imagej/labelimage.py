@@ -1,6 +1,6 @@
 """Functions to work with ImageJ label images."""
 
-from ij import IJ, ImagePlus, Prefs
+from ij import IJ, ImagePlus, Prefs, ImageStack
 from ij.plugin import Duplicator, ImageCalculator
 from ij.plugin.filter import ImageProcessor, ThresholdToSelection
 from ij.process import FloatProcessor, ImageProcessor
@@ -182,3 +182,52 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
     seg.setTitle(title)
 
     return seg.getImagePlus()
+
+
+def dilate_labels_2d(imp, dilation_radius):
+    """
+    Dilate each label in the given ImagePlus using the specified dilation radius.
+
+    Parameters
+    ----------
+    imp : ij.ImagePlus
+        Input ImagePlus with the labels to dilate
+    dilation_radius : int
+        Number of pixels to dilate each label
+
+    Returns
+    -------
+    ij.ImagePlus
+        New ImagePlus with the dilated labels
+    """
+
+    # Create a list of the dilated labels
+    dilated_labels_list = []
+
+    # Iterate over each slice of the input ImagePlus
+    for i in range(1, imp.getNSlices() + 1):
+        # Duplicate the current slice
+        current_imp = Duplicator().run(imp, 1, 1, i, imp.getNSlices(), 1, 1)
+
+        # Perform a dilation of the labels in the current slice
+        IJ.run(
+            current_imp,
+            "Label Morphological Filters",
+            "operation=Dilation radius=" + str(dilation_radius) + " from_any_label",
+        )
+
+        # Get the dilated labels
+        dilated_labels_imp = IJ.getImage()
+
+        # Hide the dilated labels to avoid visual clutter
+        dilated_labels_imp.hide()
+
+        # Append the dilated labels to the list
+        dilated_labels_list.append(dilated_labels_imp)
+
+    # Create a new ImagePlus with the dilated labels
+    dilated_labels_imp = ImagePlus(
+        "Dilated labels", ImageStack().create(dilated_labels_list)
+    )
+
+    return dilated_labels_imp
