@@ -144,19 +144,19 @@ def measure_objects_size_shape_2d(label_image):
 
 
 def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
-    """Segment a binary image to get a label image (2D/3D).
+    """
+    Segment a binary image to get a label image (2D/3D).
 
-    Works on: 2D and 3D binary data.
+    This function works on both 2D and 3D binary data.
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         Binary 3D stack or 2D image.
     title : str
         Title of the new image.
     min_thresh : int, optional
-        Threshold to do segmentation, also allows for label filtering, by
-        default 1.
+        Threshold to do segmentation, also allows for label filtering, by default 1.
     min_vol : float, optional
         Volume under which to exclude objects, by default None.
     max_vol : float, optional
@@ -164,23 +164,39 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Segmented labeled ImagePlus.
     """
+    # Get the calibration of the input ImagePlus
     cal = imp.getCalibration()
+
+    # Wrap the ImagePlus in an ImageHandler
     img = ImageHandler.wrap(imp)
+
+    # Threshold the image using the specified threshold value
     img = img.threshold(min_thresh, False, False)
 
+    # Create an ImageLabeller instance
     labeler = ImageLabeller()
+
+    # Set the minimum size for labeling if provided
     if min_vol:
         labeler.setMinSize(min_vol)
+
+    # Set the maximum size for labeling if provided
     if max_vol:
         labeler.setMaxSize(max_vol)
 
+    # Get the labeled image
     seg = labeler.getLabels(img)
+
+    # Set the scale of the labeled image
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
+
+    # Set the title of the labeled image
     seg.setTitle(title)
 
+    # Return the segmented labeled ImagePlus
     return seg.getImagePlus()
 
 
