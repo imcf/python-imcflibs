@@ -95,3 +95,57 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
         seg.setTitle(title)
 
     return seg.getImagePlus()
+
+
+def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
+    """Return a new population with the objects that have a mean intensity within
+    the specified range.
+
+    Parameters
+    ----------
+    obj_pop : Objects3DPopulation
+        Population of 3D objects
+    imp : ij.ImagePlus
+        ImagePlus on which the population is based
+    min_intensity : float
+        Minimum mean intensity of the objects
+    max_intensity : float
+        Maximum mean intensity of the objects
+
+    Returns
+    -------
+    Objects3DPopulation
+        New population with the objects filtered by intensity
+    """
+    objects_within_intensity = []
+
+    # Iterate over all objects in the population
+    for i in range(0, obj_pop.getNbObjects()):
+        obj = obj_pop.getObject(i)
+        # Calculate the mean intensity of the object
+        mean_intensity = obj.getPixMeanValue(ImageHandler.wrap(imp))
+        # Check if the object is within the specified intensity range
+        if mean_intensity >= min_intensity and mean_intensity < max_intensity:
+            objects_within_intensity.append(obj)
+
+    # Return the new population with the filtered objects
+    return Objects3DPopulation(objects_within_intensity)
+
+
+def get_objects3Dpop_names(obj_pop):
+    """Get the names of all the 3D objects in the specified Objects3DPopulation
+
+    Parameters
+    ----------
+    obj_pop : mcib3d.geom.Objects3DPopulation
+        Population of 3D objects
+
+    Returns
+    -------
+    str[]
+        List of the names of all the 3D objects in the population
+    """
+    names = []
+    for i in range(0, obj_pop.getNbObjects()):
+        names.append(obj_pop.getObject(i).getName())
+    return names
