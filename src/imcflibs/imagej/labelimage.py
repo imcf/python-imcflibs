@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Functions to work with ImageJ label images."""
 
 from ij import IJ, ImagePlus, Prefs, ImageStack
