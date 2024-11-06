@@ -19,9 +19,11 @@ from .. import pathtools
 from ..log import LOG as log
 
 SINGLE = "[Single %s (Select from List)]"
+"""Option to use to select only one value for the current dimension"""
 MULTIPLE = "[Multiple %ss (Select from List)]"
+"""Option to use to select specified multiple values for the current dimension"""
 RANGE = "[Range of %ss (Specify by Name)]"
-"""@private template string"""
+"""Option to use to select a range of values for the current dimension"""
 
 
 class ProcessingOptions(object):
@@ -451,8 +453,13 @@ class ProcessingOptions(object):
 
 
 SINGLE_FILE = "[NO (one %s)]"
+"""Option to use if the current dimension is singular (like only one angle)."""
 MULTI_SINGLE_FILE = "[YES (all %ss in one file)]"
+"""Option to use if the current dimension is plural (like multiple angles)
+contained in a single file."""
 MULTI_MULTI_FILE = "[YES (one file per %s)]"
+"""Option to use if the current dimension is plural (like multiple angles)
+contained in multiple files."""
 
 
 class DefinitionOptions(object):
