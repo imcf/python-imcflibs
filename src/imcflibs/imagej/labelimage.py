@@ -146,8 +146,7 @@ def measure_objects_size_shape_2d(label_image):
 
 
 def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
-    """
-    Segment a binary image to get a label image (2D/3D).
+    """Segment a binary image to get a label image (2D/3D).
 
     Works on both 2D and 3D binary data.
 
@@ -203,8 +202,10 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
 
 
 def dilate_labels_2d(imp, dilation_radius):
-    """
-    Dilate each label in the given ImagePlus using the specified dilation radius.
+    """Dilate each label in the given ImagePlus using the specified dilation radius.
+
+    This method will use a 2D dilation to be applied to each slice of the ImagePlus
+    and return a new stack.
 
     Parameters
     ----------
