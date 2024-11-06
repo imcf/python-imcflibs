@@ -140,6 +140,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : int or int-like
+            The illumination number to use for the grouping.
         """
         self._use_illumination = "illuminations=[use Illumination %s]" % value
         log.debug("New reference illumination setting: %s", self._use_illumination)
@@ -173,13 +174,14 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : int or int-like
+            The timepoint number to use for the grouping.
         """
         self._use_timepoint = "timepoints=[use Timepoint %s]" % value
         log.debug("New reference timepoint setting: %s", self._use_timepoint)
 
     ### process-X methods
 
-    def process_angle(self, value, range_end=None):  # def angle_select(self, value):
+    def process_angle(self, value, range_end=None):
         """Set the processing option for angles.
 
         Update the angle processing option and selection depending on input.
@@ -188,10 +190,13 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            Contains the list of input dimensions, the first input dimension of a range or a single channel
+            The angle(s) to use for processing, either a single value or a list.
         range_end : int, optional
-            Contains the end of the range, by default None
+            Contains the end of the range, by default None.
 
+        Notes:
+        ------
+        Previous function name : angle_select().
         """
 
         selection = check_processing_input(value, range_end)
@@ -202,9 +207,7 @@ class ProcessingOptions(object):
         self._angle_processing_option = processing_option
         self._angle_select = dimension_select
 
-    def process_channel(
-        self, value, range_end=None
-    ):  # def channel_select(self, value):
+    def process_channel(self, value, range_end=None):
         """Set the processing option for channels.
 
         Update the channel processing option and selection depending on input.
@@ -213,10 +216,13 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            Contains the list of input dimensions, the first input dimension of a range or a single channel
+            The channel(s) to use for processing, either a single value or a list.
         range_end : int, optional
-            Contains the end of the range, by default None
+            Contains the end of the range, by default None.
 
+        Notes:
+        ------
+        Previous function name : channel_select().
         """
 
         selection = check_processing_input(value, range_end)
@@ -227,9 +233,7 @@ class ProcessingOptions(object):
         self._channel_processing_option = processing_option
         self._channel_select = dimension_select
 
-    def process_illumination(
-        self, value, range_end=None
-    ):  # def illumination_select(self, value):
+    def process_illumination(self, value, range_end=None):
         """Set the processing option for illuminations.
 
         Update the illumination processing option and selection depending on input.
@@ -238,10 +242,13 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            Contains the list of input dimensions, the first input dimension of a range or a single channel
+            The illumination(s) to use for processing, either a single value or a list.
         range_end : int, optional
-            Contains the end of the range, by default None
+            Contains the end of the range, by default None.
 
+        Notes:
+        ------
+        Previous function name : illumination_select().
         """
 
         selection = check_processing_input(value, range_end)
@@ -252,7 +259,7 @@ class ProcessingOptions(object):
         self._illumination_processing_option = processing_option
         self._illumination_select = dimension_select
 
-    def process_tile(self, value, range_end=None):  # def tile_select(self, value):
+    def process_tile(self, value, range_end=None):
         """Set the processing option for tiles.
 
         Update the tile processing option and selection depending on input.
@@ -261,10 +268,13 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            Contains the list of input dimensions, the first input dimension of a range or a single channel
+            The tile(s) to use for processing, either a single value or a list.
         range_end : int, optional
-            Contains the end of the range, by default None
+            Contains the end of the range, by default None.
 
+        Notes:
+        ------
+        Previous function name : tile_select().
         """
 
         selection = check_processing_input(value, range_end)
@@ -275,9 +285,7 @@ class ProcessingOptions(object):
         self._tile_processing_option = processing_option
         self._tile_select = dimension_select
 
-    def process_timepoint(
-        self, value, range_end=None
-    ):  # def timepoint_select(self, value):
+    def process_timepoint(self, value, range_end=None):
         """Set the processing option for timepoints.
 
         Update the timepoint processing option and selection depending on input.
@@ -286,10 +294,13 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            Contains the list of input dimensions, the first input dimension of a range or a single channel
+            The timepoint(s) to use for processing, either a single value or a list.
         range_end : int, optional
-            Contains the end of the range, by default None
+            Contains the end of the range, by default None.
 
+        Notes:
+        ------
+        Previous function name : timepoint_select().
         """
 
         selection = check_processing_input(value, range_end)
