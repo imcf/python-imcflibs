@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pytest
 from imcflibs.pathtools import parse_path
 from imcflibs.pathtools import jython_fiji_exists
 from imcflibs.pathtools import image_basename
@@ -42,6 +41,14 @@ def test_parse_path_windows():
     assert parsed["full"] == r"C:/foo/bar"
     assert parsed["fname"] == "bar"
     assert parsed["dname"] == "foo"
+
+
+def test_parse_path_windows_tabs_and_lines():
+    path = "C:\new_folder\test"
+    parsed = parse_path(path)
+
+    assert parsed["full"] == r"C:\new_folder\test"
+    assert parsed["fname"] == "test"
 
 
 def test_jython_fiji_exists(tmpdir):
