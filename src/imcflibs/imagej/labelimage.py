@@ -149,7 +149,7 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
     """
     Segment a binary image to get a label image (2D/3D).
 
-    This function works on both 2D and 3D binary data.
+    Works on both 2D and 3D binary data.
 
     Parameters
     ----------
