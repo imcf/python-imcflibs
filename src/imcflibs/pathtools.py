@@ -101,6 +101,7 @@ def parse_path(path, prefix=""):
     'path': '/path/to/some/'}
     """
     path = str(path)
+    path = path.replace("\n", "\\n").replace("\t", "\\t")
     if prefix:
         # remove leading slash, otherwise join() will discard the first path:
         if path.startswith("/"):
