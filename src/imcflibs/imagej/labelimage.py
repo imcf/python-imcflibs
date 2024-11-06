@@ -4,7 +4,7 @@
 
 from ij import IJ, ImagePlus, Prefs, ImageStack
 from ij.plugin import Duplicator, ImageCalculator
-from ij.plugin.filter import ImageProcessor, ThresholdToSelection
+from ij.plugin.filter import ThresholdToSelection
 from ij.process import FloatProcessor, ImageProcessor
 from inra.ijpb.label import LabelImages as li
 from inra.ijpb.plugins import AnalyzeRegions
