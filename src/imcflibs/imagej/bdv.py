@@ -19,11 +19,11 @@ from .. import pathtools
 from ..log import LOG as log
 
 SINGLE = "[Single %s (Select from List)]"
-"""Option to use to select only one value for the current dimension"""
+"""Option to use to select only one value for the current dimension."""
 MULTIPLE = "[Multiple %ss (Select from List)]"
-"""Option to use to select specified multiple values for the current dimension"""
+"""Option to use to select specified multiple values for the current dimension."""
 RANGE = "[Range of %ss (Specify by Name)]"
-"""Option to use to select a range of values for the current dimension"""
+"""Option to use to select a range of values for the current dimension."""
 
 
 class ProcessingOptions(object):
@@ -786,7 +786,7 @@ def define_dataset_auto(
         os.makedirs(result_folder)
 
     if not dataset_save_path:
-        dataset_save_path = pathtools.join2(result_folder, project_filename)
+        dataset_save_path = result_folder
     if subsampling_factors:
         subsampling_factors = (
             "manual_mipmap_setup subsampling_factors=" + subsampling_factors + " "
