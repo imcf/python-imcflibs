@@ -786,7 +786,7 @@ def define_dataset_auto(
         os.makedirs(result_folder)
 
     if not dataset_save_path:
-        dataset_save_path = pathtools.join2(result_folder, project_filename)
+        dataset_save_path = result_folder
     if subsampling_factors:
         subsampling_factors = (
             "manual_mipmap_setup subsampling_factors=" + subsampling_factors + " "
