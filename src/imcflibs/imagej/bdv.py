@@ -9,9 +9,9 @@ Mostly convenience wrappers with simplified calls and default values.
 # The attribute count is not really our choice:
 # pylint: disable-msg=too-many-instance-attributes
 
-import sys
 import os
 import shutil
+import sys
 
 from ij import IJ
 
@@ -19,6 +19,8 @@ from .. import pathtools
 from ..log import LOG as log
 
 SINGLE = "[Single %s (Select from List)]"
+MULTIPLE = "[Multiple %ss (Select from List)] "
+RANGE = "[Range of %ss (Specify by Name)]"
 """@private template string"""
 
 
@@ -87,8 +89,8 @@ class ProcessingOptions(object):
         self._treat_angles = "[treat individually]"
         self._treat_channels = "group"
         self._treat_illuminations = "group"
-        self._treat_tiles = "group"
-        self._treat_timepoints = "group"
+        self._treat_tiles = "compare"
+        self._treat_timepoints = "[treat individually]"
 
     ### reference-X methods
 
@@ -138,6 +140,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : int or int-like
+            The illumination number to use for the grouping.
         """
         self._use_illumination = "illuminations=[use Illumination %s]" % value
         log.debug("New reference illumination setting: %s", self._use_illumination)
@@ -171,62 +174,142 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : int or int-like
+            The timepoint number to use for the grouping.
         """
         self._use_timepoint = "timepoints=[use Timepoint %s]" % value
         log.debug("New reference timepoint setting: %s", self._use_timepoint)
 
     ### process-X methods
 
-    def process_angle(self, value):  # def angle_select(self, value):
-        """Select a single angle to use for processing.
+    def process_angle(self, value, range_end=None):
+        """Set the processing option for angles.
+
+        Update the angle processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._angle_processing_option = SINGLE % "angle"
-        self._angle_select = "processing_angle=[angle %s]" % value
+        value : str, int, list of int or list of str
+            The angle(s) to use for processing, either a single value or a list.
+        range_end : int, optional
+            Contains the end of the range, by default None.
 
-    def process_channel(self, value):  # def channel_select(self, value):
-        """Select a single channel to use for processing.
+        Notes:
+        ------
+        Previous function name : angle_select().
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "angle", selection, value, range_end
+        )
+
+        self._angle_processing_option = processing_option
+        self._angle_select = dimension_select
+
+    def process_channel(self, value, range_end=None):
+        """Set the processing option for channels.
+
+        Update the channel processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._channel_processing_option = SINGLE % "channel"
-        # channel = int(value) - 1
-        self._channel_select = "processing_channel=[channel %s]" % int(value)
+        value : str, int, list of int or list of str
+            The channel(s) to use for processing, either a single value or a list.
+        range_end : int, optional
+            Contains the end of the range, by default None.
 
-    def process_illumination(self, value):  # def illumination_select(self, value):
-        """Select a single illumination to use for processing.
+        Notes:
+        ------
+        Previous function name : channel_select().
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "channel", selection, value, range_end
+        )
+
+        self._channel_processing_option = processing_option
+        self._channel_select = dimension_select
+
+    def process_illumination(self, value, range_end=None):
+        """Set the processing option for illuminations.
+
+        Update the illumination processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._illumination_processing_option = SINGLE % "illumination"
-        self._illumination_select = "processing_illumination=[illumination %s]" % value
+        value : str, int, list of int or list of str
+            The illumination(s) to use for processing, either a single value or a list.
+        range_end : int, optional
+            Contains the end of the range, by default None.
 
-    def process_tile(self, value):  # def tile_select(self, value):
-        """Select a single tile to use for processing.
+        Notes:
+        ------
+        Previous function name : illumination_select().
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "illumination", selection, value, range_end
+        )
+
+        self._illumination_processing_option = processing_option
+        self._illumination_select = dimension_select
+
+    def process_tile(self, value, range_end=None):
+        """Set the processing option for tiles.
+
+        Update the tile processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
-        """
-        self._tile_processing_option = SINGLE % "tile"
-        self._tile_select = "processing_tile=[tile %s]" % value
+        value : str, int, list of int or list of str
+            The tile(s) to use for processing, either a single value or a list.
+        range_end : int, optional
+            Contains the end of the range, by default None.
 
-    def process_timepoint(self, value):  # def timepoint_select(self, value):
-        """Select a single timepoint to use for processing.
+        Notes:
+        ------
+        Previous function name : tile_select().
+        """
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "tile", selection, value, range_end
+        )
+
+        self._tile_processing_option = processing_option
+        self._tile_select = dimension_select
+
+    def process_timepoint(self, value, range_end=None):
+        """Set the processing option for timepoints.
+
+        Update the timepoint processing option and selection depending on input.
+        If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
-        value : int or int-like
+        value : str, int, list of int or list of str
+            The timepoint(s) to use for processing, either a single value or a list.
+        range_end : int, optional
+            Contains the end of the range, by default None.
+
+        Notes:
+        ------
+        Previous function name : timepoint_select().
         """
-        self._timepoint_processing_option = SINGLE % "timepoint"
-        self._timepoint_select = "processing_timepoint=[timepoint %s]" % value
+
+        selection = check_processing_input(value, range_end)
+        processing_option, dimension_select = get_processing_settings(
+            "timepoint", selection, value, range_end
+        )
+
+        self._timepoint_processing_option = processing_option
+        self._timepoint_select = dimension_select
 
     ### treat-X methods
 
@@ -278,7 +361,7 @@ class ProcessingOptions(object):
     def treat_tiles(self, value):
         """Set the value for the `how_to_treat_tiles` option.
 
-        The default setting is `group`.
+        The default setting is `compare`.
 
         Parameters
         ----------
@@ -291,7 +374,7 @@ class ProcessingOptions(object):
     def treat_timepoints(self, value):
         """Set the value for the `how_to_treat_timepoints` option.
 
-        The default setting is `group`.
+        The default setting is `[treat individually]`.
 
         Parameters
         ----------
@@ -421,7 +504,7 @@ class DefinitionOptions(object):
     def __init__(self):
         self._angle_definition = SINGLE_FILE % "angle"
         self._channel_definition = MULTI_SINGLE_FILE % "channel"
-        self._illumination_definition = SINGLE_FILE % "illumination"
+        self._illumination_definition = SINGLE_FILE % "illumination direction"
         self._tile_definition = MULTI_MULTI_FILE % "tile"
         self._timepoint_definition = SINGLE_FILE % "time-point"
 
@@ -535,6 +618,91 @@ class DefinitionOptions(object):
         return parameter_string + " "
 
 
+def check_processing_input(value, range_end):
+    """Sanitize and clarifies the acitt input selection.
+
+    Check if the input is valid by checking the type and returning the expected output.
+
+    Parameters
+    ----------
+    value : str, int, list of int or list of str
+        Contains the list of input dimensions, the first input dimension of a range or a single channel
+    range_end : int or None
+        Contains the end of the range if need be
+    Returns
+    -------
+    str
+        Returns the type of selection: single, multiple or range
+    """
+    if type(value) is not list:
+        value = [value]
+    # Check if all the elements of the value list are of the same type
+    if not all(isinstance(x, type(value[0])) for x in value):
+        raise TypeError("Invalid input type. All the values should be of the same type")
+    if type(range_end) is int:
+        if type(value[0]) is not int:
+            raise TypeError("Invalid input type. Expected an int for the range start")
+        elif len(value) != 1:
+            raise ValueError(
+                "Invalid input type. Expected a single number for the range start"
+            )
+        else:
+            return "range"
+    elif len(value) == 1:
+        return "single"
+    else:
+        return "multiple"
+
+
+def get_processing_settings(dimension, selection, value, range_end):
+    """Get the variables corresponding to the dimension selection and processing mode.
+
+    Get the processing option and dimension selection string that corresponds
+    to the selected processing mode.
+
+    Parameters
+    ----------
+    dimension : str
+        "angle", "channel", "illumination", "tile" or "timepoint"
+    selection : str
+        "single", "multiple", or "range"
+    value : str, int, list of int or list of str
+        Contains the list of input dimensions, the first input dimension of a range or a single channel
+    range_end : int or None
+        Contains the end of the range if need be
+
+    Returns
+    -------
+    list of str
+        processing options string, dimension selection string
+    """
+
+    if selection == "single":
+        processing_option = SINGLE % dimension
+        dimension_select = "processing_" + dimension + "=[" + dimension + " %s]" % value
+
+    if selection == "multiple":
+        processing_option = MULTIPLE % dimension
+        dimension_list = ""
+        for dimension_name in value:
+            dimension_list += dimension + "_%s " % dimension_name
+        dimension_select = dimension_list.rstrip()
+
+    if selection == "range":
+        processing_option = RANGE % dimension
+        dimension_select = (
+            "process_following_"
+            + dimension
+            + "s=%s-%s"
+            % (
+                value,
+                range_end,
+            )
+        )
+
+    return processing_option, dimension_select
+
+
 def backup_xml_files(source_directory, subfolder_name):
     """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
 
@@ -613,30 +781,15 @@ def define_dataset_auto(
     if not dataset_save_path:
         dataset_save_path = pathtools.join2(result_folder, project_filename)
     if subsampling_factors:
-        subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
-    else:
         subsampling_factors = (
-            "manual_mipmap_setup "
-            "subsampling_factors=[{ "
-            "{1,1,1}, "
-            "{2,2,1}, "
-            "{4,4,1}, "
-            "{8,8,2}, "
-            "{16,16,4} "
-            "}] "
+            "manual_mipmap_setup subsampling_factors=" + subsampling_factors + " "
         )
+    else:
+        subsampling_factors = ""
     if hdf5_chunk_sizes:
         hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
     else:
-        hdf5_chunk_sizes = (
-            "hdf5_chunk_sizes=[{ "
-            "{32,32,4}, "
-            "{32,16,8}, "
-            "{16,16,16}, "
-            "{32,16,8}, "
-            "{32,32,4} "
-            "}] "
-        )
+        hdf5_chunk_sizes = ""
 
     if bf_series_type == "Angles":
         angle_rotation = "apply_angle_rotation "
@@ -661,7 +814,7 @@ def define_dataset_auto(
         + resave
         + "] "
         + "dataset_save_path=["
-        + result_folder
+        + dataset_save_path
         + "] "
         + "check_stack_sizes "
         + angle_rotation

@@ -14,8 +14,7 @@ import os
 
 from ij import IJ
 
-from ._loci import ImporterOptions
-from ._loci import BF, ImageReader, Memoizer
+from ._loci import BF, ImageReader, ImporterOptions, DynamicMetadataOptions, Memoizer, ZeissCZIReader
 
 from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
