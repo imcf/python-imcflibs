@@ -94,7 +94,7 @@ def relate_label_images(label_image_ref, label_image_to_relate):
     Prefs.blackBackground = True
     IJ.run(imp_dup, "Convert to Mask", "")
     IJ.run(imp_dup, "Divide...", "value=255")
-    return ImageCalculator.run(label_image_ref, imp_dup, "Multimage_processorly create")
+    return ImageCalculator.run(label_image_ref, imp_dup, "Multiply create")
 
 
 def filter_objects(label_image, table, string, min_val, max_val):
