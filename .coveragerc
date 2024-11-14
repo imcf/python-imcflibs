@@ -1,5 +1,7 @@
 [run]
 omit =
+    conftest.py
+    tests/*
     # omit anything in a venv / venv2 directory
     ./venv/*
     ./venv2/*
