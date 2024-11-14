@@ -5,3 +5,7 @@ omit =
     # omit anything in a venv / venv2 directory
     ./venv/*
     ./venv2/*
+
+[report]
+exclude_also =
+  if _python_platform.python_implementation\(\) == \"Jython\":
