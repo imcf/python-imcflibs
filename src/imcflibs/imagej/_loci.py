@@ -15,6 +15,16 @@ Other loci-related imports (i.e. those without problematic syntax) are placed in
 here simply for consistency reasons (to have everything in the same place).
 """
 
+#
+### *** WARNING *** ### *** WARNING *** ### *** WARNING *** ### *** WARNING ***
+#
+# Whenever an import is added here, make sure to also update the corresponding
+# part in `imcf-fiji-mocks`: https://github.com/imcf/imcf-fiji-mocks/
+#
+### *** WARNING *** ### *** WARNING *** ### *** WARNING *** ### *** WARNING ***
+#
+
+
 from loci.plugins import BF
 
 # dummy objects to prevent failing imports in a non-ImageJ / Jython context:
