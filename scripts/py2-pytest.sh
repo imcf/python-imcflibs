@@ -4,7 +4,7 @@ set -o errexit  # exit on any error
 set -o nounset  # empty variables are not permitted
 
 # set the version of "imcf-fiji-mocks" to be used:
-MOCKS_RELEASE="0.1.1"
+MOCKS_RELEASE="0.2.0"
 
 cd "$(dirname "$0")"/..
 
