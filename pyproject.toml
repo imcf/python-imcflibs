@@ -7,6 +7,7 @@ authors = [
   "Rohan Girish <rohangirishrao@gmail.com>",
 ]
 description = "Mostly ImageJ/Fiji-related Python helper functions."
+documentation = "https://imcf.one/apidocs/imcflibs/imcflibs.html"
 license = "GPL-3.0-or-later"
 name = "imcflibs"
 readme = "README.md"
