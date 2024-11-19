@@ -17,6 +17,6 @@ from . import strtools
 # check if we're running in Jython, then also import the 'imagej' submodule:
 import platform as _python_platform
 
-if _python_platform.python_implementation() == "Jython":
+if _python_platform.python_implementation() == "Jython":  # pragma: no cover
     from . import imagej
 del _python_platform

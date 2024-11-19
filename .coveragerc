@@ -7,5 +7,8 @@ omit =
     ./venv2/*
 
 [report]
-exclude_also =
-  if _python_platform.python_implementation\(\) == \"Jython\":
+## NOTE: `exclude_also` is only supported for coverage 7.2 and newer, which
+## won't work when testing with Python2 (coverage 5.5 is the latest one
+## supporting Python2), hence we cannot use it:
+; exclude_also =
+;   if _python_platform.python_implementation\(\) == \"Jython\":
