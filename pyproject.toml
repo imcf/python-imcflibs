@@ -10,6 +10,7 @@ description = "Mostly ImageJ/Fiji-related Python helper functions."
 license = "GPL-3.0-or-later"
 name = "imcflibs"
 readme = "README.md"
+repository = "https://github.com/imcf/python-imcflibs"
 version = "1.5.0.a0"
 
 [tool.poetry.dependencies]
