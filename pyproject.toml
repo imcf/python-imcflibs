@@ -15,7 +15,7 @@ repository = "https://github.com/imcf/python-imcflibs"
 version = "${project.version}"
 
 [tool.poetry.dependencies]
-imcf-fiji-mocks = "^0.2.0"
+imcf-fiji-mocks = ">=0.3.0"
 python = ">=2.7"
 python-micrometa = "^15.2.2"
 sjlogging = ">=0.5.2"
