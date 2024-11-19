@@ -1,4 +1,7 @@
 [run]
+source =
+    src/imcflibs
+
 omit =
     conftest.py
     tests/*
