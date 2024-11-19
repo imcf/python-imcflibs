@@ -15,9 +15,8 @@ cd "$(dirname "$0")"/..
 test -d "venv2" || {
     echo "== Creating a Python2 venv..."
     python2 -m virtualenv venv2
-    source venv2/bin/activate
     URL_PFX="https://github.com/imcf/imcf-fiji-mocks/releases/download"
-    pip install --upgrade \
+    venv2/bin/pip --no-python-version-warning install --upgrade \
         $URL_PFX/v$MOCKS_RELEASE/micrometa-15.2.2-py2.py3-none-any.whl \
         $URL_PFX/v$MOCKS_RELEASE/sjlogging-0.5.2-py2.py3-none-any.whl \
         imcf-fiji-mocks \
@@ -25,8 +24,6 @@ test -d "venv2" || {
         pytest \
         pytest-cov \
         pip
-
-    deactivate
     echo "== Finished creating a Python2 venv."
 }
 
