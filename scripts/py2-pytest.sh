@@ -46,6 +46,8 @@ setuptools.setup(
     mv pyproject_.toml pyproject.toml
     echo "== * Removing 'setup.py'..."
     rm setup.py
+    echo "== * Cleaning up egg-info..."
+    rm -r src/imcflibs.egg-info
     echo "== Finished installing local 'imcflibs'."
     echo
 }
