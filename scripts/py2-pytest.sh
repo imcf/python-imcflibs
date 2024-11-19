@@ -18,7 +18,7 @@ test -d "venv2" || {
     URL_PFX="https://github.com/imcf/imcf-fiji-mocks/releases/download"
     venv2/bin/pip --no-python-version-warning install --upgrade \
         $URL_PFX/v$MOCKS_RELEASE/micrometa-15.2.2-py2.py3-none-any.whl \
-        $URL_PFX/v$MOCKS_RELEASE/sjlogging-0.5.2-py2.py3-none-any.whl \
+        sjlogging \
         imcf-fiji-mocks \
         olefile==0.46 \
         pytest \
