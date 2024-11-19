@@ -25,24 +25,31 @@ test -d "venv2" || {
         pytest-cov \
         pip
     echo "== Finished creating a Python2 venv."
+
+    echo "== Installing local version of 'imcflibs' package..."
+    # NOTE: for being able to use coverage, the package has to be installed in
+    # editable mode, making it necessary to move `pyproject.toml` out of the way
+    # and creating a `setup.py` for the actual installation process (will be
+    # reverted after installing):
+    echo "== * Mocking 'setup.py'..."
+    echo "import setuptools
+setuptools.setup(
+    name='imcflibs',
+    package_dir={'': 'src'},
+)
+" > setup.py
+    echo "== * Temporarily disabling 'pyproject.toml'..."
+    mv pyproject.toml pyproject_.toml
+    echo "== * Installing package in editable mode..."
+    venv2/bin/pip --no-python-version-warning install --editable .
+    echo "== * Re-enabling 'pyproject.toml'..."
+    mv pyproject_.toml pyproject.toml
+    echo "== * Removing 'setup.py'..."
+    rm setup.py
+    echo "== Finished installing local 'imcflibs'."
+    echo
 }
-
-echo "== Running 'poetry build'..."
-poetry build -vv
-echo "== Finished 'poetry build'."
-echo
-
-echo "== Installing local version of 'imcflibs' package..."
-venv2/bin/pip uninstall --yes imcflibs
-venv2/bin/pip install dist/*.whl
-echo "== Finished installing local 'imcflibs'."
-echo
 
 echo "== Running pytest..."
-echo "$@" | grep -q -- "--cov" || {
-    echo "== NOTE: coverage reports will NOT be generated!"
-    echo "== Run with '--cov --cov-report html' to generate coverage reports!"
-}
-
 set -x
 venv2/bin/pytest "$@"
