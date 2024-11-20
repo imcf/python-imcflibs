@@ -1,8 +1,8 @@
 
 # IMCFlibs 🐍 ☕ 🔩 🔧 🪛
 
-[![Build Status](https://github.com/imcf/python-imcflibs/actions/workflows/build.yml/badge.svg)](https://github.com/imcf/python-imcflibs/actions/workflows/build.yml)
-[![DOI](https://zenodo.org/badge/156891364.svg)](https://zenodo.org/badge/latestdoi/156891364)
+[![Build Status](https://github.com/imcf/python-imcflibs/actions/workflows/build.yml/badge.svg)][build]
+[![DOI](https://zenodo.org/badge/156891364.svg)][doi]
 
 This package contains a diverse collection of Python functions dealing with
 paths, I/O (file handles, ...), strings etc. and tons of [Fiji][fiji] /
@@ -55,3 +55,5 @@ correct_and_project(raw_image, out_path, model, "Maximum", ".ics")
 [imcf_updsite]: https://imagej.net/list-of-update-sites/
 [script_split]: https://github.com/imcf/imcf-fiji-scripts/blob/master/src/main/resources/scripts/Plugins/IMCF_Utilities/Convert/Split_TIFFs_By_Channels_And_Slices.py
 [script_fvstitch]: https://github.com/imcf/imcf-fiji-scripts/blob/master/src/main/resources/scripts/Plugins/IMCF_Utilities/Stitching_Registration/FluoView_OIF_OIB_OIR_Simple_Stitcher.py
+[doi]: https://zenodo.org/badge/latestdoi/156891364
+[build]: https://github.com/imcf/python-imcflibs/actions/workflows/build.yml
