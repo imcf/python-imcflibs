@@ -49,6 +49,7 @@ echo "Using Python package version: [$PACKAGE_VERSION]"
 sed -i "s/\${project.version}/${PACKAGE_VERSION}/" pyproject.toml
 sed -i "s/\${project.version}/${PACKAGE_VERSION}/" "${PACKAGE_DIR}/__init__.py"
 
+set +e  # required as otherwise the 'restore' calls below might be skipped
 ### now call poetry with the given parameters:
 poetry "$@"
 
