@@ -51,10 +51,6 @@ setuptools.setup(
     mv pyproject_.toml pyproject.toml
     echo "== * Removing 'setup.py'..."
     rm setup.py
-    echo "== * Cleaning up egg-info..."
-    rm -r src/imcflibs.egg-info
-    echo "== Finished installing local 'imcflibs'."
-    echo
     venv2/bin/pip --no-python-version-warning install \
         python-micrometa \
         sjlogging \
@@ -63,6 +59,12 @@ setuptools.setup(
         pytest \
         pytest-cov \
         pip
+    echo "== * Cleaning up egg-info..."
+    # NOTE: this can only be done AFTER the pip-install from above as otherwise
+    # dependency resolution won't work due to lack of package metadata:
+    rm -r src/imcflibs.egg-info
+    echo "== Finished installing local 'imcflibs'."
+    echo
 }
 
 echo "== Running pytest..."
