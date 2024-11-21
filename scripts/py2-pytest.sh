@@ -76,10 +76,13 @@ echo
 
 echo "== Running pytest..."
 set -o xtrace
-set +o errexit
-"$VENV/bin/pytest" "$@"
+set +o errexit  # otherwise the script stops if pytest exits non-zero
+"$VENV/bin/pytest" "$@"  # run pytest with the parameters given to the script
+RETVAL=$?  # remember the actual exit code of pytest for returning it below!
 set +o xtrace
 
 echo
 echo "== Done. Leaving venv around: [$VENV]"
 echo
+
+exit $RETVAL  # now return the exit code from running pytest

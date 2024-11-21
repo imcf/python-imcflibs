@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -o errexit  # exit on any error
 
 cd "$(dirname "$0")/.."
 
@@ -50,10 +50,12 @@ sed -i "s/\${project.version}/${PACKAGE_VERSION}/" "${PACKAGE_DIR}/__init__.py"
 
 sed -i 's/^python = ">=2.7"$/python = ">=3.10"/' pyproject.toml
 
-set +e  # required as otherwise the 'restore' calls below might be skipped
-### now call poetry with the given parameters:
-poetry "$@"
+set +o errexit  # otherwise the script stops if poetry exits non-zero
+poetry "$@"  # run poetry with the parameters given to the script
+RETVAL=$?  # remember the actual exit code of poetry for returning it below!
 
 ### clean up the moved source tree and restore the previous state:
 git restore pyproject.toml
 git restore "${PACKAGE_DIR}/__init__.py"
+
+exit $RETVAL  # now return the exit code from running poetry
