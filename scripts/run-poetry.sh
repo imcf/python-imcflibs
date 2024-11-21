@@ -44,10 +44,11 @@ case $PACKAGE_VERSION in
 esac
 
 echo "Using Python package version: [$PACKAGE_VERSION]"
-
 ### put the version into the project file and the package source:
-sed -i "s/\${project.version}/${PACKAGE_VERSION}/" pyproject.toml
+sed -i "s/\"0.0.0\"/\"${PACKAGE_VERSION}\"/" pyproject.toml
 sed -i "s/\${project.version}/${PACKAGE_VERSION}/" "${PACKAGE_DIR}/__init__.py"
+
+sed -i 's/^python = ">=2.7"$/python = ">=3.10"/' pyproject.toml
 
 set +e  # required as otherwise the 'restore' calls below might be skipped
 ### now call poetry with the given parameters:
