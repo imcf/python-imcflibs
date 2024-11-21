@@ -6,7 +6,6 @@ on:
   push:
     branches:
     - master
-    - devel
     tags:
       - "*run-pytest.*"
       - "*-[0-9]+.*"
