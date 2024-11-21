@@ -69,7 +69,7 @@ jobs:
     # Install dependencies. `--no-root` means "install all dependencies but
     # not the project itself", which is what you want to avoid caching _your_
     # code. The `if` statement ensures this only runs on a cache miss.
-    - run: poetry install --no-interaction --no-root
+    - run: scripts/run-poetry.sh install --no-interaction --no-root
       if: steps.cache-deps.outputs.cache-hit != 'true'
 
     # Now install _your_ project. This isn't necessary for many types of
@@ -77,7 +77,7 @@ jobs:
     # it's a good idea since it fully-exercises the pyproject.toml and makes
     # that if you add things like console-scripts at some point that they'll
     # be installed and working.
-    - run: poetry install --no-interaction
+    - run: scripts/run-poetry.sh install --no-interaction
 
     # And finally run the tests.
-    - run: poetry run pytest
+    - run: scripts/run-poetry.sh run pytest
