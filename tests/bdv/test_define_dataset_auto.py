@@ -3,6 +3,7 @@ import logging
 from imcflibs import pathtools
 from imcflibs.imagej import bdv
 
+
 def set_default_values(project_filename, file_path):
     """Set the default values for dataset definitions.
 
@@ -18,7 +19,7 @@ def set_default_values(project_filename, file_path):
     str
         Start of the options for dataset definitions.
     """
-       # Additional settings
+    # Additional settings
     file_info = pathtools.parse_path(file_path)
 
     options = (
@@ -35,7 +36,6 @@ def set_default_values(project_filename, file_path):
     )
 
     return options
-
 
 
 def test_define_dataset_auto_tile(tmp_path, caplog):
