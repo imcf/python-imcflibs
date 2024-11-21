@@ -7,7 +7,7 @@ on:
     branches:
     - master
     tags:
-      - "*run-pytest.*"
+      - run-pytest.*
       - "*-[0-9]+.*"
   pull_request:
     branches:
