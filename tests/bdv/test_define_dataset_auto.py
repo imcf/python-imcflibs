@@ -62,7 +62,6 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
 
     # Define the result and dataset save paths
     result_folder = pathtools.join2(file_info["path"], project_filename)
-    dataset_save_path = pathtools.join2(result_folder, project_filename)
 
     # Default settings
 
@@ -82,7 +81,7 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
         + "Re-save as multiresolution HDF5"
         + "] "
         + "dataset_save_path=["
-        + dataset_save_path
+        + result_folder
         + "] "
         + "check_stack_sizes "
         + "split_hdf5 "
