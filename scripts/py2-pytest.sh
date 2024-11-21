@@ -4,15 +4,26 @@ set -o errexit  # exit on any error
 set -o nounset  # empty variables are not permitted
 
 cd "$(dirname "$0")"/..
-VENV="$(mktemp --directory --dry-run --tmpdir=. venv2.pytest-XXX)"
+
+if [ -n "$VENV_PATH" ]; then
+    VENV="$VENV_PATH"
+else
+    VENV="$(mktemp --directory --dry-run --tmpdir=. venv2.pytest-XXX)"
+fi
+
+if ! [ -d "$VENV" ]; then
+    echo "== Creating a Python2 venv in [$VENV]..."
+    python2 -m virtualenv "$VENV"
+    echo "== Finished creating a Python2 venv."
+fi
 
 function vpip() {
     "$VENV/bin/pip" --no-python-version-warning "$@"
 }
 
-echo "== Creating a Python2 venv in [$VENV]..."
-python2 -m virtualenv "$VENV"
-echo "== Finished creating a Python2 venv."
+echo
+echo "===== Using venv at: [$VENV] ====="
+echo
 
 echo "== Installing local version of 'imcflibs' package..."
 # NOTE: for being able to use coverage, the package has to be installed in
