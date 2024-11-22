@@ -6,6 +6,7 @@ on:
     - master
     tags:
       - run-pytest*
+      - py2-pytest*
       - "*-[0-9]+.*"
   pull_request:
     branches:
