@@ -13,7 +13,7 @@ fi
 
 if ! [ -d "$VENV" ]; then
     echo "== Creating a Python2 venv in [$VENV]..."
-    python2 -m virtualenv "$VENV"
+    python2 -m virtualenv --always-copy "$VENV"
     echo "== Finished creating a Python2 venv."
 fi
 
