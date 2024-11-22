@@ -12,6 +12,10 @@ else
 fi
 
 if ! [ -d "$VENV" ]; then
+    pip2 --no-python-version-warning show virtualenv > /dev/null || {
+        echo "== Installing 'virtualenv' for Python2..."
+        pip2 --no-python-version-warning install virtualenv
+    }
     echo "== Creating a Python2 venv in [$VENV]..."
     python2 -m virtualenv --always-copy "$VENV"
     echo "== Finished creating a Python2 venv."
