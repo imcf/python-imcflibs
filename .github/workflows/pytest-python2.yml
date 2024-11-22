@@ -54,7 +54,7 @@ jobs:
       id: pyenvroot
       run: |
         cat /opt/hostedtoolcache/pyenv_root/.pyenv_root
-        echo "PYENV_ROOT=$(cat /opt/hostedtoolcache/pyenv_root/.pyenv_root)" >> $GITHUB_OUTPUT
+        echo "PYENV_ROOT=$(cat /opt/hostedtoolcache/pyenv_root/.pyenv_root)" >> $GITHUB_ENV
 
     - name: Cache Python2 virtualenv
       id: cache-py2-venv
@@ -67,6 +67,6 @@ jobs:
       run: scripts/py2-pytest.sh
       env:
         VENV_PATH: venv.py2
-        PYENV_ROOT: ${{ steps.pyenvroot.outputs.PYENV_ROOT }}
+        # PYENV_ROOT: ${{ steps.pyenvroot.outputs.PYENV_ROOT }}
         PY_VERSION: ${{ env.PY_VERSION }}
 
