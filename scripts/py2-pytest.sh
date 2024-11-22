@@ -1,8 +1,6 @@
 #!/bin/bash
 
 set -o errexit  # exit on any error
-set -o nounset  # empty variables are not permitted
-
 cd "$(dirname "$0")"/..
 
 if [ -n "$VENV_PATH" ]; then
@@ -10,6 +8,10 @@ if [ -n "$VENV_PATH" ]; then
 else
     VENV="$(mktemp --directory --dry-run --tmpdir=. venv2.pytest-XXX)"
 fi
+
+
+# now we're done checking the environment, so disallow empty variables below:
+set -o nounset
 
 if ! [ -d "$VENV" ]; then
     pip2 --no-python-version-warning show virtualenv > /dev/null || {
