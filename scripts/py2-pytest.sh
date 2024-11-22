@@ -22,6 +22,11 @@ fi
 
 echo "PATH=$PATH"
 
+if [ -n "$PY_VERSION" ]; then
+    echo "Calling [pyenv local $PY_VERSION]..."
+    pyenv local "$PY_VERSION"
+fi
+
 # now we're done checking the environment, so disallow empty variables below:
 set -o nounset
 
