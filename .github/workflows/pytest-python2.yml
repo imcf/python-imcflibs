@@ -1,0 +1,71 @@
+name: pytest (using Python2)
+
+on:
+  push:
+    branches:
+    - master
+    tags:
+      - run-pytest*
+      - "*-[0-9]+.*"
+  pull_request:
+    branches:
+    - master
+    - devel
+
+env:
+    PY_VERSION: 2.7.18
+
+jobs:
+  pytest-poetry:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cache APT packages
+      uses: awalsh128/cache-apt-pkgs-action@v1.4.2
+      with:
+        packages: xmlstarlet
+        version: 1.0
+
+    - name: Cache pyenv installation
+      id: cache-pyenv
+      uses: actions/cache@v4
+      with:
+        path: /opt/hostedtoolcache/pyenv_root
+        key: "pyenv-${{ env.PY_VERSION }}-3"
+
+    - name: Set up pyenv
+      id: setup-pyenv
+      uses: "gabrielfalcao/pyenv-action@v18"
+      with:
+        default: "${{ env.PY_VERSION }}"
+        # Store the `PYENV_ROOT` var *inside* the cached directory so it can be
+        # retrieved consistently (independent of pyenv being freshly installed
+        # or coming from the cache).
+        # NOTE: In case pyenv was extracted from the cache, it WILL NOT BE ADDED
+        #       to the PATH environment variable! Any follow-up task has to take
+        #       this into account and **ACTIVELY** use the PYENV_ROOT variable!
+        command: |
+          echo $PYENV_ROOT > /opt/hostedtoolcache/pyenv_root/.pyenv_root
+      if: steps.cache-pyenv.outputs.cache-hit != 'true'
+
+    - name: Identify PYENV_ROOT
+      id: pyenvroot
+      run: |
+        cat /opt/hostedtoolcache/pyenv_root/.pyenv_root
+        echo "PYENV_ROOT=$(cat /opt/hostedtoolcache/pyenv_root/.pyenv_root)" >> $GITHUB_OUTPUT
+
+    - name: Cache Python2 virtualenv
+      id: cache-py2-venv
+      uses: actions/cache@v4
+      with:
+        path: venv.py2
+        key: "venv-py-${{ env.PY_VERSION }}--${{ hashFiles('pyproject.toml') }}-2"
+
+    - name: Run pytest-wrapper
+      run: scripts/py2-pytest.sh
+      env:
+        VENV_PATH: venv.py2
+        PYENV_ROOT: ${{ steps.pyenvroot.outputs.PYENV_ROOT }}
+        PY_VERSION: ${{ env.PY_VERSION }}
+
