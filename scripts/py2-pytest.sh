@@ -11,6 +11,16 @@ else
     VENV="$(mktemp --directory --dry-run --tmpdir=. venv2.pytest-XXX)"
 fi
 
+if [ -n "$PYENV_ROOT" ]; then
+    # in case pyenv was retrieved e.g. from a GH actions cache, it will be
+    # present in the filesystem but not added to the path (this is done when
+    # the installer runs, but will not persist to subsequent runs that will get
+    # their pyenv extracted from the cache), therefore we're force-adding it:
+    echo "Found envvar PYENV_ROOT='$PYENV_ROOT', adjusting PATH..."
+    export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+fi
+
+echo "PATH=$PATH"
 
 # now we're done checking the environment, so disallow empty variables below:
 set -o nounset
