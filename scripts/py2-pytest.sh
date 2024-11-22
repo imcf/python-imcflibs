@@ -32,6 +32,8 @@ echo "== Installing local version of 'imcflibs' package..."
 # reverted after installing):
 ### parse the version from 'pom.xml':
 PACKAGE_VERSION=$(xmlstarlet sel --template -m _:project -v _:version pom.xml)
+PACKAGE_NAME=$(xmlstarlet sel --template -m _:project -v _:artifactId pom.xml)
+
 echo "Package version from POM: [$PACKAGE_VERSION]"
 ### make sure to have a valid Python package version:
 case $PACKAGE_VERSION in
