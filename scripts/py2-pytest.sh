@@ -4,6 +4,8 @@ set -o errexit  # exit on any error
 cd "$(dirname "$0")"/..
 
 if [ -n "$VENV_PATH" ]; then
+    # can be used for GH actions to cache the venv by giving it a fixed path:
+    echo "Using venv path from envvar VENV_PATH='$VENV_PATH'."
     VENV="$VENV_PATH"
 else
     VENV="$(mktemp --directory --dry-run --tmpdir=. venv2.pytest-XXX)"
