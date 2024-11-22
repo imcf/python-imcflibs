@@ -87,4 +87,4 @@ jobs:
     - run: scripts/run-poetry.sh install --no-interaction
 
     # And finally run the tests.
-    - run: scripts/run-poetry.sh run pytest
+    - run: scripts/run-poetry.sh run pytest --cov -vv

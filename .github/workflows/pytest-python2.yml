@@ -64,7 +64,7 @@ jobs:
         key: "venv-py-${{ env.PY_VERSION }}--${{ hashFiles('pyproject.toml') }}-2"
 
     - name: Run pytest-wrapper
-      run: scripts/py2-pytest.sh
+      run: scripts/py2-pytest.sh --cov -vv
       env:
         VENV_PATH: venv.py2
         # PYENV_ROOT: ${{ steps.pyenvroot.outputs.PYENV_ROOT }}
