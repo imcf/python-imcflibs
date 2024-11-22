@@ -23,6 +23,7 @@ function vpip() {
 
 echo
 echo "===== Using venv at: [$VENV] ====="
+"$VENV/bin/python" --version
 echo
 
 echo "== Installing local version of 'imcflibs' package..."
