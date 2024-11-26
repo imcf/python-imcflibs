@@ -67,6 +67,5 @@ jobs:
       run: scripts/py2-pytest.sh --cov -vv
       env:
         VENV_PATH: venv.py2
-        # PYENV_ROOT: ${{ steps.pyenvroot.outputs.PYENV_ROOT }}
         PY_VERSION: ${{ env.PY_VERSION }}
 
