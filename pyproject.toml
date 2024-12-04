@@ -1,0 +1,29 @@
+[tool.poetry]
+authors = [
+  "Niko Ehrenfeuchter <nikolaus.ehrenfeuchter@unibas.ch>",
+  "Laurent Guerard <laurent.guerard@unibas.ch>",
+  "Kai Schleicher <kai.schleicher@unibas.ch>",
+  "Sébastien Herbert <sebastien.herbert@unibas.ch>",
+  "Rohan Girish <rohangirishrao@gmail.com>",
+]
+description = "Mostly ImageJ/Fiji-related Python helper functions."
+documentation = "https://imcf.one/apidocs/imcflibs/imcflibs.html"
+license = "GPL-3.0-or-later"
+name = "imcflibs"
+readme = "README.md"
+repository = "https://github.com/imcf/python-imcflibs"
+version = "1.4.1"
+
+[tool.poetry.dependencies]
+imcf-fiji-mocks = ">=0.3.0"
+python = ">=2.7"
+python-micrometa = "^15.2.2"
+sjlogging = ">=0.5.2"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.17.2"
+pytest = "^8.0.1"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
