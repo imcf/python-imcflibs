@@ -7,7 +7,7 @@
 .. include:: ../../CHANGELOG.md
 """
 
-__version__ = "${project.version}"
+__version__ = "1.4.1"
 
 from . import iotools
 from . import log
