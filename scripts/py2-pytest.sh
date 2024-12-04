@@ -88,6 +88,9 @@ mv pyproject.toml pyproject_.toml
 echo "== * Installing package in editable mode..."
 vpip install --editable .
 
+echo "== * Installed package version reported by pip:"
+vpip show imcflibs | grep ^Version:
+
 echo "== * Re-enabling 'pyproject.toml'..."
 mv pyproject_.toml pyproject.toml
 
