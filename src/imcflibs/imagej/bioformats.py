@@ -218,6 +218,7 @@ def get_series_count_from_ome_metadata(path_to_file):
         The number of Bio-Formats series detected in the image file metadata.
     """
     reader = ImageReader()
+    reader.setFlattenedResolutions(False)
     ome_meta = MetadataTools.createOMEXMLMetadata()
     reader.setMetadataStore(ome_meta)
     reader.setId(path_to_file)
