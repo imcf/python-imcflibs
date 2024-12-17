@@ -1,14 +1,9 @@
 """String related helper functions."""
 
-import io
 import re
 
-try:  # pragma: no cover
-    # Python 2: "file" is built-in
-    file_types = file, io.IOBase
-except NameError:  # pragma: no cover
-    # Python 3: "file" fully replaced with IOBase
-    file_types = (io.IOBase,)
+from ._jython_compat import file_types
+
 
 # this is taken from numpy's iotools:
 def _is_string_like(obj):
