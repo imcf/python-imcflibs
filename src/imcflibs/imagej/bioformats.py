@@ -14,10 +14,9 @@ import os
 
 from ij import IJ
 
-from ._loci import BF, ImageReader, ImporterOptions, DynamicMetadataOptions, Memoizer, ZeissCZIReader
-
-from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
+from ..pathtools import gen_name_from_orig
+from ._loci import BF, ImageReader, ImporterOptions, Memoizer, MetadataTools
 
 
 def import_image(
