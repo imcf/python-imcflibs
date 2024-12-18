@@ -91,4 +91,6 @@ jobs:
       run: scripts/run-poetry.sh install --no-interaction
 
     # And finally run the tests.
-    - run: scripts/run-poetry.sh run pytest --cov -vv
+    - name: 🧪 Run Tests
+      run: scripts/run-poetry.sh run pytest --color=yes --cov --cov-report=xml -vv
+
