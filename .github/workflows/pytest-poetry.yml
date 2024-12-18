@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Cache APT Packages
+    - name: 🗃 Cache 📦 APT Packages
       uses: awalsh128/cache-apt-pkgs-action@v1.4.2
       with:
         packages: xmlstarlet
@@ -30,7 +30,8 @@ jobs:
 
     # If you wanted to use multiple Python versions, you'd have specify a
     # matrix in the job and reference the matrix python version here.
-    - uses: actions/setup-python@v5.3.0
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v5.3.0
       with:
         python-version: "3.10"
 
@@ -40,7 +41,7 @@ jobs:
     # the "-0" suffix: this allows you to invalidate the cache manually
     # if/when you want to upgrade Poetry, or if something goes wrong (could be
     # done mildly cleaner by using an environment variable).
-    - name: cache poetry install
+    - name: 🗃 Cache Poetry install
       uses: actions/cache@v4
       with:
         path: ~/.local
@@ -56,7 +57,8 @@ jobs:
     # The key configuration value here is `virtualenvs-in-project: true`: this
     # creates the venv as a `.venv` in your testing directory, which allows
     # the next step to easily cache it.
-    - uses: snok/install-poetry@v1
+    - name: 🧰 Install Poetry
+      uses: snok/install-poetry@v1
       with:
         version: 1.8.2
         virtualenvs-create: true
@@ -66,7 +68,7 @@ jobs:
     # Note the cache key: if you're using multiple Python versions, or
     # multiple OSes, you'd need to include them in the cache key. I'm not, so
     # it can be simple and just depend on the poetry.lock.
-    - name: cache deps
+    - name: 🗃 Cache 🧾 Dependencies
       id: cache-deps
       uses: actions/cache@v4
       with:
@@ -76,7 +78,8 @@ jobs:
     # Install dependencies. `--no-root` means "install all dependencies but
     # not the project itself", which is what you want to avoid caching _your_
     # code. The `if` statement ensures this only runs on a cache miss.
-    - run: scripts/run-poetry.sh install --no-interaction --no-root
+    - name: 🏗 Install 🧾 Dependencies
+      run: scripts/run-poetry.sh install --no-interaction --no-root
       if: steps.cache-deps.outputs.cache-hit != 'true'
 
     # Now install _your_ project. This isn't necessary for many types of
@@ -84,7 +87,8 @@ jobs:
     # it's a good idea since it fully-exercises the pyproject.toml and makes
     # that if you add things like console-scripts at some point that they'll
     # be installed and working.
-    - run: scripts/run-poetry.sh install --no-interaction
+    - name: 🏗 Install 🛖 project
+      run: scripts/run-poetry.sh install --no-interaction
 
     # And finally run the tests.
     - run: scripts/run-poetry.sh run pytest --cov -vv
