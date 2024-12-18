@@ -94,3 +94,7 @@ jobs:
     - name: 🧪 Run Tests
       run: scripts/run-poetry.sh run pytest --color=yes --cov --cov-report=xml -vv
 
+    - name: Upload 📊 coverage reports to ☂ Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
