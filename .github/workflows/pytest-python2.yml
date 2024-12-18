@@ -22,20 +22,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Cache APT packages
+    - name: 🗃 Cache 📦 APT Packages
       uses: awalsh128/cache-apt-pkgs-action@v1.4.2
       with:
         packages: xmlstarlet
         version: 1.0
 
-    - name: Cache pyenv installation
+    - name: 🗃 Cache pyenv installation
       id: cache-pyenv
       uses: actions/cache@v4
       with:
         path: /opt/hostedtoolcache/pyenv_root
         key: "pyenv-${{ env.PY_VERSION }}-3"
 
-    - name: Set up pyenv
+    - name: 🐍🧰 Set up pyenv
       id: setup-pyenv
       uses: "gabrielfalcao/pyenv-action@v18"
       with:
@@ -50,20 +50,20 @@ jobs:
           echo $PYENV_ROOT > /opt/hostedtoolcache/pyenv_root/.pyenv_root
       if: steps.cache-pyenv.outputs.cache-hit != 'true'
 
-    - name: Identify PYENV_ROOT
+    - name: 🕵 Identify PYENV_ROOT
       id: pyenvroot
       run: |
         cat /opt/hostedtoolcache/pyenv_root/.pyenv_root
         echo "PYENV_ROOT=$(cat /opt/hostedtoolcache/pyenv_root/.pyenv_root)" >> $GITHUB_ENV
 
-    - name: Cache Python2 virtualenv
+    - name: 🗃🐍 Cache Python2 virtualenv
       id: cache-py2-venv
       uses: actions/cache@v4
       with:
         path: venv.py2
         key: "venv-py-${{ env.PY_VERSION }}--${{ hashFiles('pyproject.toml') }}-2"
 
-    - name: Run pytest-wrapper
+    - name: 🧪⚗ Run pytest-wrapper
       run: scripts/py2-pytest.sh --cov -vv
       env:
         VENV_PATH: venv.py2
