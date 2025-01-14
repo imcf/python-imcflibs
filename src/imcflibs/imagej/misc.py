@@ -156,15 +156,15 @@ def send_mail(job_name, recipient, filename, total_execution_time):
 
     # Ensure the sender and server are configured from Prefs
     if not sender:
-        print("Sender email is not configured. Please check IJ_Prefs.txt.")
+        log.info("Sender email is not configured. Please check IJ_Prefs.txt.")
         return
     if not server:
-        print("SMTP server is not configured. Please check IJ_Prefs.txt.")
+        log.info("SMTP server is not configured. Please check IJ_Prefs.txt.")
         return
 
     # Ensure the recipient is provided
     if not recipient.strip():
-        print("Recipient email is required.")
+        log.info("Recipient email is required.")
         return
 
     # Form the email subject and body
@@ -187,9 +187,9 @@ def send_mail(job_name, recipient, filename, total_execution_time):
     try:
         smtpObj = smtplib.SMTP(server)
         smtpObj.sendmail(sender, recipient, message)
-        print("Successfully sent email")
+        log.debug("Successfully sent email")
     except smtplib.SMTPException as err:
-        print("Error: Unable to send email:", err)
+        log.warning("Error: Unable to send email: %s", err)
     return
 
 
