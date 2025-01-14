@@ -4,6 +4,8 @@
 
 ## 1.5.0
 
+FIXME: complete description for `send_mail` configuration below!
+
 ### Added
 
 * `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
@@ -39,6 +41,8 @@
     propagating transformation parameters to other channels.
   * `imcflibs.imagej.bdv.fuse_dataset` to call BigStitcher's "Fuse Dataset"
     command.
+* `imcflibs.imagej.misc.send_mail` to send notification emails to users, e.g.
+  upon completion of a long running script (configurable via user preferences).
 
 ## 1.4.0
 
