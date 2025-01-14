@@ -2,6 +2,7 @@
 
 import sys
 import time
+import smtplib
 import os
 
 from ij import IJ  # pylint: disable-msg=import-error
@@ -135,6 +136,63 @@ def find_focus(imp):
                 focused_slice = current_z
 
     return focused_slice
+
+
+def send_mail(job_name, recipient, filename, total_execution_time):
+    """Send an email using the SMTP server and sender email configured in ImageJ's Preferences.
+
+    Parameters
+    ----------
+    job_name : string
+        Job name to display in the email.
+    recipient : string
+        Recipient's email address.
+    filename : string
+        The name of the file to be passed in the email.
+    total_execution_time : str
+        The time it took to process the file in the format [HH:MM:SS:ss].
+    """
+    # Retrieve sender email and SMTP server from preferences
+    sender = prefs.Prefs.get("imcf.sender_email", "").strip()
+    server = prefs.Prefs.get("imcf.smtpserver", "").strip()
+
+    # Ensure the sender and server are configured from Prefs
+    if not sender:
+        log.info("Sender email is not configured. Please check IJ_Prefs.txt.")
+        return
+    if not server:
+        log.info("SMTP server is not configured. Please check IJ_Prefs.txt.")
+        return
+
+    # Ensure the recipient is provided
+    if not recipient.strip():
+        log.info("Recipient email is required.")
+        return
+
+    # Form the email subject and body
+    subject = "Your {0} job finished successfully".format(job_name)
+    body = (
+        "Dear recipient,\n\n"
+        "This is an automated message.\n"
+        "Your dataset '{0}' has been successfully processed "
+        "({1} [HH:MM:SS:ss]).\n\n"
+        "Kind regards,\n"
+        "The IMCF-team"
+    ).format(filename, total_execution_time)
+
+    # Form the complete message
+    message = ("From: {0}\nTo: {1}\nSubject: {2}\n\n{3}").format(
+        sender, recipient, subject, body
+    )
+
+    # Try sending the email, print error message if it wasn't possible
+    try:
+        smtpObj = smtplib.SMTP(server)
+        smtpObj.sendmail(sender, recipient, message)
+        log.debug("Successfully sent email")
+    except smtplib.SMTPException as err:
+        log.warning("Error: Unable to send email: %s", err)
+    return
 
 
 def progressbar(progress, total, line_number, prefix=""):
