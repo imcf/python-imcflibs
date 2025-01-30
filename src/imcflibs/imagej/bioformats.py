@@ -16,7 +16,15 @@ from ij import IJ
 
 from ..log import LOG as log
 from ..pathtools import gen_name_from_orig
-from ._loci import BF, ImageReader, ImporterOptions, Memoizer, MetadataTools
+from ._loci import (
+    BF,
+    DynamicMetadataOptions,
+    ImageReader,
+    ImporterOptions,
+    Memoizer,
+    MetadataTools,
+    ZeissCZIReader,
+)
 
 
 def import_image(
