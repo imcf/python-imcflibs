@@ -19,8 +19,11 @@ jobs:
   pytest-poetry:
     # runs-on: ubuntu-latest
     runs-on: ubuntu-22.04
+
     steps:
+
     - uses: actions/checkout@v4
+      name: 📥 Checkout repo
 
     # - name: 🗃 Cache 📦 APT Packages
     #   uses: awalsh128/cache-apt-pkgs-action@v1.4.2
@@ -41,7 +44,7 @@ jobs:
     # the "-0" suffix: this allows you to invalidate the cache manually
     # if/when you want to upgrade Poetry, or if something goes wrong (could be
     # done mildly cleaner by using an environment variable).
-    - name: 🗃 Cache Poetry install
+    - name: 🗃 Cache 🎭 Poetry install
       uses: actions/cache@v4
       with:
         path: ~/.local
@@ -57,7 +60,7 @@ jobs:
     # The key configuration value here is `virtualenvs-in-project: true`: this
     # creates the venv as a `.venv` in your testing directory, which allows
     # the next step to easily cache it.
-    - name: 🧰 Install Poetry
+    - name: 🔩🔧 Install 🎭 Poetry
       uses: snok/install-poetry@v1
       with:
         version: 1.8.2
@@ -78,7 +81,7 @@ jobs:
     # Install dependencies. `--no-root` means "install all dependencies but
     # not the project itself", which is what you want to avoid caching _your_
     # code. The `if` statement ensures this only runs on a cache miss.
-    - name: 🏗 Install 🧾 Dependencies
+    - name: 🎭 Install 🧾 Dependencies
       run: scripts/run-poetry.sh install --no-interaction --no-root
       if: steps.cache-deps.outputs.cache-hit != 'true'
 
@@ -87,11 +90,11 @@ jobs:
     # it's a good idea since it fully-exercises the pyproject.toml and makes
     # that if you add things like console-scripts at some point that they'll
     # be installed and working.
-    - name: 🏗 Install 🛖 project
+    - name: 🎭 Install 🛖 project
       run: scripts/run-poetry.sh install --no-interaction
 
     # And finally run the tests.
-    - name: 🧪 Run Tests
+    - name: 🧪🎭 Run Tests
       run: scripts/run-poetry.sh run pytest --color=yes --cov --cov-report=xml -vv
 
     # - name: Upload 📊 coverage reports to ☂ Codecov
