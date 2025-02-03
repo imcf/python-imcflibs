@@ -31,7 +31,7 @@ jobs:
     # If you wanted to use multiple Python versions, you'd have specify a
     # matrix in the job and reference the matrix python version here.
     - name: 🐍 Set up Python
-      uses: actions/setup-python@v5.3.0
+      uses: actions/setup-python@v5.4.0
       with:
         python-version: "3.10"
 
