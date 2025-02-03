@@ -1,6 +1,6 @@
 ## action file inspired by https://jacobian.org/til/github-actions-poetry/
 
-name: pytest (via poetry)
+name: 🧪 pytest (via 🎭 Poetry)
 
 on:
   push:
@@ -22,11 +22,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: 🗃 Cache 📦 APT Packages
-      uses: awalsh128/cache-apt-pkgs-action@v1.4.2
-      with:
-        packages: xmlstarlet
-        version: 1.0
+    # - name: 🗃 Cache 📦 APT Packages
+    #   uses: awalsh128/cache-apt-pkgs-action@v1.4.2
+    #   with:
+    #     packages: xmlstarlet
+    #     version: 1.0
 
     # If you wanted to use multiple Python versions, you'd have specify a
     # matrix in the job and reference the matrix python version here.
@@ -94,7 +94,7 @@ jobs:
     - name: 🧪 Run Tests
       run: scripts/run-poetry.sh run pytest --color=yes --cov --cov-report=xml -vv
 
-    - name: Upload 📊 coverage reports to ☂ Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+    # - name: Upload 📊 coverage reports to ☂ Codecov
+    #   uses: codecov/codecov-action@v5
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
