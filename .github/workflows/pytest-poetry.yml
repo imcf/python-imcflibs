@@ -78,6 +78,9 @@ jobs:
         path: .venv
         key: pydeps-${{ hashFiles('**/poetry.lock') }}
 
+    - name: 🎭 Install Poetry dynamic-versioning 🔌 plugin
+      run: poetry self add "poetry-dynamic-versioning[plugin]"
+
     # Install dependencies. `--no-root` means "install all dependencies but
     # not the project itself", which is what you want to avoid caching _your_
     # code. The `if` statement ensures this only runs on a cache miss.
