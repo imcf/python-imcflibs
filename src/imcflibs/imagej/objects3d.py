@@ -130,22 +130,3 @@ def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
 
     # Return the new population with the filtered objects
     return Objects3DPopulation(objects_within_intensity)
-
-
-def get_objects3Dpop_names(obj_pop):
-    """Get the names of all the 3D objects in the specified Objects3DPopulation
-
-    Parameters
-    ----------
-    obj_pop : mcib3d.geom.Objects3DPopulation
-        Population of 3D objects
-
-    Returns
-    -------
-    str[]
-        List of the names of all the 3D objects in the population
-    """
-    names = []
-    for i in range(0, obj_pop.getNbObjects()):
-        names.append(obj_pop.getObject(i).getName())
-    return names
