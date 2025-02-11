@@ -70,14 +70,14 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     title : str, optional
         Title of the new image. Defaults to None.
     min_thresh : int, optional
-        Threshold to do segmentation, also allows for label filtering. Defaults to 1.
-        Since the segmentation is happening on a binary stack, values are either 0 or 255,
-        so using 0 allows to discard only the background.
+        Threshold to do segmentation, also allows for label filtering. Since the
+        segmentation is happening on a binary stack, values are either 0 or 255,
+        so using 0 allows to discard only the background.  Defaults to 1.
     min_vol : int, optional
-        Minimum volume (in voxels) under which objects get filtered. 
+        Minimum volume (in voxels) under which objects get filtered.
         Defaults to None.
     max_vol : int, optional
-        Maximum volume (in voxels) above which objects get filtered. 
+        Maximum volume (in voxels) above which objects get filtered.
         Defaults to None.
 
     Returns
@@ -107,8 +107,7 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
 
 
 def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
-    """Return a new population with the objects that have a mean intensity within
-    the specified range.
+    """Filter a population for objects within the given intensity range.
 
     Parameters
     ----------
@@ -124,7 +123,7 @@ def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
     Returns
     -------
     Objects3DPopulation
-        New population with the objects filtered by intensity
+        New population with the objects filtered by intensity.
     """
     objects_within_intensity = []
 
