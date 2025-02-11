@@ -2,6 +2,10 @@
 
 Contains helpers to parse URLs and / or OMERO image IDs, connect to OMERO and
 fetch images from the server.
+
+Requires the [`simple-omero-client`][simple-omero-client] JAR to be installed.
+
+[simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client
 """
 
 from java.lang import Long
