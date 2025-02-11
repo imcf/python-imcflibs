@@ -1558,3 +1558,55 @@ def fuse_dataset(
 
     log.debug("Dataset fusion options: <%s>", options)
     IJ.run("Fuse dataset ...", str(options))
+
+def fuse_dataset_bdvp(
+    project_path,
+    command,
+    processing_opts=None,
+    result_path=None,
+    compression="LZW",
+):
+    """Export a BigDataViewer project using the BIOP Kheops exporter.
+
+    This function uses the BIOP Kheops exporter to convert a BigDataViewer project into a
+    OME-TIFF files, with optional compression.
+
+    Parameters
+    ----------
+    project_path : str
+        Full path to the BigDataViewer XML project file.
+    command : CommandService
+        The Scijava CommandService instance to execute the export command.
+    processing_opts : ProcessingOptions, optional
+        Options defining which parts of the dataset to process. If None, default processing
+        options will be used (process all angles, channels, etc.).
+    result_path : str, optional
+        Path where to store the exported files. If None, files will be saved in the same
+        directory as the input project.
+    compression : str, optional
+        Compression method to use for the TIFF files. Default is "LZW".
+
+    Notes
+    -----
+    This function requires the PTBIOP update site to be enabled in Fiji/ImageJ.
+    """
+    if processing_opts is None:
+        processing_opts = ProcessingOptions()
+
+    file_info = pathtools.parse_path(project_path)
+    if not result_path:
+        result_path = file_info["path"]
+        # if not os.path.exists(result_path):
+        #     os.makedirs(result_path)
+
+    command.run(
+        KheopsExportImagePlusCommand,
+        True,
+        "image", project_path,
+        "output_dir", result_path,
+        "compression", compression,
+        "subset_channels", "",
+        "subset_slices", "",
+        "subset_frames", "",
+        "compress_temp_files", False
+    )
