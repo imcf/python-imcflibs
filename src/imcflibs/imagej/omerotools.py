@@ -16,20 +16,25 @@ from fr.igred.omero.annotations import MapAnnotationWrapper
 
 
 def parse_url(client, omero_str):
-    """Parse an OMERO URL with one or multiple images selected or a dataset
-    and return the ImageWrapper list
+    """Parse an OMERO URL / image IDs into the respective ImageWrapper objects.
+
+    Assemble a list of ImageWrapper objects from one of the following inputs:
+
+    - An OMERO URL (as retrieved e.g. from OMERO.web).
+    - One or more OMERO image IDs.
+    - An OMERO Dataset ID.
 
     Parameters
     ----------
     client : fr.igred.omero.Client
-        Client used for login to OMERO
+        Client used for login to OMERO.
     omero_str : str
-        String which is either the link gotten from OMERO or image IDs separated by commas
+        Either an URL from OMERO or image IDs separated by commas.
 
     Returns
     -------
-    list(fr.igred.omero.repositor.ImageWrapper)
-        List of ImageWrappers parsed from the string
+    list(fr.igred.omero.repository.ImageWrapper)
+        List of ImageWrappers parsed from the string.
     """
     image_ids = []
     dataset_ids = []
@@ -105,7 +110,7 @@ def connect(host, port, username, password):
 
     Returns
     -------
-    client: fr.igred.omero.Client
+    fr.igred.omero.Client
         A Client object representing the connection to the OMERO server.
     """
     # Create a new OMERO client
@@ -124,9 +129,9 @@ def fetch_image(client, image_id):
     Parameters
     ----------
     client : fr.igred.omero.Client
-        The OMERO client used to connect to the server
+        The client object used to connect to the OMERO server.
     image_id : int
-        The ID of the image to fetch
+        The ID of the image to fetch.
 
     Returns
     -------
@@ -142,16 +147,16 @@ def fetch_image(client, image_id):
 
 
 def upload_image_to_omero(user_client, path, dataset_id):
-    """Upload the image back to OMERO
+    """Upload an image to OMERO.
 
     Parameters
     ----------
     user_client : fr.igred.omero.Client
-        Client used for login to OMERO
+        The client object used to connect to the OMERO server.
     path : str
-        Path of the file to upload back to OMERO
+        Path of the file to upload back to OMERO.
     dataset_id : Long
-        ID of the dataset where to upload the file
+        ID of the dataset where to upload the file.
 
     Returns
     -------
@@ -162,18 +167,18 @@ def upload_image_to_omero(user_client, path, dataset_id):
 
 
 def add_annotation(client, repository_wpr, dict, header):
-    """Add annotation to OMERO object
+    """Add an annotation to an OMERO object.
 
     Parameters
     ----------
     user_client : fr.igred.omero.Client
-        Client used for login to OMERO
+        The client object used to connect to the OMERO server.
     repository_wpr : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
-        Wrapper to the object for the anotation
+        Wrapper to the object for the anotation.
     dict : dict
-        Dictionary with the annotation to add
+        Dictionary with the annotation to add.
     header : str
-        Name for the annotation header
+        Name for the annotation header.
     """
     # for pair in dict:
     #     result.add
@@ -183,12 +188,12 @@ def add_annotation(client, repository_wpr, dict, header):
 
 
 def find_dataset(client, dataset_id):
-    """Retrieve a dataset from the OMERO server.
+    """Retrieve a dataset (wrapper) from the OMERO server.
 
     Parameters
     ----------
     client : fr.igred.omero.Client
-        The OMERO client used to connect to the server.
+        The client object used to connect to the OMERO server.
     dataset_id : int
         The ID of the dataset to retrieve.
 
