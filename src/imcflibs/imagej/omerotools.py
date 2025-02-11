@@ -166,7 +166,7 @@ def upload_image_to_omero(user_client, path, dataset_id):
     return user_client.getDataset(Long(dataset_id)).importImage(user_client, path)[0]
 
 
-def add_annotation(client, repository_wpr, dict, header):
+def add_annotation(client, repository_wpr, annotations, header):
     """Add an annotation to an OMERO object.
 
     Parameters
@@ -175,14 +175,14 @@ def add_annotation(client, repository_wpr, dict, header):
         The client object used to connect to the OMERO server.
     repository_wpr : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
         Wrapper to the object for the anotation.
-    dict : dict
+    annotations : dict
         Dictionary with the annotation to add.
     header : str
         Name for the annotation header.
     """
     # for pair in dict:
     #     result.add
-    map_annotation_wpr = MapAnnotationWrapper(dict)
+    map_annotation_wpr = MapAnnotationWrapper(annotations)
     map_annotation_wpr.setNameSpace(header)
     repository_wpr.addMapAnnotation(client, map_annotation_wpr)
 
