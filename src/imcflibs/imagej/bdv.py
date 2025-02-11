@@ -645,7 +645,7 @@ class DefinitionOptions(object):
         parameters = [
             "multiple_angles=" + self._angle_definition,
             "multiple_channels=" + self._channel_definition,
-            "multiple_illuminations=" + self._illumination_definition,
+            "multiple_illuminations_directions=" + self._illumination_definition,
             "multiple_tiles=" + self._tile_definition,
             "multiple_timepoints=" + self._timepoint_definition,
         ]
@@ -842,14 +842,19 @@ def define_dataset_auto(
         + file_info["path"]
         + "] "
         + "exclude=10 "
-        # + "bioformats_series_are?="
-        # + bf_series_type
-        # + " "
+        + "bioformats_series_are?="
+        + bf_series_type
+        + " "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
-        + "how_to_load_images=["
+        + "how_to_store_input_images=["
         + resave
         + "] "
-        + "dataset_save_path=["
+        + load_raw_data_virtually
+        + " "
+        + "metadata_save_path=["
+        + dataset_save_path
+        + "] "
+        + "image_data_save_path=["
         + dataset_save_path
         + "] "
         + "check_stack_sizes "
@@ -862,16 +867,13 @@ def define_dataset_auto(
         + " "
         + "setups_per_partition=0 "
         + "use_deflate_compression "
-        # + "export_path=["
-        # + dataset_save_path
-        # + "]",
     )
 
     log.debug(options)
 
     if bf_series_type == "Tiles":
         log.debug("Doing tiled dataset definition")
-        IJ.run("Define dataset ...", str(options))
+        IJ.run("BigSticher", "select=define " + str(options))
     elif bf_series_type == "Angles":
         log.debug("Doing multi-view dataset definition")
         IJ.run("Define Multi-View Dataset", str(options))
@@ -914,10 +916,12 @@ def define_dataset_manual(
     os.path.join(temp, project_filename)
 
     options = (
-        "define_dataset=[Manual Loader (Bioformats based)] "
+        "select=define "
+        + "define_dataset=[Manual Loader (Bioformats based)] "
         + "project_filename=["
         + xml_filename
         + "] "
+        + "_____"
         + definition_opts.fmt_acitt_options()
         + " "
         + "image_file_directory="
@@ -929,11 +933,11 @@ def define_dataset_manual(
         + " "
         + "calibration_type=[Same voxel-size for all views] "
         + "calibration_definition=[Load voxel-size(s) from file(s)] "
-        + "imglib2_data_container=[ArrayImg (faster)]"
+        # + "imglib2_data_container=[ArrayImg (faster)]"
     )
 
-    log.debug("Manual dataset defintion options: <%s>", options)
-    IJ.run("Define dataset ...", str(options))
+    log.debug("Manual dataset definition options: <%s>", options)
+    IJ.run("BigStitcher", str(options))
 
 
 def resave_as_h5(
