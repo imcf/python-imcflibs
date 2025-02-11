@@ -15,6 +15,10 @@
     an Objects3DPopulation into an ImagePlus (2D/3D).
   * `imcflibs.imagej.objects3d.imgplus_to_population3d` to get the
     Objects3DPopulation from an ImagePlus (2D/3D).
+  * `imcflibs.imagej.objects3d.segment_3d_image` to threshold an image into a
+    labeled stack.
+  * `imcflibs.imagej.objects3d.get_objects_within_intensity` to filter a
+    population of 3D objects by intensity.
 * New `imcflibs.imagej.bdv` submodule, providing BigDataViewer related
   functions:
   * `imcflibs.imagej.bdv.backup_xml_files` to create a backup of BDV-XML files
