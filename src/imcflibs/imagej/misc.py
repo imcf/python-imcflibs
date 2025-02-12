@@ -13,39 +13,63 @@ from ij.process import StackStatistics, ImageProcessor
 
 
 def show_status(msg):
-    """Wrapper to update the ImageJ status bar and the log simultaneously."""
+    """Update the ImageJ status bar and issue a log message.
+    
+    Parameters
+    ----------
+    msg : str
+        The message to display in the ImageJ status bar and log.
+    """
     log.info(msg)
     IJ.showStatus(msg)
 
 
 def show_progress(cur, final):
-    """Wrapper to update the progress bar and issue a log message."""
-    # ij.IJ.showProgress is adding 1 to the value given as first parameter...
+    """Update the ImageJ progress bar and log the current progress.
+
+    Parameters
+    ----------
+    cur : int
+        Current progress value.
+    final : int
+        Total value representing 100% completion.
+
+    Notes 
+    -----
+    `ij.IJ.showProgress` internally increments the given `cur` value by 1
+    """
     log.info("Progress: %s / %s (%s)", cur + 1, final, (1.0 + cur) / final)
     IJ.showProgress(cur, final)
 
 
 def error_exit(msg):
-    """Convenience wrapper to log an error and exit then."""
+    """Log an error message and exit.
+    
+    Parameters
+    ----------
+    msg : str
+        The error message to log.
+    """
     log.error(msg)
     sys.exit(msg)
 
 
 def elapsed_time_since(start, end=None):
-    """Generate a string with the time elapsed between the two timepoints.
+    """Generate a string with the time elapsed between two timepoints.
 
     Parameters
     ----------
-    start : time.time
-        Start time.
-    end : time.time, optional
-        End time. If skipped the current time will be used.
+    start : float
+        The start time, typically obtained via `time.time()`.
+    end : float, optional
+        The end time. If not given, the current time is used.
 
     Returns
     -------
     str
-    """
+        The elapsed time formatted as `HH:MM:SS.ss`.
 
+    """
     if not end:
         end = time.time()
 
@@ -60,13 +84,14 @@ def percentage(part, whole):
     Parameters
     ----------
     part : float
-        Part.
+        The portion value of a total.
     whole : float
-        Complete size.
+        The total value.
 
     Returns
     -------
     float
+        The percentage value.
     """
     return 100 * float(part) / float(whole)
 
@@ -76,13 +101,13 @@ def calculate_mean_and_stdv(float_values):
 
     Parameters
     ----------
-    float_values : list(float)
+    float_values : list of float
         List containing float numbers.
 
     Returns
     -------
-    [float, float]
-        Mean (1st item) and standard deviation (2nd item) of the list.
+    tuple of (float, float)
+        Mean and standard deviation of the input list.
     """
     mean = sum(float_values) / len(float_values)
     tot = 0.0
@@ -92,21 +117,30 @@ def calculate_mean_and_stdv(float_values):
 
 
 def find_focus(imp):
-    """Find the slice of a stack that seems to bet the best focused one.
+    """Find the slice of a stack that is the best focused one.
 
-    NOTE: currently only single-channel stacks are supported.
-
-    FIXME: explain what the function is actually doing, i.e. how does it decide
-    what "the best focused one" is?
+    This function calculates the variance of the pixel values in each slice.
+    The slice with the highest variance is considered the best focused
+    because a higher variance typically indicates more contrast and sharpness.
 
     Parameters
     ----------
     imp : ij.ImagePlus
-        A single-channel ImagePlus.
+        A single-channel ImagePlus stack.
 
     Returns
     -------
     int
+        The slice number of the best focused slice.
+
+    Raises
+    ------
+    SystemExit
+        If the image has more than one channel.
+
+    Notes
+    -----
+    Currently only single-channel stacks are supported.
     """
 
     imp_dimensions = imp.getDimensions()
@@ -116,7 +150,7 @@ def find_focus(imp):
     if imp_dimensions[2] != 1:
         sys.exit("Image has more than one channel, please reduce dimensionality")
 
-    # Loop through each time points
+    # Loop through each time point
     for plane in range(1, imp_dimensions[4] + 1):
         focused_slice = 0
         norm_var = 0
@@ -186,7 +220,7 @@ def timed_log(message, as_string=False):
 
 
 def get_free_memory():
-    """Get the free memory thats available to ImageJ.
+    """Get the free memory that is available to ImageJ.
 
     Returns
     -------
@@ -203,13 +237,8 @@ def get_free_memory():
 def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-argument
     """Set up a clean and defined ImageJ environment.
 
-    Clean active results table, roi manager and log, close any open image.
-
-    "Fresh Start" is described in the ImageJ release notes [1] following a
-    suggestion by Robert Haase in the Image.sc Forum [2].
-
-    [1]: https://imagej.nih.gov/ij/notes.html
-    [2]: https://forum.image.sc/t/fresh-start-macro-command-in-imagej-fiji/43102
+    This funtion clears the active results table, the ROI manager, and the log.
+    Additionally, it closes all open images and resets the ImageJ options, performing a "Fresh Start".
 
     Parameters
     ----------
@@ -217,6 +246,14 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
         Will be ignored (kept for keeping API compatibility).
     rt : ResultsTable, optional
         Will be ignored (kept for keeping API compatibility).
+
+    Notes
+    -----
+    "Fresh Start" is described in the ImageJ release notes [1] following a
+    suggestion by Robert Haase in the Image.sc Forum [2].
+
+    [1]: https://imagej.nih.gov/ij/notes.html
+    [2]: https://forum.image.sc/t/fresh-start-macro-command-in-imagej-fiji/43102
     """
 
     IJ.run("Fresh Start", "")
@@ -226,12 +263,17 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
 
 def sanitize_image_title(imp):
-    """Remove special chars and various suffixes from an open ImagePlus.
+    """Remove special characters and various suffixes from the title of an open ImagePlus.
 
     Parameters
     ----------
     imp : ImagePlus
         The ImagePlus to be renamed.
+    
+    Notes
+    -----
+    - The function removes the full path of the image file (if present), retaining only
+      the base filename using `os.path.basename()`.
     """
     # sometimes (unclear when) the title contains the full path, therefore we
     # simply call `os.path.basename()` on it to remove all up to the last "/":
@@ -250,15 +292,15 @@ def subtract_images(imp1, imp2):
 
     Parameters
     ----------
-    imp1: ImagePlus
+    imp1: ij.ImagePlus
         The ImagePlus that is to be subtracted from
-    imp2: ImagePlus
+    imp2: ij.ImagePlus
         The ImagePlus that is to be subtracted
 
     Returns
     ---------
-    subtract: ImagePlus
-        The result of the subtraction
+    subtracted: ij.ImagePlus
+        The resulting ImagePlus from the subtraction
     """
     ic = ImageCalculator()
     subtracted = ic.run("Subtract create", imp1, imp2)
@@ -271,7 +313,7 @@ def close_images(list_of_imps):
 
     Parameters
     ----------
-    list_of_imps : list
+    list_of_imps : list of ij.ImagePlus
         A list of open ImagePlus objects
 
     """
@@ -280,45 +322,29 @@ def close_images(list_of_imps):
         imp.close()
 
 
-def get_threshold_value_from_method(imp, channel, method, dark=True):
-    """Returns the threshold value of an ImagePlus object using the chosen
-    IJ AutoThreshold method in desired channel. ImagePlus Object needs to be 8 or 16 bit, 32 will throw an error.
+def get_threshold_value_from_method(imp, method, ops):
+    """Returns the threshold value of chosen IJ AutoThreshold method from an ImagePlus stack.
 
     Parameters
     ----------
-    imp : ImagePlus
-        The imp from which to get the threshold value
-    channel : integer
-        The channel in which to get the threshold
+    imp : ij.ImagePlus
+        The image from which to get the threshold value.
     method : string
-        The AutoThreshold method to use
-    dark: bool
-        Sets background to be dark or not
+        The AutoThreshold method to use.
+        Only the ones listed in the IJ AutoThreshold plugin are supported:
+        'huang', 'ij1', 'intermodes', 'isoData', 'li', 'maxEntropy', 'maxLikelihood', 'mean', 'minError', 
+        'minimum', 'moments', 'otsu', 'percentile', 'renyiEntropy', 'rosin', 'shanbhag', 'triangle', 'yen'.
+    ops: ops.OpService
+        The ImageJ Ops service, defined as script parameter at the top of the script, as follows:
+        #@ OpService ops 
 
     Returns
     -------
-    list
-        the upper and the lower threshold (integer values)
+    threshold_value: int
+        The threshold value.
     """
-    imp.setC(channel)  # starts at 1
-    max_int_val = 2 ** imp.getBitDepth() - 1  # Get maximum intensity value depending on image bit depth
-    if imp.getBitDepth == 32:  # Raise error if 32 bit image
-        raise ValueError("Image is 32-bit; thresholding values will be off.")
-
-    ip = imp.getProcessor()
-    if dark:
-        ip.setAutoThreshold(method + " dark")
-    else:
-        ip.setAutoThreshold(method + "")
-
-    lower_thr = ip.getMinThreshold()
-    upper_thr = ip.getMaxThreshold()
-
-    if lower_thr == 0:
-        threshold = upper_thr
-    elif upper_thr == max_int_val:
-        threshold = lower_thr
-
-    ip.resetThreshold()
-
-    return threshold
+    histogram = ops.run("image.histogram", imp)
+    threshold_value = ops.run("threshold.%s" % method, histogram)
+    threshold_value = int(round(threshold_value.get()))
+    
+    return threshold_value
