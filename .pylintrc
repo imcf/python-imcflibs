@@ -4,3 +4,6 @@ good-names=i,j,k,ex,Run,_,x,y,z,rm,rt
 
 # don't mess with black autoformatting, just let it do its job:
 disable=bad-continuation
+
+# this is (unfortunately) Python 2.7 code, so no f-strings:
+disable=consider-using-f-string
