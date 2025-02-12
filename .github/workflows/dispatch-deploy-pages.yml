@@ -1,4 +1,4 @@
-name: 🚀 Dispatch workflows in other repositories
+name: 🚀 Dispatch foreign workflows
 
 on:
   workflow_dispatch:
