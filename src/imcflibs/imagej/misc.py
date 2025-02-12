@@ -5,8 +5,7 @@ import time
 import os
 
 from ij import IJ  # pylint: disable-msg=import-error
-from ij.plugin import ImageCalculator, Concatenator
-from ij.process import StackStatistics, ImageProcessor
+from ij.plugin import ImageCalculator
 
 from . import prefs
 from ..log import LOG as log
