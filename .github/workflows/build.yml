@@ -151,6 +151,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    needs:
+      - publish-to-pypi
+
     steps:
       - name: 🏹 Fire event on `${{ matrix.repo }}`
         run: |
