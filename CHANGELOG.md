@@ -8,8 +8,15 @@ FIXME: complete description for `send_mail` configuration below!
 
 ### Added
 
-* `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
-  various suffixes from an ImagePlus.
+* Various additions to `imcflibs.imagej.misc`:
+  * `imcflibs.imagej.misc.send_mail` to send notification emails to users, e.g.
+    upon completion of long running scripts (configurable via user preferences).
+  * `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
+    various suffixes from an ImagePlus.
+  * `imcflibs.imagej.misc.subtract_images` to subtract an image from another.
+  * `imcflibs.imagej.misc.close_images` for closing selected image windows.
+  * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that
+    a selected AutoThreshold method would be using.
 * `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image
   to get a label image (2D/3D).
 * New `imcflibs.imagej.objects3d` submodule, providing:
@@ -45,8 +52,6 @@ FIXME: complete description for `send_mail` configuration below!
     propagating transformation parameters to other channels.
   * `imcflibs.imagej.bdv.fuse_dataset` to call BigStitcher's "Fuse Dataset"
     command.
-* `imcflibs.imagej.misc.send_mail` to send notification emails to users, e.g.
-  upon completion of a long running script (configurable via user preferences).
 
 ## 1.4.0
 
