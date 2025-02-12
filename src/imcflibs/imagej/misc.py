@@ -14,7 +14,7 @@ from ij.process import StackStatistics, ImageProcessor
 
 def show_status(msg):
     """Update the ImageJ status bar and issue a log message.
-    
+
     Parameters
     ----------
     msg : str
@@ -34,7 +34,7 @@ def show_progress(cur, final):
     final : int
         Total value representing 100% completion.
 
-    Notes 
+    Notes
     -----
     `ij.IJ.showProgress` internally increments the given `cur` value by 1
     """
@@ -44,7 +44,7 @@ def show_progress(cur, final):
 
 def error_exit(msg):
     """Log an error message and exit.
-    
+
     Parameters
     ----------
     msg : str
@@ -269,7 +269,7 @@ def sanitize_image_title(imp):
     ----------
     imp : ImagePlus
         The ImagePlus to be renamed.
-    
+
     Notes
     -----
     - The function removes the full path of the image file (if present), retaining only
@@ -332,11 +332,11 @@ def get_threshold_value_from_method(imp, method, ops):
     method : string
         The AutoThreshold method to use.
         Only the ones listed in the IJ AutoThreshold plugin are supported:
-        'huang', 'ij1', 'intermodes', 'isoData', 'li', 'maxEntropy', 'maxLikelihood', 'mean', 'minError', 
+        'huang', 'ij1', 'intermodes', 'isoData', 'li', 'maxEntropy', 'maxLikelihood', 'mean', 'minError',
         'minimum', 'moments', 'otsu', 'percentile', 'renyiEntropy', 'rosin', 'shanbhag', 'triangle', 'yen'.
     ops: ops.OpService
         The ImageJ Ops service, defined as script parameter at the top of the script, as follows:
-        #@ OpService ops 
+        #@ OpService ops
 
     Returns
     -------
@@ -346,5 +346,5 @@ def get_threshold_value_from_method(imp, method, ops):
     histogram = ops.run("image.histogram", imp)
     threshold_value = ops.run("threshold.%s" % method, histogram)
     threshold_value = int(round(threshold_value.get()))
-    
+
     return threshold_value
