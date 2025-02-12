@@ -24,7 +24,7 @@ def show_status(msg):
 
 
 def show_progress(cur, final):
-    """Update the ImageJ progress bar and log the current progress.
+    """Update ImageJ's progress bar and print the current progress to the log.
 
     Parameters
     ----------
@@ -35,7 +35,7 @@ def show_progress(cur, final):
 
     Notes
     -----
-    `ij.IJ.showProgress` internally increments the given `cur` value by 1
+    `ij.IJ.showProgress` internally increments the given `cur` value by 1.
     """
     log.info("Progress: %s / %s (%s)", cur + 1, final, (1.0 + cur) / final)
     IJ.showProgress(cur, final)
@@ -118,9 +118,9 @@ def calculate_mean_and_stdv(float_values):
 def find_focus(imp):
     """Find the slice of a stack that is the best focused one.
 
-    This function calculates the variance of the pixel values in each slice.
-    The slice with the highest variance is considered the best focused
-    because a higher variance typically indicates more contrast and sharpness.
+    First, calculate the variance of the pixel values in each slice. The slice
+    with the highest variance is considered the best focused as this typically
+    indicates more contrast and sharpness.
 
     Parameters
     ----------
@@ -187,7 +187,7 @@ def progressbar(progress, total, line_number, prefix=""):
     line_number : int
         Number of the line to be updated.
     prefix : str, optional
-        Text to use before the progress bar, by default ''.
+        Text to use before the progress bar, by default an empty string.
     """
 
     size = 20
@@ -237,7 +237,8 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
     """Set up a clean and defined ImageJ environment.
 
     This funtion clears the active results table, the ROI manager, and the log.
-    Additionally, it closes all open images and resets the ImageJ options, performing a "Fresh Start".
+    Additionally, it closes all open images and resets the ImageJ options,
+    performing a [*Fresh Start*][fresh_start].
 
     Parameters
     ----------
@@ -248,11 +249,11 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
     Notes
     -----
-    "Fresh Start" is described in the ImageJ release notes [1] following a
-    suggestion by Robert Haase in the Image.sc Forum [2].
+    "Fresh Start" is described in the [ImageJ release notes][ij_relnotes],
+    following a [suggestion by Robert Haase][fresh_start].
 
-    [1]: https://imagej.nih.gov/ij/notes.html
-    [2]: https://forum.image.sc/t/fresh-start-macro-command-in-imagej-fiji/43102
+    [ij_relnotes]: https://imagej.nih.gov/ij/notes.html
+    [fresh_start]: https://forum.image.sc/t/43102
     """
 
     IJ.run("Fresh Start", "")
@@ -262,7 +263,7 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
 
 def sanitize_image_title(imp):
-    """Remove special characters and various suffixes from the title of an open ImagePlus.
+    """Remove special chars and various suffixes from the title of an ImagePlus.
 
     Parameters
     ----------
@@ -271,8 +272,8 @@ def sanitize_image_title(imp):
 
     Notes
     -----
-    - The function removes the full path of the image file (if present), retaining only
-      the base filename using `os.path.basename()`.
+    The function removes the full path of the image file (if present), retaining
+    only the base filename using `os.path.basename()`.
     """
     # sometimes (unclear when) the title contains the full path, therefore we
     # simply call `os.path.basename()` on it to remove all up to the last "/":
@@ -287,7 +288,7 @@ def sanitize_image_title(imp):
 
 
 def subtract_images(imp1, imp2):
-    """Subtract one image from the other (imp1 - imp2)
+    """Subtract one image from the other (imp1 - imp2).
 
     Parameters
     ----------
@@ -298,8 +299,8 @@ def subtract_images(imp1, imp2):
 
     Returns
     ---------
-    subtracted: ij.ImagePlus
-        The resulting ImagePlus from the subtraction
+    ij.ImagePlus
+        The ImagePlus resulting from the subtraction
     """
     ic = ImageCalculator()
     subtracted = ic.run("Subtract create", imp1, imp2)
@@ -308,13 +309,12 @@ def subtract_images(imp1, imp2):
 
 
 def close_images(list_of_imps):
-    """Closes all open image plus objects given in a list
+    """Close all open ImagePlus objects given in a list.
 
     Parameters
     ----------
-    list_of_imps : list of ij.ImagePlus
+    list(ij.ImagePlus)
         A list of open ImagePlus objects
-
     """
     for imp in list_of_imps:
         imp.changes = False
@@ -322,25 +322,30 @@ def close_images(list_of_imps):
 
 
 def get_threshold_value_from_method(imp, method, ops):
-    """Returns the threshold value of chosen IJ AutoThreshold method from an ImagePlus stack.
+    """Get the value of a selected AutoThreshold method for the given ImagePlus.
+
+    This is useful to figure out which threshold value will be calculated by the
+    selected method for the given stack *without* actually having to apply it.
 
     Parameters
     ----------
     imp : ij.ImagePlus
         The image from which to get the threshold value.
-    method : string
+    method : {'huang', 'ij1', 'intermodes', 'isoData', 'li', 'maxEntropy',
+        'maxLikelihood', 'mean', 'minError', 'minimum', 'moments', 'otsu',
+        'percentile', 'renyiEntropy', 'rosin', 'shanbhag', 'triangle', 'yen'}
         The AutoThreshold method to use.
-        Only the ones listed in the IJ AutoThreshold plugin are supported:
-        'huang', 'ij1', 'intermodes', 'isoData', 'li', 'maxEntropy', 'maxLikelihood', 'mean', 'minError',
-        'minimum', 'moments', 'otsu', 'percentile', 'renyiEntropy', 'rosin', 'shanbhag', 'triangle', 'yen'.
     ops: ops.OpService
-        The ImageJ Ops service, defined as script parameter at the top of the script, as follows:
+        The ImageJ Ops service instance, usually retrieved through a _Script
+        Parameter_ at the top of the script, as follows:
+        ```
         #@ OpService ops
+        ```
 
     Returns
     -------
-    threshold_value: int
-        The threshold value.
+    int
+        The threshold value chosen by the selected method.
     """
     histogram = ops.run("image.histogram", imp)
     threshold_value = ops.run("threshold.%s" % method, histogram)
