@@ -87,27 +87,29 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
 
-    # Cache dependencies (i.e. all the stuff in your `pyproject.toml`).
-    - name: 🗃 Cache 🧾 Dependencies
-      id: cache-deps
-      uses: actions/cache@v4
-      with:
-        path: .venv
-        key: pydeps-${{ hashFiles('**/poetry.lock') }}
+    ### No dependencies and project installation required, we're just packaging.
+    # # Cache dependencies (i.e. all the stuff in your `pyproject.toml`).
+    # - name: 🗃 Cache 🧾 Dependencies
+    #   id: cache-deps
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: .venv
+    #     key: pydeps-${{ hashFiles('**/poetry.lock') }}
 
-    # No Poetry dynamic versioning in this project, we're using the POM instead!
+    ### No poetry-dynamic-versioning here, we're using the POM instead!
     # - name: 🎭 Install Poetry dynamic-versioning 🔌 plugin
     #   run: poetry self add "poetry-dynamic-versioning[plugin]"
 
-    # Install dependencies. `--no-root` means "install all dependencies but
-    # not the project itself", which is what you want to avoid caching _your_
-    # code. The `if` statement ensures this only runs on a cache miss.
-    - name: 🎭 Install 🧾 Dependencies
-      run: scripts/run-poetry.sh install --no-interaction --no-root
-      if: steps.cache-deps.outputs.cache-hit != 'true'
+    ### No dependencies and project installation required, we're just packaging.
+    # # Install dependencies. `--no-root` means "install all dependencies but
+    # # not the project itself", which is what you want to avoid caching _your_
+    # # code. The `if` statement ensures this only runs on a cache miss.
+    # - name: 🎭 Install 🧾 Dependencies
+    #   run: scripts/run-poetry.sh install --no-interaction --no-root
+    #   if: steps.cache-deps.outputs.cache-hit != 'true'
 
-    - name: 🎭 Install 🛖 project
-      run: scripts/run-poetry.sh install --no-interaction
+    # - name: 🎭 Install 🛖 project
+    #   run: scripts/run-poetry.sh install --no-interaction
 
     - name: 🎭👷 Build 🧱 project
       run: scripts/run-poetry.sh build
