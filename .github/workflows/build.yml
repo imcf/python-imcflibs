@@ -15,36 +15,36 @@ on:
 
 jobs:
 
-  # publish-to-scijava:
+  publish-to-scijava:
 
-  #   name: 🔬☕ publish via Ⓜ Maven to SciJava
+    name: 🔬☕ publish via Ⓜ Maven to SciJava
 
-  #   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #   steps:
+    steps:
 
-  #     - uses: actions/checkout@v4
-  #       name: 📥 Checkout repo
+      - uses: actions/checkout@v4
+        name: 📥 Checkout repo
 
-  #     - name: ☕ Set up Java
-  #       uses: actions/setup-java@v3
-  #       with:
-  #         java-version: '8'
-  #         distribution: 'zulu'
-  #         cache: 'maven'
+      - name: ☕ Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'zulu'
+          cache: 'maven'
 
-  #     - name: 🪐 Set up CI environment
-  #       run: .github/setup.sh
+      - name: 🪐 Set up CI environment
+        run: .github/setup.sh
 
-  #     - name: 👷 Build and publish on 🔬☕ SciJava
-  #       run: .github/build.sh
-  #       env:
-  #         GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
-  #         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-  #         MAVEN_USER: ${{ secrets.MAVEN_USER }}
-  #         MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-  #         OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
-  #         SIGNING_ASC: ${{ secrets.SIGNING_ASC }}
+      - name: 👷 Build and publish on 🔬☕ SciJava
+        run: .github/build.sh
+        env:
+          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_USER: ${{ secrets.MAVEN_USER }}
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+          OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
+          SIGNING_ASC: ${{ secrets.SIGNING_ASC }}
 
 
   build-via-poetry:
