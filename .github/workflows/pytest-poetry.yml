@@ -86,7 +86,7 @@ jobs:
     # not the project itself", which is what you want to avoid caching _your_
     # code. The `if` statement ensures this only runs on a cache miss.
     - name: 🎭 Install 🧾 Dependencies
-      run: scripts/run-poetry.sh install --no-interaction --no-root
+      run: scripts/run-poetry.sh install --no-interaction --no-root --verbose
       if: steps.cache-deps.outputs.cache-hit != 'true'
 
     # Now install _your_ project. This isn't necessary for many types of
@@ -95,7 +95,7 @@ jobs:
     # that if you add things like console-scripts at some point that they'll
     # be installed and working.
     - name: 🎭 Install 🛖 project
-      run: scripts/run-poetry.sh install --no-interaction
+      run: scripts/run-poetry.sh install --no-interaction --verbose
 
     # And finally run the tests.
     - name: 🧪🎭 Run Tests
