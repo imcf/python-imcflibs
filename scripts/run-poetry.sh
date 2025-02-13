@@ -8,16 +8,11 @@ STATUS=$(git status --porcelain)
 
 if [ -z "$RUN_ON_UNCLEAN" ]; then
     if [ -n "$STATUS" ]; then
-        echo "================================================================"
-        echo "============= ERROR: repository unclean, stopping! ============="
-        echo "================================================================"
+        echo "==== ERROR: repository unclean, stopping! ===="
         echo
         git status
         echo
-        echo "================================================================"
-        echo "============= ERROR: repository unclean, stopping! ============="
-        echo "================================================================"
-        echo
+        echo "--------"
         echo "To ignore this (you have been warned!), set an environment var:"
         echo
         echo "> export RUN_ON_UNCLEAN=true"
