@@ -17,7 +17,7 @@ jobs:
 
   publish-to-scijava:
 
-    name: 🔬☕ publish via Ⓜ Maven to SciJava
+    name: 🔬☕ publish to SciJava
 
     runs-on: ubuntu-latest
 
