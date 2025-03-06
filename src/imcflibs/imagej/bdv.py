@@ -543,32 +543,6 @@ class DefinitionOptions(object):
             "multi_multi": MULTI_MULTI_FILE,
         }
 
-    def check_definition_option_ang_ill(self, value):
-        """Check if the value is a valid definition option.
-
-        This is needed for angles and illuminations because support is not
-        available for multiple angles and illuminations in a single file.
-
-        Parameters
-        ----------
-        value : str
-            Entered value by the user.
-
-        Returns
-        -------
-        dict(str, str): dictionary containing the correct string definition.
-        """
-        if value not in [
-            "single",
-            "multi_multi",
-        ]:
-            raise ValueError("Value must be one of single, multi_multi. Support for multi_single is not available for angles and illuminations")
-
-        return {
-            "single": SINGLE_FILE,
-            "multi_multi": MULTI_MULTI_FILE,
-        }
-
     def set_angle_definition(self, value):
         """Set the value for the angle definition
 
@@ -833,13 +807,16 @@ def define_dataset_auto(
         angle_rotation = ""
 
     options = (
-        "define_dataset=[Automatic Loader (Bioformats based)] "
+        "select=define"
+        + " "
+        + "define_dataset=[Automatic Loader (Bioformats based)]"
+        + " "
         + "project_filename=["
         + project_filename
         + ".xml"
         + "] "
         + "path=["
-        + file_info["path"]
+        + file_info["full"]
         + "] "
         + "exclude=10 "
         + "bioformats_series_are?="
@@ -849,7 +826,7 @@ def define_dataset_auto(
         + "how_to_store_input_images=["
         + resave
         + "] "
-        + load_raw_data_virtually
+        + "load_raw_data_virtually"
         + " "
         + "metadata_save_path=["
         + dataset_save_path
@@ -871,14 +848,7 @@ def define_dataset_auto(
 
     log.debug(options)
 
-    if bf_series_type == "Tiles":
-        log.debug("Doing tiled dataset definition")
-        IJ.run("BigSticher", "select=define " + str(options))
-    elif bf_series_type == "Angles":
-        log.debug("Doing multi-view dataset definition")
-        IJ.run("Define Multi-View Dataset", str(options))
-    else:
-        raise ValueError("Wrong answer for series type")
+    IJ.run("BigStitcher", str(options))
 
 
 def define_dataset_manual(
@@ -1454,7 +1424,9 @@ def fuse_dataset(
     downsampling=1,
     interpolation="[Linear Interpolation]",
     pixel_type="[16-bit unsigned integer]",
+    fusion_type="Avg, Blending",
     export="HDF5",
+    compression="Zstandard",
 ):
     """Call BigStitcher's "Fuse Dataset" command.
 
@@ -1505,11 +1477,13 @@ def fuse_dataset(
         + "interpolation="
         + interpolation
         + " "
+        + "fusion_type=["
+        + fusion_type
+        + "] "
         + "pixel_type="
         + pixel_type
         + " "
         + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
-        + "blend "
         + "preserve_original "
         + "produce=[Each timepoint & channel] "
     )
@@ -1536,9 +1510,12 @@ def fuse_dataset(
 
         options = (
             options
-            + "fused_image=[ZARR/N5/HDF5 export using N5-API] "
+            + "fused_image=[OME-ZARR/N5/HDF5 export using N5-API] "
             + "define_input=[Auto-load from input data (values shown below)] "
             + "export=HDF5 "
+            + "compression="
+            + compression
+            + " "
             + "create "
             + "create_0 "
             + "hdf5_file=["
@@ -1557,56 +1534,4 @@ def fuse_dataset(
         )
 
     log.debug("Dataset fusion options: <%s>", options)
-    IJ.run("Fuse dataset ...", str(options))
-
-def fuse_dataset_bdvp(
-    project_path,
-    command,
-    processing_opts=None,
-    result_path=None,
-    compression="LZW",
-):
-    """Export a BigDataViewer project using the BIOP Kheops exporter.
-
-    This function uses the BIOP Kheops exporter to convert a BigDataViewer project into a
-    OME-TIFF files, with optional compression.
-
-    Parameters
-    ----------
-    project_path : str
-        Full path to the BigDataViewer XML project file.
-    command : CommandService
-        The Scijava CommandService instance to execute the export command.
-    processing_opts : ProcessingOptions, optional
-        Options defining which parts of the dataset to process. If None, default processing
-        options will be used (process all angles, channels, etc.).
-    result_path : str, optional
-        Path where to store the exported files. If None, files will be saved in the same
-        directory as the input project.
-    compression : str, optional
-        Compression method to use for the TIFF files. Default is "LZW".
-
-    Notes
-    -----
-    This function requires the PTBIOP update site to be enabled in Fiji/ImageJ.
-    """
-    if processing_opts is None:
-        processing_opts = ProcessingOptions()
-
-    file_info = pathtools.parse_path(project_path)
-    if not result_path:
-        result_path = file_info["path"]
-        # if not os.path.exists(result_path):
-        #     os.makedirs(result_path)
-
-    command.run(
-        KheopsExportImagePlusCommand,
-        True,
-        "image", project_path,
-        "output_dir", result_path,
-        "compression", compression,
-        "subset_channels", "",
-        "subset_slices", "",
-        "subset_frames", "",
-        "compress_temp_files", False
-    )
+    IJ.run("Image Fusion", str(options))
