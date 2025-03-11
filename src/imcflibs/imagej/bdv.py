@@ -13,7 +13,7 @@ import os
 import shutil
 import sys
 
-from ch.epfl.biop.kheops import KheopsExportImagePlusCommand
+from ch.epfl.biop.scijava.command.spimdata import FuseBigStitcherDatasetIntoOMETiffCommand
 from ij import IJ
 
 from .. import pathtools
@@ -1576,7 +1576,7 @@ def fuse_dataset_bdvp(
         #     os.makedirs(result_path)
 
     command.run(
-        KheopsExportImagePlusCommand,
+        FuseBigStitcherDatasetIntoOMETiffCommand,
         True,
         "image",
         project_path,
