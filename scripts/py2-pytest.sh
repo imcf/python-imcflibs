@@ -30,7 +30,11 @@ fi
 # now we're done checking the environment, so disallow empty variables below:
 set -o nounset
 
-pip2 --version
+# NOTE: the `pip2` calls below were initially using a flag to prevent the
+# deprecation warning for Python 2.7 (`--no-python-version-warning`), alas this
+# flag only got into pip as of version 20.0, which is newer than the default one
+# provided by GitHub's "ubuntu-22.04" image, so these commands would fail -
+# therefore we'll have to live with the warnings for now.
 
 if ! [ -d "$VENV" ]; then
     pip2 show virtualenv > /dev/null || {
