@@ -97,6 +97,51 @@ def relate_label_images(label_image_ref, label_image_to_relate):
     return ImageCalculator.run(label_image_ref, imp_dup, "Multiply create")
 
 
+def associate_label_images_3d(outer_label_imp, inner_label_imp):
+    """
+    Associate two label images.
+
+    Uses the 3D Association plugin from the 3DImageJSuite.
+
+    Parameters
+    ----------
+    outer_label_imp : ij.ImagePlus
+        The outer label image
+    inner_label_imp : ij.ImagePlus
+        The inner label image
+
+    Returns
+    -------
+    related_inner_imp : ij.ImagePlus
+        The related inner label image
+    """
+
+    outer_label_imp.show()
+    inner_label_imp.show()
+
+    outer_title = outer_label_imp.getTitle()
+    inner_title = inner_label_imp.getTitle()
+
+    IJ.run(
+        "3D Association",
+        "image_a="
+        + outer_title
+        + " "
+        + "image_b="
+        + inner_title
+        + " "
+        + "method=Colocalisation min=1 max=0.000",
+    )
+
+    related_inner_imp = IJ.getImage()
+
+    outer_label_imp.hide()
+    inner_label_imp.hide()
+    related_inner_imp.hide()
+
+    return related_inner_imp
+
+
 def filter_objects(label_image, table, string, min_val, max_val):
     """Filter labels based on specific min and max values.
 
