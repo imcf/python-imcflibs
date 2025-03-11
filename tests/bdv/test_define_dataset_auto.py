@@ -4,7 +4,7 @@ from imcflibs import pathtools
 from imcflibs.imagej import bdv
 
 
-def set_default_values(project_filename, file_path):
+def set_default_values(project_filename, file_path, series_type = "Tiles"):
     """Set the default values for dataset definitions.
 
     Parameters
@@ -32,6 +32,7 @@ def set_default_values(project_filename, file_path):
         + file_info["path"]
         + "] "
         + "exclude=10 "
+        + "bioformats_series_are?=[" + series_type + "] "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
     )
 
@@ -77,7 +78,6 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     # Construct the options for dataset definitions
     options = (
         options
-        + "bioformats_series_are?=Tiles "
         + "how_to_store_input_images=["
         + "Re-save as multiresolution HDF5"
         + "] "
@@ -138,15 +138,19 @@ def test_define_dataset_auto_angle(tmp_path, caplog):
     cmd = "Define Multi-View Dataset"
 
     # Set the default values for dataset definitions
-    options = set_default_values(project_filename, file_path)
+    options = set_default_values(project_filename, file_path, bf_series_type)
 
     # Construct the options for dataset definitions
     options = (
         options
-        + "how_to_load_images=["
+        + "how_to_store_input_images=["
         + "Re-save as multiresolution HDF5"
         + "] "
-        + "dataset_save_path=["
+        + "load_raw_data_virtually "
+        + "metadata_save_path=["
+        + result_folder
+        + "] "
+        + "image_data_save_path=["
         + result_folder
         + "] "
         + "check_stack_sizes "
