@@ -69,7 +69,7 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     bf_series_type = "Tiles"
 
     # Define the ImageJ command
-    cmd = "Define dataset ..."
+    cmd = "Define Multi-View Dataset"
 
     # Set the default values for dataset definitions
     options = set_default_values(project_filename, file_path)
@@ -77,10 +77,15 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     # Construct the options for dataset definitions
     options = (
         options
-        + "how_to_load_images=["
+        + "bioformats_series_are?=Tiles "
+        + "how_to_store_input_images=["
         + "Re-save as multiresolution HDF5"
         + "] "
-        + "dataset_save_path=["
+        + "load_raw_data_virtually "
+        + "metadata_save_path=["
+        + result_folder
+        + "] "
+        + "image_data_save_path=["
         + result_folder
         + "] "
         + "check_stack_sizes "
