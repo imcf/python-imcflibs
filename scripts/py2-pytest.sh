@@ -30,10 +30,12 @@ fi
 # now we're done checking the environment, so disallow empty variables below:
 set -o nounset
 
+pip2 --version
+
 if ! [ -d "$VENV" ]; then
-    pip2 --no-python-version-warning show virtualenv > /dev/null || {
+    pip2 show virtualenv > /dev/null || {
         echo "== Installing 'virtualenv' for Python2..."
-        pip2 --no-python-version-warning install virtualenv
+        pip2 install virtualenv
     }
     echo "== Creating a Python2 venv in [$VENV]..."
     python2 -m virtualenv --always-copy "$VENV"
@@ -41,7 +43,7 @@ if ! [ -d "$VENV" ]; then
 fi
 
 function vpip() {
-    "$VENV/bin/pip" --no-python-version-warning "$@"
+    "$VENV/bin/pip" "$@"
 }
 
 echo
