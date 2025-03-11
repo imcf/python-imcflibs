@@ -808,9 +808,7 @@ def define_dataset_auto(
         angle_rotation = ""
 
     options = (
-        "select=define"
-        + " "
-        + "define_dataset=[Automatic Loader (Bioformats based)]"
+        "define_dataset=[Automatic Loader (Bioformats based)]"
         + " "
         + "project_filename=["
         + project_filename
@@ -849,7 +847,7 @@ def define_dataset_auto(
 
     log.debug(options)
 
-    IJ.run("BigStitcher", str(options))
+    IJ.run("Define Multi-View Dataset", str(options))
 
 
 def define_dataset_manual(
@@ -887,8 +885,7 @@ def define_dataset_manual(
     os.path.join(temp, project_filename)
 
     options = (
-        "select=define "
-        + "define_dataset=[Manual Loader (Bioformats based)] "
+        "define_dataset=[Manual Loader (Bioformats based)] "
         + "project_filename=["
         + xml_filename
         + "] "
@@ -908,7 +905,7 @@ def define_dataset_manual(
     )
 
     log.debug("Manual dataset definition options: <%s>", options)
-    IJ.run("BigStitcher", str(options))
+    IJ.run("Define Multi-View Dataset", str(options))
 
 
 def resave_as_h5(
