@@ -2,7 +2,7 @@
 
 """Functions to work with ImageJ label images."""
 
-from ij import IJ, ImagePlus, Prefs, ImageStack
+from ij import IJ, ImagePlus, ImageStack, Prefs
 from ij.plugin import Duplicator, ImageCalculator
 from ij.plugin.filter import ThresholdToSelection
 from ij.process import FloatProcessor, ImageProcessor
