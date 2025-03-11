@@ -4,6 +4,7 @@ import sys
 import time
 import smtplib
 import os
+import csv
 
 from ij import IJ  # pylint: disable-msg=import-error
 from ij.plugin import ImageCalculator
@@ -410,3 +411,30 @@ def get_threshold_value_from_method(imp, method, ops):
     threshold_value = int(round(threshold_value.get()))
 
     return threshold_value
+
+
+def write_results(out_file, content):
+    """
+    Write the results to a csv file.
+
+    Parameters
+    ----------
+    out_file : str
+        Path to the output file.
+    content : list of OrderedDict
+        List of dictionaries representing the results.
+
+    """
+
+    # Check if the output file exists
+    if not os.path.exists(out_file):
+        # If the file does not exist, create it and write the header
+        with open(out_file, "wb") as f:
+            dict_writer = csv.DictWriter(f, content[0].keys(), delimiter=";")
+            dict_writer.writeheader()
+            dict_writer.writerows(content)
+    else:
+        # If the file exists, append the results
+        with open(out_file, "ab") as f:
+            dict_writer = csv.DictWriter(f, content[0].keys(), delimiter=";")
+            dict_writer.writerows(content)
