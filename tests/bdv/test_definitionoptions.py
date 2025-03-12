@@ -2,12 +2,13 @@ import pytest
 
 from imcflibs.imagej.bdv import DefinitionOptions
 
+
 def test_defaults():
     """Test the default options by calling all formatters on a "raw" objects."""
     acitt_options = (
         "multiple_angles=[NO (one angle)] "
         "multiple_channels=[YES (all channels in one file)] "
-        "multiple_illuminations=[NO (one illumination direction)] "
+        "multiple_illuminations_directions=[NO (one illumination direction)] "
         "multiple_tiles=[YES (one file per tile)] "
         "multiple_timepoints=[NO (one time-point)] "
     )
@@ -32,7 +33,7 @@ def test__multiple_timepoints_files():
     acitt_options = (
         "multiple_angles=[NO (one angle)] "
         "multiple_channels=[YES (all channels in one file)] "
-        "multiple_illuminations=[NO (one illumination direction)] "
+        "multiple_illuminations_directions=[NO (one illumination direction)] "
         "multiple_tiles=[YES (one file per tile)] "
         "multiple_timepoints=[YES (one file per time-point)] "
     )
@@ -42,13 +43,14 @@ def test__multiple_timepoints_files():
 
     assert def_opts.fmt_acitt_options() == acitt_options
 
+
 def test__multiple_channels_files_multiple_timepoints():
     """Test an example setting how to treat multiple channels and multiple time-points."""
 
     acitt_options = (
         "multiple_angles=[NO (one angle)] "
         "multiple_channels=[YES (one file per channel)] "
-        "multiple_illuminations=[NO (one illumination direction)] "
+        "multiple_illuminations_directions=[NO (one illumination direction)] "
         "multiple_tiles=[YES (one file per tile)] "
         "multiple_timepoints=[YES (all time-points in one file)] "
     )
@@ -59,6 +61,7 @@ def test__multiple_channels_files_multiple_timepoints():
 
     assert def_opts.fmt_acitt_options() == acitt_options
 
+
 def test_single_tile_multiple_angles_files():
     """Test an example setting how to treat single tile and multiple angle
     files"""
@@ -66,7 +69,7 @@ def test_single_tile_multiple_angles_files():
     acitt_options = (
         "multiple_angles=[YES (one file per angle)] "
         "multiple_channels=[YES (all channels in one file)] "
-        "multiple_illuminations=[NO (one illumination direction)] "
+        "multiple_illuminations_directions=[NO (one illumination direction)] "
         "multiple_tiles=[NO (one tile)] "
         "multiple_timepoints=[NO (one time-point)] "
     )
