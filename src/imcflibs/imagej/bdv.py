@@ -580,7 +580,7 @@ class DefinitionOptions(object):
         Parameters
         ----------
         value : str
-            One of `single`, `multi_single` or `multi_multi`.
+            One of `single` or `multi_multi`.
         """
         choices = self.check_definition_option_ang_ill(value)
         self._angle_definition = choices[value] % "angle"
