@@ -1,9 +1,7 @@
 """I/O related functions."""
 
-import glob
 import zipfile
 
-import os
 from os.path import splitext, join
 
 from .log import LOG as log
