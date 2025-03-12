@@ -42,6 +42,8 @@ select = [
     "D212",
     # imperative mood for all docstrings
     "D401",
+    # summary line has to end in a punctuation mark
+    "D415",
 ]
 
 ignore = [
