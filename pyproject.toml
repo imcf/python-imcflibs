@@ -44,6 +44,8 @@ select = [
     "D401",
     # summary line has to end in a punctuation mark
     "D415",
+    # require documentation for _all_ function parameters
+    "D417",
 ]
 
 ignore = [
