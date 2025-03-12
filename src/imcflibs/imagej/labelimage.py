@@ -227,11 +227,11 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
 
     # Set the minimum size for labeling if provided
     if min_vol:
-        labeler.setMinSizeCalibrated(min_vol)
+        labeler.setMinSize(min_vol)
 
     # Set the maximum size for labeling if provided
     if max_vol:
-        labeler.setMinSizeCalibrated(max_vol)
+        labeler.setMaxSize(max_vol)
 
     # Get the labeled image
     seg = labeler.getLabels(img)
