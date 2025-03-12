@@ -544,6 +544,34 @@ class DefinitionOptions(object):
             "multi_multi": MULTI_MULTI_FILE,
         }
 
+    def check_definition_option_ang_ill(self, value):
+        """Check if the value is a valid definition option.
+
+        This is needed for angles and illuminations because support is not
+        available for multiple angles and illuminations in a single file.
+
+        Parameters
+        ----------
+        value : str
+            Entered value by the user.
+
+        Returns
+        -------
+        dict(str, str): dictionary containing the correct string definition.
+        """
+        if value not in [
+            "single",
+            "multi_multi",
+        ]:
+            raise ValueError(
+                "Value must be one of single, multi_multi. Support for multi_single is not available for angles and illuminations"
+            )
+
+        return {
+            "single": SINGLE_FILE,
+            "multi_multi": MULTI_MULTI_FILE,
+        }
+
     def set_angle_definition(self, value):
         """Set the value for the angle definition
 
