@@ -38,6 +38,8 @@ requires = ["poetry-core"]
 [tool.ruff.lint]
 select = [
     "D",
+    # summary lines have to be placed on the first physical line of the docstring
+    "D212",
     # imperative mood for all docstrings
     "D401",
 ]
