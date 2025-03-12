@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""Tests for `imcflibs.pathtools`."""
 
 import pytest
 from imcflibs.pathtools import parse_path
