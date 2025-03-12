@@ -32,7 +32,9 @@ def set_default_values(project_filename, file_path, series_type = "Tiles"):
         + file_info["path"]
         + "] "
         + "exclude=10 "
-        + "bioformats_series_are?=[" + series_type + "] "
+        + "bioformats_series_are?="
+        + series_type
+        + " "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
     )
 
