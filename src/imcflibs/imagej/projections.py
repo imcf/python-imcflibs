@@ -1,4 +1,4 @@
-"""Functions for creating Z projections."""
+"""Functions for creating projections."""
 
 from ij.plugin import ZProjector  # pylint: disable-msg=E0401
 
@@ -12,7 +12,7 @@ from net.imagej import Dataset
 
 
 def average(imp):
-    """Create an average intensity projection.
+    """Create an average intensity Z projection.
 
     Parameters
     ----------
@@ -28,13 +28,13 @@ def average(imp):
         log.warn("ImagePlus is not a z-stack, not creating a projection!")
         return imp
 
-    log.debug("Creating average projection...")
+    log.debug("Creating average Z projection...")
     proj = ZProjector.run(imp, "avg")
     return proj
 
 
 def maximum(imp):
-    """Create a maximum intensity projection.
+    """Create a maximum intensity Z projection.
 
     Parameters
     ----------
@@ -50,7 +50,7 @@ def maximum(imp):
         log.warn("ImagePlus is not a z-stack, not creating a projection!")
         return imp
 
-    log.debug("Creating maximum intensity projection...")
+    log.debug("Creating maximum intensity Z projection...")
     proj = ZProjector.run(imp, "max")
     return proj
 
