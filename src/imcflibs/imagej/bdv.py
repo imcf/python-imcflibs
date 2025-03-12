@@ -13,7 +13,9 @@ import os
 import shutil
 import sys
 
-from ch.epfl.biop.scijava.command.spimdata import FuseBigStitcherDatasetIntoOMETiffCommand
+from ch.epfl.biop.scijava.command.spimdata import (
+    FuseBigStitcherDatasetIntoOMETiffCommand,
+)
 from ij import IJ
 
 from .. import pathtools
