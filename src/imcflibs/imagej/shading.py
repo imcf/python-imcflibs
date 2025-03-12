@@ -4,8 +4,8 @@ import os
 
 import ij  # pylint: disable-msg=import-error
 from ij import IJ
-from ij.plugin import ImageCalculator, Concatenator
-from ij.process import StackStatistics, ImageProcessor
+from ij.plugin import ImageCalculator
+from ij.process import StackStatistics
 from ..imagej import bioformats  # pylint: disable-msg=no-name-in-module
 from ..imagej import misc, projections
 from ..log import LOG as log
