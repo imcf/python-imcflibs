@@ -101,7 +101,7 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     final_call = "IJ.run(cmd=[%s], params=[%s])" % (cmd, options)
 
     # Define the dataset using the "Auto-Loader" option
-    bdv.define_dataset_auto(project_filename, file_path, bf_series_type)
+    bdv.define_dataset_auto(project_filename, file_info["path"], bf_series_type)
     # Check if the final call is in the log
     assert final_call == caplog.messages[0]
 
@@ -167,6 +167,6 @@ def test_define_dataset_auto_angle(tmp_path, caplog):
     final_call = "IJ.run(cmd=[%s], params=[%s])" % (cmd, options)
 
     # Define the dataset using the "Auto-Loader" option
-    bdv.define_dataset_auto(project_filename, file_path, bf_series_type)
+    bdv.define_dataset_auto(project_filename, file_info["path"], bf_series_type)
     # Check if the final call is in the log
     assert final_call == caplog.messages[0]
