@@ -4,7 +4,7 @@ from imcflibs import pathtools
 from imcflibs.imagej import bdv
 
 
-def set_default_values(project_filename, file_path, series_type = "Tiles"):
+def set_default_values(project_filename, file_path, series_type="Tiles"):
     """Set the default values for dataset definitions.
 
     Parameters

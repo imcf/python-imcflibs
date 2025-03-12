@@ -1,5 +1,4 @@
 import pytest
-
 from imcflibs.imagej.bdv import DefinitionOptions
 
 
@@ -17,6 +16,7 @@ def test_defaults():
 
     assert def_opts.fmt_acitt_options() == acitt_options
 
+
 def test__definition_option():
     """Test an example with wrong setting for definition option."""
 
@@ -25,7 +25,10 @@ def test__definition_option():
     def_opts = DefinitionOptions()
     with pytest.raises(ValueError) as excinfo:
         def_opts.set_angle_definition(test_value)
-    assert str(excinfo.value) == "Value must be one of single, multi_multi or multi_single"
+    assert (
+        str(excinfo.value) == "Value must be one of single, multi_multi or multi_single"
+    )
+
 
 def test__multiple_timepoints_files():
     """Test an example setting how to treat multiple time-points."""
