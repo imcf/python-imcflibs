@@ -507,7 +507,7 @@ class DefinitionOptions(object):
     >>> opts.fmt_acitt_options()
     ... multiple_angles=[NO (one angle)]
     ... multiple_channels=[YES (all channels in one file)]
-    ... multiple_illuminations=[NO (one illumination direction)]
+    ... multiple_illuminations_directions=[NO (one illumination direction)]
     ... multiple_tiles=[YES (all tiles in one file)]
     ... multiple_timepoints=[NO (one time-point)]
     """
@@ -638,7 +638,7 @@ class DefinitionOptions(object):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
 
         Build a string providing the `multiple_angles`, `multiple_channels`,
-        `multiple_illuminations`, `multiple_tiles` and `multiple_timepoints` options
+        `multiple_illuminations_directions`, `multiple_tiles` and `multiple_timepoints` options
         that can be used in a BDV-related `IJ.run` call.
 
         Returns
