@@ -274,7 +274,17 @@ def dilate_labels_2d(imp, dilation_radius):
         current_imp = Duplicator().run(imp, 1, 1, i, imp.getNSlices(), 1, 1)
 
         # Perform a dilation of the labels in the current slice
-        dilated_labels_imp = li.dilateLabels(current_imp, dilation_radius)
+        IJ.run(
+            current_imp,
+            "Label Morphological Filters",
+            "operation=Dilation radius=" + str(dilation_radius) + " from_any_label",
+        )
+
+        # Get the dilated labels
+        dilated_labels_imp = IJ.getImage()
+
+        # Hide the dilated labels to avoid visual clutter
+        dilated_labels_imp.hide()
 
         # Append the dilated labels to the list
         dilated_labels_list.append(dilated_labels_imp)
