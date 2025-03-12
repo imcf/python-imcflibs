@@ -96,30 +96,6 @@ def percentage(part, whole):
     """
     return 100 * float(part) / float(whole)
 
-def median(array):
-    """
-    Calculate the median of a list of numbers.
-
-    Parameters
-    ----------
-    array : list
-        The list of numbers to calculate the median of.
-
-    Returns
-    -------
-    float
-        The median of the list of numbers.
-    """
-    sorted_array = sorted(array)
-    half, odd = divmod(len(sorted_array), 2)
-    if odd:
-        # If the length of the array is odd, the median is the middle element
-        return sorted_array[half]
-    else:
-        # If the length of the array is even, the median is the average of the two middle elements
-        return (sorted_array[half - 1] + sorted_array[half]) / 2.0
-
-
 
 def calculate_mean_and_stdv(float_values):
     """Calculate mean and standard deviation from a list of floats.
