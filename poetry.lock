@@ -145,13 +145,13 @@ tests = ["asttokens (>=2.1.0)", "coverage", "coverage-enable-subprocess", "ipyth
 
 [[package]]
 name = "imcf-fiji-mocks"
-version = "0.6.0"
+version = "0.7.0"
 description = "Mocks collection for Fiji-Python. Zero functional code."
 optional = false
 python-versions = ">=2.7"
 files = [
-    {file = "imcf_fiji_mocks-0.6.0-py2.py3-none-any.whl", hash = "sha256:77396edd71133b8a7b2c3c4257d176c1e695f6b158e73af80a4441658988f332"},
-    {file = "imcf_fiji_mocks-0.6.0.tar.gz", hash = "sha256:cc48debf0d9eb26d932ea29364370caa6dc46fe26e2e992080ba1cf3a087b204"},
+    {file = "imcf_fiji_mocks-0.7.0-py2.py3-none-any.whl", hash = "sha256:643c3d4cc916d1573f1f3490885e37822c11c40c09b6a1e06c2fc561c8aeb20e"},
+    {file = "imcf_fiji_mocks-0.7.0.tar.gz", hash = "sha256:65eab1974629ef72bbe7b8d76e81e067d5fb55b65aab8fb7e0f24755e0f7ac6b"},
 ]
 
 [[package]]
@@ -520,4 +520,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10"
-content-hash = "a626402e812f99ff5599089b35498cd1146ced3c5e952f4cf0caf81e473f42b2"
+content-hash = "010a8923c68fb6e367da60506e1937f570cd37633e42c44ba312012be4aa2172"
