@@ -51,7 +51,7 @@ def maximum(imp):
 
 
 def create_and_save(imp, projections, path, filename, export_format):
-    """Wrapper to create one or more projections and export the results.
+    """Create one or more projections and export (save) them.
 
     Parameters
     ----------
