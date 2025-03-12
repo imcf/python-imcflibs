@@ -108,23 +108,27 @@ def create_and_save(imp, projections, path, filename, export_format):
 
 
 def project_stack(imp, projected_dimension, projection_type, ops, ds, cs):
-    """
-    Project a multi-dimensional dataset along a specified axis using a specified projection type.
+    """Project along a defined axis using the given projection type.
 
     Parameters
     ----------
     imp : ImagePlus
         The input image to be projected.
     projected_dimension : str
-        The dimension along which to project the data. Must be one of {"X", "Y", "Z", "TIME", "CHANNEL"}.
+        The dimension along which to project the data. Must be one of {"X", "Y", "Z",
+        "TIME", "CHANNEL"}.
     projection_type : str
-        The type of projection to perform. Must be one of {"Max", "Mean", "Median", "Min", "StdDev", "Sum"}.
+        The type of projection to perform. Must be one of {"Max", "Mean", "Median",
+        "Min", "StdDev", "Sum"}.
     ops : OpService
-        The service used to access image processing operations. Use e.g. from script parameter: #@ OpService ops
+        The service used to access image processing operations. Use e.g. from script
+        parameter: `#@ OpService ops`
     ds : DatasetService
-        The service used to create new datasets. Use e.g. from script parameter: #@ DatasetService ds
+        The service used to create new datasets. Use e.g. from script parameter:
+        `#@ DatasetService ds`
     cs : ConvertService
-        The service used to convert between formats. Use e.g. from script parameter: #@ ConvertService cs
+        The service used to convert between formats. Use e.g. from script parameter:
+        `#@ ConvertService cs`
 
     Returns
     -------
