@@ -8,7 +8,7 @@ from fiji.plugin.trackmate.cellpose.CellposeSettings import PretrainedModel
 from fiji.plugin.trackmate.detection import LogDetectorFactory
 from fiji.plugin.trackmate.features import FeatureFilter
 from fiji.plugin.trackmate.stardist import StarDistDetectorFactory
-from fiji.plugin.trackmate.tracking.jaqaman import LAPUtils, SparseLAPTrackerFactory
+from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
 
 from ij import IJ
 
