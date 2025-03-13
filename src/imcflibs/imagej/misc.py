@@ -1,16 +1,18 @@
 """Miscellaneous ImageJ related functions, mostly convenience wrappers."""
 
+import csv
+import os
+import smtplib
+import subprocess
 import sys
 import time
-import smtplib
-import os
-import csv
 
 from ij import IJ  # pylint: disable-msg=import-error
-from ij.plugin import ImageCalculator
+from ij.plugin import Duplicator, ImageCalculator, StackWriter
 
-from . import prefs
 from ..log import LOG as log
+from . import bioformats as bf
+from . import prefs
 
 
 def show_status(msg):
@@ -445,6 +447,8 @@ def write_results(out_file, content):
         with open(out_file, "ab") as f:
             dict_writer = csv.DictWriter(f, content[0].keys(), delimiter=";")
             dict_writer.writerows(content)
+
+
 def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
     """Function to save an image
 
@@ -513,6 +517,8 @@ def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
             bf.export(current_imp, out_path + out_ext[extension])
 
         current_imp.close()
+
+
 def pad_number(index, pad_length=2):
     """Pad a number with leading zeros to a specified length.
 
