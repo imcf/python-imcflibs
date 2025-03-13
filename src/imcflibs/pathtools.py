@@ -372,7 +372,7 @@ def create_directory(new_path):
 # pylint: disable-msg=C0103
 #   we use the variable name 'exists' in its common spelling (lowercase), so
 #   removing this workaround will be straightforward at a later point
-if platform.python_implementation() == "Jython":
+if platform.python_implementation() == "Jython":  # pragma: no cover
     # pylint: disable-msg=F0401
     #   java.lang is only importable within Jython, pylint would complain
     import java.lang

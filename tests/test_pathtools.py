@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+"""Tests for `imcflibs.pathtools`."""
 # -*- coding: utf-8 -*-
 
 from imcflibs.pathtools import parse_path
@@ -12,53 +12,53 @@ __license__ = "gpl3"
 
 def test_parse_path():
     """Tests using regular POSIX-style paths."""
-    path = '/tmp/foo/'
+    path = "/tmp/foo/"
     path_to_dir = parse_path(path)
-    path_to_file = parse_path(path + 'file.ext')
-    path_to_file_noext = parse_path(path + 'file')
+    path_to_file = parse_path(path + "file.ext")
+    path_to_file_noext = parse_path(path + "file")
 
-    assert path_to_file['orig'] == path + 'file.ext'
-    assert path_to_file['path'] == path
-    assert path_to_file['dname'] == 'foo'
-    assert path_to_file['fname'] == 'file.ext'
-    assert path_to_file['ext'] == '.ext'
+    assert path_to_file["orig"] == path + "file.ext"
+    assert path_to_file["path"] == path
+    assert path_to_file["dname"] == "foo"
+    assert path_to_file["fname"] == "file.ext"
+    assert path_to_file["ext"] == ".ext"
 
-    assert path_to_file_noext['ext'] == ''
-    assert path_to_file_noext['fname'] == 'file'
-    assert path_to_file_noext['dname'] == 'foo'
-    assert path_to_file_noext['path'] == path
+    assert path_to_file_noext["ext"] == ""
+    assert path_to_file_noext["fname"] == "file"
+    assert path_to_file_noext["dname"] == "foo"
+    assert path_to_file_noext["path"] == path
 
-    assert path_to_dir['path'] == path
-    assert path_to_dir['fname'] == ''
-    assert path_to_dir['dname'] == 'foo'
-    assert path_to_dir['ext'] == ''
+    assert path_to_dir["path"] == path
+    assert path_to_dir["fname"] == ""
+    assert path_to_dir["dname"] == "foo"
+    assert path_to_dir["ext"] == ""
 
 
 def test_parse_path_windows():
     """Test using a Windows-style path."""
-    path = r'C:\Foo\Bar'
+    path = r"C:\Foo\Bar"
     parsed = parse_path(path)
 
-    assert parsed['orig'] == path
-    assert parsed['full'] == 'C:/Foo/Bar'
-    assert parsed['fname'] == 'Bar'
-    assert parsed['dname'] == 'Foo'
+    assert parsed["orig"] == path
+    assert parsed["full"] == "C:/Foo/Bar"
+    assert parsed["fname"] == "Bar"
+    assert parsed["dname"] == "Foo"
 
 
 def test_parse_path_windows_newline_tab():
     """Test a Windows path with newline and tab sequences as raw string."""
-    path = r'C:\Temp\new\file.ext'
-    parsed =  parse_path(path)
+    path = r"C:\Temp\new\file.ext"
+    parsed = parse_path(path)
 
     assert parsed == {
-        'dname': 'new',
-        'ext': '.ext',
-        'fname': 'file.ext',
-        'full': 'C:/Temp/new/file.ext',
-        'basename': 'file',
-        'orig': 'C:\\Temp\\new\\file.ext',
-        'parent': 'C:/Temp',
-        'path': 'C:/Temp/new/',
+        "dname": "new",
+        "ext": ".ext",
+        "fname": "file.ext",
+        "full": "C:/Temp/new/file.ext",
+        "basename": "file",
+        "orig": "C:\\Temp\\new\\file.ext",
+        "parent": "C:/Temp",
+        "path": "C:/Temp/new/",
     }
 
 
@@ -82,6 +82,6 @@ def test_jython_fiji_exists(tmpdir):
 
 def test_image_basename():
     """Test basename extraction for various image file names."""
-    assert image_basename('/path/to/image_file_01.png') == 'image_file_01'
-    assert image_basename('more-complex-stack.ome.tif') == 'more-complex-stack'
-    assert image_basename('/tmp/FoObAr.OMe.tIf') == 'FoObAr'
+    assert image_basename("/path/to/image_file_01.png") == "image_file_01"
+    assert image_basename("more-complex-stack.ome.tif") == "more-complex-stack"
+    assert image_basename("/tmp/FoObAr.OMe.tIf") == "FoObAr"

@@ -13,14 +13,16 @@ def population3d_to_imgplus(imp, population):
     imp : ij.ImagePlus
         Original ImagePlus to derive the size of the resulting ImagePlus.
     population : mcib3d.geom.Objects3DPopulation
-        Population to use to generate the new ImagePlus.
+        Population of 3D objects used to generate the new ImagePlus.
 
     Returns
     -------
-    ImagePlus
-        Newly created ImagePlus from the population.
+    ij.ImagePlus
+        A newly created ImagePlus representing the labeled population.
     """
     dim = imp.getDimensions()
+
+    # Create a new 16-bit image with the same size as the original image
     new_imp = IJ.createImage(
         "Filtered labeled stack",
         "16-bit black",
@@ -31,6 +33,8 @@ def population3d_to_imgplus(imp, population):
         dim[4],
     )
     new_imp.setCalibration(imp.getCalibration())
+
+    # Wrap the new image in an ImageHandler and draw the population
     new_img = ImageHandler.wrap(new_imp)
     population.drawPopulation(new_img)
 
@@ -45,12 +49,12 @@ def imgplus_to_population3d(imp):
     Parameters
     ----------
     imp : ij.ImagePlus
-        Labeled 3D stack or 2D image to use to get population.
+        Labeled 2D image or 3D stack used to get the population.
 
     Returns
     -------
     mcib3d.geom.Objects3DPopulation
-        Population from the image.
+        The extracted population from the image.
     """
     img = ImageHandler.wrap(imp)
     return Objects3DPopulation(img)
@@ -62,24 +66,28 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     Parameters
     ----------
     imp : ij.ImagePlus
-        Binary 3D stack.
+        A binary 3D stack for segmentation.
     title : str, optional
-        Title of the new image.
+        Title of the new image. Defaults to None.
     min_thresh : int, optional
-        Threshold to do segmentation, also allows for label filtering, by default 1.
-        Since the segmentation is happening on a binary stack, values are either 0 or 255
-        so using 0 allows to discard only the background.
+        Threshold to do segmentation, also allows for label filtering. Since the
+        segmentation is happening on a binary stack, values are either 0 or 255,
+        so using 0 allows to discard only the background.  Defaults to 1.
     min_vol : int, optional
-        Volume (voxels) under which to filter objects, by default None.
+        Minimum volume (in voxels) under which objects get filtered.
+        Defaults to None.
     max_vol : int, optional
-        Volume above which to filter objects, by default None.
+        Maximum volume (in voxels) above which objects get filtered.
+        Defaults to None.
 
     Returns
     -------
     ij.ImagePlus
-        Segmented 3D labelled ImagePlus.
+        A labelled 3D ImagePlus.
     """
     cal = imp.getCalibration()
+
+    # Wrap through ImageHandler and apply thresholding
     img = ImageHandler.wrap(imp)
     img = img.threshold(min_thresh, False, False)
 
@@ -89,9 +97,44 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     if max_vol:
         labeler.setMaxSizeCalibrated(max_vol, img)
 
+    # Generate labelled segmentation
     seg = labeler.getLabels(img)
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
     if title:
         seg.setTitle(title)
 
     return seg.getImagePlus()
+
+
+def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
+    """Filter a population for objects within the given intensity range.
+
+    Parameters
+    ----------
+    obj_pop : mcib3d.geom.Objects3DPopulation
+        A population of 3D objects.
+    imp : ij.ImagePlus
+        An ImagePlus on which the population is based.
+    min_intensity : float
+        Minimum mean intensity threshold for filtering objects.
+    max_intensity : float
+        Maximum mean intensity threshold for filtering objects.
+
+    Returns
+    -------
+    Objects3DPopulation
+        New population with the objects filtered by intensity.
+    """
+    objects_within_intensity = []
+
+    # Iterate over all objects in the population
+    for i in range(0, obj_pop.getNbObjects()):
+        obj = obj_pop.getObject(i)
+        # Calculate the mean intensity of the object
+        mean_intensity = obj.getPixMeanValue(ImageHandler.wrap(imp))
+        # Check if the object is within the specified intensity range
+        if mean_intensity >= min_intensity and mean_intensity < max_intensity:
+            objects_within_intensity.append(obj)
+
+    # Return the new population with the filtered objects
+    return Objects3DPopulation(objects_within_intensity)

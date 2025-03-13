@@ -7,7 +7,7 @@ from java.lang.System import getProperty  # pylint: disable-msg=import-error
 import micrometa  # pylint: disable-msg=import-error
 import ij  # pylint: disable-msg=import-error
 
-from imcflibs.imagej.misc import show_status, show_progress, error_exit
+from .misc import show_status, show_progress, error_exit
 from ..strtools import flatten
 from ..log import LOG as log
 

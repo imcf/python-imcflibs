@@ -2,48 +2,74 @@
 
 import sys
 import time
+import smtplib
 import os
 
 from ij import IJ  # pylint: disable-msg=import-error
+from ij.plugin import ImageCalculator
 
 from . import prefs
 from ..log import LOG as log
 
 
 def show_status(msg):
-    """Wrapper to update the ImageJ status bar and the log simultaneously."""
+    """Update the ImageJ status bar and issue a log message.
+
+    Parameters
+    ----------
+    msg : str
+        The message to display in the ImageJ status bar and log.
+    """
     log.info(msg)
     IJ.showStatus(msg)
 
 
 def show_progress(cur, final):
-    """Wrapper to update the progress bar and issue a log message."""
-    # ij.IJ.showProgress is adding 1 to the value given as first parameter...
+    """Update ImageJ's progress bar and print the current progress to the log.
+
+    Parameters
+    ----------
+    cur : int
+        Current progress value.
+    final : int
+        Total value representing 100% completion.
+
+    Notes
+    -----
+    `ij.IJ.showProgress` internally increments the given `cur` value by 1.
+    """
     log.info("Progress: %s / %s (%s)", cur + 1, final, (1.0 + cur) / final)
     IJ.showProgress(cur, final)
 
 
 def error_exit(msg):
-    """Convenience wrapper to log an error and exit then."""
+    """Log an error message and exit.
+
+    Parameters
+    ----------
+    msg : str
+        The error message to log.
+    """
     log.error(msg)
     sys.exit(msg)
 
 
 def elapsed_time_since(start, end=None):
-    """Generate a string with the time elapsed between the two timepoints.
+    """Generate a string with the time elapsed between two timepoints.
 
     Parameters
     ----------
-    start : time.time
-        Start time.
-    end : time.time, optional
-        End time. If skipped the current time will be used.
+    start : float
+        The start time, typically obtained via `time.time()`.
+    end : float, optional
+        The end time. If not given, the current time is used.
 
     Returns
     -------
     str
-    """
+        The elapsed time formatted as `HH:MM:SS.ss`.
 
+    """
     if not end:
         end = time.time()
 
@@ -58,13 +84,14 @@ def percentage(part, whole):
     Parameters
     ----------
     part : float
-        Part.
+        The portion value of a total.
     whole : float
-        Complete size.
+        The total value.
 
     Returns
     -------
     float
+        The percentage value.
     """
     return 100 * float(part) / float(whole)
 
@@ -74,13 +101,13 @@ def calculate_mean_and_stdv(float_values):
 
     Parameters
     ----------
-    float_values : list(float)
+    float_values : list of float
         List containing float numbers.
 
     Returns
     -------
-    [float, float]
-        Mean (1st item) and standard deviation (2nd item) of the list.
+    tuple of (float, float)
+        Mean and standard deviation of the input list.
     """
     mean = sum(float_values) / len(float_values)
     tot = 0.0
@@ -90,21 +117,30 @@ def calculate_mean_and_stdv(float_values):
 
 
 def find_focus(imp):
-    """Find the slice of a stack that seems to bet the best focused one.
+    """Find the slice of a stack that is the best focused one.
 
-    NOTE: currently only single-channel stacks are supported.
-
-    FIXME: explain what the function is actually doing, i.e. how does it decide
-    what "the best focused one" is?
+    First, calculate the variance of the pixel values in each slice. The slice
+    with the highest variance is considered the best focused as this typically
+    indicates more contrast and sharpness.
 
     Parameters
     ----------
     imp : ij.ImagePlus
-        A single-channel ImagePlus.
+        A single-channel ImagePlus stack.
 
     Returns
     -------
     int
+        The slice number of the best focused slice.
+
+    Raises
+    ------
+    SystemExit
+        If the image has more than one channel.
+
+    Notes
+    -----
+    Currently only single-channel stacks are supported.
     """
 
     imp_dimensions = imp.getDimensions()
@@ -114,7 +150,7 @@ def find_focus(imp):
     if imp_dimensions[2] != 1:
         sys.exit("Image has more than one channel, please reduce dimensionality")
 
-    # Loop through each time points
+    # Loop through each time point
     for plane in range(1, imp_dimensions[4] + 1):
         focused_slice = 0
         norm_var = 0
@@ -137,6 +173,63 @@ def find_focus(imp):
     return focused_slice
 
 
+def send_mail(job_name, recipient, filename, total_execution_time):
+    """Send an email using the SMTP server and sender email configured in ImageJ's Preferences.
+
+    Parameters
+    ----------
+    job_name : string
+        Job name to display in the email.
+    recipient : string
+        Recipient's email address.
+    filename : string
+        The name of the file to be passed in the email.
+    total_execution_time : str
+        The time it took to process the file in the format [HH:MM:SS:ss].
+    """
+    # Retrieve sender email and SMTP server from preferences
+    sender = prefs.Prefs.get("imcf.sender_email", "").strip()
+    server = prefs.Prefs.get("imcf.smtpserver", "").strip()
+
+    # Ensure the sender and server are configured from Prefs
+    if not sender:
+        log.info("Sender email is not configured. Please check IJ_Prefs.txt.")
+        return
+    if not server:
+        log.info("SMTP server is not configured. Please check IJ_Prefs.txt.")
+        return
+
+    # Ensure the recipient is provided
+    if not recipient.strip():
+        log.info("Recipient email is required.")
+        return
+
+    # Form the email subject and body
+    subject = "Your {0} job finished successfully".format(job_name)
+    body = (
+        "Dear recipient,\n\n"
+        "This is an automated message.\n"
+        "Your dataset '{0}' has been successfully processed "
+        "({1} [HH:MM:SS:ss]).\n\n"
+        "Kind regards,\n"
+        "The IMCF-team"
+    ).format(filename, total_execution_time)
+
+    # Form the complete message
+    message = ("From: {0}\nTo: {1}\nSubject: {2}\n\n{3}").format(
+        sender, recipient, subject, body
+    )
+
+    # Try sending the email, print error message if it wasn't possible
+    try:
+        smtpObj = smtplib.SMTP(server)
+        smtpObj.sendmail(sender, recipient, message)
+        log.debug("Successfully sent email")
+    except smtplib.SMTPException as err:
+        log.warning("Error: Unable to send email: %s", err)
+    return
+
+
 def progressbar(progress, total, line_number, prefix=""):
     """Progress bar for the IJ log window.
 
@@ -152,7 +245,7 @@ def progressbar(progress, total, line_number, prefix=""):
     line_number : int
         Number of the line to be updated.
     prefix : str, optional
-        Text to use before the progress bar, by default ''.
+        Text to use before the progress bar, by default an empty string.
     """
 
     size = 20
@@ -184,7 +277,7 @@ def timed_log(message, as_string=False):
 
 
 def get_free_memory():
-    """Get the free memory thats available to ImageJ.
+    """Get the free memory that is available to ImageJ.
 
     Returns
     -------
@@ -201,13 +294,9 @@ def get_free_memory():
 def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-argument
     """Set up a clean and defined ImageJ environment.
 
-    Clean active results table, roi manager and log, close any open image.
-
-    "Fresh Start" is described in the ImageJ release notes [1] following a
-    suggestion by Robert Haase in the Image.sc Forum [2].
-
-    [1]: https://imagej.nih.gov/ij/notes.html
-    [2]: https://forum.image.sc/t/fresh-start-macro-command-in-imagej-fiji/43102
+    This funtion clears the active results table, the ROI manager, and the log.
+    Additionally, it closes all open images and resets the ImageJ options,
+    performing a [*Fresh Start*][fresh_start].
 
     Parameters
     ----------
@@ -215,6 +304,14 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
         Will be ignored (kept for keeping API compatibility).
     rt : ResultsTable, optional
         Will be ignored (kept for keeping API compatibility).
+
+    Notes
+    -----
+    "Fresh Start" is described in the [ImageJ release notes][ij_relnotes],
+    following a [suggestion by Robert Haase][fresh_start].
+
+    [ij_relnotes]: https://imagej.nih.gov/ij/notes.html
+    [fresh_start]: https://forum.image.sc/t/43102
     """
 
     IJ.run("Fresh Start", "")
@@ -224,12 +321,17 @@ def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-
 
 
 def sanitize_image_title(imp):
-    """Remove special chars and various suffixes from an open ImagePlus.
+    """Remove special chars and various suffixes from the title of an ImagePlus.
 
     Parameters
     ----------
     imp : ImagePlus
         The ImagePlus to be renamed.
+
+    Notes
+    -----
+    The function removes the full path of the image file (if present), retaining
+    only the base filename using `os.path.basename()`.
     """
     # sometimes (unclear when) the title contains the full path, therefore we
     # simply call `os.path.basename()` on it to remove all up to the last "/":
@@ -241,3 +343,70 @@ def sanitize_image_title(imp):
     image_title = image_title.replace("#", "Series")
 
     imp.setTitle(image_title)
+
+
+def subtract_images(imp1, imp2):
+    """Subtract one image from the other (imp1 - imp2).
+
+    Parameters
+    ----------
+    imp1: ij.ImagePlus
+        The ImagePlus that is to be subtracted from
+    imp2: ij.ImagePlus
+        The ImagePlus that is to be subtracted
+
+    Returns
+    ---------
+    ij.ImagePlus
+        The ImagePlus resulting from the subtraction
+    """
+    ic = ImageCalculator()
+    subtracted = ic.run("Subtract create", imp1, imp2)
+
+    return subtracted
+
+
+def close_images(list_of_imps):
+    """Close all open ImagePlus objects given in a list.
+
+    Parameters
+    ----------
+    list(ij.ImagePlus)
+        A list of open ImagePlus objects
+    """
+    for imp in list_of_imps:
+        imp.changes = False
+        imp.close()
+
+
+def get_threshold_value_from_method(imp, method, ops):
+    """Get the value of a selected AutoThreshold method for the given ImagePlus.
+
+    This is useful to figure out which threshold value will be calculated by the
+    selected method for the given stack *without* actually having to apply it.
+
+    Parameters
+    ----------
+    imp : ij.ImagePlus
+        The image from which to get the threshold value.
+    method : {'huang', 'ij1', 'intermodes', 'isoData', 'li', 'maxEntropy',
+        'maxLikelihood', 'mean', 'minError', 'minimum', 'moments', 'otsu',
+        'percentile', 'renyiEntropy', 'rosin', 'shanbhag', 'triangle', 'yen'}
+        The AutoThreshold method to use.
+    ops: ops.OpService
+        The ImageJ Ops service instance, usually retrieved through a _Script
+        Parameter_ at the top of the script, as follows:
+        ```
+        #@ OpService ops
+        ```
+
+    Returns
+    -------
+    int
+        The threshold value chosen by the selected method.
+    """
+    histogram = ops.run("image.histogram", imp)
+    threshold_value = ops.run("threshold.%s" % method, histogram)
+    threshold_value = int(round(threshold_value.get()))
+
+    return threshold_value

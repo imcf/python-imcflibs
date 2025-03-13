@@ -14,11 +14,17 @@ import os
 
 from ij import IJ
 
-from ._loci import ImporterOptions  # pdoc: skip
-from ._loci import BF, ImageReader, Memoizer
-
-from ..pathtools import gen_name_from_orig
 from ..log import LOG as log
+from ..pathtools import gen_name_from_orig
+from ._loci import (
+    BF,
+    DynamicMetadataOptions,
+    ImageReader,
+    ImporterOptions,
+    Memoizer,
+    MetadataTools,
+    ZeissCZIReader,
+)
 
 
 def import_image(
@@ -203,29 +209,70 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
     return out_file
 
 
-def get_series_count_from_ome_metadata(path_to_file):
-    """Get the Bio-Formates series count from a file on disk.
+def get_series_info_from_ome_metadata(path_to_file, skip_labels=False):
+    """Get the Bio-Formats series information from a file on disk.
 
-    Useful to access a specific image in a container format like .czi, .nd2, .lif...
+    Useful to access specific images in container formats like .czi, .nd2, .lif...
 
     Parameters
     ----------
     path_to_file : str
         The full path to the image file.
+    skip_labels : bool, optional
+        If True, excludes label and macro images from the series count (default: False).
 
     Returns
     -------
-    int
-        The number of Bio-Formats series detected in the image file metadata.
-    """
-    reader = ImageReader()
-    ome_meta = MetadataTools.createOMEXMLMetadata()
-    reader.setMetadataStore(ome_meta)
-    reader.setId(path_to_file)
-    series_count = reader.getSeriesCount()
-    reader.close()
+    tuple
+        A tuple containing:
+        - int: The number of Bio-Formats series detected (excluding labels if skip_labels=True)
+        - list or range: Series indices. If skip_labels=True, returns filtered list of indices,
+          otherwise returns range(series_count)
 
-    return series_count
+    Examples
+    --------
+    >>> count, indices = get_series_info_from_ome_metadata("image.czi")
+    >>> count, indices = get_series_info_from_ome_metadata("image.nd2", skip_labels=True)
+    """
+
+    if not skip_labels:
+        reader = ImageReader()
+        reader.setFlattenedResolutions(False)
+        ome_meta = MetadataTools.createOMEXMLMetadata()
+        reader.setMetadataStore(ome_meta)
+        reader.setId(path_to_file)
+        series_count = reader.getSeriesCount()
+
+        reader.close()
+        return series_count, range(series_count)
+
+    else:
+        reader = ImageReader()
+        # reader.setFlattenedResolutions(True)
+        ome_meta = MetadataTools.createOMEXMLMetadata()
+        reader.setMetadataStore(ome_meta)
+        reader.setId(path_to_file)
+        series_count = reader.getSeriesCount()
+
+        series_ids = []
+        series_names = []
+        x = 0
+        y = 0
+        for i in range(series_count):
+            reader.setSeries(i)
+
+            if reader.getSizeX() > x and reader.getSizeY() > y:
+                name = ome_meta.getImageName(i)
+
+                if name not in ["label image", "macro image"]:
+                    series_ids.append(i)
+                    series_names.append(name)
+
+            x = reader.getSizeX()
+            y = reader.getSizeY()
+
+        print(series_names)
+        return len(series_ids), series_ids
 
 
 def write_bf_memoryfile(path_to_file):

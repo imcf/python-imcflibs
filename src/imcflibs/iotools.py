@@ -1,13 +1,13 @@
 """I/O related functions."""
 
-import glob
 import zipfile
 
-import os
 from os.path import splitext, join
 
 from .log import LOG as log
 from .strtools import flatten
+
+from ._jython_compat import file_types
 
 
 def filehandle(fname, mode="r"):
@@ -44,13 +44,13 @@ def filehandle(fname, mode="r"):
     <type 'file'>
     """
     log.debug(type(fname))
-    if type(fname).__name__ == "str":
+    if isinstance(fname, str):
         try:
             return open(fname, mode)
         except IOError as err:
             message = "can't open '%s': %s"
             raise SystemExit(message % (fname, err))
-    elif type(fname).__name__ == "file":
+    elif isinstance(fname, file_types):
         if fname.mode != mode:
             message = "mode mismatch: %s != %s"
             raise IOError(message % (fname.mode, mode))
@@ -101,6 +101,10 @@ def readtxt(fname, path="", flat=False):
     else:
         fin = open(join(path, fname), "r")
     txt = fin.readlines()  # returns file as a list, one entry per line
+    try:
+        txt = [x.decode("utf-8") for x in txt]
+    except AttributeError:
+        pass  # in Python2 decoding isn't necessary
     if flat:
         txt = flatten(txt)
     fin.close()

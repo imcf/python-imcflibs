@@ -2,6 +2,8 @@
 
 import re
 
+from ._jython_compat import file_types
+
 
 # this is taken from numpy's iotools:
 def _is_string_like(obj):
@@ -62,7 +64,7 @@ def filename(name):
         # likely we are not running under Jython
         pass
 
-    if isinstance(name, file):
+    if isinstance(name, file_types):
         return name.name
     elif _is_string_like(name):
         return name

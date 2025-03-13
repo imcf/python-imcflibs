@@ -2,5 +2,8 @@
 # Good variable names which should always be accepted, separated by a comma
 good-names=i,j,k,ex,Run,_,x,y,z,rm,rt
 
-# don't mess with black autoformatting, just let it do its job:
-disable=bad-continuation
+disable=too-many-lines
+
+# This repo is all about Python 2.7 code, so disable a few messages:
+disable=consider-using-f-string
+disable=useless-object-inheritance
