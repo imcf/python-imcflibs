@@ -344,3 +344,24 @@ def upload_array_as_omero_table(user_client, table_title, data, columns, image_w
     table_wpr = TableWrapper(table_data)
     table_wpr.setName(table_title)
     dataset_wpr.addTable(user_client, table_wpr)
+
+
+def save_rois_to_omero(user_client, image_wpr, rm):
+    """Save ROIs to OMERO linked to the image
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    image_wpr : fr.igred.omero.repositor.ImageWrapper
+        Wrapper to the image for the ROIs
+    rm : ij.plugin.frame.RoiManager
+        ROI Manager containing the ROIs
+
+    """
+    rois_list = rm.getRoisAsArray()
+    rois_arraylist = ArrayList(len(rois_list))
+    for roi in rois_list:
+        rois_arraylist.add(roi)
+    rois_to_upload = ROIWrapper.fromImageJ(rois_arraylist)
+    image_wpr.saveROIs(user_client, rois_to_upload)
