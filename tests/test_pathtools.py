@@ -35,14 +35,14 @@ def test_parse_path():
 
 
 def test_parse_path_windows():
-    path = r'C:\foo\bar'
     """Test using a Windows-style path."""
+    path = r'C:\Foo\Bar'
     parsed = parse_path(path)
 
     assert parsed['orig'] == path
-    assert parsed['full'] == r'C:/foo/bar'
-    assert parsed['fname'] == 'bar'
-    assert parsed['dname'] == 'foo'
+    assert parsed['full'] == 'C:/Foo/Bar'
+    assert parsed['fname'] == 'Bar'
+    assert parsed['dname'] == 'Foo'
 
 
 def test_parse_path_windows_newline_tab():
