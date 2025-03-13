@@ -295,3 +295,52 @@ def get_info_from_original_metadata(user_client, image_wpr, field):
     rsp = cmd.loop(5, 500)
     gm = rsp.globalMetadata
     return gm.get(field).getValue()
+
+
+def create_table_columns(headings):
+    """Create the table headings from the ImageJ results table
+
+    Parameters
+    ----------
+    headings : list(str)
+        List of columns names
+
+    Returns
+    -------
+    list(omero.gateway.model.TableDataColumn)
+        List of columns formatted to be uploaded to OMERO
+    """
+    table_columns = []
+    # populate the headings
+    for h in range(len(headings)):
+        heading = headings.keys()[h]
+        type = headings.values()[h]
+        # OMERO.tables queries don't handle whitespace well
+        heading = heading.replace(" ", "_")
+        # title_heading = ["Slice", "Label"]
+        table_columns.append(TableDataColumn(heading, h, type))
+    # table_columns.append(TableDataColumn("Image", size, ImageData))
+    return table_columns
+
+
+def upload_array_as_omero_table(user_client, table_title, data, columns, image_wpr):
+    """Upload a table to OMERO plus from a list of lists
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    data : list(list())
+        List of lists of results to upload
+    columns : list(str)
+        List of columns names
+    image_wpr : fr.igred.omero.repositor.ImageWrapper
+        Wrapper to the image to be uploaded
+    """
+    dataset_wpr = image_wpr.getDatasets(user_client)[0]
+
+    table_columns = create_table_columns(columns)
+    table_data = TableData(table_columns, data)
+    table_wpr = TableWrapper(table_data)
+    table_wpr.setName(table_title)
+    dataset_wpr.addTable(user_client, table_wpr)
