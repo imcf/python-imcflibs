@@ -142,7 +142,7 @@ def parse_path(path, prefix=""):
 
 
 def join2(path1, path2):
-    """Join two paths into one, much like os.path.join().
+    r"""Join two paths into one, much like os.path.join().
 
     The main difference is that `join2()` takes exactly two arguments, but they
     can be non-str (as long as they're having a `__str__()` method), so this is
@@ -358,12 +358,12 @@ def folder_size(source):
 
 
 def create_directory(new_path):
-    """create a new directory if it does not already exist
+    """create a new directory if it does not already exist.
 
     Parameters
     ----------
     new_path : str
-        Path to the new directory
+        Path to the new directory.
     """
     if not os.path.exists(new_path):
         os.makedirs(new_path)
