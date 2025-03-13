@@ -43,6 +43,23 @@ def test_parse_path_windows():
     assert parsed['dname'] == 'foo'
 
 
+def test_parse_path_windows_newline():
+    path = r'C:\Temp\new\file.ext'
+    parsed =  parse_path(path)
+
+    assert parsed == {
+        'dname': 'new',
+        'ext': '.ext',
+        'fname': 'file.ext',
+        'full': 'C:/Temp/new/file.ext',
+        'basename': 'file',
+        'orig': 'C:\\Temp\\new\\file.ext',
+        'parent': 'C:/Temp',
+        'path': 'C:/Temp/new/',
+    }
+
+
+
 def test_parse_path_windows_tabs_and_lines():
     r"""Test non-raw string containing newline \n and tab \t sequences."""
     path = "C:\new_folder\test"
