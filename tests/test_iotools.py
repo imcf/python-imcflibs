@@ -21,6 +21,7 @@ except NameError:
 
 
 def test_filehandle(tmpdir):
+    """Test instance types of objects returned by `filehandle()`."""
     tmpfile = tmpdir.join("testfile")
     tmpname = str(tmpfile)
     # print(tmpname)
@@ -37,6 +38,11 @@ def test_filehandle(tmpdir):
 
 
 def test_readtxt(tmpdir):
+    """Test the `readtxt()` function.
+
+    Read text from a regular file as well as from a zip file, both straight and
+    using the `flat` option.
+    """
     content = [
         "lorem\n",
         "ipsum\n",
