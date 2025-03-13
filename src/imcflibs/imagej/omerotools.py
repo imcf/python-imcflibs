@@ -8,11 +8,14 @@ Requires the [`simple-omero-client`][simple-omero-client] JAR to be installed.
 [simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client
 """
 
-from java.lang import Long
-
-
 from fr.igred.omero import Client
-from fr.igred.omero.annotations import MapAnnotationWrapper
+from fr.igred.omero.annotations import MapAnnotationWrapper, TableWrapper
+from fr.igred.omero.roi import ROIWrapper
+from java.lang import Long
+from java.text import SimpleDateFormat
+from java.util import ArrayList
+from omero.cmd import OriginalMetadataRequest
+from omero.gateway.model import TableData, TableDataColumn
 
 
 def parse_url(client, omero_str):
@@ -219,6 +222,8 @@ def find_dataset(client, dataset_id):
     """
     # Fetch the dataset from the OMERO server using the provided dataset ID
     return client.getDataset(Long(dataset_id))
+
+
 def get_acquisition_metadata_from_imageid(user_client, image_wpr):
     """Get acquisition metadata from OMERO based on an image ID
 
