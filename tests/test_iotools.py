@@ -27,12 +27,16 @@ def test_filehandle(tmpdir):
     # print(tmpname)
     tmphandle = open(str(tmpfile), "w")
     print(type(tmphandle))
+
     assert isinstance(tmpname, str)
     print("tmpname is str-like 🦋")
+
     assert isinstance(tmphandle, file_types)
     print("tmphandle is file/io-like 🦋")
+
     assert isinstance(filehandle(tmpname), file_types)
     print("filehandle(tmpname) is file/io-like 🦋")
+
     assert isinstance(filehandle(tmphandle, "w"), file_types)
     print("filehandle(tmphandle) is file/io-like 🦋")
 
