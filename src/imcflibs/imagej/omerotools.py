@@ -204,3 +204,79 @@ def find_dataset(client, dataset_id):
     """
     # Fetch the dataset from the OMERO server using the provided dataset ID
     return client.getDataset(Long(dataset_id))
+def get_acquisition_metadata_from_imageid(user_client, image_wpr):
+    """Get acquisition metadata from OMERO based on an image ID
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    image_wpr : fr.igred.omero.repositor.ImageWrapper
+        Wrapper to the image for the ROIs
+
+    Returns
+    -------
+    tuple of (int, int, str, int)
+        List of info about the acquisition
+    """
+    ctx = user_client.getCtx()
+    instrument_data = (
+        user_client.getGateway()
+        .getMetadataService(ctx)
+        .loadInstrument(image_wpr.asDataObject().getInstrumentId())
+    )
+    objective_data = instrument_data.copyObjective().get(0)
+    if objective_data.getNominalMagnification() is None:
+        obj_mag = 0
+    else:
+        obj_mag = objective_data.getNominalMagnification().getValue()
+    if objective_data.getLensNA() is None:
+        obj_na = 0
+    else:
+        obj_na = objective_data.getLensNA().getValue()
+    if image_wpr.getAcquisitionDate() is None:
+        if image_wpr.asDataObject().getFormat() == "ZeissCZI":
+            field = "Information|Document|CreationDate"
+            date_field = get_info_from_original_metadata(user_client, image_wpr, field)
+            acq_date = date_field.split("T")[0]
+            acq_date_number = int(acq_date.replace("-", ""))
+        else:
+            acq_date = "NA"
+            acq_date_number = 0
+
+    else:
+        sdf = SimpleDateFormat("yyyy-MM-dd")
+        acq_date = sdf.format(
+            image_wpr.getAcquisitionDate()
+        )  # image_wpr.getAcquisitionDate()
+        acq_date_number = int(acq_date.replace("-", ""))
+
+    return obj_mag, obj_na, acq_date, acq_date_number
+
+
+def get_info_from_original_metadata(user_client, image_wpr, field):
+    """Recovers information from the original metadata
+
+    In some cases, some information aren't parsed correctly by BF and have to
+    get recovered directly from the original metadata. This gets the value
+    based on the field string.
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    image_id : int
+        ID of the image to look.
+    field : str
+        Field to look for in the original metadata. Needs to be found beforehand.
+
+    Returns
+    -------
+    str
+        Value of the field
+    """
+    omr = OriginalMetadataRequest(Long(image_wpr.getId()))
+    cmd = user_client.getGateway().submit(user_client.getCtx(), omr)
+    rsp = cmd.loop(5, 500)
+    gm = rsp.globalMetadata
+    return gm.get(field).getValue()
