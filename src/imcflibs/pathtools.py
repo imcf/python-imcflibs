@@ -10,7 +10,7 @@ from .log import LOG as log
 
 
 def parse_path(path, prefix=""):
-    """Parse a path into its components.
+    r"""Parse a path into its components.
 
     If the path doesn't end with the pathsep, it is assumed being a file!
     No tests based on existing files are done, as this is supposed to also work
@@ -19,6 +19,11 @@ def parse_path(path, prefix=""):
     The function accepts `java.io.File` objects (as retrieved by using ImageJ2's
     *Script Parameter* `#@ File`) for either of the parameters, so it is safe to
     use this in ImageJ Python scripts without additional measures.
+
+    **WARNING**: when passing in **Windows paths** literally, make sure to
+    declare them as **raw strings** using the `r""` notation, otherwise
+    unexpected things might happen if the path contains sections that Python
+    will interpret as escape sequences (e.g. `\n`, `\t`, `\u2324`, ...).
 
     Parameters
     ----------
@@ -55,50 +60,61 @@ def parse_path(path, prefix=""):
     POSIX-style path to a file with a suffix:
 
     >>> parse_path('/tmp/foo/file.suffix')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': 'file',
-     'full': '/tmp/foo/file',
-     'basename': 'file',
-     'orig': '/tmp/foo/file',
-     'parent': '/tmp/',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "file",
+        "full": "/tmp/foo/file",
+        "basename": "file",
+        "orig": "/tmp/foo/file",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
+
 
     POSIX-style path to a directory:
 
     >>> parse_path('/tmp/foo/')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': '',
-     'full': '/tmp/foo/',
-     'basename': '',
-     'orig': '/tmp/foo/',
-     'parent': '/tmp/',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "",
+        "full": "/tmp/foo/",
+        "basename": "",
+        "orig": "/tmp/foo/",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
+
 
     Windows-style path to a file:
 
-    >>> parse_path('C:\\Temp\\foo\\file.ext')
-    {'dname': 'foo',
-     'ext': '.ext',
-     'fname': 'file.ext',
-     'full': 'C:/Temp/foo/file.ext',
-     'basename': 'file',
-     'orig': 'C:\\Temp\\foo\\file.ext',
-     'parent': 'C:/Temp/',
-     'path': 'C:/Temp/foo/'}
+    >>> parse_path(r'C:\Temp\new\file.ext')
+    {
+        "dname": "new",
+        "ext": ".ext",
+        "fname": "file.ext",
+        "full": "C:/Temp/new/file.ext",
+        "basename": "file",
+        "orig": "C:\\Temp\\new\\file.ext",
+        "parent": "C:/Temp",
+        "path": "C:/Temp/new/",
+    }
+
 
     Special treatment for *OME-TIFF* suffixes:
 
     >>> parse_path("/path/to/some/nice.OME.tIf")
-    {'basename': 'nice',
-    'dname': 'some',
-    'ext': '.OME.tIf',
-    'fname': 'nice.OME.tIf',
-    'full': '/path/to/some/nice.OME.tIf',
-    'orig': '/path/to/some/nice.OME.tIf',
-    'parent': '/path/to/',
-    'path': '/path/to/some/'}
+    {
+        "basename": "nice",
+        "dname": "some",
+        "ext": ".OME.tIf",
+        "fname": "nice.OME.tIf",
+        "full": "/path/to/some/nice.OME.tIf",
+        "orig": "/path/to/some/nice.OME.tIf",
+        "parent": "/path/to/",
+        "path": "/path/to/some/",
+    }
     """
     path = str(path)
     if prefix:

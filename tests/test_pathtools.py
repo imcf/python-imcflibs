@@ -1,7 +1,6 @@
 """Tests for `imcflibs.pathtools`."""
 # -*- coding: utf-8 -*-
 
-import pytest
 from imcflibs.pathtools import parse_path
 from imcflibs.pathtools import jython_fiji_exists
 from imcflibs.pathtools import image_basename
@@ -12,6 +11,7 @@ __license__ = "gpl3"
 
 
 def test_parse_path():
+    """Tests using regular POSIX-style paths."""
     path = "/tmp/foo/"
     path_to_dir = parse_path(path)
     path_to_file = parse_path(path + "file.ext")
@@ -35,20 +35,53 @@ def test_parse_path():
 
 
 def test_parse_path_windows():
-    path = r"C:\foo\bar"
+    """Test using a Windows-style path."""
+    path = r"C:\Foo\Bar"
     parsed = parse_path(path)
 
     assert parsed["orig"] == path
-    assert parsed["full"] == r"C:/foo/bar"
-    assert parsed["fname"] == "bar"
-    assert parsed["dname"] == "foo"
+    assert parsed["full"] == "C:/Foo/Bar"
+    assert parsed["fname"] == "Bar"
+    assert parsed["dname"] == "Foo"
+
+
+def test_parse_path_windows_newline_tab():
+    """Test a Windows path with newline and tab sequences as raw string."""
+    path = r"C:\Temp\new\file.ext"
+    parsed = parse_path(path)
+
+    assert parsed == {
+        "dname": "new",
+        "ext": ".ext",
+        "fname": "file.ext",
+        "full": "C:/Temp/new/file.ext",
+        "basename": "file",
+        "orig": "C:\\Temp\\new\\file.ext",
+        "parent": "C:/Temp",
+        "path": "C:/Temp/new/",
+    }
+
+
+def test_parse_path_windows_nonraw():
+    r"""Test non-raw string containing newline `\n` and tab `\t` sequences.
+
+    As `parse_path()` cannot work on non-raw strings containing escape
+    sequences, the parsed result will not be the expected one.
+    """
+    path = "C:\new_folder\test"
+    parsed = parse_path(path)
+
+    assert parsed["full"] != r"C:\new_folder\test"
+    assert parsed["fname"] != "test"
 
 
 def test_jython_fiji_exists(tmpdir):
+    """Test the Jython/Fiji `os.path.exists()` workaround."""
     assert jython_fiji_exists(str(tmpdir)) == True
 
 
 def test_image_basename():
+    """Test basename extraction for various image file names."""
     assert image_basename("/path/to/image_file_01.png") == "image_file_01"
     assert image_basename("more-complex-stack.ome.tif") == "more-complex-stack"
     assert image_basename("/tmp/FoObAr.OMe.tIf") == "FoObAr"
