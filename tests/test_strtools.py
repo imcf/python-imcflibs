@@ -9,10 +9,6 @@ from imcflibs.strtools import filename
 from imcflibs.strtools import flatten
 from imcflibs.strtools import strip_prefix
 
-__author__ = "Niko Ehrenfeuchter"
-__copyright__ = "Niko Ehrenfeuchter"
-__license__ = "gpl3"
-
 
 def test__is_string_like():
     assert _is_string_like("foo") == True

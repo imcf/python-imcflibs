@@ -19,10 +19,6 @@ except NameError:
     file_types = (io.IOBase,)
 
 
-__author__ = "Niko Ehrenfeuchter"
-__copyright__ = "Niko Ehrenfeuchter"
-__license__ = "gpl3"
-
 
 def test_filehandle(tmpdir):
     tmpfile = tmpdir.join("testfile")

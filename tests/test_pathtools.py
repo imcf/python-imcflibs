@@ -5,10 +5,6 @@ from imcflibs.pathtools import parse_path
 from imcflibs.pathtools import jython_fiji_exists
 from imcflibs.pathtools import image_basename
 
-__author__ = "Niko Ehrenfeuchter"
-__copyright__ = "Niko Ehrenfeuchter"
-__license__ = "gpl3"
-
 
 def test_parse_path():
     """Tests using regular POSIX-style paths."""
