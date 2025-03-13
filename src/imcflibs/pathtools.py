@@ -56,7 +56,6 @@ def parse_path(path, prefix=""):
 
     Examples
     --------
-
     POSIX-style path to a file with a suffix:
 
     >>> parse_path('/tmp/foo/file.suffix')
@@ -168,7 +167,7 @@ def join2(path1, path2):
 
 
 def jython_fiji_exists(path):
-    """Wrapper to work around problems with Jython 2.7 in Fiji.
+    """Work around problems with `os.path.exists()` in Jython 2.7 in Fiji.
 
     In current Fiji, the Jython implementation of os.path.exists(path) raises a
     java.lang.AbstractMethodError iff 'path' doesn't exist. This function
@@ -235,6 +234,7 @@ def image_basename(orig_name):
     Parameters
     ----------
     orig_name : str
+        The original name, possibly containing paths and filename suffix.
 
     Examples
     --------
@@ -358,7 +358,7 @@ def folder_size(source):
 
 
 def create_directory(new_path):
-    """create a new directory if it does not already exist.
+    """Create a new directory if it does not already exist.
 
     Parameters
     ----------
