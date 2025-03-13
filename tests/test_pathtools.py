@@ -44,6 +44,7 @@ def test_parse_path_windows():
 
 
 def test_parse_path_windows_tabs_and_lines():
+    r"""Test non-raw string containing newline \n and tab \t sequences."""
     path = "C:\new_folder\test"
     parsed = parse_path(path)
 
