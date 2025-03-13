@@ -10,7 +10,7 @@ from .log import LOG as log
 
 
 def parse_path(path, prefix=""):
-    """Parse a path into its components.
+    r"""Parse a path into its components.
 
     If the path doesn't end with the pathsep, it is assumed being a file!
     No tests based on existing files are done, as this is supposed to also work
@@ -19,6 +19,11 @@ def parse_path(path, prefix=""):
     The function accepts `java.io.File` objects (as retrieved by using ImageJ2's
     *Script Parameter* `#@ File`) for either of the parameters, so it is safe to
     use this in ImageJ Python scripts without additional measures.
+
+    **WARNING**: when passing in **Windows paths** literally, make sure to
+    declare them as **raw strings** using the `r""` notation, otherwise
+    unexpected things might happen if the path contains sections that Python
+    will interpret as escape sequences (e.g. `\n`, `\t`, `\u2324`, ...).
 
     Parameters
     ----------
@@ -64,6 +69,7 @@ def parse_path(path, prefix=""):
      'parent': '/tmp/',
      'path': '/tmp/foo/'}
 
+
     POSIX-style path to a directory:
 
     >>> parse_path('/tmp/foo/')
@@ -76,17 +82,19 @@ def parse_path(path, prefix=""):
      'parent': '/tmp/',
      'path': '/tmp/foo/'}
 
+
     Windows-style path to a file:
 
-    >>> parse_path('C:\\Temp\\foo\\file.ext')
-    {'dname': 'foo',
+    >>> parse_path(r'C:\Temp\new\file.ext')
+    {'dname': 'new',
      'ext': '.ext',
      'fname': 'file.ext',
-     'full': 'C:/Temp/foo/file.ext',
+     'full': 'C:/Temp/new/file.ext',
      'basename': 'file',
-     'orig': 'C:\\Temp\\foo\\file.ext',
+     'orig': 'C:\\Temp\\new\\file.ext',
      'parent': 'C:/Temp/',
-     'path': 'C:/Temp/foo/'}
+     'path': 'C:/Temp/new/'}
+
 
     Special treatment for *OME-TIFF* suffixes:
 
