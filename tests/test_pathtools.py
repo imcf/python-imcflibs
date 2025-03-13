@@ -59,14 +59,17 @@ def test_parse_path_windows_newline():
     }
 
 
-
 def test_parse_path_windows_tabs_and_lines():
-    r"""Test non-raw string containing newline \n and tab \t sequences."""
+    r"""Test non-raw string containing newline `\n` and tab `\t` sequences.
+
+    As `parse_path()` cannot work on non-raw strings containing escape
+    sequences, the parsed result will not be the expected one.
+    """
     path = "C:\new_folder\test"
     parsed = parse_path(path)
 
-    assert parsed["full"] == r"C:\new_folder\test"
-    assert parsed["fname"] == "test"
+    assert parsed["full"] != r"C:\new_folder\test"
+    assert parsed["fname"] != "test"
 
 
 def test_jython_fiji_exists(tmpdir):
