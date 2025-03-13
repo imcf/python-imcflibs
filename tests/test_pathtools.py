@@ -1,4 +1,5 @@
 """Tests for `imcflibs.pathtools`."""
+# -*- coding: utf-8 -*-
 
 import pytest
 from imcflibs.pathtools import parse_path

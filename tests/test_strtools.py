@@ -1,4 +1,5 @@
 """Tests for `imcflibs.strtools`."""
+# -*- coding: utf-8 -*-
 
 import pytest
 import os

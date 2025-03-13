@@ -1,4 +1,5 @@
 """Tests for `imcflibs.iotools`."""
+# -*- coding: utf-8 -*-
 
 import pytest
 import zipfile
