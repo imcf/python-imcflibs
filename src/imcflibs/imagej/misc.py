@@ -513,3 +513,26 @@ def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
             bf.export(current_imp, out_path + out_ext[extension])
 
         current_imp.close()
+def pad_number(index, pad_length=2):
+    """Pad a number with leading zeros to a specified length.
+
+    Parameters
+    ----------
+    index : int or str
+        The number to be padded
+    pad_length : int, optional
+        The total length of the resulting string after padding, by default 2
+
+    Returns
+    -------
+    str
+        The padded number as a string
+
+    Examples
+    --------
+    >>> pad_number(7)
+    '07'
+    >>> pad_number(42, 4)
+    '0042'
+    """
+    return str(index).zfill(pad_length)
