@@ -11,6 +11,7 @@ __license__ = "gpl3"
 
 
 def test_parse_path():
+    """Tests using regular POSIX-style paths."""
     path = '/tmp/foo/'
     path_to_dir = parse_path(path)
     path_to_file = parse_path(path + 'file.ext')
@@ -35,6 +36,7 @@ def test_parse_path():
 
 def test_parse_path_windows():
     path = r'C:\foo\bar'
+    """Test using a Windows-style path."""
     parsed = parse_path(path)
 
     assert parsed['orig'] == path
@@ -44,6 +46,7 @@ def test_parse_path_windows():
 
 
 def test_parse_path_windows_newline():
+    """Test a Windows path with newline and tab sequences as raw string."""
     path = r'C:\Temp\new\file.ext'
     parsed =  parse_path(path)
 
@@ -73,10 +76,12 @@ def test_parse_path_windows_tabs_and_lines():
 
 
 def test_jython_fiji_exists(tmpdir):
+    """Test the Jython/Fiji `os.path.exists()` workaround."""
     assert jython_fiji_exists(str(tmpdir)) == True
 
 
 def test_image_basename():
+    """Test basename extraction for various image file names."""
     assert image_basename('/path/to/image_file_01.png') == 'image_file_01'
     assert image_basename('more-complex-stack.ome.tif') == 'more-complex-stack'
     assert image_basename('/tmp/FoObAr.OMe.tIf') == 'FoObAr'
