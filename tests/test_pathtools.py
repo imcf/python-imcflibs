@@ -45,7 +45,7 @@ def test_parse_path_windows():
     assert parsed['dname'] == 'foo'
 
 
-def test_parse_path_windows_newline():
+def test_parse_path_windows_newline_tab():
     """Test a Windows path with newline and tab sequences as raw string."""
     path = r'C:\Temp\new\file.ext'
     parsed =  parse_path(path)
@@ -62,7 +62,7 @@ def test_parse_path_windows_newline():
     }
 
 
-def test_parse_path_windows_tabs_and_lines():
+def test_parse_path_windows_nonraw():
     r"""Test non-raw string containing newline `\n` and tab `\t` sequences.
 
     As `parse_path()` cannot work on non-raw strings containing escape
