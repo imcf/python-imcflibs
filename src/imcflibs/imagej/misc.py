@@ -536,3 +536,68 @@ def pad_number(index, pad_length=2):
     '0042'
     """
     return str(index).zfill(pad_length)
+
+
+def locate_latest_imaris(paths_to_check=None):
+    """Find paths to latest installed Imaris or ImarisFileConverter version.
+
+    Parameters
+    ----------
+    paths_to_check: list of str, optional
+        A list of paths that should be used to look for the installations, by default
+        `None` which will fall back to the standard installation locations of Bitplane.
+
+    Returns
+    -------
+    str
+        Full path to the most recent (as in "version number") ImarisFileConverter
+        or Imaris installation folder with the latter one having priority.
+        Will be empty if nothing is found.
+    """
+
+    if not paths_to_check:
+        paths_to_check = [
+            r"C:\Program Files\Bitplane\ImarisFileConverter ",
+            r"C:\Program Files\Bitplane\Imaris ",
+        ]
+
+    imaris_paths = [""]
+
+    for check in paths_to_check:
+        hits = glob.glob(check + "*")
+        imaris_paths += sorted(
+            hits, key=lambda x: float(x.replace(check, "").replace(".", ""))
+        )
+
+    return imaris_paths[-1]
+
+
+def convert_to_imaris(path_to_image):
+    """Convert a given file to Imaris5 .ims using ImarisConvert.exe via subprocess.
+
+    Parameters
+    ----------
+    path_to_image : str
+        Absolute path to the input image file.
+
+    Notes
+    -----
+    The function handles special case for .ids files by converting them to .ics before
+    processing. It uses the latest installed Imaris application to perform the conversion.
+    """
+
+    path_root, file_extension = os.path.splitext(path_to_image)
+    if file_extension == ".ids":
+        file_extension = ".ics"
+        path_to_image = path_root + file_extension
+
+    imaris_path = locate_latest_imaris()
+
+    command = 'ImarisConvert.exe  -i "%s" -of Imaris5 -o "%s"' % (
+        path_to_image,
+        path_to_image.replace(file_extension, ".ims"),
+    )
+    print("\n%s" % command)
+    IJ.log("Converting to Imaris5 .ims...")
+    subprocess.call(command, shell=True, cwd=imaris_path)
+    IJ.log("Conversion to .ims is finished")
