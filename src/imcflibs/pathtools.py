@@ -2,8 +2,8 @@
 
 import os.path
 import platform
-from os import sep
 import re
+from os import sep
 
 from . import strtools
 from .log import LOG as log
