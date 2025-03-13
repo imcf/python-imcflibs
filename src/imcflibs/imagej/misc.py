@@ -445,3 +445,71 @@ def write_results(out_file, content):
         with open(out_file, "ab") as f:
             dict_writer = csv.DictWriter(f, content[0].keys(), delimiter=";")
             dict_writer.writerows(content)
+def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
+    """Function to save an image
+
+    Parameters
+    ----------
+    imageplus : ImagePlus
+        ImagePlus to save
+    extension : str
+        Extension to use for the output
+    out_dir : str
+        Path for the output
+    series : int
+        Series to open
+    pad_number : int
+        Number of 0 to use for padding
+    split_channels : bool
+        Bool to split or not the channels
+    """
+
+    out_ext = {}
+    out_ext["ImageJ-TIF"] = ".tif"
+    out_ext["ICS-1"] = ".ids"
+    out_ext["ICS-2"] = ".ics"
+    out_ext["OME-TIFF"] = ".ome.tif"
+    out_ext["CellH5"] = ".ch5"
+    out_ext["BMP"] = ".bmp"
+
+    imp_to_use = []
+    dir_to_save = []
+
+    if split_channels:
+        for channel in range(1, imageplus.getNChannels() + 1):
+            imp_to_use.append(
+                Duplicator().run(
+                    imageplus,
+                    channel,
+                    channel,
+                    1,
+                    imageplus.getNSlices(),
+                    1,
+                    imageplus.getNFrames(),
+                )
+            )
+            dir_to_save.append(os.path.join(out_dir, "C" + str(channel)))
+    else:
+        imp_to_use.append(imageplus)
+        dir_to_save.append(out_dir)
+
+    for index, current_imp in enumerate(imp_to_use):
+        basename = imageplus.getShortTitle()
+
+        out_path = os.path.join(
+            dir_to_save[index], basename + "_series_" + str(series).zfill(pad_number)
+        )
+
+        if extension == "ImageJ-TIF":
+            check_folder(dir_to_save[index])
+            IJ.saveAs(current_imp, "Tiff", out_path + ".tif")
+
+        elif extension == "BMP":
+            out_folder = os.path.join(out_dir, basename + os.path.sep)
+            check_folder(out_folder)
+            StackWriter.save(current_imp, out_folder, "format=bmp")
+
+        else:
+            bf.export(current_imp, out_path + out_ext[extension])
+
+        current_imp.close()
