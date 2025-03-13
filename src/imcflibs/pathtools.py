@@ -60,53 +60,61 @@ def parse_path(path, prefix=""):
     POSIX-style path to a file with a suffix:
 
     >>> parse_path('/tmp/foo/file.suffix')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': 'file',
-     'full': '/tmp/foo/file',
-     'basename': 'file',
-     'orig': '/tmp/foo/file',
-     'parent': '/tmp/',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "file",
+        "full": "/tmp/foo/file",
+        "basename": "file",
+        "orig": "/tmp/foo/file",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
 
 
     POSIX-style path to a directory:
 
     >>> parse_path('/tmp/foo/')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': '',
-     'full': '/tmp/foo/',
-     'basename': '',
-     'orig': '/tmp/foo/',
-     'parent': '/tmp/',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "",
+        "full": "/tmp/foo/",
+        "basename": "",
+        "orig": "/tmp/foo/",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
 
 
     Windows-style path to a file:
 
     >>> parse_path(r'C:\Temp\new\file.ext')
-    {'dname': 'new',
-     'ext': '.ext',
-     'fname': 'file.ext',
-     'full': 'C:/Temp/new/file.ext',
-     'basename': 'file',
-     'orig': 'C:\\Temp\\new\\file.ext',
-     'parent': 'C:/Temp/',
-     'path': 'C:/Temp/new/'}
+    {
+        "dname": "new",
+        "ext": ".ext",
+        "fname": "file.ext",
+        "full": "C:/Temp/new/file.ext",
+        "basename": "file",
+        "orig": "C:\\Temp\\new\\file.ext",
+        "parent": "C:/Temp",
+        "path": "C:/Temp/new/",
+    }
 
 
     Special treatment for *OME-TIFF* suffixes:
 
     >>> parse_path("/path/to/some/nice.OME.tIf")
-    {'basename': 'nice',
-    'dname': 'some',
-    'ext': '.OME.tIf',
-    'fname': 'nice.OME.tIf',
-    'full': '/path/to/some/nice.OME.tIf',
-    'orig': '/path/to/some/nice.OME.tIf',
-    'parent': '/path/to/',
-    'path': '/path/to/some/'}
+    {
+        "basename": "nice",
+        "dname": "some",
+        "ext": ".OME.tIf",
+        "fname": "nice.OME.tIf",
+        "full": "/path/to/some/nice.OME.tIf",
+        "orig": "/path/to/some/nice.OME.tIf",
+        "parent": "/path/to/",
+        "path": "/path/to/some/",
+    }
     """
     path = str(path)
     if prefix:
