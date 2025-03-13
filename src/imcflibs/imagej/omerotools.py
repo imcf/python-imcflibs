@@ -187,6 +187,21 @@ def add_annotation(client, repository_wpr, annotations, header):
     repository_wpr.addMapAnnotation(client, map_annotation_wpr)
 
 
+def delete_annotation(user_client, repository_wpr):
+    """Delete annotations linked to object
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    repository_wpr : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
+        Wrapper to the object for the anotation
+
+    """
+    kv_pairs = repository_wpr.getMapAnnotations(user_client)
+    user_client.delete(kv_pairs)
+
+
 def find_dataset(client, dataset_id):
     """Retrieve a dataset (wrapper) from the OMERO server.
 
