@@ -34,3 +34,30 @@ pytest-cov = "^6.0.0"
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
+
+
+[tool.ruff.lint]
+exclude = [
+  "tests/interactive-imagej/*"
+]
+
+select = [
+    "D",
+    # summary lines have to be placed on the first physical line of the docstring
+    "D212",
+    # imperative mood for all docstrings
+    "D401",
+    # summary line has to end in a punctuation mark
+    "D415",
+    # require documentation for _all_ function parameters
+    "D417",
+]
+
+ignore = [
+    # no blank lines allowed after function docstring
+    "D202",
+]
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
