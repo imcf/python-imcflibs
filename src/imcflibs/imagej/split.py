@@ -8,7 +8,7 @@ from ij.plugin import ChannelSplitter  # pylint: disable-msg=E0401
 
 
 def split_by_c_and_z(log, dname, imgf, skip_top, skip_bottom):
-    """Helper function to open, split and save a file.
+    """Open a file, split by Z and C and save the result into individual TIFFs.
 
     Load the file specified, split by channels and z-slices, create a directory
     for each channel using the channel number as a name suffix and export
