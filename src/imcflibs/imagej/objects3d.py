@@ -1,3 +1,10 @@
+"""Functions to work with 3D objects.
+
+Mostly (although not exclusively) related to the [`mcib3d`][mcib3d] package.
+
+[mcib3d]: https://mcib3d.frama.io/3d-suite-imagej/
+"""
+
 from ij import IJ
 from mcib3d.geom import Objects3DPopulation
 from mcib3d.image3d import ImageHandler, ImageLabeller
