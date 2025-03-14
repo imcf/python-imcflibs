@@ -21,7 +21,10 @@ def debug_mode():
 
 
 def fix_ij_options():
-    """Set up ImageJ default options."""
+    """Set up ImageJ default options.
+
+    FIXME: Explain the rationale / idea!
+    """
 
     # disable inverting LUT
     IJ.run("Appearance...", " menu=0 16-bit=Automatic")
