@@ -277,9 +277,10 @@ def timed_log(message, as_string=False):
         Flag to request the formatted string to be returned instead of printing
         it to the log. By default False.
     """
+    formatted = time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " "
     if as_string:
-        return time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " "
-    IJ.log(time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " ")
+        return formatted
+    IJ.log(formatted)
 
 
 def get_free_memory():
