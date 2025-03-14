@@ -1,3 +1,8 @@
+"""Functions working with [TrackMate].
+
+[TrackMate]: https://imagej.net/plugins/trackmate/
+"""
+
 import os
 import sys
 
@@ -301,7 +306,7 @@ def run_trackmate(
     crop_roi=None,
 ):
     # sourcery skip: merge-else-if-into-elif, swap-if-else-branches
-    """Function to run TrackMate on already opened data.
+    """Run TrackMate on an open ImagePlus object.
 
     Parameters
     ----------
