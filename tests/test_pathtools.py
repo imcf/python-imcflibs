@@ -5,6 +5,7 @@ from imcflibs.pathtools import parse_path
 from imcflibs.pathtools import jython_fiji_exists
 from imcflibs.pathtools import image_basename
 from imcflibs.pathtools import gen_name_from_orig
+from imcflibs.pathtools import derive_out_dir
 
 
 def test_parse_path():
@@ -106,3 +107,10 @@ def test_gen_name_from_orig():
     generated = gen_name_from_orig(outpath, inpath, tag, suffix)
     assert generated == "/outpath/foobar-avg.h5"
 
+
+def test_derive_out_dir():
+    """Test derive_out_dir() using various parameter combinations."""
+    assert derive_out_dir("/foo", "-") == "/foo"
+    assert derive_out_dir("/foo", "none") == "/foo"
+    assert derive_out_dir("/foo", "NONE") == "/foo"
+    assert derive_out_dir("/foo", "/bar") == "/bar"
