@@ -175,7 +175,7 @@ def jython_fiji_exists(path):
     """
     try:
         return os.path.exists(path)
-    except java.lang.AbstractMethodError:
+    except java.lang.AbstractMethodError:  # pragma: no cover
         return False
 
 
