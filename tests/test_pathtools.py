@@ -4,6 +4,7 @@
 from imcflibs.pathtools import parse_path
 from imcflibs.pathtools import jython_fiji_exists
 from imcflibs.pathtools import image_basename
+from imcflibs.pathtools import gen_name_from_orig
 
 
 def test_parse_path():
@@ -94,3 +95,14 @@ def test_image_basename():
     assert image_basename("/path/to/image_file_01.png") == "image_file_01"
     assert image_basename("more-complex-stack.ome.tif") == "more-complex-stack"
     assert image_basename("/tmp/FoObAr.OMe.tIf") == "FoObAr"
+
+
+def test_gen_name_from_orig():
+    """Test assembling an output name from input, tag and suffix."""
+    outpath = "/outpath"
+    inpath = "/inpath/to/foobar.tif"
+    tag = "-avg"
+    suffix = ".h5"
+    generated = gen_name_from_orig(outpath, inpath, tag, suffix)
+    assert generated == "/outpath/foobar-avg.h5"
+
