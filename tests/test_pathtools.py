@@ -30,6 +30,19 @@ def test_parse_path():
     assert path_to_dir["ext"] == ""
 
 
+def test_parse_path_with_prefix():
+    """Test parse_path with a prefix parameter."""
+    exp_full = "/FOO/BAR/tmp/foo/file.suffix"
+    prefix = "/FOO/BAR/"
+    path = "/tmp/foo/file.suffix"
+    assert parse_path(path, prefix)["full"] == exp_full
+
+    # test again without trailing / leading slashes:
+    prefix = "/FOO/BAR"
+    path = "tmp/foo/file.suffix"
+    assert parse_path(path, prefix)["full"] == exp_full
+
+
 def test_parse_path_windows():
     """Test using a Windows-style path."""
     path = r"C:\Foo\Bar"
