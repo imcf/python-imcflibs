@@ -422,17 +422,41 @@ def get_threshold_value_from_method(imp, method, ops):
     return threshold_value
 
 
-def write_results(out_file, content):
-    """
-    Write the results to a csv file.
+def write_ordereddict_to_csv(out_file, content):
+    """Write data from a list of OrderedDicts to a CSV file.
+
+    This function writes data to a CSV file, preserving the order of columns
+    as defined in the OrderedDict objects. If the output file doesn't exist,
+    it creates a new file with a header row. If the file exists, it appends
+    the data without repeating the header.
 
     Parameters
     ----------
     out_file : str
-        Path to the output file.
+        Path to the output CSV file.
     content : list of OrderedDict
-        List of dictionaries representing the results.
+        List of OrderedDict objects representing the data rows to be written.
+        All dictionaries should have the same keys.
 
+    Examples
+    --------
+    >>> from collections import OrderedDict
+    >>> results = [
+    ...     OrderedDict([('id', 1), ('name', 'Sample A'), ('value', 42.5)]),
+    ...     OrderedDict([('id', 2), ('name', 'Sample B'), ('value', 37.2)])
+    ... ]
+    >>> write_ordereddict_to_csv('results.csv', results)
+
+    The resulting CSV file will contain:
+    id;name;value
+    1;Sample A;42.5
+    2;Sample B;37.2
+
+    Notes
+    -----
+    - Uses semicolon (;) as delimiter
+    - When appending to an existing file, assumes the column structure matches
+    - Opens files in binary mode for compatibility
     """
 
     # Check if the output file exists
