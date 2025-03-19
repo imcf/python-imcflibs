@@ -14,6 +14,11 @@ def _is_string_like(obj):
     instance of it (or a subclass thereof). So it's more generic than using
     isinstance(obj, str).
 
+    Parameters
+    ----------
+    obj : any
+        The object to be checked for being string-like.
+
     Example
     -------
     >>> _is_string_like('foo')
@@ -41,6 +46,7 @@ def filename(name):
     Parameters
     ----------
     name : str or filehandle or java.io.File
+        The object to retrieve the filename from.
 
     Returns
     -------
@@ -78,6 +84,7 @@ def flatten(lst):
     Parameters
     ----------
     lst : list(str)
+        The list of strings to be flattened.
 
     Returns
     -------

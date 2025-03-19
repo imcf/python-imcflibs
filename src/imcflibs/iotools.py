@@ -1,9 +1,7 @@
 """I/O related functions."""
 
-import glob
 import zipfile
 
-import os
 from os.path import splitext, join
 
 from .log import LOG as log
@@ -24,6 +22,7 @@ def filehandle(fname, mode="r"):
     Parameters
     ----------
     fname : str or filehandle
+        The object to ensure it is a file handle, or to create one from it.
     mode : str
         The desired mode of the filehandle (default=read).
 

@@ -4,8 +4,8 @@ import os
 
 import ij  # pylint: disable-msg=import-error
 from ij import IJ
-from ij.plugin import ImageCalculator, Concatenator
-from ij.process import StackStatistics, ImageProcessor
+from ij.plugin import ImageCalculator
+from ij.process import StackStatistics
 from ..imagej import bioformats  # pylint: disable-msg=no-name-in-module
 from ..imagej import misc, projections
 from ..log import LOG as log
@@ -183,22 +183,19 @@ def process_files(files, outpath, model_file, fmt):
         model.close()
 
 def simple_flatfield_correction(imp, sigma=20.0):
-    """Performs a simple flatfield correction to a given ImagePlus stack.
-
-    The function returns a 32-bit corrected flatfield image.
+    """Perform a simple flatfield correction to a given ImagePlus stack.
 
     Parameters
     ----------
     imp : ij.ImagePlus
         The input stack to be projected.
     sigma: float, optional
-        The sigma value for the Gaussian blur, default=20.0
+        The sigma value for the Gaussian blur, default=20.0.
 
     Returns
     -------
     ij.ImagePlus
-        The 32-bit image result of flatfield correction
-
+        The 32-bit image resulting from the flatfield correction.
     """
     flatfield = imp.duplicate()
     sigma_str = "sigma=" + str(sigma)

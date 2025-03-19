@@ -174,7 +174,7 @@ def add_annotation(client, repository_wpr, annotations, header):
 
     Parameters
     ----------
-    user_client : fr.igred.omero.Client
+    client : fr.igred.omero.Client
         The client object used to connect to the OMERO server.
     repository_wpr : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
         Wrapper to the object for the anotation.

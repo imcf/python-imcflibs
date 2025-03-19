@@ -290,26 +290,23 @@ def progressbar(progress, total, line_number, prefix=""):
 
 
 def timed_log(message, as_string=False):
-    """Print a message to the ImageJ log window with a timestamp added.
+    """Print a message to the ImageJ log window, prefixed with a timestamp.
+
+    If `as_string` is set to True, nothgin will be printed to the log window,
+    instead the formatted log message will be returned as a string.
 
     Parameters
     ----------
     message : str
         Message to print
+    as_string : bool, optional
+        Flag to request the formatted string to be returned instead of printing
+        it to the log. By default False.
     """
+    formatted = time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " "
     if as_string:
-        return (
-            time.strftime("%H:%M:%S", time.localtime())
-            + ": "
-            + message
-            + " "
-        )
-    IJ.log(
-        time.strftime("%H:%M:%S", time.localtime())
-        + ": "
-        + message
-        + " "
-    )
+        return formatted
+    IJ.log(formatted)
 
 
 def get_free_memory():
@@ -387,14 +384,14 @@ def subtract_images(imp1, imp2):
     Parameters
     ----------
     imp1: ij.ImagePlus
-        The ImagePlus that is to be subtracted from
+        The ImagePlus that is to be subtracted from.
     imp2: ij.ImagePlus
-        The ImagePlus that is to be subtracted
+        The ImagePlus that is to be subtracted.
 
     Returns
-    ---------
+    -------
     ij.ImagePlus
-        The ImagePlus resulting from the subtraction
+        The ImagePlus resulting from the subtraction.
     """
     ic = ImageCalculator()
     subtracted = ic.run("Subtract create", imp1, imp2)
@@ -407,8 +404,8 @@ def close_images(list_of_imps):
 
     Parameters
     ----------
-    list(ij.ImagePlus)
-        A list of open ImagePlus objects
+    list_of_imps: list(ij.ImagePlus)
+        A list of open ImagePlus objects.
     """
     for imp in list_of_imps:
         imp.changes = False

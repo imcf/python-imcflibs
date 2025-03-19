@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+"""Tests for `imcflibs.iotools`."""
 # -*- coding: utf-8 -*-
 
 import pytest
@@ -19,28 +19,34 @@ except NameError:
     file_types = (io.IOBase,)
 
 
-__author__ = "Niko Ehrenfeuchter"
-__copyright__ = "Niko Ehrenfeuchter"
-__license__ = "gpl3"
-
 
 def test_filehandle(tmpdir):
+    """Test instance types of objects returned by `filehandle()`."""
     tmpfile = tmpdir.join("testfile")
     tmpname = str(tmpfile)
     # print(tmpname)
     tmphandle = open(str(tmpfile), "w")
     print(type(tmphandle))
+
     assert isinstance(tmpname, str)
     print("tmpname is str-like 🦋")
+
     assert isinstance(tmphandle, file_types)
     print("tmphandle is file/io-like 🦋")
+
     assert isinstance(filehandle(tmpname), file_types)
     print("filehandle(tmpname) is file/io-like 🦋")
+
     assert isinstance(filehandle(tmphandle, "w"), file_types)
     print("filehandle(tmphandle) is file/io-like 🦋")
 
 
 def test_readtxt(tmpdir):
+    """Test the `readtxt()` function.
+
+    Read text from a regular file as well as from a zip file, both straight and
+    using the `flat` option.
+    """
     content = [
         "lorem\n",
         "ipsum\n",

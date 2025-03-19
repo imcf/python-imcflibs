@@ -1,3 +1,10 @@
+"""Functions to work with 3D objects.
+
+Mostly (although not exclusively) related to the [`mcib3d`][mcib3d] package.
+
+[mcib3d]: https://mcib3d.frama.io/3d-suite-imagej/
+"""
+
 from de.mpicbg.scf.imgtools.image.create.image import ImageCreationUtilities
 from de.mpicbg.scf.imgtools.image.create.labelmap import WatershedLabeling
 from ij import IJ

@@ -140,7 +140,7 @@ def import_image(
 
 
 def export(imp, filename, overwrite=False):
-    """Simple wrapper to export an image to a given file.
+    """Export an ImagePlus object to a given file.
 
     Parameters
     ----------
@@ -283,7 +283,7 @@ def write_bf_memoryfile(path_to_file):
 
     Parameters
     ----------
-    string
+    path_to_file : str
         The full path to the image file.
     """
     reader = Memoizer(ImageReader())

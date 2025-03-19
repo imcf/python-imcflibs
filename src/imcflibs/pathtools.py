@@ -10,7 +10,7 @@ from .log import LOG as log
 
 
 def parse_path(path, prefix=""):
-    """Parse a path into its components.
+    r"""Parse a path into its components.
 
     If the path doesn't end with the pathsep, it is assumed being a file!
     No tests based on existing files are done, as this is supposed to also work
@@ -19,6 +19,11 @@ def parse_path(path, prefix=""):
     The function accepts `java.io.File` objects (as retrieved by using ImageJ2's
     *Script Parameter* `#@ File`) for either of the parameters, so it is safe to
     use this in ImageJ Python scripts without additional measures.
+
+    **WARNING**: when passing in **Windows paths** literally, make sure to
+    declare them as **raw strings** using the `r""` notation, otherwise
+    unexpected things might happen if the path contains sections that Python
+    will interpret as escape sequences (e.g. `\n`, `\t`, `\u2324`, ...).
 
     Parameters
     ----------
@@ -51,54 +56,64 @@ def parse_path(path, prefix=""):
 
     Examples
     --------
-
     POSIX-style path to a file with a suffix:
 
     >>> parse_path('/tmp/foo/file.suffix')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': 'file',
-     'full': '/tmp/foo/file',
-     'basename': 'file',
-     'orig': '/tmp/foo/file',
-     'parent': '/tmp/',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "file",
+        "full": "/tmp/foo/file",
+        "basename": "file",
+        "orig": "/tmp/foo/file",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
+
 
     POSIX-style path to a directory:
 
     >>> parse_path('/tmp/foo/')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': '',
-     'full': '/tmp/foo/',
-     'basename': '',
-     'orig': '/tmp/foo/',
-     'parent': '/tmp/',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "",
+        "full": "/tmp/foo/",
+        "basename": "",
+        "orig": "/tmp/foo/",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
+
 
     Windows-style path to a file:
 
-    >>> parse_path('C:\\Temp\\foo\\file.ext')
-    {'dname': 'foo',
-     'ext': '.ext',
-     'fname': 'file.ext',
-     'full': 'C:/Temp/foo/file.ext',
-     'basename': 'file',
-     'orig': 'C:\\Temp\\foo\\file.ext',
-     'parent': 'C:/Temp/',
-     'path': 'C:/Temp/foo/'}
+    >>> parse_path(r'C:\Temp\new\file.ext')
+    {
+        "dname": "new",
+        "ext": ".ext",
+        "fname": "file.ext",
+        "full": "C:/Temp/new/file.ext",
+        "basename": "file",
+        "orig": "C:\\Temp\\new\\file.ext",
+        "parent": "C:/Temp",
+        "path": "C:/Temp/new/",
+    }
+
 
     Special treatment for *OME-TIFF* suffixes:
 
     >>> parse_path("/path/to/some/nice.OME.tIf")
-    {'basename': 'nice',
-    'dname': 'some',
-    'ext': '.OME.tIf',
-    'fname': 'nice.OME.tIf',
-    'full': '/path/to/some/nice.OME.tIf',
-    'orig': '/path/to/some/nice.OME.tIf',
-    'parent': '/path/to/',
-    'path': '/path/to/some/'}
+    {
+        "basename": "nice",
+        "dname": "some",
+        "ext": ".OME.tIf",
+        "fname": "nice.OME.tIf",
+        "full": "/path/to/some/nice.OME.tIf",
+        "orig": "/path/to/some/nice.OME.tIf",
+        "parent": "/path/to/",
+        "path": "/path/to/some/",
+    }
     """
     path = str(path)
     if prefix:
@@ -126,7 +141,7 @@ def parse_path(path, prefix=""):
 
 
 def join2(path1, path2):
-    """Join two paths into one, much like os.path.join().
+    r"""Join two paths into one, much like os.path.join().
 
     The main difference is that `join2()` takes exactly two arguments, but they
     can be non-str (as long as they're having a `__str__()` method), so this is
@@ -152,7 +167,7 @@ def join2(path1, path2):
 
 
 def jython_fiji_exists(path):
-    """Wrapper to work around problems with Jython 2.7 in Fiji.
+    """Work around problems with `os.path.exists()` in Jython 2.7 in Fiji.
 
     In current Fiji, the Jython implementation of os.path.exists(path) raises a
     java.lang.AbstractMethodError iff 'path' doesn't exist. This function
@@ -160,7 +175,7 @@ def jython_fiji_exists(path):
     """
     try:
         return os.path.exists(path)
-    except java.lang.AbstractMethodError:
+    except java.lang.AbstractMethodError:  # pragma: no cover
         return False
 
 
@@ -219,6 +234,7 @@ def image_basename(orig_name):
     Parameters
     ----------
     orig_name : str
+        The original name, possibly containing paths and filename suffix.
 
     Examples
     --------
@@ -339,18 +355,6 @@ def folder_size(source):
                 total_size += os.path.getsize(fpath)
 
     return total_size
-
-
-def create_directory(new_path):
-    """create a new directory if it does not already exist
-
-    Parameters
-    ----------
-    new_path : str
-        Path to the new directory
-    """
-    if not os.path.exists(new_path):
-        os.makedirs(new_path)
 
 
 # pylint: disable-msg=C0103

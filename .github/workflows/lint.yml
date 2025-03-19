@@ -1,0 +1,23 @@
+name: 🔎 Lint code ⚡
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  lint:
+    name: Ruff ⚡🕵
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run Ruff checks ⚡
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: check

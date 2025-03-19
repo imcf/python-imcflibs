@@ -4,7 +4,7 @@ from ij import Prefs, IJ  # pylint: disable-msg=E0401
 
 
 def debug_mode():
-    """Wrapper to check if 'imcf.debugging' is enabled.
+    """Check if the 'imcf.debugging' setting is enabled.
 
     This is a workaround for a Jython issue in ImageJ with values that are
     stored in the "IJ_Prefs.txt" file being cast to the wrong types and / or
@@ -21,7 +21,10 @@ def debug_mode():
 
 
 def fix_ij_options():
-    """Wrapper to setup ImageJ default options."""
+    """Set up ImageJ default options.
+
+    FIXME: Explain the rationale / idea!
+    """
 
     # disable inverting LUT
     IJ.run("Appearance...", " menu=0 16-bit=Automatic")
