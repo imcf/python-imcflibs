@@ -449,23 +449,64 @@ def write_results(out_file, content):
             dict_writer.writerows(content)
 
 
-def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
-    """Function to save an image
+def save_image_with_extension(
+    imp, extension, out_dir, series, pad_number, split_channels
+):
+    """Save an ImagePlus object in the specified format.
+
+    This function provides flexible options for saving ImageJ images in various
+    formats with customizable naming conventions. It supports different
+    Bio-Formats compatible formats as well as ImageJ-native formats, and can
+    handle multi-channel images by either saving them as a single file or
+    splitting channels into separate files.
+
+    The function automatically creates necessary directories and uses consistent
+    naming patterns with series numbers. For split channels, separate
+    subdirectories are created for each channel (C1, C2, etc.).
 
     Parameters
     ----------
     imp : ij.ImagePlus
-        ImagePlus to save
-    extension : str
-        Extension to use for the output
+        ImagePlus object to save.
+    extension : {'ImageJ-TIF', 'ICS-1', 'ICS-2', 'OME-TIFF', 'CellH5', 'BMP'}
+        Output format to use: - ImageJ-TIF: Saves as ImageJ TIFF format (.tif) -
+        ICS-1: Saves as ICS version 1 format (.ids) - ICS-2: Saves as ICS
+        version 2 format (.ics) - OME-TIFF: Saves as OME-TIFF format (.ome.tif)
+        - CellH5: Saves as CellH5 format (.ch5) - BMP: Saves as BMP format (one
+        file per slice)
     out_dir : str
-        Path for the output
+        Directory path where the image(s) will be saved.
     series : int
-        Series to open
+        Series number to append to the filename.
     pad_number : int
-        Number of 0 to use for padding
+        Number of digits to use when zero-padding the series number.
     split_channels : bool
-        Bool to split or not the channels
+        If True, splits channels and saves them individually in separate folders
+        named "C1", "C2", etc. inside out_dir. If False, saves all channels in a
+        single file.
+
+    Notes
+    -----
+    - For "ImageJ-TIF" format, uses IJ.saveAs function
+    - For "BMP" format, saves images using StackWriter.save with one BMP file
+      per slice in a subfolder named after the original image
+    - For all other formats, uses Bio-Formats exporter (bf.export)
+    - The original ImagePlus is not modified, but any duplicate images created
+      for channel splitting are closed after saving
+    - Metadata is preserved when using Bio-Formats exporters
+
+    Examples
+    --------
+    Save a multichannel image as OME-TIFF without splitting channels:
+
+    >>> save_image_with_extension(imp, "OME-TIFF", "/output/path", 1, 3, False)
+    # Saves as: /output/path/image_title_series_001.ome.tif
+
+    Save with channels split:
+
+    >>> save_image_with_extension(imp, "OME-TIFF", "/output/path", 1, 3, True)
+    # Saves as: /output/path/C1/image_title_series_001.ome.tif
+    #           /output/path/C2/image_title_series_001.ome.tif
     """
 
     out_ext = {}
