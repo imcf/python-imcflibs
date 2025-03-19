@@ -179,7 +179,9 @@ def jython_fiji_exists(path):
         return False
 
 
-def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
+def listdir_matching(
+    path, suffix, fullpath=False, sort=False, regex=False
+):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -295,9 +297,13 @@ def derive_out_dir(in_dir, out_dir):
     """
     if out_dir.upper() in ["-", "NONE"]:
         out_dir = in_dir
-        log.info("No output directory given, using input dir [%s].", out_dir)
+        log.info(
+            "No output directory given, using input dir [%s].", out_dir
+        )
     else:
-        log.info("Using directory [%s] for results and temp files.", out_dir)
+        log.info(
+            "Using directory [%s] for results and temp files.", out_dir
+        )
 
     return out_dir
 
@@ -355,6 +361,27 @@ def folder_size(source):
                 total_size += os.path.getsize(fpath)
 
     return total_size
+
+
+def create_directory(new_path):
+    """Create a new directory at the specified path.
+
+    This function first checks if the directory already exists and only
+    attempts to create it if it doesn't exist.
+
+    Parameters
+    ----------
+    new_path : str
+        Path where the new directory should be created.
+
+    Notes
+    -----
+    This approach is used as a workaround for Python 2.7 which doesn't
+    have the exist_ok' parameter in os.makedirs().
+    """
+
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
 
 
 # pylint: disable-msg=C0103
