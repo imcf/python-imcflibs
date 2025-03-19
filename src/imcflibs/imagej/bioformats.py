@@ -307,26 +307,19 @@ def get_metadata_from_image(path_to_image):
     -------
     dict
         A dictionary containing the following metadata:
-        - unit_width : float
-            Physical width of a pixel.
-        - unit_height : float
-            Physical height of a pixel.
-        - unit_depth : float
-            Physical depth of a voxel.
-        - pixel_width : int
-            Width of the image in pixels.
-        - pixel_height : int
-            Height of the image in pixels.
-        - slice_count : int
-            Number of Z-slices.
-        - channel_count : int
-            Number of channels.
-        - timepoints_count : int
-            Number of timepoints.
-        - dimension_order : str
-            Order of dimensions in the image (e.g., 'XYZCT').
-        - pixel_type : str
-            Data type of the pixel values.
+
+            {
+                unit_width : float,  # physical width of a pixel
+                unit_height : float,  # physical height of a pixel
+                unit_depth : float,  # physical depth of a voxel
+                pixel_width : int,  # width of the image in pixels
+                pixel_height : int,  # height of the image in pixels
+                slice_count : int,  # number of Z-slices
+                channel_count : int,  # number of channels
+                timepoints_count : int,  # number of timepoints
+                dimension_order : str,  # order of dimensions, e.g. "XYZCT"
+                pixel_type : str,  # data type of the pixel values
+            }
     """
     reader = ImageReader()
     ome_meta = MetadataTools.createOMEXMLMetadata()
