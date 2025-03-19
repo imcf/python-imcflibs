@@ -11,6 +11,7 @@ import time
 from ij import IJ  # pylint: disable-msg=import-error
 from ij.plugin import Duplicator, ImageCalculator, StackWriter
 
+from .. import pathtools
 from ..log import LOG as log
 from . import bioformats as bf
 from . import prefs
@@ -571,12 +572,12 @@ def save_image_with_extension(
         )
 
         if extension == "ImageJ-TIF":
-            check_folder(dir_to_save[index])
+            pathtools.create_directory(dir_to_save[index])
             IJ.saveAs(current_imp, "Tiff", out_path + ".tif")
 
         elif extension == "BMP":
             out_folder = os.path.join(out_dir, basename + os.path.sep)
-            check_folder(out_folder)
+            pathtools.create_directory(out_folder)
             StackWriter.save(current_imp, out_folder, "format=bmp")
 
         else:
