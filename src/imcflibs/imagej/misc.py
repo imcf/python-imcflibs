@@ -521,13 +521,7 @@ def save_image_with_extension(
     imp : ij.ImagePlus
         ImagePlus object to save.
     extension : {'ImageJ-TIF', 'ICS-1', 'ICS-2', 'OME-TIFF', 'CellH5', 'BMP'}
-        Output format to use:
-        - ImageJ-TIF: Saves as ImageJ TIFF format (.tif)
-        - ICS-1: Saves as ICS version 1 format (.ids)
-        - ICS-2: Saves as ICS version 2 format (.ics)
-        - OME-TIFF: Saves as OME-TIFF format (.ome.tif)
-        - CellH5: Saves as CellH5 format (.ch5)
-        - BMP: Saves as BMP format (one file per slice)
+        Output format to use, see Notes section below for details.
     out_dir : str
         Directory path where the image(s) will be saved.
     series : int
@@ -535,32 +529,37 @@ def save_image_with_extension(
     pad_number : int
         Number of digits to use when zero-padding the series number.
     split_channels : bool
-        If True, splits channels and saves them individually in separate folders
-        named "C1", "C2", etc. inside out_dir. If False, saves all channels in a
+        If True, split channels and save them individually in separate folders
+        named "C1", "C2", etc. inside out_dir. If False, save all channels in a
         single file.
 
     Notes
     -----
-    - For "ImageJ-TIF" format, uses IJ.saveAs function
-    - For "BMP" format, saves images using StackWriter.save with one BMP file
-      per slice in a subfolder named after the original image
-    - For all other formats, uses Bio-Formats exporter (bf.export)
-    - The original ImagePlus is not modified, but any duplicate images created
-      for channel splitting are closed after saving
-    - Metadata is preserved when using Bio-Formats exporters
+    Depending on the value of the `extension` parameter, one of the following
+    output formats and saving strategies will be used:
+    - Bio-Formats based formats will be produced by calling `bf.export()`, note
+      that these formats will preserve metadata (which is **not** the case for
+      the other formats using different saving strategies):
+        - `ICS-1`: Save as ICS version 1 format (a pair of `.ics` and `.ids`).
+        - `ICS-2`: Save as ICS version 2 format (single `.ics` file).
+        - `OME-TIFF`: Save in OME-TIFF format (`.ome.tif`).
+        - `CellH5`: Save as CellH5 format (`.ch5`).
+    - `ImageJ-TIF`: Save in ImageJ TIFF format (`.tif`) using `IJ.saveAs()`.
+    - `BMP`: Save in BMP format using `StackWriter.save()`, producing one `.bmp`
+      per slice in a subfolder named after the original image.
 
     Examples
     --------
     Save a multichannel image as OME-TIFF without splitting channels:
 
     >>> save_image_with_extension(imp, "OME-TIFF", "/output/path", 1, 3, False)
-    # Saves as: /output/path/image_title_series_001.ome.tif
+    # resulting file: /output/path/image_title_series_001.ome.tif
 
-    Save with channels split:
+    Save with channel splitting:
 
     >>> save_image_with_extension(imp, "OME-TIFF", "/output/path", 1, 3, True)
-    # Saves as: /output/path/C1/image_title_series_001.ome.tif
-    #           /output/path/C2/image_title_series_001.ome.tif
+    # resulting files: /output/path/C1/image_title_series_001.ome.tif
+    #                  /output/path/C2/image_title_series_001.ome.tif
     """
 
     out_ext = {}
