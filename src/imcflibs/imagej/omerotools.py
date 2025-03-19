@@ -303,17 +303,17 @@ def get_info_from_original_metadata(user_client, image_wpr, field):
 
 
 def create_table_columns(headings):
-    """Create the table headings from the ImageJ results table
+    """Create OMERO table headings from an ImageJ results table.
 
     Parameters
     ----------
     headings : list(str)
-        List of columns names
+        List of columns names.
 
     Returns
     -------
     list(omero.gateway.model.TableDataColumn)
-        List of columns formatted to be uploaded to OMERO
+        List of columns formatted to be uploaded to OMERO.
     """
     table_columns = []
     # populate the headings
