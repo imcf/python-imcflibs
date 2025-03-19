@@ -523,11 +523,13 @@ def save_image_with_extension(
     imp : ij.ImagePlus
         ImagePlus object to save.
     extension : {'ImageJ-TIF', 'ICS-1', 'ICS-2', 'OME-TIFF', 'CellH5', 'BMP'}
-        Output format to use: - ImageJ-TIF: Saves as ImageJ TIFF format (.tif) -
-        ICS-1: Saves as ICS version 1 format (.ids) - ICS-2: Saves as ICS
-        version 2 format (.ics) - OME-TIFF: Saves as OME-TIFF format (.ome.tif)
-        - CellH5: Saves as CellH5 format (.ch5) - BMP: Saves as BMP format (one
-        file per slice)
+        Output format to use:
+        - ImageJ-TIF: Saves as ImageJ TIFF format (.tif)
+        - ICS-1: Saves as ICS version 1 format (.ids)
+        - ICS-2: Saves as ICS version 2 format (.ics)
+        - OME-TIFF: Saves as OME-TIFF format (.ome.tif)
+        - CellH5: Saves as CellH5 format (.ch5)
+        - BMP: Saves as BMP format (one file per slice)
     out_dir : str
         Directory path where the image(s) will be saved.
     series : int
