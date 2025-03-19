@@ -275,11 +275,11 @@ def get_acquisition_metadata_from_imageid(user_client, image_wpr):
 
 
 def get_info_from_original_metadata(user_client, image_wpr, field):
-    """Recovers information from the original metadata
+    """Retrieve information from the original metadata (as opposed to OME-MD).
 
-    In some cases, some information aren't parsed correctly by BF and have to
-    get recovered directly from the original metadata. This gets the value
-    based on the field string.
+    In some cases not all information is parsed correctly by BF and has to be
+    recovered / identified directly from the *original* metadata. This function
+    extracts the corresponding value based on the field identifier.
 
     Parameters
     ----------
