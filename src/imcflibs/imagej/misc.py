@@ -43,7 +43,9 @@ def show_progress(cur, final):
     -----
     `ij.IJ.showProgress` internally increments the given `cur` value by 1.
     """
-    log.info("Progress: %s / %s (%s)", cur + 1, final, (1.0 + cur) / final)
+    log.info(
+        "Progress: %s / %s (%s)", cur + 1, final, (1.0 + cur) / final
+    )
     IJ.showProgress(cur, final)
 
 
@@ -80,7 +82,9 @@ def elapsed_time_since(start, end=None):
 
     hours, rem = divmod(end - start, 3600)
     minutes, seconds = divmod(rem, 60)
-    return "{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds)
+    return "{:0>2}:{:0>2}:{:05.2f}".format(
+        int(hours), int(minutes), seconds
+    )
 
 
 def percentage(part, whole):
@@ -119,7 +123,9 @@ def calculate_mean_and_stdv(values_list, round_decimals=0):
     filtered_list = filter(None, values_list)
 
     try:
-        mean = round(sum(filtered_list) / len(filtered_list), round_decimals)
+        mean = round(
+            sum(filtered_list) / len(filtered_list), round_decimals
+        )
     except ZeroDivisionError:
         mean = 0
     tot = 0.0
@@ -160,7 +166,9 @@ def find_focus(imp):
     # Check if more than 1 channel
     # FUTURE Could be improved for multi channel
     if imp_dimensions[2] != 1:
-        sys.exit("Image has more than one channel, please reduce dimensionality")
+        sys.exit(
+            "Image has more than one channel, please reduce dimensionality"
+        )
 
     # Loop through each time point
     for plane in range(1, imp_dimensions[4] + 1):
@@ -176,7 +184,9 @@ def find_focus(imp):
             # pix_array = pix_array*pix_array
 
             sumpix_array = sum(pix_array)
-            var = sumpix_array / (imp_dimensions[0] * imp_dimensions[1] * mean)
+            var = sumpix_array / (
+                imp_dimensions[0] * imp_dimensions[1] * mean
+            )
 
             if var > norm_var:
                 norm_var = var
@@ -205,10 +215,14 @@ def send_mail(job_name, recipient, filename, total_execution_time):
 
     # Ensure the sender and server are configured from Prefs
     if not sender:
-        log.info("Sender email is not configured. Please check IJ_Prefs.txt.")
+        log.info(
+            "Sender email is not configured. Please check IJ_Prefs.txt."
+        )
         return
     if not server:
-        log.info("SMTP server is not configured. Please check IJ_Prefs.txt.")
+        log.info(
+            "SMTP server is not configured. Please check IJ_Prefs.txt."
+        )
         return
 
     # Ensure the recipient is provided
@@ -284,8 +298,18 @@ def timed_log(message, as_string=False):
         Message to print
     """
     if as_string:
-        return time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " "
-    IJ.log(time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " ")
+        return (
+            time.strftime("%H:%M:%S", time.localtime())
+            + ": "
+            + message
+            + " "
+        )
+    IJ.log(
+        time.strftime("%H:%M:%S", time.localtime())
+        + ": "
+        + message
+        + " "
+    )
 
 
 def get_free_memory():
@@ -465,13 +489,17 @@ def write_ordereddict_to_csv(out_file, content):
     if not os.path.exists(out_file):
         # If the file does not exist, create it and write the header
         with open(out_file, "wb") as f:
-            dict_writer = csv.DictWriter(f, content[0].keys(), delimiter=";")
+            dict_writer = csv.DictWriter(
+                f, content[0].keys(), delimiter=";"
+            )
             dict_writer.writeheader()
             dict_writer.writerows(content)
     else:
         # If the file exists, append the results
         with open(out_file, "ab") as f:
-            dict_writer = csv.DictWriter(f, content[0].keys(), delimiter=";")
+            dict_writer = csv.DictWriter(
+                f, content[0].keys(), delimiter=";"
+            )
             dict_writer.writerows(content)
 
 
@@ -559,16 +587,19 @@ def save_image_with_extension(
                     imp.getNFrames(),
                 )
             )
-            dir_to_save.append(os.path.join(out_dir, "C" + str(channel)))
+            dir_to_save.append(
+                os.path.join(out_dir, "C" + str(channel))
+            )
     else:
-        imp_to_use.append(imageplus)
+        imp_to_use.append(imp)
         dir_to_save.append(out_dir)
 
     for index, current_imp in enumerate(imp_to_use):
         basename = imp.getShortTitle()
 
         out_path = os.path.join(
-            dir_to_save[index], basename + "_series_" + str(series).zfill(pad_number)
+            dir_to_save[index],
+            basename + "_series_" + str(series).zfill(pad_number),
         )
 
         if extension == "ImageJ-TIF":
@@ -639,7 +670,8 @@ def locate_latest_imaris(paths_to_check=None):
     for check in paths_to_check:
         hits = glob.glob(check + "*")
         imaris_paths += sorted(
-            hits, key=lambda x: float(x.replace(check, "").replace(".", ""))
+            hits,
+            key=lambda x: float(x.replace(check, "").replace(".", "")),
         )
 
     return imaris_paths[-1]
