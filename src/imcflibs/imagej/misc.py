@@ -644,6 +644,10 @@ def pad_number(index, pad_length=2):
 def locate_latest_imaris(paths_to_check=None):
     """Find paths to latest installed Imaris or ImarisFileConverter version.
 
+    Identify the full path to the most recent (as in "version number")
+    ImarisFileConverter or Imaris installation folder with the latter one having
+    priority. In case nothing is found, an empty string is returned.
+
     Parameters
     ----------
     paths_to_check: list of str, optional
@@ -653,11 +657,7 @@ def locate_latest_imaris(paths_to_check=None):
     Returns
     -------
     str
-        Full path to the most recent (as in "version number") ImarisFileConverter
-        or Imaris installation folder with the latter one having priority.
-        Will be empty if nothing is found.
     """
-
     if not paths_to_check:
         paths_to_check = [
             r"C:\Program Files\Bitplane\ImarisFileConverter ",
