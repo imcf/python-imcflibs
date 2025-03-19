@@ -207,7 +207,7 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
+        Notes
         -----
         Previous function name : angle_select().
         """
@@ -233,7 +233,7 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
+        Notes
         -----
         Previous function name : channel_select().
         """
@@ -259,7 +259,7 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
+        Notes
         -----
         Previous function name : illumination_select().
         """
@@ -285,7 +285,7 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
+        Notes
         -----
         Previous function name : tile_select().
         """
@@ -311,7 +311,7 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
+        Notes
         -----
         Previous function name : timepoint_select().
         """
@@ -578,7 +578,7 @@ class DefinitionOptions(object):
         }
 
     def set_angle_definition(self, value):
-        """Set the value for the angle definition
+        """Set the value for the angle definition.
 
         Parameters
         ----------
@@ -592,7 +592,7 @@ class DefinitionOptions(object):
         )
 
     def set_channel_definition(self, value):
-        """Set the value for the channel definition
+        """Set the value for the channel definition.
 
         Parameters
         ----------
@@ -607,7 +607,7 @@ class DefinitionOptions(object):
         )
 
     def set_illumination_definition(self, value):
-        """Set the value for the illumination definition
+        """Set the value for the illumination definition.
 
         Parameters
         ----------
@@ -624,7 +624,7 @@ class DefinitionOptions(object):
         )
 
     def set_tile_definition(self, value):
-        """Set the value for the tile_definition
+        """Set the value for the tile_definition.
 
         Parameters
         ----------
@@ -638,7 +638,7 @@ class DefinitionOptions(object):
         )
 
     def set_timepoint_definition(self, value):
-        """Set the value for the time_point_definition
+        """Set the value for the time_point_definition.
 
         Parameters
         ----------
@@ -688,6 +688,7 @@ def check_processing_input(value, range_end):
         Contains the list of input dimensions, the first input dimension of a range or a single channel
     range_end : int or None
         Contains the end of the range if need be
+
     Returns
     -------
     str
@@ -809,8 +810,8 @@ def define_dataset_auto(
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
 ):
-    """Will run the corresponding "Define Dataset" using the "Auto-Loader"
-    option.
+    """Define a dataset using the Autoloader or Multi-View loader.
+
     If the series is tiles, will run "Define Dataset...", otherwise will run
     "Define Multi-View Dataset...".
 
@@ -993,8 +994,10 @@ def resave_as_h5(
         XML input file.
     output_h5_file_path : str
         Export path for the output file including the `.xml `extension.
-    timepoints : str, optional
-        The timepoints that should be exported, by default `All Timepoints`.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptions` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped.
     timepoints_per_partition : int, optional
         How many timepoints to export per partition, by default `1`.
     use_deflate_compression : bool, optional
@@ -1279,10 +1282,10 @@ def detect_interest_points(
     ----------
     project_path : str
         Path to the `.xml` project.
-    process_timepoint : str, optional
-        Timepoint to be processed, by default `All Timepoints`.
-    process_channel : str, optional
-        Channel to be processed, by default `All channels`.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptions` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped.
     sigma : float, optional
         Minimum sigma for interest points detection, by default `1.8`.
     threshold : float, optional
@@ -1337,14 +1340,11 @@ def interest_points_registration(
     ----------
     project_path : str
         Path to the `.xml` project.
-    process_timepoint : str, optional
-        Timepoint to be processed, by default `All Timepoints`.
-    process_channel : str, optional
-        Channels to be used for performing the registration. By default, all
-        channels are taken into account, however this behavior could be
-        undesirable if only one channel is adequate (e.g. beads or other useful
-        fiducials). To restrict registration to a specific channel, provide the
-        channel name using this parameter. By default `All channels`.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptions` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped. This controls which angles, channels,
+        illuminations, tiles and timepoints are processed.
     rigid_timepoints : bool, optional
         If set to `True` each timepoint will be considered as a rigid unit
         (useful e.g. if spatial registration has already been performed before).
