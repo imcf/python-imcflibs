@@ -1,6 +1,7 @@
 """Miscellaneous ImageJ related functions, mostly convenience wrappers."""
 
 import csv
+import glob
 import os
 import smtplib
 import subprocess
