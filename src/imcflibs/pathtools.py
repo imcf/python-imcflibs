@@ -366,18 +366,13 @@ def folder_size(source):
 def create_directory(new_path):
     """Create a new directory at the specified path.
 
-    This function first checks if the directory already exists and only
-    attempts to create it if it doesn't exist.
+    This is a workaround for Python 2.7 where `os.makedirs()` is lacking
+    the `exist_ok` parameter that is present in Python 3.2 and newer.
 
     Parameters
     ----------
     new_path : str
         Path where the new directory should be created.
-
-    Notes
-    -----
-    This approach is used as a workaround for Python 2.7 which doesn't
-    have the exist_ok' parameter in os.makedirs().
     """
 
     if not os.path.exists(new_path):
