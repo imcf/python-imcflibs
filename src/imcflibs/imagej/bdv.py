@@ -202,7 +202,7 @@ class ProcessingOptions(object):
             Contains the end of the range, by default None.
 
         Notes:
-        ------
+        -----
         Previous function name : angle_select().
         """
 
@@ -228,7 +228,7 @@ class ProcessingOptions(object):
             Contains the end of the range, by default None.
 
         Notes:
-        ------
+        -----
         Previous function name : channel_select().
         """
 
@@ -254,7 +254,7 @@ class ProcessingOptions(object):
             Contains the end of the range, by default None.
 
         Notes:
-        ------
+        -----
         Previous function name : illumination_select().
         """
 
@@ -280,7 +280,7 @@ class ProcessingOptions(object):
             Contains the end of the range, by default None.
 
         Notes:
-        ------
+        -----
         Previous function name : tile_select().
         """
 
@@ -306,7 +306,7 @@ class ProcessingOptions(object):
             Contains the end of the range, by default None.
 
         Notes:
-        ------
+        -----
         Previous function name : timepoint_select().
         """
 
