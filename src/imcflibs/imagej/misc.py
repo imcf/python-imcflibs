@@ -454,7 +454,7 @@ def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
 
     Parameters
     ----------
-    imageplus : ImagePlus
+    imp : ij.ImagePlus
         ImagePlus to save
     extension : str
         Extension to use for the output
@@ -480,16 +480,16 @@ def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
     dir_to_save = []
 
     if split_channels:
-        for channel in range(1, imageplus.getNChannels() + 1):
+        for channel in range(1, imp.getNChannels() + 1):
             imp_to_use.append(
                 Duplicator().run(
-                    imageplus,
+                    imp,
                     channel,
                     channel,
                     1,
-                    imageplus.getNSlices(),
+                    imp.getNSlices(),
                     1,
-                    imageplus.getNFrames(),
+                    imp.getNFrames(),
                 )
             )
             dir_to_save.append(os.path.join(out_dir, "C" + str(channel)))
@@ -498,7 +498,7 @@ def save_as(imageplus, extension, out_dir, series, pad_number, split_channels):
         dir_to_save.append(out_dir)
 
     for index, current_imp in enumerate(imp_to_use):
-        basename = imageplus.getShortTitle()
+        basename = imp.getShortTitle()
 
         out_path = os.path.join(
             dir_to_save[index], basename + "_series_" + str(series).zfill(pad_number)
