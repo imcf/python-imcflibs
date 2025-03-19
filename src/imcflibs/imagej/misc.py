@@ -470,16 +470,17 @@ def write_ordereddict_to_csv(out_file, content):
     ... ]
     >>> write_ordereddict_to_csv('results.csv', results)
 
-    The resulting CSV file will contain:
-    id;name;value
-    1;Sample A;42.5
-    2;Sample B;37.2
+    The resulting CSV file will have the following content:
+
+        id;name;value
+        1;Sample A;42.5
+        2;Sample B;37.2
 
     Notes
     -----
-    - Uses semicolon (;) as delimiter
-    - When appending to an existing file, assumes the column structure matches
-    - Opens files in binary mode for compatibility
+    - Uses the semicolon charachter (`;`) as delimiter.
+    - When appending to an existing file, the column structure has to match.
+    - Output file is opened in binary mode for compatibility.
     """
 
     # Check if the output file exists
