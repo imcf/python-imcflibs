@@ -208,15 +208,21 @@ def send_notification_email(job_name, recipient, filename, total_execution_time,
         return
 
     # Form the email subject and body
-    subject = "Your {0} job finished successfully".format(job_name)
-    body = (
-        "Dear recipient,\n\n"
-        "This is an automated message.\n"
-        "Your dataset '{0}' has been successfully processed "
-        "({1} [HH:MM:SS:ss]).\n\n"
-        "Kind regards,\n"
-        "The IMCF-team"
-    ).format(filename, total_execution_time)
+    if subject == "":
+        subject = "Your {0} job has finished".format(job_name)
+    else:
+        subject = subject
+
+    if message == "":
+        body = (
+            "Dear recipient,\n\n"
+            "This is an automated message.\n"
+            "Your workflow '{0}' has been processed "
+            "({1} [HH:MM:SS:ss]).\n\n"
+            "Kind regards.\n"
+        ).format(filename, total_execution_time)
+    else:
+        body = message
 
     # Form the complete message
     message = ("From: {0}\nTo: {1}\nSubject: {2}\n\n{3}").format(
