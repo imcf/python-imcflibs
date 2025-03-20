@@ -27,7 +27,6 @@ python-micrometa = "^15.2.2"
 sjlogging = ">=0.5.2"
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^8.17.2"
 pytest = "^8.0.1"
 pytest-cov = "^6.0.0"
 
