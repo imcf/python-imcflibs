@@ -189,7 +189,21 @@ def send_notification_email(job_name, recipient, filename, total_execution_time,
         The name of the file to be passed in the email.
     total_execution_time : str
         The time it took to process the file in the format [HH:MM:SS:ss].
+    subject : string, optional
+        Subject of the email, by default says job finished.
+    message : string, optional
+        Message to be included in the email, by default says job processed.
+
+    Notes
+    -----
+    - The function requires two preferences to be set in `~/.imagej/IJ_Prefs.txt`:
+      `imcf.sender_email` (the sender's email address) and
+      `imcf.smtpserver` (the SMTP server address).
+    - If these preferences are not set or if required parameters are missing,
+      the function logs a message and exits without sending an email.
+    - In case of an SMTP error, the function logs a warning.
     """
+
     # Retrieve sender email and SMTP server from preferences
     sender = prefs.Prefs.get("imcf.sender_email", "").strip()
     server = prefs.Prefs.get("imcf.smtpserver", "").strip()
