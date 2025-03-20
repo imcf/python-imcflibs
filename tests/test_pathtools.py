@@ -4,6 +4,8 @@
 from imcflibs.pathtools import parse_path
 from imcflibs.pathtools import jython_fiji_exists
 from imcflibs.pathtools import image_basename
+from imcflibs.pathtools import gen_name_from_orig
+from imcflibs.pathtools import derive_out_dir
 
 
 def test_parse_path():
@@ -28,6 +30,19 @@ def test_parse_path():
     assert path_to_dir["fname"] == ""
     assert path_to_dir["dname"] == "foo"
     assert path_to_dir["ext"] == ""
+
+
+def test_parse_path_with_prefix():
+    """Test parse_path with a prefix parameter."""
+    exp_full = "/FOO/BAR/tmp/foo/file.suffix"
+    prefix = "/FOO/BAR/"
+    path = "/tmp/foo/file.suffix"
+    assert parse_path(path, prefix)["full"] == exp_full
+
+    # test again without trailing / leading slashes:
+    prefix = "/FOO/BAR"
+    path = "tmp/foo/file.suffix"
+    assert parse_path(path, prefix)["full"] == exp_full
 
 
 def test_parse_path_windows():
@@ -81,3 +96,21 @@ def test_image_basename():
     assert image_basename("/path/to/image_file_01.png") == "image_file_01"
     assert image_basename("more-complex-stack.ome.tif") == "more-complex-stack"
     assert image_basename("/tmp/FoObAr.OMe.tIf") == "FoObAr"
+
+
+def test_gen_name_from_orig():
+    """Test assembling an output name from input, tag and suffix."""
+    outpath = "/outpath"
+    inpath = "/inpath/to/foobar.tif"
+    tag = "-avg"
+    suffix = ".h5"
+    generated = gen_name_from_orig(outpath, inpath, tag, suffix)
+    assert generated == "/outpath/foobar-avg.h5"
+
+
+def test_derive_out_dir():
+    """Test derive_out_dir() using various parameter combinations."""
+    assert derive_out_dir("/foo", "-") == "/foo"
+    assert derive_out_dir("/foo", "none") == "/foo"
+    assert derive_out_dir("/foo", "NONE") == "/foo"
+    assert derive_out_dir("/foo", "/bar") == "/bar"

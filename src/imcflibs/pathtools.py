@@ -175,7 +175,7 @@ def jython_fiji_exists(path):
     """
     try:
         return os.path.exists(path)
-    except java.lang.AbstractMethodError:
+    except java.lang.AbstractMethodError:  # pragma: no cover
         return False
 
 
@@ -355,18 +355,6 @@ def folder_size(source):
                 total_size += os.path.getsize(fpath)
 
     return total_size
-
-
-def create_directory(new_path):
-    """Create a new directory if it does not already exist.
-
-    Parameters
-    ----------
-    new_path : str
-        Path to the new directory.
-    """
-    if not os.path.exists(new_path):
-        os.makedirs(new_path)
 
 
 # pylint: disable-msg=C0103

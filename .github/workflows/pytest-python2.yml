@@ -25,7 +25,9 @@ jobs:
     - name: 🗃 Cache 📦 APT Packages
       uses: awalsh128/cache-apt-pkgs-action@v1.4.3
       with:
-        packages: xmlstarlet
+        packages:
+          xmlstarlet
+          # python3-tomli  # required only for 'parse-python-deps.py'
         version: 1.0
 
     - name: 🗃 Cache pyenv installation
