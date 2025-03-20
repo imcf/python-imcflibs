@@ -173,8 +173,11 @@ def find_focus(imp):
     return focused_slice
 
 
-def send_mail(job_name, recipient, filename, total_execution_time):
-    """Send an email using the SMTP server and sender email configured in ImageJ's Preferences.
+def send_notification_email(job_name, recipient, filename, total_execution_time, subject = "", message=""):
+    """Send an automated email notification with optional details of the processed job.
+
+    This function retrieves the sender email and SMTP server settings from
+    ImageJ's preferences and uses them to send an email notification with job details.
 
     Parameters
     ----------
