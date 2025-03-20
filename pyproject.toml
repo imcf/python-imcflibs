@@ -21,7 +21,7 @@ version = "0.0.0"
 # - or: python = ">=3.10"
 
 [tool.poetry.dependencies]
-imcf-fiji-mocks = ">=0.7.0"
+imcf-fiji-mocks = ">=0.8.0.a0"
 python = ">=2.7"
 python-micrometa = "^15.2.2"
 sjlogging = ">=0.5.2"
