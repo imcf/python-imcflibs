@@ -103,11 +103,14 @@ mv pyproject_.toml pyproject.toml
 echo "== * Removing 'setup.py'..."
 rm setup.py
 
+echo "== * Installing dependencies (incl. pre-release and dev versions)..."
+vpip install --upgrade --pre \
+    imcf-fiji-mocks
+
 echo "== * Installing dependencies..."
 vpip install \
     python-micrometa \
     sjlogging \
-    "imcf-fiji-mocks>=0.3.0" \
     olefile==0.46 \
     pytest \
     pytest-cov \
