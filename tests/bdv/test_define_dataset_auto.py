@@ -13,6 +13,8 @@ def set_default_values(project_filename, file_path, series_type="Tiles"):
         Name of the project
     file_path : pathlib.Path
         Path to a temporary folder
+    series_type : str, optional
+        Type of Bioformats series (default is "Tiles")
 
     Returns
     ----------

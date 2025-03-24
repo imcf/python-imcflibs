@@ -1564,6 +1564,10 @@ def fuse_dataset(
         Pixel type to use during fusion, by default `[16-bit unsigned integer]`.
     export : str, optional
         Format of the output fused image, by default `HDF5`.
+    fusion_type : str, optional
+        Type of fusion algorithm to use, by default `Avg, Blending`.
+    compression : str, optional
+        Compression method to use when exporting as HDF5, by default `Zstandard`.
     """
 
     if processing_opts is None:
