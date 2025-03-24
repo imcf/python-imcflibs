@@ -1,3 +1,9 @@
+"""ImageJ processing utilities for filtering and thresholding images.
+
+This module provides functions to apply various image processing operations
+using ImageJ, including filters, background subtraction, and thresholding.
+"""
+
 from ij import IJ
 
 from ..log import LOG as log
