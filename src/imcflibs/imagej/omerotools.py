@@ -364,18 +364,54 @@ def create_table_columns(headings):
 def upload_array_as_omero_table(
     user_client, table_title, data, columns, image_wpr
 ):
+    """Upload a table to OMERO from a list of lists.
 
     Parameters
     ----------
     user_client : fr.igred.omero.Client
         Client used for login to OMERO
+    table_title : str
+        Title of the table to be uploaded.
     data : list(list())
         List of lists of results to upload
     columns : list(str)
         List of columns names
     image_wpr : fr.igred.omero.repositor.ImageWrapper
         Wrapper to the image to be uploaded
+
+    Examples
+    --------
+    >>> from fr.igred.omero import Client
+    >>> from java.lang import String, Double, Long
+    >>>
+    >>> # Connect to OMERO
+    >>> client = Client()
+    >>> client.connect("omero.example.org", 4064, "username", "password")
+    >>>
+    >>> # Get an image
+    >>> image_id = 123456
+    >>> image_wpr = client.getImage(Long(image_id))
+    >>>
+    >>> # Prepare column definitions (name-type pairs)
+    >>> columns = {
+    ...     "Row_ID": Long,
+    ...     "Cell_Area": Double,
+    ...     "Cell_Type": String
+    ... }
+    >>>
+    >>> # Prepare data (list of rows, each row is a list of values)
+    >>> data = [
+    ...     [1, 250.5, "Neuron"],
+    ...     [2, 180.2, "Astrocyte"],
+    ...     [3, 310.7, "Neuron"]
+    ... ]
+    >>>
+    >>> # Upload the table
+    >>> upload_array_as_omero_table(
+    ...     client, "Cell Measurements", data, columns, image_wpr
+    ... )
     """
+
     dataset_wpr = image_wpr.getDatasets(user_client)[0]
 
     table_columns = create_table_columns(columns)

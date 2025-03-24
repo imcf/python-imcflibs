@@ -453,10 +453,13 @@ def get_threshold_value_from_method(imp, method, ops):
 def write_ordereddict_to_csv(out_file, content):
     """Write data from a list of OrderedDicts to a CSV file.
 
-    This function writes data to a CSV file, preserving the order of columns
-    as defined in the OrderedDict objects. If the output file doesn't exist,
-    it creates a new file with a header row. If the file exists, it appends
-    the data without repeating the header.
+    In order to save the results of an analysis, looping over files,
+    making an OrderedDict help structure the data. If a list is made
+    containing all these OrderedDict, this function will write the data to
+    a CSV file, preserving the order of columns as defined in the
+    OrderedDict objects. If the output file doesn't exist, it creates a
+    new file with a header row. If the file exists, it appends the data
+    without repeating the header.
 
     Parameters
     ----------
@@ -464,7 +467,7 @@ def write_ordereddict_to_csv(out_file, content):
         Path to the output CSV file.
     content : list of OrderedDict
         List of OrderedDict objects representing the data rows to be written.
-        All dictionaries should have the same keys.
+        All dictionaries must have the same keys.
 
     Examples
     --------
@@ -477,9 +480,22 @@ def write_ordereddict_to_csv(out_file, content):
 
     The resulting CSV file will have the following content:
 
-        id;name;value
-        1;Sample A;42.5
-        2;Sample B;37.2
+    id;name;value
+    1;Sample A;42.5
+    2;Sample B;37.2
+
+    >>> results = []
+    >>> for i in range(1, 3):
+    ...     results.append(OrderedDict([('id', i), ('name', f'Sample {chr(64+i)}'), ('value', 30 + i*7.5)]))
+    >>> write_ordereddict_to_csv('results.csv', results)
+
+    The resulting CSV file will have the following content:
+
+
+    id;name;value
+    1;Sample A;37.5
+    2;Sample B;45.0
+    3;Sample C;52.5
 
     Notes
     -----
@@ -682,7 +698,17 @@ def locate_latest_imaris(paths_to_check=None):
 
 
 def run_imarisconvert(file_path):
-    """Convert a given file to Imaris5 .ims using ImarisConvert.exe via subprocess.
+    """Convert a given file to Imaris format using ImarisConvert.
+
+    Convert the input image file to Imaris format (Imaris5) using the
+    ImarisConvert utility. The function uses the latest installed Imaris
+    application to perform the conversion using subprocess.
+
+    Notes
+    -----
+    The function handles special case for .ids files by converting them
+    to .ics before processing. It uses the latest installed Imaris
+    application to perform the conversion.
 
     Parameters
     ----------
