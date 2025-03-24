@@ -435,12 +435,13 @@ def get_stage_coords(source, filenames):
                 z_interval = physSizeZ.value()
 
             if frame_size_z > 1 and physSizeZ is None:
-                print("no z calibration found, trying to recover")
+                log.debug("no z calibration found, trying to recover")
                 first_plane = omeMeta.getPlanePositionZ(0, 0)
                 next_plane_imagenumber = frame_size_c + frame_size_t - 1
                 second_plane = omeMeta.getPlanePositionZ(0, next_plane_imagenumber)
                 z_interval = abs(abs(first_plane.value()) - abs(second_plane.value()))
                 print("z-interval seems to be: " + str(z_interval))
+                log.debug("z-interval seems to be: " + str(z_interval))
 
             # create an image calibration
             image_calibration = [physSizeX.value(), physSizeY.value(), z_interval]
@@ -488,7 +489,7 @@ def get_stage_coords(source, filenames):
             pos_y = current_position_y.value()
 
             if current_position_z is None:
-                print("the z-position is missing in the ome-xml metadata.")
+                log.debug(
                 pos_z = 1.0
             else:
                 pos_z = current_position_z.value()

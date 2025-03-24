@@ -698,7 +698,7 @@ def run_imarisconvert(file_path):
         file_path,
         file_path.replace(file_extension, ".ims"),
     )
-    print("\n%s" % command)
+    log.debug("\n%s" % command)
     IJ.log("Converting to Imaris5 .ims...")
     subprocess.call(command, shell=True, cwd=imaris_path)
     IJ.log("Conversion to .ims is finished")
