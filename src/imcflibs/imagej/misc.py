@@ -120,18 +120,20 @@ def calculate_mean_and_stdv(values_list, round_decimals=0):
     tuple of (float, float)
         Mean and standard deviation of the input list.
     """
-    filtered_list = filter(None, values_list)
+    filtered_list = [x for x in values_list if x is not None]
 
-    try:
-        mean = round(
-            sum(filtered_list) / len(filtered_list), round_decimals
-        )
-    except ZeroDivisionError:
-        mean = 0
-    tot = 0.0
-    for x in filtered_list:
-        tot = tot + (x - mean) ** 2
-    return [mean, (tot / (len(filtered_list))) ** 0.5]
+    if not filtered_list:
+        return 0, 0
+
+    mean = round(
+        sum(filtered_list) / len(filtered_list), round_decimals
+    )
+    variance = sum((x - mean) ** 2 for x in filtered_list) / len(
+        filtered_list
+    )
+    std_dev = round(variance**0.5, round_decimals)
+
+    return mean, std_dev
 
 
 def find_focus(imp):
