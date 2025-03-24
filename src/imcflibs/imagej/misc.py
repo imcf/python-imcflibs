@@ -520,7 +520,7 @@ def save_image_in_format(
     ----------
     imp : ij.ImagePlus
         ImagePlus object to save.
-    extension : {'ImageJ-TIF', 'ICS-1', 'ICS-2', 'OME-TIFF', 'CellH5', 'BMP'}
+    format : {'ImageJ-TIF', 'ICS-1', 'ICS-2', 'OME-TIFF', 'CellH5', 'BMP'}
         Output format to use, see Notes section below for details.
     out_dir : str
         Directory path where the image(s) will be saved.
@@ -535,7 +535,7 @@ def save_image_in_format(
 
     Notes
     -----
-    Depending on the value of the `extension` parameter, one of the following
+    Depending on the value of the `format` parameter, one of the following
     output formats and saving strategies will be used:
     - Bio-Formats based formats will be produced by calling `bf.export()`, note
       that these formats will preserve metadata (which is **not** the case for
@@ -601,17 +601,17 @@ def save_image_in_format(
             basename + "_series_" + str(series).zfill(pad_number),
         )
 
-        if extension == "ImageJ-TIF":
+        if format == "ImageJ-TIF":
             pathtools.create_directory(dir_to_save[index])
             IJ.saveAs(current_imp, "Tiff", out_path + ".tif")
 
-        elif extension == "BMP":
+        elif format == "BMP":
             out_folder = os.path.join(out_dir, basename + os.path.sep)
             pathtools.create_directory(out_folder)
             StackWriter.save(current_imp, out_folder, "format=bmp")
 
         else:
-            bf.export(current_imp, out_path + out_ext[extension])
+            bf.export(current_imp, out_path + out_ext[format])
 
         current_imp.close()
 
@@ -681,25 +681,22 @@ def run_imarisconvert(file_path):
 
     Parameters
     ----------
-    path_to_image : str
+    file_path : str
         Absolute path to the input image file.
 
-    Notes
-    -----
-    The function handles special case for .ids files by converting them to .ics before
-    processing. It uses the latest installed Imaris application to perform the conversion.
+
     """
 
-    path_root, file_extension = os.path.splitext(path_to_image)
+    path_root, file_extension = os.path.splitext(file_path)
     if file_extension == ".ids":
         file_extension = ".ics"
-        path_to_image = path_root + file_extension
+        file_path = path_root + file_extension
 
     imaris_path = locate_latest_imaris()
 
     command = 'ImarisConvert.exe  -i "%s" -of Imaris5 -o "%s"' % (
-        path_to_image,
-        path_to_image.replace(file_extension, ".ims"),
+        file_path,
+        file_path.replace(file_extension, ".ims"),
     )
     print("\n%s" % command)
     IJ.log("Converting to Imaris5 .ims...")

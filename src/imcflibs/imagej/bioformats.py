@@ -401,7 +401,7 @@ def get_stage_coords(source, filenames):
     stage_coordinates_z = []
     series_names = []
 
-    for counter, image in enumerate(imagenames):
+    for counter, image in enumerate(filenames):
         # parse metadata
         reader = ImageReader()
         reader.setFlattenedResolutions(False)

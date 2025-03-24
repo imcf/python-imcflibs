@@ -3,7 +3,7 @@ from ij import IJ
 from ..log import LOG as log
 
 def apply_filter(imp, filter_method, filter_radius, do_3D=False):
-    """
+def apply_filter(imp, filter_method, filter_radius, do_3d=False):
     Make a specific filter followed by a threshold method of choice
 
     Parameters
@@ -54,7 +54,7 @@ def apply_filter(imp, filter_method, filter_radius, do_3D=False):
     return imageplus
 
 def apply_background_subtraction(imp, rolling_ball_radius, do_3D=False):
-    """
+def apply_background_subtraction(imp, rolling_ball_radius, do_3d=False):
     Perform background subtraction using a rolling ball method
 
     Parameters
@@ -75,7 +75,7 @@ def apply_background_subtraction(imp, rolling_ball_radius, do_3D=False):
 
     options = (
         "rolling=" + str(rolling_ball_radius)
-        + " stack" if do_3D else ""
+        if do_3d
     )
 
     log.debug("Background subtraction options: %s" % options)
@@ -86,7 +86,7 @@ def apply_background_subtraction(imp, rolling_ball_radius, do_3D=False):
     return imageplus
 
 def apply_threshold(imp, threshold_method):
-    """
+def apply_threshold(imp, threshold_method, do_3d=True):
     Apply a threshold method to the input ImagePlus
 
     Parameters

@@ -191,17 +191,17 @@ def add_annotation(client, repository_wpr, annotations, header):
 
 
 def delete_keyvalue_annotations(user_client, object_wrapper):
-    """Delete annotations linked to object
+    """Delete annotations linked to object.
 
     Parameters
     ----------
     user_client : fr.igred.omero.Client
         Client used for login to OMERO
-    repository_wpr : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
+    object_wrapper : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
         Wrapper to the object for the anotation
 
     """
-    kv_pairs = repository_wpr.getMapAnnotations(user_client)
+    kv_pairs = object_wrapper.getMapAnnotations(user_client)
     user_client.delete(kv_pairs)
 
 
@@ -298,8 +298,8 @@ def get_info_from_original_metadata(user_client, image_wpr, field):
     ----------
     user_client : fr.igred.omero.Client
         Client used for login to OMERO
-    image_id : int
-        ID of the image to look.
+    image_wpr : fr.igred.omero.repositor.ImageWrapper
+        Wrapper to the image
     field : str
         Field to look for in the original metadata. Needs to be found beforehand.
 

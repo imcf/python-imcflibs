@@ -160,7 +160,7 @@ def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
 
     Parameters
     ----------
-    imageplus : ij.ImagePlus
+    imp : ij.ImagePlus
         The input 3D image in which to find local maxima.
     min_threshold : int, optional
         The minimum intensity threshold for maxima detection. Default is 0.
@@ -177,7 +177,7 @@ def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
         An ImagePlus object containing the detected maxima as peaks.
     """
     # Wrap the input ImagePlus into an ImageHandler
-    img = ImageHandler.wrap(imageplus)
+    img = ImageHandler.wrap(imp)
 
     # Duplicate the image and apply a threshold cut-off
     thresholded = img.duplicate()
@@ -196,7 +196,7 @@ def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
     imp_peaks = img_peaks.getImagePlus()
 
     # Set the calibration of the peaks image to match the input image
-    imp_peaks.setCalibration(imageplus.getCalibration())
+    imp_peaks.setCalibration(imp.getCalibration())
 
     # Set the title of the peaks image
     imp_peaks.setTitle("Peaks")
