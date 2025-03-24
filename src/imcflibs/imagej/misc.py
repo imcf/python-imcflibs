@@ -731,5 +731,8 @@ def run_imarisconvert(file_path):
     )
     log.debug("\n%s" % command)
     IJ.log("Converting to Imaris5 .ims...")
-    subprocess.call(command, shell=True, cwd=imaris_path)
-    IJ.log("Conversion to .ims is finished")
+    result = subprocess.call(command, shell=True, cwd=imaris_path)
+    if result == 0:
+        IJ.log("Conversion to .ims is finished")
+    else:
+        IJ.log("Conversion failed with error code: %d" % result)
