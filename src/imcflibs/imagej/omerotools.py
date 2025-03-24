@@ -224,55 +224,67 @@ def find_dataset(client, dataset_id):
     return client.getDataset(Long(dataset_id))
 
     def get_acquisition_metadata(user_client, image_wpr):
+        """Get acquisition metadata from OMERO based on an image ID.
 
-def get_acquisition_metadata_from_imageid(user_client, image_wpr):
-    """Get acquisition metadata from OMERO based on an image ID
+        Parameters
+        ----------
+        user_client : fr.igred.omero.Client
+            Client used for login to OMERO
+        image_wpr : fr.igred.omero.repositor.ImageWrapper
+            Wrapper to the image for the metadata
 
-    Parameters
-    ----------
-    user_client : fr.igred.omero.Client
-        Client used for login to OMERO
-    image_wpr : fr.igred.omero.repositor.ImageWrapper
-        Wrapper to the image for the ROIs
+        Returns
+        -------
+        dict
+            Dictionary containing acquisition metadata:
+            - `objective_magnification`: Objective magnification
+            - `objective_na`: Objective NA
+            - `acquisition_date`: Acquisition date
+            - `acquisition_date_number`: Acquisition date as a number
+        """
+        ctx = user_client.getCtx()
+        instrument_data = (
+            user_client.getGateway()
+            .getMetadataService(ctx)
+            .loadInstrument(image_wpr.asDataObject().getInstrumentId())
+        )
+        objective_data = instrument_data.copyObjective().get(0)
+        metadata = {}
 
-    Returns
-    -------
-    tuple of (int, int, str, int)
-        List of info about the acquisition
-    """
-    ctx = user_client.getCtx()
-    instrument_data = (
-        user_client.getGateway()
-        .getMetadataService(ctx)
-        .loadInstrument(image_wpr.asDataObject().getInstrumentId())
-    )
-    objective_data = instrument_data.copyObjective().get(0)
-    if objective_data.getNominalMagnification() is None:
-        obj_mag = 0
-    else:
-        obj_mag = objective_data.getNominalMagnification().getValue()
-    if objective_data.getLensNA() is None:
-        obj_na = 0
-    else:
-        obj_na = objective_data.getLensNA().getValue()
-    if image_wpr.getAcquisitionDate() is None:
-        if image_wpr.asDataObject().getFormat() == "ZeissCZI":
-            field = "Information|Document|CreationDate"
-            date_field = get_info_from_original_metadata(user_client, image_wpr, field)
-            acq_date = date_field.split("T")[0]
-            acq_date_number = int(acq_date.replace("-", ""))
+        metadata["objective_magnification"] = (
+            objective_data.getNominalMagnification().getValue()
+            if objective_data.getNominalMagnification() is not None
+            else 0
+        )
+        metadata["objective_na"] = (
+            objective_data.getLensNA().getValue()
+            if objective_data.getLensNA() is not None
+            else 0
+        )
+
+        if image_wpr.getAcquisitionDate() is None:
+            if image_wpr.asDataObject().getFormat() == "ZeissCZI":
+                field = "Information|Document|CreationDate"
+                date_field = get_info_from_original_metadata(
+                    user_client, image_wpr, field
+                )
+                metadata["acquisition_date"] = date_field.split("T")[0]
+                metadata["acquisition_date_number"] = int(
+                    metadata["acquisition_date"].replace("-", "")
+                )
+            else:
+                metadata["acquisition_date"] = "NA"
+                metadata["acquisition_date_number"] = 0
         else:
-            acq_date = "NA"
-            acq_date_number = 0
+            sdf = SimpleDateFormat("yyyy-MM-dd")
+            metadata["acquisition_date"] = sdf.format(
+                image_wpr.getAcquisitionDate()
+            )
+            metadata["acquisition_date_number"] = int(
+                metadata["acquisition_date"].replace("-", "")
+            )
 
-    else:
-        sdf = SimpleDateFormat("yyyy-MM-dd")
-        acq_date = sdf.format(
-            image_wpr.getAcquisitionDate()
-        )  # image_wpr.getAcquisitionDate()
-        acq_date_number = int(acq_date.replace("-", ""))
-
-    return obj_mag, obj_na, acq_date, acq_date_number
+        return metadata
 
 
 def get_info_from_original_metadata(user_client, image_wpr, field):

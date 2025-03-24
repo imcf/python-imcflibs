@@ -356,42 +356,42 @@ def get_metadata_from_file(path_to_image):
 
 
 def get_stage_coords(source, filenames):
-    """Get the stage coordinates and calibration from the ome-xml for a given list of images
+    """Get stage coordinates and calibration for a given list of images.
 
     Parameters
     ----------
     source : str
         Path to the images
-    imagenames : list of str
+    filenames : list of str
         List of images filenames
 
     Returns
     -------
-    tuple
-        Contains
-        dimensions : int
+    dict
+        A dictionary containing the following metadata:
+        - `dimensions` : int
             Number of dimensions (2D or 3D)
-        stage_coordinates_x : list
-            The absolute stage x-coordinated from ome-xml metadata
-        stage_coordinates_y : list
-            The absolute stage y-coordinated from ome-xml metadata
-        stage_coordinates_z : list
-            The absolute stage z-coordinated from ome-xml metadata
-        relative_coordinates_x : list
+        - `stage_coordinates_x` : list
+            The absolute stage x-coordinated
+        - `stage_coordinates_y` : list
+            The absolute stage y-coordinated
+        - `stage_coordinates_z` : list
+            The absolute stage z-coordinated
+        - `relative_coordinates_x` : list
             The relative stage x-coordinates in px
-        relative_coordinates_y : list
+        - `relative_coordinates_y` : list
             The relative stage y-coordinates in px
-        relative_coordinates_z : list
+        - `relative_coordinates_z` : list
             The relative stage z-coordinates in px
-        image_calibration : list
+        - `image_calibration` : list
             x,y,z image calibration in unit/px
-        calibration_unit : str
+        - `calibration_unit` : str
             Image calibration unit
-        image_dimensions_czt : list
+        - `image_dimensions_czt` : list
             Number of images in dimensions c,z,t
-        series_names : list of str
+        - `series_names` : list of str
             Names of all series contained in the files
-        max_size : list of int
+        - `max_size` : list of int
             Maximum size across all files in dimensions x,y,z
     """
 
@@ -517,17 +517,17 @@ def get_stage_coords(source, filenames):
         relative_coordinates_y_px.append(rel_pos_y)
         relative_coordinates_z_px.append(rel_pos_z)
 
-    return (
-        dimensions,
-        stage_coordinates_x,
-        stage_coordinates_y,
-        stage_coordinates_z,
-        relative_coordinates_x_px,
-        relative_coordinates_y_px,
-        relative_coordinates_z_px,
-        image_calibration,
-        calibration_unit,
-        image_dimensions_czt,
-        series_names,
-        max_size,
-    )
+    return {
+        "dimensions": dimensions,
+        "stage_coordinates_x": stage_coordinates_x,
+        "stage_coordinates_y": stage_coordinates_y,
+        "stage_coordinates_z": stage_coordinates_z,
+        "relative_coordinates_x": relative_coordinates_x_px,
+        "relative_coordinates_y": relative_coordinates_y_px,
+        "relative_coordinates_z": relative_coordinates_z_px,
+        "image_calibration": image_calibration,
+        "calibration_unit": calibration_unit,
+        "image_dimensions_czt": image_dimensions_czt,
+        "series_names": series_names,
+        "max_size": max_size,
+    }
