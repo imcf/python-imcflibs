@@ -31,7 +31,9 @@ def label_image_to_roi_list(label_image, low_thresh=None):
     max_value = 0
 
     for slice in range(1, label_image.getNSlices() + 1):
-        label_image_slice = Duplicator().run(label_image, 1, 1, slice, slice, 1, 1)
+        label_image_slice = Duplicator().run(
+            label_image, 1, 1, slice, slice, 1, 1
+        )
 
         image_processor = label_image_slice.getProcessor()
         pixels = image_processor.getFloatArray()
@@ -57,7 +59,9 @@ def label_image_to_roi_list(label_image, low_thresh=None):
             elif value == 0:
                 continue
             # print(value)
-            float_processor.setThreshold(value, value, ImageProcessor.NO_LUT_UPDATE)
+            float_processor.setThreshold(
+                value, value, ImageProcessor.NO_LUT_UPDATE
+            )
             roi = ThresholdToSelection.run(img_float_copy)
             roi.setName(str(value))
             roi.setPosition(slice)
@@ -94,7 +98,9 @@ def cookie_cut_labels(label_image_ref, label_image_to_relate):
     Prefs.blackBackground = True
     IJ.run(imp_dup, "Convert to Mask", "")
     IJ.run(imp_dup, "Divide...", "value=255")
-    return ImageCalculator.run(label_image_ref, imp_dup, "Multiply create")
+    return ImageCalculator.run(
+        label_image_ref, imp_dup, "Multiply create"
+    )
 
 
 def relate_label_images(outer_label_imp, inner_label_imp):
@@ -190,7 +196,9 @@ def measure_objects_size_shape_2d(label_image):
     return regions.process(label_image)
 
 
-def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
+def binary_to_label(
+    imp, title, min_thresh=1, min_vol=None, max_vol=None
+):
     """Segment a binary image to get a label image (2D/3D).
 
     Works on: 2D and 3D binary data.
@@ -271,10 +279,14 @@ def dilate_labels_2d(imp, dilation_radius):
     # Iterate over each slice of the input ImagePlus
     for i in range(1, imp.getNSlices() + 1):
         # Duplicate the current slice
-        current_imp = Duplicator().run(imp, 1, 1, i, imp.getNSlices(), 1, 1)
+        current_imp = Duplicator().run(
+            imp, 1, 1, i, imp.getNSlices(), 1, 1
+        )
 
         # Perform a dilation of the labels in the current slice
-        dilated_labels_imp = li.dilateLabels(current_imp, dilation_radius)
+        dilated_labels_imp = li.dilateLabels(
+            current_imp, dilation_radius
+        )
 
         # Append the dilated labels to the list
         dilated_labels_list.append(dilated_labels_imp)

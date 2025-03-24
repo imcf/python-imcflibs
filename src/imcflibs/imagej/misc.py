@@ -303,7 +303,12 @@ def timed_log(message, as_string=False):
         Flag to request the formatted string to be returned instead of printing
         it to the log. By default False.
     """
-    formatted = time.strftime("%H:%M:%S", time.localtime()) + ": " + message + " "
+    formatted = (
+        time.strftime("%H:%M:%S", time.localtime())
+        + ": "
+        + message
+        + " "
+    )
     if as_string:
         return formatted
     IJ.log(formatted)

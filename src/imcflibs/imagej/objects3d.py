@@ -5,8 +5,12 @@ Mostly (although not exclusively) related to the [`mcib3d`][mcib3d] package.
 [mcib3d]: https://mcib3d.frama.io/3d-suite-imagej/
 """
 
-from de.mpicbg.scf.imgtools.image.create.image import ImageCreationUtilities
-from de.mpicbg.scf.imgtools.image.create.labelmap import WatershedLabeling
+from de.mpicbg.scf.imgtools.image.create.image import (
+    ImageCreationUtilities,
+)
+from de.mpicbg.scf.imgtools.image.create.labelmap import (
+    WatershedLabeling,
+)
 from ij import IJ
 from mcib3d.geom import Objects3DPopulation
 from mcib3d.image3d import ImageHandler, ImageLabeller
@@ -71,7 +75,9 @@ def imgplus_to_population3d(imp):
     return Objects3DPopulation(img)
 
 
-def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
+def segment_3d_image(
+    imp, title=None, min_thresh=1, min_vol=None, max_vol=None
+):
     """Segment a 3D binary image to get a labelled stack.
 
     Parameters
@@ -117,7 +123,9 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     return seg.getImagePlus()
 
 
-def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
+def get_objects_within_intensity(
+    obj_pop, imp, min_intensity, max_intensity
+):
     """Filter a population for objects within the given intensity range.
 
     Parameters
@@ -144,7 +152,10 @@ def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
         # Calculate the mean intensity of the object
         mean_intensity = obj.getPixMeanValue(ImageHandler.wrap(imp))
         # Check if the object is within the specified intensity range
-        if mean_intensity >= min_intensity and mean_intensity < max_intensity:
+        if (
+            mean_intensity >= min_intensity
+            and mean_intensity < max_intensity
+        ):
             objects_within_intensity.append(obj)
 
     # Return the new population with the filtered objects
@@ -152,8 +163,7 @@ def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
 
 
 def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
-    """
-    Find local maxima in a 3D image.
+    """Find local maxima in a 3D image.
 
     This function identifies local maxima in a 3D image using a specified minimum threshold and noise level.
     The radii for the maxima detection can be set independently for the x/y and z dimensions.
@@ -205,8 +215,7 @@ def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
 
 
 def seeded_watershed(imp_binary, imp_peaks, threshold=10):
-    """
-    Perform a seeded watershed segmentation on a binary image using seed points.
+    """Perform a seeded watershed segmentation on a binary image using seed points.
 
     This function applies a watershed segmentation to a binary image using seed points provided in another image.
     An optional threshold can be specified to control the segmentation process.
@@ -230,7 +239,9 @@ def seeded_watershed(imp_binary, imp_peaks, threshold=10):
     img_seed = ImagePlusAdapter.convertFloat(imp_peaks).copy()
 
     if threshold:
-        watersheded_result = WatershedLabeling.watershed(img, img_seed, threshold)
+        watersheded_result = WatershedLabeling.watershed(
+            img, img_seed, threshold
+        )
     else:
         watersheded_result = WatershedLabeling.watershed(img, img_seed)
 

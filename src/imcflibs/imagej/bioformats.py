@@ -159,7 +159,9 @@ def export(imp, filename, overwrite=False):
         log.debug("Detected calibration unit: %s", unit)
     except Exception as err:
         log.error("Unable to detect spatial unit: %s", err)
-        raise RuntimeError("Error detecting image calibration: %s" % err)
+        raise RuntimeError(
+            "Error detecting image calibration: %s" % err
+        )
     if unit == "pixel" and (suffix == "ics" or suffix == "ids"):
         log.warn(
             "Forcing unit to be 'm' instead of 'pixel' to avoid "
@@ -176,7 +178,9 @@ def export(imp, filename, overwrite=False):
     log.debug("Exporting finished.")
 
 
-def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
+def export_using_orig_name(
+    imp, path, orig_name, tag, suffix, overwrite=False
+):
     """Export an image to a given path, deriving the name from the input file.
 
     The input filename is stripped to its pure file name, without any path or
@@ -438,15 +442,26 @@ def get_stage_coords(source, filenames):
                 log.debug("no z calibration found, trying to recover")
                 first_plane = omeMeta.getPlanePositionZ(0, 0)
                 next_plane_imagenumber = frame_size_c + frame_size_t - 1
-                second_plane = omeMeta.getPlanePositionZ(0, next_plane_imagenumber)
-                z_interval = abs(abs(first_plane.value()) - abs(second_plane.value()))
-                print("z-interval seems to be: " + str(z_interval))
+                second_plane = omeMeta.getPlanePositionZ(
+                    0, next_plane_imagenumber
+                )
+                z_interval = abs(
+                    abs(first_plane.value()) - abs(second_plane.value())
+                )
                 log.debug("z-interval seems to be: " + str(z_interval))
 
             # create an image calibration
-            image_calibration = [physSizeX.value(), physSizeY.value(), z_interval]
+            image_calibration = [
+                physSizeX.value(),
+                physSizeY.value(),
+                z_interval,
+            ]
             calibration_unit = physSizeX.unit().getSymbol()
-            image_dimensions_czt = [frame_size_c, frame_size_z, frame_size_t]
+            image_dimensions_czt = [
+                frame_size_c,
+                frame_size_z,
+                frame_size_t,
+            ]
 
         reader.close()
 
@@ -465,12 +480,14 @@ def get_stage_coords(source, filenames):
 
             physSizeX_max = (
                 physSizeX.value()
-                if physSizeX.value() >= omeMeta.getPixelsPhysicalSizeX(series).value()
+                if physSizeX.value()
+                >= omeMeta.getPixelsPhysicalSizeX(series).value()
                 else omeMeta.getPixelsPhysicalSizeX(series).value()
             )
             physSizeY_max = (
                 physSizeY.value()
-                if physSizeY.value() >= omeMeta.getPixelsPhysicalSizeY(series).value()
+                if physSizeY.value()
+                >= omeMeta.getPixelsPhysicalSizeY(series).value()
                 else omeMeta.getPixelsPhysicalSizeY(series).value()
             )
             if omeMeta.getPixelsPhysicalSizeZ(series):
@@ -490,6 +507,8 @@ def get_stage_coords(source, filenames):
 
             if current_position_z is None:
                 log.debug(
+                    "the z-position is missing in the ome-xml metadata."
+                )
                 pos_z = 1.0
             else:
                 pos_z = current_position_z.value()
@@ -512,7 +531,9 @@ def get_stage_coords(source, filenames):
         rel_pos_y = (
             stage_coordinates_y[i] - stage_coordinates_y[0]
         ) / physSizeY.value()
-        rel_pos_z = (stage_coordinates_z[i] - stage_coordinates_z[0]) / z_interval
+        rel_pos_z = (
+            stage_coordinates_z[i] - stage_coordinates_z[0]
+        ) / z_interval
 
         relative_coordinates_x_px.append(rel_pos_x)
         relative_coordinates_y_px.append(rel_pos_y)

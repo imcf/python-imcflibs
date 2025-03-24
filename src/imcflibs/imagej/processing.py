@@ -2,9 +2,9 @@ from ij import IJ
 
 from ..log import LOG as log
 
-def apply_filter(imp, filter_method, filter_radius, do_3D=False):
+
 def apply_filter(imp, filter_method, filter_radius, do_3d=False):
-    Make a specific filter followed by a threshold method of choice
+    """Make a specific filter followed by a threshold method of choice.
 
     Parameters
     ----------
@@ -28,9 +28,18 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
     ij.ImagePlus
         Filtered ImagePlus
     """
-    log.info("Applying filter %s with radius %d" % (filter_method, filter_radius))
+    log.info(
+        "Applying filter %s with radius %d"
+        % (filter_method, filter_radius)
+    )
 
-    if filter_method not in ["Median", "Mean", "Gaussian Blur", "Minimum", "Maximum"]:
+    if filter_method not in [
+        "Median",
+        "Mean",
+        "Gaussian Blur",
+        "Minimum",
+        "Maximum",
+    ]:
         raise ValueError(
             "filter_method must be one of: Median, Mean, Gaussian Blur, Minimum, Maximum"
         )
@@ -41,9 +50,9 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
         filter = filter_method + "..."
 
     options = (
-        "sigma=" if filter_method == "Gaussian Blur" else "radius="
-        + str(filter_radius)
-        + " stack"
+        "sigma="
+        if filter_method == "Gaussian Blur"
+        else "radius=" + str(filter_radius) + " stack"
     )
 
     log.debug("Filter: <%s> with options <%s>" % (filter, options))
@@ -53,9 +62,9 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
 
     return imageplus
 
-def apply_background_subtraction(imp, rolling_ball_radius, do_3D=False):
+
 def apply_background_subtraction(imp, rolling_ball_radius, do_3d=False):
-    Perform background subtraction using a rolling ball method
+    """Perform background subtraction using a rolling ball method.
 
     Parameters
     ----------
@@ -71,11 +80,14 @@ def apply_background_subtraction(imp, rolling_ball_radius, do_3d=False):
     ij.ImagePlus
         Filtered ImagePlus
     """
-    log.info("Applying rolling ball with radius %d" % rolling_ball_radius)
+    log.info(
+        "Applying rolling ball with radius %d" % rolling_ball_radius
+    )
 
     options = (
-        "rolling=" + str(rolling_ball_radius)
+        "rolling=" + str(rolling_ball_radius) + " stack"
         if do_3d
+        else ""
     )
 
     log.debug("Background subtraction options: %s" % options)
@@ -85,9 +97,9 @@ def apply_background_subtraction(imp, rolling_ball_radius, do_3d=False):
 
     return imageplus
 
-def apply_threshold(imp, threshold_method):
+
 def apply_threshold(imp, threshold_method, do_3d=True):
-    Apply a threshold method to the input ImagePlus
+    """Apply a threshold method to the input ImagePlus.
 
     Parameters
     ----------
@@ -109,11 +121,7 @@ def apply_threshold(imp, threshold_method, do_3d=True):
     imageplus = imp.duplicate()
 
     auto_threshold_options = (
-        threshold_method
-        + " "
-        + "dark"
-        + " "
-        + "stack" if do_3D else ""
+        threshold_method + " " + "dark" + " " + "stack" if do_3D else ""
     )
 
     log.debug("Auto threshold options: %s" % auto_threshold_options)
@@ -121,14 +129,17 @@ def apply_threshold(imp, threshold_method, do_3d=True):
     IJ.setAutoThreshold(imageplus, auto_threshold_options)
 
     convert_to_binary_options = (
-        "method=" + threshold_method
+        "method="
+        + threshold_method
         + " "
         + "background=Dark"
         + " "
         + "black"
     )
 
-    log.debug("Convert to binary options: %s" % convert_to_binary_options)
+    log.debug(
+        "Convert to binary options: %s" % convert_to_binary_options
+    )
 
     IJ.run(imageplus, "Convert to Mask", convert_to_binary_options)
 

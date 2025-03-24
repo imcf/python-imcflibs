@@ -9,7 +9,10 @@ Requires the [`simple-omero-client`][simple-omero-client] JAR to be installed.
 """
 
 from fr.igred.omero import Client
-from fr.igred.omero.annotations import MapAnnotationWrapper, TableWrapper
+from fr.igred.omero.annotations import (
+    MapAnnotationWrapper,
+    TableWrapper,
+)
 from fr.igred.omero.roi import ROIWrapper
 from java.lang import Long
 from java.text import SimpleDateFormat
@@ -54,23 +57,33 @@ def parse_url(client, omero_str):
                         [
                             image
                             for image in client.getDataset(
-                                Long(part.split("dataset-")[1].split("/")[0])
+                                Long(
+                                    part.split("dataset-")[1].split(
+                                        "/"
+                                    )[0]
+                                )
                             ).getImages()
                         ]
                     )
-                    dataset_id = Long(part.split("dataset-")[1].split("/")[0])
+                    dataset_id = Long(
+                        part.split("dataset-")[1].split("/")[0]
+                    )
                     dataset_ids.append(dataset_id)
         else:
             image_ids.extend(
                 [
                     image
                     for image in client.getDataset(
-                        Long(omero_str.split("dataset-")[1].split("/")[0])
+                        Long(
+                            omero_str.split("dataset-")[1].split("/")[0]
+                        )
                     ).getImages()
                 ]
             )
             # If there is only one dataset
-            dataset_id = Long(omero_str.split("dataset-")[1].split("/")[0])
+            dataset_id = Long(
+                omero_str.split("dataset-")[1].split("/")[0]
+            )
             dataset_ids.append(dataset_id)
 
         # Get the images from the dataset
@@ -84,10 +97,15 @@ def parse_url(client, omero_str):
     elif "image-" in omero_str:
         image_ids = omero_str.split("image-")
         image_ids.pop(0)
-        image_ids = [s.split("%")[0].replace("|", "") for s in image_ids]
+        image_ids = [
+            s.split("%")[0].replace("|", "") for s in image_ids
+        ]
     else:
         image_ids = (
-            [s.split("%")[0].replace("|", "") for s in omero_str.split("image-")[1:]]
+            [
+                s.split("%")[0].replace("|", "")
+                for s in omero_str.split("image-")[1:]
+            ]
             if "image-" in omero_str
             else omero_str.split(",")
         )
@@ -166,7 +184,9 @@ def upload_image_to_omero(user_client, path, dataset_id):
     Long
         ID of the uploaded image
     """
-    return user_client.getDataset(Long(dataset_id)).importImage(user_client, path)[0]
+    return user_client.getDataset(Long(dataset_id)).importImage(
+        user_client, path
+    )[0]
 
 
 def add_annotation(client, repository_wpr, annotations, header):
@@ -341,8 +361,9 @@ def create_table_columns(headings):
     return table_columns
 
 
-def upload_array_as_omero_table(user_client, table_title, data, columns, image_wpr):
-    """Upload a table to OMERO plus from a list of lists
+def upload_array_as_omero_table(
+    user_client, table_title, data, columns, image_wpr
+):
 
     Parameters
     ----------
@@ -365,7 +386,7 @@ def upload_array_as_omero_table(user_client, table_title, data, columns, image_w
 
 
 def save_rois_to_omero(user_client, image_wpr, rm):
-    """Save ROIs to OMERO linked to the image
+    """Save ROIs to OMERO linked to the image.
 
     Parameters
     ----------
