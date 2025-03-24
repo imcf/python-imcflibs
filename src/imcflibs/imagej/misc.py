@@ -501,8 +501,8 @@ def write_ordereddict_to_csv(out_file, content):
             dict_writer.writerows(content)
 
 
-def save_image_with_extension(
-    imp, extension, out_dir, series, pad_number, split_channels
+def save_image_in_format(
+    imp, format, out_dir, series, pad_number, split_channels
 ):
     """Save an ImagePlus object in the specified format.
 
@@ -676,7 +676,7 @@ def locate_latest_imaris(paths_to_check=None):
     return imaris_paths[-1]
 
 
-def convert_to_imaris(path_to_image):
+def run_imarisconvert(file_path):
     """Convert a given file to Imaris5 .ims using ImarisConvert.exe via subprocess.
 
     Parameters

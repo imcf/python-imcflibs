@@ -151,7 +151,7 @@ def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
     return Objects3DPopulation(objects_within_intensity)
 
 
-def maxima_finder_3D(imageplus, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
+def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
     """
     Find local maxima in a 3D image.
 

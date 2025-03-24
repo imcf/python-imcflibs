@@ -190,7 +190,7 @@ def add_annotation(client, repository_wpr, annotations, header):
     repository_wpr.addMapAnnotation(client, map_annotation_wpr)
 
 
-def delete_annotation(user_client, repository_wpr):
+def delete_keyvalue_annotations(user_client, object_wrapper):
     """Delete annotations linked to object
 
     Parameters
@@ -223,6 +223,7 @@ def find_dataset(client, dataset_id):
     # Fetch the dataset from the OMERO server using the provided dataset ID
     return client.getDataset(Long(dataset_id))
 
+    def get_acquisition_metadata(user_client, image_wpr):
 
 def get_acquisition_metadata_from_imageid(user_client, image_wpr):
     """Get acquisition metadata from OMERO based on an image ID

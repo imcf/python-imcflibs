@@ -67,7 +67,7 @@ def label_image_to_roi_list(label_image, low_thresh=None):
     return roi_list, max_value
 
 
-def relate_label_images(label_image_ref, label_image_to_relate):
+def cookie_cut_labels(label_image_ref, label_image_to_relate):
     """Relate label images, giving the same label to objects belonging together.
 
     ❗ NOTE: Won't work with touching labels ❗
@@ -97,7 +97,7 @@ def relate_label_images(label_image_ref, label_image_to_relate):
     return ImageCalculator.run(label_image_ref, imp_dup, "Multiply create")
 
 
-def associate_label_images_3d(outer_label_imp, inner_label_imp):
+def relate_label_images(outer_label_imp, inner_label_imp):
     """
     Associate two label images.
 

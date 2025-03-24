@@ -291,7 +291,7 @@ def write_bf_memoryfile(path_to_file):
     reader.close()
 
 
-def get_metadata_from_image(path_to_image):
+def get_metadata_from_file(path_to_image):
     """Extract metadata from an image file using Bio-Formats.
 
     This function reads an image file using the Bio-Formats library and extracts
@@ -355,7 +355,7 @@ def get_metadata_from_image(path_to_image):
     return image_calibration
 
 
-def get_stage_coordinates_from_ome_metadata(source, imagenames):
+def get_stage_coords(source, filenames):
     """Get the stage coordinates and calibration from the ome-xml for a given list of images
 
     Parameters
