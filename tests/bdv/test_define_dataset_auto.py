@@ -4,7 +4,9 @@ from imcflibs import pathtools
 from imcflibs.imagej import bdv
 
 
-def set_default_values(project_filename, file_path, series_type="Tiles"):
+def set_default_values(
+    project_filename, file_path, series_type="Tiles"
+):
     """Set the default values for dataset definitions.
 
     Parameters
@@ -17,7 +19,7 @@ def set_default_values(project_filename, file_path, series_type="Tiles"):
         Type of Bioformats series (default is "Tiles")
 
     Returns
-    ----------
+    -------
     str
         Start of the options for dataset definitions.
     """
@@ -44,8 +46,7 @@ def set_default_values(project_filename, file_path, series_type="Tiles"):
 
 
 def test_define_dataset_auto_tile(tmp_path, caplog):
-    """
-    Test automatic dataset definition method for tile series.
+    """Test automatic dataset definition method for tile series.
 
     Parameters
     ----------
@@ -103,14 +104,15 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     final_call = "IJ.run(cmd=[%s], params=[%s])" % (cmd, options)
 
     # Define the dataset using the "Auto-Loader" option
-    bdv.define_dataset_auto(project_filename, file_info["path"], bf_series_type)
+    bdv.define_dataset_auto(
+        project_filename, file_info["path"], bf_series_type
+    )
     # Check if the final call is in the log
     assert final_call == caplog.messages[0]
 
 
 def test_define_dataset_auto_angle(tmp_path, caplog):
-    """
-    Test automatic dataset definition method for angle series.
+    """Test automatic dataset definition method for angle series.
 
     Parameters
     ----------
@@ -142,7 +144,9 @@ def test_define_dataset_auto_angle(tmp_path, caplog):
     cmd = "Define Multi-View Dataset"
 
     # Set the default values for dataset definitions
-    options = set_default_values(project_filename, file_path, bf_series_type)
+    options = set_default_values(
+        project_filename, file_path, bf_series_type
+    )
 
     # Construct the options for dataset definitions
     options = (
@@ -169,6 +173,8 @@ def test_define_dataset_auto_angle(tmp_path, caplog):
     final_call = "IJ.run(cmd=[%s], params=[%s])" % (cmd, options)
 
     # Define the dataset using the "Auto-Loader" option
-    bdv.define_dataset_auto(project_filename, file_info["path"], bf_series_type)
+    bdv.define_dataset_auto(
+        project_filename, file_info["path"], bf_series_type
+    )
     # Check if the final call is in the log
     assert final_call == caplog.messages[0]

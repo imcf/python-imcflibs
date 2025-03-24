@@ -18,7 +18,10 @@ def test_defaults():
         "how_to_treat_tiles=compare "
         "how_to_treat_timepoints=[treat individually] "
     )
-    use_acitt = "channels=[Average Channels] " "illuminations=[Average Illuminations] "
+    use_acitt = (
+        "channels=[Average Channels] "
+        "illuminations=[Average Illuminations] "
+    )
 
     proc_opts = ProcessingOptions()
 
@@ -47,7 +50,10 @@ def test__treat_tc_ti__ref_c1():
         "how_to_treat_tiles=compare "
         "how_to_treat_timepoints=[treat individually] "
     )
-    use_acitt = "channels=[use Channel 1] " "illuminations=[Average Illuminations] "
+    use_acitt = (
+        "channels=[use Channel 1] "
+        "illuminations=[Average Illuminations] "
+    )
 
     proc_opts = ProcessingOptions()
     proc_opts.treat_tiles("compare")
