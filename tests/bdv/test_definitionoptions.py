@@ -68,8 +68,7 @@ def test__multiple_channels_files_multiple_timepoints():
 
 
 def test_single_tile_multiple_angles_files():
-    """Test an example setting how to treat single tile and multiple angle
-    files"""
+    """Test an example on with one tile and multiple angle files."""
 
     acitt_options = (
         "multiple_angles=[YES (one file per angle)] "
