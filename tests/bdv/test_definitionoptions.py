@@ -1,3 +1,5 @@
+"""Tests for the imcflibs.imagej.bdv.DefinitionOptions class."""
+
 import pytest
 
 from imcflibs.imagej.bdv import DefinitionOptions

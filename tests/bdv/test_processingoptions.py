@@ -1,3 +1,5 @@
+"""Tests for the ProcessingOptions class from the imcflibs.imagej.bdv module."""
+
 from imcflibs.imagej.bdv import ProcessingOptions
 
 

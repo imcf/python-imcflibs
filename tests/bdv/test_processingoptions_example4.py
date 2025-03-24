@@ -1,3 +1,5 @@
+"""Tests for the ProcessingOptions class handling channel specific selection."""
+
 from imcflibs.imagej.bdv import ProcessingOptions
 
 

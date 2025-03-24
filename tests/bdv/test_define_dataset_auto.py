@@ -1,3 +1,5 @@
+"""Tests for the automatic dataset definition functionality in the BDV module."""
+
 import logging
 
 from imcflibs import pathtools
