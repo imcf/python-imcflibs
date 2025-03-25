@@ -452,9 +452,10 @@ def write_ordereddict_to_csv(out_file, content):
 
     Notes
     -----
-    - Uses the semicolon charachter (`;`) as delimiter.
-    - When appending to an existing file, the column structure has to match.
-    - Output file is opened in binary mode for compatibility.
+    - The CSV file will use the semicolon charachter (`;`) as delimiter.
+    - When appending to an existing file, the column structure has to match. No
+      sanity checking is being done on this by the function!
+    - The output file is opened in binary mode for compatibility.
 
     Examples
     --------
