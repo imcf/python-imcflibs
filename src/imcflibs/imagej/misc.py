@@ -434,13 +434,13 @@ def get_threshold_value_from_method(imp, method, ops):
 def write_ordereddict_to_csv(out_file, content):
     """Write data from a list of OrderedDicts to a CSV file.
 
-    In order to save the results of an analysis, looping over files,
-    making an OrderedDict help structure the data. If a list is made
-    containing all these OrderedDict, this function will write the data to
-    a CSV file, preserving the order of columns as defined in the
-    OrderedDict objects. If the output file doesn't exist, it creates a
-    new file with a header row. If the file exists, it appends the data
-    without repeating the header.
+    When performing measurements in an analysis that is e.g. looping over
+    multiple files, it's useful to keep the results in `OrderedDict` objects,
+    e.g. one per analyzed file / dataset. This function can be used to create a
+    CSV file (or append to an existing one) from a list of `OrderedDict`s. The
+    structure inside the dicts is entirely up to the calling code (i.e. it's not
+    related to ImageJ's *Results* window or such), the only requirement is
+    type-consistency among all the `OrderedDict`s provided to the function.
 
     Parameters
     ----------
