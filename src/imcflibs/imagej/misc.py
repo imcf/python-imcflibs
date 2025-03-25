@@ -450,6 +450,12 @@ def write_ordereddict_to_csv(out_file, content):
         List of OrderedDict objects representing the data rows to be written.
         All dictionaries must have the same keys.
 
+    Notes
+    -----
+    - Uses the semicolon charachter (`;`) as delimiter.
+    - When appending to an existing file, the column structure has to match.
+    - Output file is opened in binary mode for compatibility.
+
     Examples
     --------
     >>> from collections import OrderedDict
@@ -464,12 +470,6 @@ def write_ordereddict_to_csv(out_file, content):
         id;name;value
         1;Sample A;42.5
         2;Sample B;37.2
-
-    Notes
-    -----
-    - Uses the semicolon charachter (`;`) as delimiter.
-    - When appending to an existing file, the column structure has to match.
-    - Output file is opened in binary mode for compatibility.
     """
 
     # Check if the output file exists
