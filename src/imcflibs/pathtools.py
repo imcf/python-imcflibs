@@ -180,9 +180,7 @@ def jython_fiji_exists(path):
         return False
 
 
-def listdir_matching(
-    path, suffix, fullpath=False, sort=False, regex=False
-):
+def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -298,13 +296,9 @@ def derive_out_dir(in_dir, out_dir):
     """
     if out_dir.upper() in ["-", "NONE"]:
         out_dir = in_dir
-        log.info(
-            "No output directory given, using input dir [%s].", out_dir
-        )
+        log.info("No output directory given, using input dir [%s].", out_dir)
     else:
-        log.info(
-            "Using directory [%s] for results and temp files.", out_dir
-        )
+        log.info("Using directory [%s] for results and temp files.", out_dir)
 
     return out_dir
 

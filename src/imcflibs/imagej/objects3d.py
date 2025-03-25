@@ -75,9 +75,7 @@ def imgplus_to_population3d(imp):
     return Objects3DPopulation(img)
 
 
-def segment_3d_image(
-    imp, title=None, min_thresh=1, min_vol=None, max_vol=None
-):
+def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     """Segment a 3D binary image to get a labelled stack.
 
     Parameters
@@ -123,9 +121,7 @@ def segment_3d_image(
     return seg.getImagePlus()
 
 
-def get_objects_within_intensity(
-    obj_pop, imp, min_intensity, max_intensity
-):
+def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
     """Filter a population for objects within the given intensity range.
 
     Parameters
@@ -152,10 +148,7 @@ def get_objects_within_intensity(
         # Calculate the mean intensity of the object
         mean_intensity = obj.getPixMeanValue(ImageHandler.wrap(imp))
         # Check if the object is within the specified intensity range
-        if (
-            mean_intensity >= min_intensity
-            and mean_intensity < max_intensity
-        ):
+        if mean_intensity >= min_intensity and mean_intensity < max_intensity:
             objects_within_intensity.append(obj)
 
     # Return the new population with the filtered objects
@@ -239,9 +232,7 @@ def seeded_watershed(imp_binary, imp_peaks, threshold=10):
     img_seed = ImagePlusAdapter.convertFloat(imp_peaks).copy()
 
     if threshold:
-        watersheded_result = WatershedLabeling.watershed(
-            img, img_seed, threshold
-        )
+        watersheded_result = WatershedLabeling.watershed(img, img_seed, threshold)
     else:
         watersheded_result = WatershedLabeling.watershed(img, img_seed)
 
