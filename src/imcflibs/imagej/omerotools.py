@@ -216,9 +216,9 @@ def delete_keyvalue_annotations(user_client, object_wrapper):
     Parameters
     ----------
     user_client : fr.igred.omero.Client
-        Client used for login to OMERO
+        Client used for login to OMERO.
     object_wrapper : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
-        Wrapper to the object for the anotation
+        Wrapper to the object for the anotation.
 
     """
     kv_pairs = object_wrapper.getMapAnnotations(user_client)
@@ -256,11 +256,13 @@ def find_dataset(client, dataset_id):
         Returns
         -------
         dict
-            Dictionary containing acquisition metadata:
-            - `objective_magnification`: Objective magnification
-            - `objective_na`: Objective NA
-            - `acquisition_date`: Acquisition date
-            - `acquisition_date_number`: Acquisition date as a number
+
+            {
+                objective_magnification : float,
+                objective_na : float,
+                acquisition_date : str,
+                acquisition_date_number : str,
+            }
         """
         ctx = user_client.getCtx()
         instrument_data = (
