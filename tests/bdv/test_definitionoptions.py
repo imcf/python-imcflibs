@@ -28,9 +28,9 @@ def test__definition_option():
     def_opts = DefinitionOptions()
     with pytest.raises(ValueError) as excinfo:
         def_opts.set_angle_definition(test_value)
-    assert (
-        str(excinfo.value)
-        == "Value must be one of single, multi_multi. Support for multi_single is not available for angles and illuminations"
+    assert str(excinfo.value) == (
+        "Value must be one of: ['single', 'multi_multi']. Support for "
+        "'multi_single' is not available for angles and illuminations."
     )
 
 
