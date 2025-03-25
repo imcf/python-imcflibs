@@ -754,10 +754,12 @@ def get_processing_settings(dimension, selection, value, range_end):
 
     Parameters
     ----------
-    dimension : str
-        "angle", "channel", "illumination", "tile" or "timepoint"
-    selection : str
-        "single", "multiple", or "range"
+    dimension : {`angle`, `channel`, `illumination`, `tile`, `timepoint`}
+        The dimension selection to use.
+    selection : {`single`, `multiple`, `range`}
+        The *selector* name ("processing mode"), used to derive how the
+        generated string needs to be assembled according to the given dimension
+        and value / range settings.
     value : str, int, list of int or list of str
         Contains the list of input dimensions, the first input dimension of a range or a single channel
     range_end : int or None
