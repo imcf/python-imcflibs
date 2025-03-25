@@ -105,11 +105,6 @@ def relate_label_images(outer_label_imp, inner_label_imp):
     of the second image using the 3D Association plugin from the
     3DImageJSuite.
 
-    Notes
-    -----
-    Unlike `cookie_cut_labels`, this should work with touching labels by
-    using MereoTopology algorithms.
-
     Parameters
     ----------
     outer_label_imp : ij.ImagePlus
@@ -121,6 +116,11 @@ def relate_label_images(outer_label_imp, inner_label_imp):
     -------
     related_inner_imp : ij.ImagePlus
         The related inner label image
+
+    Notes
+    -----
+    Unlike `cookie_cut_labels`, this should work with touching labels by
+    using MereoTopology algorithms.
     """
 
     outer_label_imp.show()
