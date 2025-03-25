@@ -5,12 +5,8 @@ Mostly (although not exclusively) related to the [`mcib3d`][mcib3d] package.
 [mcib3d]: https://mcib3d.frama.io/3d-suite-imagej/
 """
 
-from de.mpicbg.scf.imgtools.image.create.image import (
-    ImageCreationUtilities,
-)
-from de.mpicbg.scf.imgtools.image.create.labelmap import (
-    WatershedLabeling,
-)
+from de.mpicbg.scf.imgtools.image.create.image import ImageCreationUtilities
+from de.mpicbg.scf.imgtools.image.create.labelmap import WatershedLabeling
 from ij import IJ
 from mcib3d.geom import Objects3DPopulation
 from mcib3d.image3d import ImageHandler, ImageLabeller

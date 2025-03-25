@@ -1,3 +1,4 @@
+"""Tests for ProcessingOptions class with multiple reference channels configuration."""
 
 from imcflibs.imagej.bdv import ProcessingOptions
 
