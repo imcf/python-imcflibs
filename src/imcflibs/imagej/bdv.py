@@ -561,14 +561,9 @@ class DefinitionOptions(object):
         -------
         dict(str, str): dictionary containing the correct string definition.
         """
-        if value not in [
-            "single",
-            "multi_single",
-            "multi_multi",
-        ]:
-            raise ValueError(
-                "Value must be one of single, multi_multi or multi_single"
-            )
+        valid = ["single", "multi_single", "multi_multi"]
+        if value not in valid:
+            raise ValueError("Value must be one of: %s" % valid)
 
         return {
             "single": SINGLE_FILE,
@@ -591,12 +586,14 @@ class DefinitionOptions(object):
         -------
         dict(str, str): dictionary containing the correct string definition.
         """
-        if value not in [
-            "single",
-            "multi_multi",
-        ]:
+        valid = ["single", "multi_multi"]
+        if value not in valid:
             raise ValueError(
-                "Value must be one of single, multi_multi. Support for multi_single is not available for angles and illuminations"
+                (
+                    "Value must be one of: %s. Support for 'multi_single' is "
+                    "not available for angles and illuminations."
+                )
+                % valid
             )
 
         return {
