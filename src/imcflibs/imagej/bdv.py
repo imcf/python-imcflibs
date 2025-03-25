@@ -38,6 +38,7 @@ MULTI_SINGLE_FILE = "[YES (all %ss in one file)]"
 MULTI_MULTI_FILE = "[YES (one file per %s)]"
 """@private"""
 
+
 class ProcessingOptions(object):
     """Helper to store processing options and generate parameter strings.
 
@@ -140,9 +141,7 @@ class ProcessingOptions(object):
         """
         # channel = int(value) - 1  # will raise a ValueError if cast fails
         self._use_channel = "channels=[use Channel %s]" % int(value)
-        log.debug(
-            "New reference channel setting: %s", self._use_channel
-        )
+        log.debug("New reference channel setting: %s", self._use_channel)
 
     def reference_illumination(self, value):
         """Set the reference illumination when using *Expert Grouping Options*.
@@ -158,9 +157,7 @@ class ProcessingOptions(object):
         value : int or int-like
             The illumination number to use for the grouping.
         """
-        self._use_illumination = (
-            "illuminations=[use Illumination %s]" % value
-        )
+        self._use_illumination = "illuminations=[use Illumination %s]" % value
         log.debug(
             "New reference illumination setting: %s",
             self._use_illumination,
@@ -198,9 +195,7 @@ class ProcessingOptions(object):
             The timepoint number to use for the grouping.
         """
         self._use_timepoint = "timepoints=[use Timepoint %s]" % value
-        log.debug(
-            "New reference timepoint setting: %s", self._use_timepoint
-        )
+        log.debug("New reference timepoint setting: %s", self._use_timepoint)
 
     ### process-X methods
 
@@ -422,22 +417,16 @@ class ProcessingOptions(object):
         """
         input_type = ["process", "resave"]
         if input not in input_type:
-            raise ValueError(
-                "Invalue input type. Expected one of: %s" % input_type
-            )
+            raise ValueError("Invalid input type, expected one of: %s" % input_type)
         parameters = [
             input + "_angle=" + self._angle_processing_option,
             input + "_channel=" + self._channel_processing_option,
-            input
-            + "_illumination="
-            + self._illumination_processing_option,
+            input + "_illumination=" + self._illumination_processing_option,
             input + "_tile=" + self._tile_processing_option,
             input + "_timepoint=" + self._timepoint_processing_option,
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug(
-            "Formatted 'process_X' options: <%s>", parameter_string
-        )
+        log.debug("Formatted 'process_X' options: <%s>", parameter_string)
         return parameter_string + " "
 
     def fmt_acitt_selectors(self):
@@ -457,16 +446,12 @@ class ProcessingOptions(object):
         parameters = [
             self._angle_select if self._angle_select else "",
             self._channel_select if self._channel_select else "",
-            self._illumination_select
-            if self._illumination_select
-            else "",
+            self._illumination_select if self._illumination_select else "",
             self._tile_select if self._tile_select else "",
             self._timepoint_select if self._timepoint_select else "",
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug(
-            "Formatted 'processing_X' selectors: <%s>", parameter_string
-        )
+        log.debug("Formatted 'processing_X' selectors: <%s>", parameter_string)
         return parameter_string + " "
 
     def fmt_how_to_treat(self):
@@ -484,9 +469,7 @@ class ProcessingOptions(object):
             "how_to_treat_timepoints=" + self._treat_timepoints,
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug(
-            "Formatted 'how_to_treat_X' options: <%s>", parameter_string
-        )
+        log.debug("Formatted 'how_to_treat_X' options: <%s>", parameter_string)
         return parameter_string + " "
 
     def fmt_use_acitt(self):
@@ -501,16 +484,10 @@ class ProcessingOptions(object):
         """
         parameters = [
             self._use_angle if self._treat_angles == "group" else "",
-            self._use_channel
-            if self._treat_channels == "group"
-            else "",
-            self._use_illumination
-            if self._treat_illuminations == "group"
-            else "",
+            self._use_channel if self._treat_channels == "group" else "",
+            self._use_illumination if self._treat_illuminations == "group" else "",
             self._use_tile if self._treat_tiles == "group" else "",
-            self._use_timepoint
-            if self._treat_timepoints == "group"
-            else "",
+            self._use_timepoint if self._treat_timepoints == "group" else "",
         ]
         parameter_string = " ".join(parameters).strip()
         log.debug(
@@ -543,9 +520,7 @@ class DefinitionOptions(object):
     def __init__(self):
         self._angle_definition = SINGLE_FILE % "angle"
         self._channel_definition = MULTI_SINGLE_FILE % "channel"
-        self._illumination_definition = (
-            SINGLE_FILE % "illumination direction"
-        )
+        self._illumination_definition = SINGLE_FILE % "illumination direction"
         self._tile_definition = MULTI_MULTI_FILE % "tile"
         self._timepoint_definition = SINGLE_FILE % "time-point"
 
@@ -611,9 +586,7 @@ class DefinitionOptions(object):
         """
         choices = self.check_definition_option_ang_ill(value)
         self._angle_definition = choices[value] % "angle"
-        log.debug(
-            "New 'angle_definition' setting: %s", self._angle_definition
-        )
+        log.debug("New 'angle_definition' setting: %s", self._angle_definition)
 
     def set_channel_definition(self, value):
         """Set the value for the channel definition.
@@ -639,9 +612,7 @@ class DefinitionOptions(object):
             One of `single`, `multi_single` or `multi_multi`.
         """
         choices = self.check_definition_option_ang_ill(value)
-        self._illumination_definition = (
-            choices[value] % "illumination direction"
-        )
+        self._illumination_definition = choices[value] % "illumination direction"
         log.debug(
             "New 'illumination_definition' setting: %s",
             self._illumination_definition,
@@ -657,9 +628,7 @@ class DefinitionOptions(object):
         """
         choices = self.check_definition_option(value)
         self._tile_definition = choices[value] % "tile"
-        log.debug(
-            "New 'tile_definition' setting: %s", self._tile_definition
-        )
+        log.debug("New 'tile_definition' setting: %s", self._tile_definition)
 
     def set_timepoint_definition(self, value):
         """Set the value for the time_point_definition.
@@ -691,15 +660,12 @@ class DefinitionOptions(object):
         parameters = [
             "multiple_angles=" + self._angle_definition,
             "multiple_channels=" + self._channel_definition,
-            "multiple_illuminations_directions="
-            + self._illumination_definition,
+            "multiple_illuminations_directions=" + self._illumination_definition,
             "multiple_tiles=" + self._tile_definition,
             "multiple_timepoints=" + self._timepoint_definition,
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug(
-            "Formatted 'multiple_X' options: <%s>", parameter_string
-        )
+        log.debug("Formatted 'multiple_X' options: <%s>", parameter_string)
         return parameter_string + " "
 
 
@@ -725,9 +691,7 @@ def check_processing_input(value, range_end):
         value = [value]
     # Check if all the elements of the value list are of the same type
     if not all(isinstance(x, type(value[0])) for x in value):
-        raise TypeError(
-            "Invalid input type. All the values should be of the same type"
-        )
+        raise TypeError("Invalid input, all values must be of the same type.")
     if type(range_end) is int:
         if type(value[0]) is not int:
             raise TypeError("Range start needs to be an int.")
@@ -771,13 +735,7 @@ def get_processing_settings(dimension, selection, value, range_end):
 
     if selection == "single":
         processing_option = SINGLE % dimension
-        dimension_select = (
-            "processing_"
-            + dimension
-            + "=["
-            + dimension
-            + " %s]" % value
-        )
+        dimension_select = "processing_" + dimension + "=[" + dimension + " %s]" % value
 
     if selection == "multiple":
         processing_option = MULTIPLE % dimension
@@ -820,9 +778,7 @@ def backup_xml_files(source_directory, subfolder_name):
     pathtools.create_directory(xml_backup_directory)
     backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
     pathtools.create_directory(backup_subfolder)
-    all_xml_files = pathtools.listdir_matching(
-        source_directory, ".*\\.xml", regex=True
-    )
+    all_xml_files = pathtools.listdir_matching(source_directory, ".*\\.xml", regex=True)
     os.chdir(source_directory)
     for xml_file in all_xml_files:
         shutil.copy2(xml_file, backup_subfolder)
@@ -882,9 +838,7 @@ def define_dataset_auto(
         dataset_save_path = result_folder
     if subsampling_factors:
         subsampling_factors = (
-            "manual_mipmap_setup subsampling_factors="
-            + subsampling_factors
-            + " "
+            "manual_mipmap_setup subsampling_factors=" + subsampling_factors + " "
         )
     else:
         subsampling_factors = ""
@@ -1051,9 +1005,7 @@ def resave_as_h5(
         split_hdf5 = ""
 
     if subsampling_factors:
-        subsampling_factors = (
-            "subsampling_factors=" + subsampling_factors + " "
-        )
+        subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
     else:
         subsampling_factors = " "
     if hdf5_chunk_sizes:
@@ -1143,13 +1095,10 @@ def phase_correlation_pairwise_shifts_calculation(
     file_info = pathtools.parse_path(project_path)
 
     if downsampling_xyz != "":
-        downsampling = (
-            "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s "
-            % (
-                downsampling_xyz[0],
-                downsampling_xyz[1],
-                downsampling_xyz[2],
-            )
+        downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (
+            downsampling_xyz[0],
+            downsampling_xyz[1],
+            downsampling_xyz[2],
         )
     else:
         downsampling = ""
@@ -1173,9 +1122,7 @@ def phase_correlation_pairwise_shifts_calculation(
     log.debug("Calculate pairwise shifts options: <%s>", options)
     IJ.run("Calculate pairwise shifts ...", str(options))
 
-    backup_xml_files(
-        file_info["path"], "phase_correlation_shift_calculation"
-    )
+    backup_xml_files(file_info["path"], "phase_correlation_shift_calculation")
 
 
 def filter_pairwise_shifts(
@@ -1287,9 +1234,7 @@ def optimize_and_apply_shifts(
         + processing_opts.fmt_how_to_treat()
     )
 
-    log.debug(
-        "Optimization and shifts application options: <%s>", options
-    )
+    log.debug("Optimization and shifts application options: <%s>", options)
     IJ.run("Optimize globally and apply shifts ...", str(options))
 
     backup_xml_files(file_info["path"], "optimize_and_apply_shifts")
@@ -1469,12 +1414,8 @@ def duplicate_transformations(
         target = "[All Channels]"
         source = str(channel_source - 1)
         if tile_source:
-            tile_apply = (
-                "apply_to_tile=[Single tile (Select from List)] "
-            )
-            tile_process = (
-                "processing_tile=[tile " + str(tile_source) + "] "
-            )
+            tile_apply = "apply_to_tile=[Single tile (Select from List)] "
+            tile_process = "processing_tile=[tile " + str(tile_source) + "] "
         else:
             tile_apply = "apply_to_tile=[All tiles] "
     elif transformation_type == "tile":
@@ -1482,13 +1423,9 @@ def duplicate_transformations(
         target = "[All Tiles]"
         source = str(tile_source)
         if channel_source:
-            chnl_apply = (
-                "apply_to_channel=[Single channel (Select from List)] "
-            )
+            chnl_apply = "apply_to_channel=[Single channel (Select from List)] "
             chnl_process = (
-                "processing_channel=[channel "
-                + str(channel_source - 1)
-                + "] "
+                "processing_channel=[channel " + str(channel_source - 1) + "] "
             )
         else:
             chnl_apply = "apply_to_channel=[All channels] "
