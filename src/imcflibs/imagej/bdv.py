@@ -21,15 +21,22 @@ from ij import IJ
 from .. import pathtools
 from ..log import LOG as log
 
-SINGLE = "[Single %s (Select from List)]"
-"""Template string to use to select only one value for the current dimension."""
-MULTIPLE = "[Multiple %ss (Select from List)]"
-"""Template string to use to select specified multiple values for the current
-dimension."""
-RANGE = "[Range of %ss (Specify by Name)]"
-"""Template string to use to select a range of values for the current
-dimension."""
 
+# internal template strings used in string formatting (note: the `"""@private"""`
+# pseudo-decorator is there to instruct [pdoc] to omit those variables when generating
+# API documentation):
+SINGLE = "[Single %s (Select from List)]"
+"""@private"""
+MULTIPLE = "[Multiple %ss (Select from List)]"
+"""@private"""
+RANGE = "[Range of %ss (Specify by Name)]"
+"""@private"""
+SINGLE_FILE = "[NO (one %s)]"
+"""@private"""
+MULTI_SINGLE_FILE = "[YES (all %ss in one file)]"
+"""@private"""
+MULTI_MULTI_FILE = "[YES (one file per %s)]"
+"""@private"""
 
 class ProcessingOptions(object):
     """Helper to store processing options and generate parameter strings.
@@ -511,17 +518,6 @@ class ProcessingOptions(object):
             parameter_string,
         )
         return parameter_string + " "
-
-
-SINGLE_FILE = "[NO (one %s)]"
-"""Template string to use if the current dimension is singular (like only one
-angle)."""
-MULTI_SINGLE_FILE = "[YES (all %ss in one file)]"
-"""Template string to use if the current dimension is plural (like multiple
-angles) contained in a single file."""
-MULTI_MULTI_FILE = "[YES (one file per %s)]"
-"""Template string to use if the current dimension is plural (like multiple
-angles) contained in multiple files."""
 
 
 class DefinitionOptions(object):
