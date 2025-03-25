@@ -38,6 +38,7 @@ def parse_path(path, prefix=""):
     dict
         The parsed (and possibly combined) path split into its components, with
         the following keys:
+
         - `orig` : The full string as passed into this function (possibly
           combined with the prefix in case one was specified).
         - `full` : The same as `orig` with separators adjusted to the current
