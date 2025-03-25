@@ -113,8 +113,8 @@ class ProcessingOptions(object):
 
         Select the angle(s) to use for the operation, by default empty (`""`).
 
-        NOTE: this value will be used to render `angles=[use Angle VALUE]` when calling
-        the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `angles=[use Angle VALUE]` when
+        calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -127,11 +127,11 @@ class ProcessingOptions(object):
     def reference_channel(self, value):
         """Set the reference channel when using *Expert Grouping Options*.
 
-        Select the channel(s) to use for the operation, by default the averaging mode
-        will be used (`channels=[Average Channels]`).
+        Select the channel(s) to use for the operation, by default the averaging
+        mode will be used (`channels=[Average Channels]`).
 
-        NOTE: this value will be used to render `channels=[use Channel VALUE]` when
-        calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `channels=[use Channel VALUE]`
+        when calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -147,11 +147,11 @@ class ProcessingOptions(object):
     def reference_illumination(self, value):
         """Set the reference illumination when using *Expert Grouping Options*.
 
-        Select the illumination(s) to use for the operation, by default the averaging
-        mode will be used (`illuminations=[Average Illuminations]`).
+        Select the illumination(s) to use for the operation, by default the
+        averaging mode will be used (`illuminations=[Average Illuminations]`).
 
-        NOTE: this value will be used to render `illuminations=[use Illumination VALUE]`
-        when calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `illuminations=[use Illumination
+        VALUE]` when calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -169,11 +169,11 @@ class ProcessingOptions(object):
     def reference_tile(self, value):
         """Set the reference tile when using *Expert Grouping Options*.
 
-        Select the tile(s) to use for the operation, by default the averaging mode will
-        be used (`tiles=[Average Tiles]`).
+        Select the tile(s) to use for the operation, by default the averaging
+        mode will be used (`tiles=[Average Tiles]`).
 
-        NOTE: this value will be used to render `tiles=[use Tile VALUE]` when calling
-        the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `tiles=[use Tile VALUE]` when
+        calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -186,11 +186,11 @@ class ProcessingOptions(object):
     def reference_timepoint(self, value):
         """Set the reference timepoint when using *Expert Grouping Options*.
 
-        Select the timepoint(s) to use for the operation, by default the averaging mode
-        will be used (`timepoints=[Average Timepoints]`).
+        Select the timepoint(s) to use for the operation, by default the
+        averaging mode will be used (`timepoints=[Average Timepoints]`).
 
-        NOTE: this value will be used to render `timepoints=[use Timepoint VALUE]` when
-        calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `timepoints=[use Timepoint
+        VALUE]` when calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -239,7 +239,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The channel(s) to use for processing, either a single value or a list.
+            The channel(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
@@ -259,13 +259,13 @@ class ProcessingOptions(object):
     def process_illumination(self, value, range_end=None):
         """Set the processing option for illuminations.
 
-        Update the illumination processing option and selection depending on input.
-        If the range_end is not None, it is considered as a range.
+        Update the illumination processing option and selection depending on
+        input. If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The illumination(s) to use for processing, either a single value or a list.
+            The illumination(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
@@ -291,7 +291,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The tile(s) to use for processing, either a single value or a list.
+            The tile(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
@@ -317,7 +317,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The timepoint(s) to use for processing, either a single value or a list.
+            The timepoint(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
@@ -683,8 +683,9 @@ class DefinitionOptions(object):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
 
         Build a string providing the `multiple_angles`, `multiple_channels`,
-        `multiple_illuminations_directions`, `multiple_tiles` and `multiple_timepoints` options
-        that can be used in a BDV-related `IJ.run` call.
+        `multiple_illuminations_directions`, `multiple_tiles` and
+        `multiple_timepoints` options that can be used in a BDV-related `IJ.run`
+        call.
 
         Returns
         -------
@@ -708,14 +709,15 @@ class DefinitionOptions(object):
 def check_processing_input(value, range_end):
     """Sanitize and clarifies the acitt input selection.
 
-    Check if the input is valid by checking the type and returning the expected output.
+    Validate the input by checking the type and returning the expected output.
 
     Parameters
     ----------
     value : str, int, list of int or list of str
-        Contains the list of input dimensions, the first input dimension of a range or a single channel
+        Contains the list of input dimensions, the first input dimension of a
+        range or a single channel.
     range_end : int or None
-        Contains the end of the range if need be
+        Contains the end of the range if need be.
 
     Returns
     -------
@@ -731,13 +733,9 @@ def check_processing_input(value, range_end):
         )
     if type(range_end) is int:
         if type(value[0]) is not int:
-            raise TypeError(
-                "Invalid input type. Expected an int for the range start"
-            )
+            raise TypeError("Range start needs to be an int.")
         elif len(value) != 1:
-            raise ValueError(
-                "Invalid input type. Expected a single number for the range start"
-            )
+            raise ValueError("Range start needs to be single number.")
         else:
             return "range"
     elif len(value) == 1:
@@ -747,26 +745,31 @@ def check_processing_input(value, range_end):
 
 
 def get_processing_settings(dimension, selection, value, range_end):
-    """Get the variables corresponding to the dimension selection and processing mode.
+    """Generate processing strings for selected dimension and processing mode.
 
-    Get the processing option and dimension selection string that corresponds
-    to the selected processing mode.
+    Generate the processing option and dimension selection strings that
+    correspond to the selected processing mode and the given dimension
+    selection.
 
     Parameters
     ----------
-    dimension : str
-        "angle", "channel", "illumination", "tile" or "timepoint"
-    selection : str
-        "single", "multiple", or "range"
+    dimension : {`angle`, `channel`, `illumination`, `tile`, `timepoint`}
+        The dimension selection to use.
+    selection : {`single`, `multiple`, `range`}
+        The *selector* name ("processing mode"), used to derive how the
+        generated string needs to be assembled according to the given dimension
+        and value / range settings.
     value : str, int, list of int or list of str
-        Contains the list of input dimensions, the first input dimension of a range or a single channel
+        The list of input dimensions, the first input dimension of a range or a
+        single dimension value in case `selection == "single"` (e.g. for
+        selecting a single channel).
     range_end : int or None
-        Contains the end of the range if need be
+        Contains the end of the range if need be.
 
     Returns
     -------
-    list of str
-        processing options string, dimension selection string
+    tuple of str
+        processing_option, dimension_select
     """
 
     if selection == "single":
@@ -804,9 +807,9 @@ def get_processing_settings(dimension, selection, value, range_end):
 def backup_xml_files(source_directory, subfolder_name):
     """Create a backup of BDV-XML files inside a subfolder of `xml-backup`.
 
-    Copies all `.xml` and `.xml~` files to a subfolder with the given name inside a
-    folder called `xml-backup` in the source directory. Uses the `shutil.copy2()`
-    command, which will overwrite existing files.
+    Copies all `.xml` and `.xml~` files to a subfolder with the given name
+    inside a folder called `xml-backup` in the source directory. Uses the
+    `shutil.copy2()` command, which will overwrite existing files.
 
     Parameters
     ----------
@@ -852,8 +855,8 @@ def define_dataset_auto(
         with an extension.
     dataset_save_path : str
         Output path for the `.xml`.
-    bf_series_type : str
-        One of "Angles" or "Tiles", specifying how Bio-Formats interprets the series.
+    bf_series_type : {`Angles`,`Tiles`}
+        Defines how Bio-Formats interprets the series.
     timepoints_per_partition : int, optional
         Split the output dataset by timepoints. Use `0` for no split, resulting
         in a single HDF5 file containing all timepoints. By default `1`,
@@ -912,7 +915,8 @@ def define_dataset_auto(
         + "bioformats_series_are?="
         + bf_series_type
         + " "
-        + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
+        + "move_tiles_to_grid_(per_angle)?=["
+        + "Do not move Tiles to Grid (use Metadata if available)] "
         + "how_to_store_input_images=["
         + resave
         + "] "
@@ -957,8 +961,8 @@ def define_dataset_manual(
     source_directory : str
         Path to the folder containing the file(s).
     image_file_pattern : str
-        Regular expression corresponding to the names of your files and how to read the
-        different dimensions.
+        Regular expression corresponding to the names of your files and how to
+        read the different dimensions.
     dataset_organisation : str
         Organisation of the dataset and the dimensions to process.
         Allows for defining the range of interest of the different dimensions.
@@ -1391,8 +1395,10 @@ def interest_points_registration(
         + processing_opts.fmt_acitt_options()
         + processing_opts.fmt_acitt_selectors()
         + "registration_algorithm=[Precise descriptor-based (translation invariant)] "
-        + "registration_over_time=[Match against one reference timepoint (no global optimization)] "
-        + "registration_in_between_views=[Only compare overlapping views (according to current transformations)] "
+        + "registration_over_time=["
+        + "Match against one reference timepoint (no global optimization)] "
+        + "registration_in_between_views=["
+        + "Only compare overlapping views (according to current transformations)] "
         + "interest_point_inclusion=[Compare all interest point of overlapping views] "
         + "interest_points=beads "
         + "group_tiles "
@@ -1409,8 +1415,11 @@ def interest_points_registration(
         + "significance=3 "
         + "allowed_error_for_ransac=5 "
         + "ransac_iterations=Normal "
-        + "global_optimization_strategy=[Two-Round: Handle unconnected tiles, remove wrong links RELAXED (5.0x / 7.0px)] "
-        + "interestpoint_grouping=[Group interest points (simply combine all in one virtual view)] "
+        + "global_optimization_strategy=["
+        + "Two-Round: Handle unconnected tiles, "
+        + "remove wrong links RELAXED (5.0x / 7.0px)] "
+        + "interestpoint_grouping=["
+        + "Group interest points (simply combine all in one virtual view)] "
         + "interest=5"
     )
 
@@ -1656,7 +1665,7 @@ def fuse_dataset_bdvp(
 ):
     """Export a BigDataViewer project using the BIOP Kheops exporter.
 
-    This function uses the BIOP Kheops exporter to convert a BigDataViewer project into a
+    Use the BIOP Kheops exporter to convert a BigDataViewer project into
     OME-TIFF files, with optional compression.
 
     Parameters
@@ -1666,11 +1675,11 @@ def fuse_dataset_bdvp(
     command : CommandService
         The Scijava CommandService instance to execute the export command.
     processing_opts : ProcessingOptions, optional
-        Options defining which parts of the dataset to process. If None, default processing
-        options will be used (process all angles, channels, etc.).
+        Options defining which parts of the dataset to process. If None, default
+        processing options will be used (process all angles, channels, etc.).
     result_path : str, optional
-        Path where to store the exported files. If None, files will be saved in the same
-        directory as the input project.
+        Path where to store the exported files. If None, files will be saved in
+        the same directory as the input project.
     compression : str, optional
         Compression method to use for the TIFF files. Default is "LZW".
 
