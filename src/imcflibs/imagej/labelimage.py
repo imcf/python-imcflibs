@@ -100,27 +100,26 @@ def cookie_cut_labels(label_image_ref, label_image_to_relate):
 def relate_label_images(outer_label_imp, inner_label_imp):
     """Relate label images, giving the same label to objects belonging together.
 
-    Given two label images, this function will create a new label image
-    with the same labels as the reference image, but with the objects
-    of the second image using the 3D Association plugin from the
-    3DImageJSuite.
+    Given two label images, this function will create a new label image with the
+    same labels as the reference image, but with the objects of the second image
+    using the 3D Association plugin from the 3DImageJSuite.
 
     Parameters
     ----------
     outer_label_imp : ij.ImagePlus
-        The outer label image
+        The outer label image.
     inner_label_imp : ij.ImagePlus
-        The inner label image
+        The inner label image.
 
     Returns
     -------
     related_inner_imp : ij.ImagePlus
-        The related inner label image
+        The related inner label image.
 
     Notes
     -----
-    Unlike `cookie_cut_labels`, this should work with touching labels by
-    using MereoTopology algorithms.
+    Unlike `cookie_cut_labels`, this should work with touching labels by using
+    MereoTopology algorithms.
     """
 
     outer_label_imp.show()
