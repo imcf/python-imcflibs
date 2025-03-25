@@ -13,6 +13,9 @@ import os
 import shutil
 import sys
 
+from ch.epfl.biop.scijava.command.spimdata import (
+    FuseBigStitcherDatasetIntoOMETiffCommand,
+)
 from ij import IJ
 
 from .. import pathtools
@@ -130,7 +133,9 @@ class ProcessingOptions(object):
         """
         # channel = int(value) - 1  # will raise a ValueError if cast fails
         self._use_channel = "channels=[use Channel %s]" % int(value)
-        log.debug("New reference channel setting: %s", self._use_channel)
+        log.debug(
+            "New reference channel setting: %s", self._use_channel
+        )
 
     def reference_illumination(self, value):
         """Set the reference illumination when using *Expert Grouping Options*.
@@ -146,8 +151,13 @@ class ProcessingOptions(object):
         value : int or int-like
             The illumination number to use for the grouping.
         """
-        self._use_illumination = "illuminations=[use Illumination %s]" % value
-        log.debug("New reference illumination setting: %s", self._use_illumination)
+        self._use_illumination = (
+            "illuminations=[use Illumination %s]" % value
+        )
+        log.debug(
+            "New reference illumination setting: %s",
+            self._use_illumination,
+        )
 
     def reference_tile(self, value):
         """Set the reference tile when using *Expert Grouping Options*.
@@ -181,7 +191,9 @@ class ProcessingOptions(object):
             The timepoint number to use for the grouping.
         """
         self._use_timepoint = "timepoints=[use Timepoint %s]" % value
-        log.debug("New reference timepoint setting: %s", self._use_timepoint)
+        log.debug(
+            "New reference timepoint setting: %s", self._use_timepoint
+        )
 
     ### process-X methods
 
@@ -198,8 +210,8 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
-        ------
+        Notes
+        -----
         Previous function name : angle_select().
         """
 
@@ -224,8 +236,8 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
-        ------
+        Notes
+        -----
         Previous function name : channel_select().
         """
 
@@ -250,8 +262,8 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
-        ------
+        Notes
+        -----
         Previous function name : illumination_select().
         """
 
@@ -276,8 +288,8 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
-        ------
+        Notes
+        -----
         Previous function name : tile_select().
         """
 
@@ -302,8 +314,8 @@ class ProcessingOptions(object):
         range_end : int, optional
             Contains the end of the range, by default None.
 
-        Notes:
-        ------
+        Notes
+        -----
         Previous function name : timepoint_select().
         """
 
@@ -403,16 +415,22 @@ class ProcessingOptions(object):
         """
         input_type = ["process", "resave"]
         if input not in input_type:
-            raise ValueError("Invalue input type. Expected one of: %s" % input_type)
+            raise ValueError(
+                "Invalue input type. Expected one of: %s" % input_type
+            )
         parameters = [
             input + "_angle=" + self._angle_processing_option,
             input + "_channel=" + self._channel_processing_option,
-            input + "_illumination=" + self._illumination_processing_option,
+            input
+            + "_illumination="
+            + self._illumination_processing_option,
             input + "_tile=" + self._tile_processing_option,
             input + "_timepoint=" + self._timepoint_processing_option,
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug("Formatted 'process_X' options: <%s>", parameter_string)
+        log.debug(
+            "Formatted 'process_X' options: <%s>", parameter_string
+        )
         return parameter_string + " "
 
     def fmt_acitt_selectors(self):
@@ -432,12 +450,16 @@ class ProcessingOptions(object):
         parameters = [
             self._angle_select if self._angle_select else "",
             self._channel_select if self._channel_select else "",
-            self._illumination_select if self._illumination_select else "",
+            self._illumination_select
+            if self._illumination_select
+            else "",
             self._tile_select if self._tile_select else "",
             self._timepoint_select if self._timepoint_select else "",
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug("Formatted 'processing_X' selectors: <%s>", parameter_string)
+        log.debug(
+            "Formatted 'processing_X' selectors: <%s>", parameter_string
+        )
         return parameter_string + " "
 
     def fmt_how_to_treat(self):
@@ -455,7 +477,9 @@ class ProcessingOptions(object):
             "how_to_treat_timepoints=" + self._treat_timepoints,
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug("Formatted 'how_to_treat_X' options: <%s>", parameter_string)
+        log.debug(
+            "Formatted 'how_to_treat_X' options: <%s>", parameter_string
+        )
         return parameter_string + " "
 
     def fmt_use_acitt(self):
@@ -470,13 +494,22 @@ class ProcessingOptions(object):
         """
         parameters = [
             self._use_angle if self._treat_angles == "group" else "",
-            self._use_channel if self._treat_channels == "group" else "",
-            self._use_illumination if self._treat_illuminations == "group" else "",
+            self._use_channel
+            if self._treat_channels == "group"
+            else "",
+            self._use_illumination
+            if self._treat_illuminations == "group"
+            else "",
             self._use_tile if self._treat_tiles == "group" else "",
-            self._use_timepoint if self._treat_timepoints == "group" else "",
+            self._use_timepoint
+            if self._treat_timepoints == "group"
+            else "",
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug("Formatted expert grouping 'use' options: <%s>", parameter_string)
+        log.debug(
+            "Formatted expert grouping 'use' options: <%s>",
+            parameter_string,
+        )
         return parameter_string + " "
 
 
@@ -506,7 +539,7 @@ class DefinitionOptions(object):
     >>> opts.fmt_acitt_options()
     ... multiple_angles=[NO (one angle)]
     ... multiple_channels=[YES (all channels in one file)]
-    ... multiple_illuminations=[NO (one illumination direction)]
+    ... multiple_illuminations_directions=[NO (one illumination direction)]
     ... multiple_tiles=[YES (all tiles in one file)]
     ... multiple_timepoints=[NO (one time-point)]
     """
@@ -514,7 +547,9 @@ class DefinitionOptions(object):
     def __init__(self):
         self._angle_definition = SINGLE_FILE % "angle"
         self._channel_definition = MULTI_SINGLE_FILE % "channel"
-        self._illumination_definition = SINGLE_FILE % "illumination direction"
+        self._illumination_definition = (
+            SINGLE_FILE % "illumination direction"
+        )
         self._tile_definition = MULTI_MULTI_FILE % "tile"
         self._timepoint_definition = SINGLE_FILE % "time-point"
 
@@ -535,7 +570,9 @@ class DefinitionOptions(object):
             "multi_single",
             "multi_multi",
         ]:
-            raise ValueError("Value must be one of single, multi_multi or multi_single")
+            raise ValueError(
+                "Value must be one of single, multi_multi or multi_single"
+            )
 
         return {
             "single": SINGLE_FILE,
@@ -543,20 +580,50 @@ class DefinitionOptions(object):
             "multi_multi": MULTI_MULTI_FILE,
         }
 
-    def set_angle_definition(self, value):
-        """Set the value for the angle definition
+    def check_definition_option_ang_ill(self, value):
+        """Check if the value is a valid definition option.
+
+        This is needed for angles and illuminations because support is not
+        available for multiple angles and illuminations in a single file.
 
         Parameters
         ----------
         value : str
-            One of `single`, `multi_single` or `multi_multi`.
+            Entered value by the user.
+
+        Returns
+        -------
+        dict(str, str): dictionary containing the correct string definition.
         """
-        choices = self.check_definition_option(value)
+        if value not in [
+            "single",
+            "multi_multi",
+        ]:
+            raise ValueError(
+                "Value must be one of single, multi_multi. Support for multi_single is not available for angles and illuminations"
+            )
+
+        return {
+            "single": SINGLE_FILE,
+            "multi_multi": MULTI_MULTI_FILE,
+        }
+
+    def set_angle_definition(self, value):
+        """Set the value for the angle definition.
+
+        Parameters
+        ----------
+        value : str
+            One of `single` or `multi_multi`.
+        """
+        choices = self.check_definition_option_ang_ill(value)
         self._angle_definition = choices[value] % "angle"
-        log.debug("New 'angle_definition' setting: %s", self._angle_definition)
+        log.debug(
+            "New 'angle_definition' setting: %s", self._angle_definition
+        )
 
     def set_channel_definition(self, value):
-        """Set the value for the channel definition
+        """Set the value for the channel definition.
 
         Parameters
         ----------
@@ -565,24 +632,30 @@ class DefinitionOptions(object):
         """
         choices = self.check_definition_option(value)
         self._channel_definition = choices[value] % "channel"
-        log.debug("New 'channel_definition' setting: %s", self._channel_definition)
+        log.debug(
+            "New 'channel_definition' setting: %s",
+            self._channel_definition,
+        )
 
     def set_illumination_definition(self, value):
-        """Set the value for the illumination definition
+        """Set the value for the illumination definition.
 
         Parameters
         ----------
         value : str
             One of `single`, `multi_single` or `multi_multi`.
         """
-        choices = self.check_definition_option(value)
-        self._illumination_definition = choices[value] % "illumination direction"
+        choices = self.check_definition_option_ang_ill(value)
+        self._illumination_definition = (
+            choices[value] % "illumination direction"
+        )
         log.debug(
-            "New 'illumination_definition' setting: %s", self._illumination_definition
+            "New 'illumination_definition' setting: %s",
+            self._illumination_definition,
         )
 
     def set_tile_definition(self, value):
-        """Set the value for the tile_definition
+        """Set the value for the tile_definition.
 
         Parameters
         ----------
@@ -591,10 +664,12 @@ class DefinitionOptions(object):
         """
         choices = self.check_definition_option(value)
         self._tile_definition = choices[value] % "tile"
-        log.debug("New 'tile_definition' setting: %s", self._tile_definition)
+        log.debug(
+            "New 'tile_definition' setting: %s", self._tile_definition
+        )
 
     def set_timepoint_definition(self, value):
-        """Set the value for the time_point_definition
+        """Set the value for the time_point_definition.
 
         Parameters
         ----------
@@ -603,13 +678,16 @@ class DefinitionOptions(object):
         """
         choices = self.check_definition_option(value)
         self._timepoint_definition = choices[value] % "time-point"
-        log.debug("New 'timepoint_definition' setting: %s", self._timepoint_definition)
+        log.debug(
+            "New 'timepoint_definition' setting: %s",
+            self._timepoint_definition,
+        )
 
     def fmt_acitt_options(self):
         """Format Angle / Channel / Illumination / Tile / Timepoint options.
 
         Build a string providing the `multiple_angles`, `multiple_channels`,
-        `multiple_illuminations`, `multiple_tiles` and `multiple_timepoints` options
+        `multiple_illuminations_directions`, `multiple_tiles` and `multiple_timepoints` options
         that can be used in a BDV-related `IJ.run` call.
 
         Returns
@@ -619,12 +697,15 @@ class DefinitionOptions(object):
         parameters = [
             "multiple_angles=" + self._angle_definition,
             "multiple_channels=" + self._channel_definition,
-            "multiple_illuminations=" + self._illumination_definition,
+            "multiple_illuminations_directions="
+            + self._illumination_definition,
             "multiple_tiles=" + self._tile_definition,
             "multiple_timepoints=" + self._timepoint_definition,
         ]
         parameter_string = " ".join(parameters).strip()
-        log.debug("Formatted 'multiple_X' options: <%s>", parameter_string)
+        log.debug(
+            "Formatted 'multiple_X' options: <%s>", parameter_string
+        )
         return parameter_string + " "
 
 
@@ -639,6 +720,7 @@ def check_processing_input(value, range_end):
         Contains the list of input dimensions, the first input dimension of a range or a single channel
     range_end : int or None
         Contains the end of the range if need be
+
     Returns
     -------
     str
@@ -648,10 +730,14 @@ def check_processing_input(value, range_end):
         value = [value]
     # Check if all the elements of the value list are of the same type
     if not all(isinstance(x, type(value[0])) for x in value):
-        raise TypeError("Invalid input type. All the values should be of the same type")
+        raise TypeError(
+            "Invalid input type. All the values should be of the same type"
+        )
     if type(range_end) is int:
         if type(value[0]) is not int:
-            raise TypeError("Invalid input type. Expected an int for the range start")
+            raise TypeError(
+                "Invalid input type. Expected an int for the range start"
+            )
         elif len(value) != 1:
             raise ValueError(
                 "Invalid input type. Expected a single number for the range start"
@@ -689,7 +775,13 @@ def get_processing_settings(dimension, selection, value, range_end):
 
     if selection == "single":
         processing_option = SINGLE % dimension
-        dimension_select = "processing_" + dimension + "=[" + dimension + " %s]" % value
+        dimension_select = (
+            "processing_"
+            + dimension
+            + "=["
+            + dimension
+            + " %s]" % value
+        )
 
     if selection == "multiple":
         processing_option = MULTIPLE % dimension
@@ -732,7 +824,9 @@ def backup_xml_files(source_directory, subfolder_name):
     pathtools.create_directory(xml_backup_directory)
     backup_subfolder = xml_backup_directory + "/%s" % (subfolder_name)
     pathtools.create_directory(backup_subfolder)
-    all_xml_files = pathtools.listdir_matching(source_directory, ".*\\.xml", regex=True)
+    all_xml_files = pathtools.listdir_matching(
+        source_directory, ".*\\.xml", regex=True
+    )
     os.chdir(source_directory)
     for xml_file in all_xml_files:
         shutil.copy2(xml_file, backup_subfolder)
@@ -748,8 +842,8 @@ def define_dataset_auto(
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
 ):
-    """Will run the corresponding "Define Dataset" using the "Auto-Loader"
-    option.
+    """Define a dataset using the Autoloader or Multi-View loader.
+
     If the series is tiles, will run "Define Dataset...", otherwise will run
     "Define Multi-View Dataset...".
 
@@ -792,7 +886,9 @@ def define_dataset_auto(
         dataset_save_path = result_folder
     if subsampling_factors:
         subsampling_factors = (
-            "manual_mipmap_setup subsampling_factors=" + subsampling_factors + " "
+            "manual_mipmap_setup subsampling_factors="
+            + subsampling_factors
+            + " "
         )
     else:
         subsampling_factors = ""
@@ -807,23 +903,29 @@ def define_dataset_auto(
         angle_rotation = ""
 
     options = (
-        "define_dataset=[Automatic Loader (Bioformats based)] "
+        "define_dataset=[Automatic Loader (Bioformats based)]"
+        + " "
         + "project_filename=["
         + project_filename
         + ".xml"
         + "] "
         + "path=["
-        + file_info["path"]
+        + file_info["full"]
         + "] "
         + "exclude=10 "
-        # + "bioformats_series_are?="
-        # + bf_series_type
-        # + " "
+        + "bioformats_series_are?="
+        + bf_series_type
+        + " "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
-        + "how_to_load_images=["
+        + "how_to_store_input_images=["
         + resave
         + "] "
-        + "dataset_save_path=["
+        + "load_raw_data_virtually"
+        + " "
+        + "metadata_save_path=["
+        + dataset_save_path
+        + "] "
+        + "image_data_save_path=["
         + dataset_save_path
         + "] "
         + "check_stack_sizes "
@@ -836,21 +938,11 @@ def define_dataset_auto(
         + " "
         + "setups_per_partition=0 "
         + "use_deflate_compression "
-        # + "export_path=["
-        # + dataset_save_path
-        # + "]",
     )
 
     log.debug(options)
 
-    if bf_series_type == "Tiles":
-        log.debug("Doing tiled dataset definition")
-        IJ.run("Define dataset ...", str(options))
-    elif bf_series_type == "Angles":
-        log.debug("Doing multi-view dataset definition")
-        IJ.run("Define Multi-View Dataset", str(options))
-    else:
-        raise ValueError("Wrong answer for series type")
+    IJ.run("Define Multi-View Dataset", str(options))
 
 
 def define_dataset_manual(
@@ -892,6 +984,7 @@ def define_dataset_manual(
         + "project_filename=["
         + xml_filename
         + "] "
+        + "_____"
         + definition_opts.fmt_acitt_options()
         + " "
         + "image_file_directory="
@@ -903,11 +996,11 @@ def define_dataset_manual(
         + " "
         + "calibration_type=[Same voxel-size for all views] "
         + "calibration_definition=[Load voxel-size(s) from file(s)] "
-        + "imglib2_data_container=[ArrayImg (faster)]"
+        # + "imglib2_data_container=[ArrayImg (faster)]"
     )
 
-    log.debug("Manual dataset defintion options: <%s>", options)
-    IJ.run("Define dataset ...", str(options))
+    log.debug("Manual dataset definition options: <%s>", options)
+    IJ.run("Define Multi-View Dataset", str(options))
 
 
 def resave_as_h5(
@@ -930,8 +1023,10 @@ def resave_as_h5(
         XML input file.
     output_h5_file_path : str
         Export path for the output file including the `.xml `extension.
-    timepoints : str, optional
-        The timepoints that should be exported, by default `All Timepoints`.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptions` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped.
     timepoints_per_partition : int, optional
         How many timepoints to export per partition, by default `1`.
     use_deflate_compression : bool, optional
@@ -959,7 +1054,9 @@ def resave_as_h5(
         split_hdf5 = ""
 
     if subsampling_factors:
-        subsampling_factors = "subsampling_factors=" + subsampling_factors + " "
+        subsampling_factors = (
+            "subsampling_factors=" + subsampling_factors + " "
+        )
     else:
         subsampling_factors = " "
     if hdf5_chunk_sizes:
@@ -1049,10 +1146,13 @@ def phase_correlation_pairwise_shifts_calculation(
     file_info = pathtools.parse_path(project_path)
 
     if downsampling_xyz != "":
-        downsampling = "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s " % (
-            downsampling_xyz[0],
-            downsampling_xyz[1],
-            downsampling_xyz[2],
+        downsampling = (
+            "downsample_in_x=%s downsample_in_y=%s downsample_in_z=%s "
+            % (
+                downsampling_xyz[0],
+                downsampling_xyz[1],
+                downsampling_xyz[2],
+            )
         )
     else:
         downsampling = ""
@@ -1076,7 +1176,9 @@ def phase_correlation_pairwise_shifts_calculation(
     log.debug("Calculate pairwise shifts options: <%s>", options)
     IJ.run("Calculate pairwise shifts ...", str(options))
 
-    backup_xml_files(file_info["path"], "phase_correlation_shift_calculation")
+    backup_xml_files(
+        file_info["path"], "phase_correlation_shift_calculation"
+    )
 
 
 def filter_pairwise_shifts(
@@ -1188,7 +1290,9 @@ def optimize_and_apply_shifts(
         + processing_opts.fmt_how_to_treat()
     )
 
-    log.debug("Optimization and shifts application options: <%s>", options)
+    log.debug(
+        "Optimization and shifts application options: <%s>", options
+    )
     IJ.run("Optimize globally and apply shifts ...", str(options))
 
     backup_xml_files(file_info["path"], "optimize_and_apply_shifts")
@@ -1207,10 +1311,10 @@ def detect_interest_points(
     ----------
     project_path : str
         Path to the `.xml` project.
-    process_timepoint : str, optional
-        Timepoint to be processed, by default `All Timepoints`.
-    process_channel : str, optional
-        Channel to be processed, by default `All channels`.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptions` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped.
     sigma : float, optional
         Minimum sigma for interest points detection, by default `1.8`.
     threshold : float, optional
@@ -1265,14 +1369,11 @@ def interest_points_registration(
     ----------
     project_path : str
         Path to the `.xml` project.
-    process_timepoint : str, optional
-        Timepoint to be processed, by default `All Timepoints`.
-    process_channel : str, optional
-        Channels to be used for performing the registration. By default, all
-        channels are taken into account, however this behavior could be
-        undesirable if only one channel is adequate (e.g. beads or other useful
-        fiducials). To restrict registration to a specific channel, provide the
-        channel name using this parameter. By default `All channels`.
+    processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
+        The `ProcessingOptions` object defining parameters for the run. Will
+        fall back to the defaults defined in the corresponding class if the
+        parameter is `None` or skipped. This controls which angles, channels,
+        illuminations, tiles and timepoints are processed.
     rigid_timepoints : bool, optional
         If set to `True` each timepoint will be considered as a rigid unit
         (useful e.g. if spatial registration has already been performed before).
@@ -1366,8 +1467,12 @@ def duplicate_transformations(
         target = "[All Channels]"
         source = str(channel_source - 1)
         if tile_source:
-            tile_apply = "apply_to_tile=[Single tile (Select from List)] "
-            tile_process = "processing_tile=[tile " + str(tile_source) + "] "
+            tile_apply = (
+                "apply_to_tile=[Single tile (Select from List)] "
+            )
+            tile_process = (
+                "processing_tile=[tile " + str(tile_source) + "] "
+            )
         else:
             tile_apply = "apply_to_tile=[All tiles] "
     elif transformation_type == "tile":
@@ -1375,9 +1480,13 @@ def duplicate_transformations(
         target = "[All Tiles]"
         source = str(tile_source)
         if channel_source:
-            chnl_apply = "apply_to_channel=[Single channel (Select from List)] "
+            chnl_apply = (
+                "apply_to_channel=[Single channel (Select from List)] "
+            )
             chnl_process = (
-                "processing_channel=[channel " + str(channel_source - 1) + "] "
+                "processing_channel=[channel "
+                + str(channel_source - 1)
+                + "] "
             )
         else:
             chnl_apply = "apply_to_channel=[All channels] "
@@ -1413,7 +1522,8 @@ def duplicate_transformations(
     IJ.run("Duplicate Transformations", str(options))
 
     backup_xml_files(
-        file_info["path"], "duplicate_transformation_" + transformation_type
+        file_info["path"],
+        "duplicate_transformation_" + transformation_type,
     )
 
 
@@ -1424,7 +1534,9 @@ def fuse_dataset(
     downsampling=1,
     interpolation="[Linear Interpolation]",
     pixel_type="[16-bit unsigned integer]",
+    fusion_type="Avg, Blending",
     export="HDF5",
+    compression="Zstandard",
 ):
     """Call BigStitcher's "Fuse Dataset" command.
 
@@ -1452,6 +1564,10 @@ def fuse_dataset(
         Pixel type to use during fusion, by default `[16-bit unsigned integer]`.
     export : str, optional
         Format of the output fused image, by default `HDF5`.
+    fusion_type : str, optional
+        Type of fusion algorithm to use, by default `Avg, Blending`.
+    compression : str, optional
+        Compression method to use when exporting as HDF5, by default `Zstandard`.
     """
 
     if processing_opts is None:
@@ -1475,11 +1591,13 @@ def fuse_dataset(
         + "interpolation="
         + interpolation
         + " "
+        + "fusion_type=["
+        + fusion_type
+        + "] "
         + "pixel_type="
         + pixel_type
         + " "
         + "interest_points_for_non_rigid=[-= Disable Non-Rigid =-] "
-        + "blend "
         + "preserve_original "
         + "produce=[Each timepoint & channel] "
     )
@@ -1506,9 +1624,12 @@ def fuse_dataset(
 
         options = (
             options
-            + "fused_image=[ZARR/N5/HDF5 export using N5-API] "
+            + "fused_image=[OME-ZARR/N5/HDF5 export using N5-API] "
             + "define_input=[Auto-load from input data (values shown below)] "
             + "export=HDF5 "
+            + "compression="
+            + compression
+            + " "
             + "create "
             + "create_0 "
             + "hdf5_file=["
@@ -1527,4 +1648,64 @@ def fuse_dataset(
         )
 
     log.debug("Dataset fusion options: <%s>", options)
-    IJ.run("Fuse dataset ...", str(options))
+    IJ.run("Image Fusion", str(options))
+
+
+def fuse_dataset_bdvp(
+    project_path,
+    command,
+    processing_opts=None,
+    result_path=None,
+    compression="LZW",
+):
+    """Export a BigDataViewer project using the BIOP Kheops exporter.
+
+    This function uses the BIOP Kheops exporter to convert a BigDataViewer project into a
+    OME-TIFF files, with optional compression.
+
+    Parameters
+    ----------
+    project_path : str
+        Full path to the BigDataViewer XML project file.
+    command : CommandService
+        The Scijava CommandService instance to execute the export command.
+    processing_opts : ProcessingOptions, optional
+        Options defining which parts of the dataset to process. If None, default processing
+        options will be used (process all angles, channels, etc.).
+    result_path : str, optional
+        Path where to store the exported files. If None, files will be saved in the same
+        directory as the input project.
+    compression : str, optional
+        Compression method to use for the TIFF files. Default is "LZW".
+
+    Notes
+    -----
+    This function requires the PTBIOP update site to be enabled in Fiji/ImageJ.
+    """
+    if processing_opts is None:
+        processing_opts = ProcessingOptions()
+
+    file_info = pathtools.parse_path(project_path)
+    if not result_path:
+        result_path = file_info["path"]
+        # if not os.path.exists(result_path):
+        #     os.makedirs(result_path)
+
+    command.run(
+        FuseBigStitcherDatasetIntoOMETiffCommand,
+        True,
+        "image",
+        project_path,
+        "output_dir",
+        result_path,
+        "compression",
+        compression,
+        "subset_channels",
+        "",
+        "subset_slices",
+        "",
+        "subset_frames",
+        "",
+        "compress_temp_files",
+        False,
+    )

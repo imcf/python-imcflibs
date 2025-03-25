@@ -1,10 +1,14 @@
+"""Tests for the automatic dataset definition functionality in the BDV module."""
+
 import logging
 
 from imcflibs import pathtools
 from imcflibs.imagej import bdv
 
 
-def set_default_values(project_filename, file_path):
+def set_default_values(
+    project_filename, file_path, series_type="Tiles"
+):
     """Set the default values for dataset definitions.
 
     Parameters
@@ -13,9 +17,11 @@ def set_default_values(project_filename, file_path):
         Name of the project
     file_path : pathlib.Path
         Path to a temporary folder
+    series_type : str, optional
+        Type of Bioformats series (default is "Tiles")
 
     Returns
-    ----------
+    -------
     str
         Start of the options for dataset definitions.
     """
@@ -32,6 +38,9 @@ def set_default_values(project_filename, file_path):
         + file_info["path"]
         + "] "
         + "exclude=10 "
+        + "bioformats_series_are?="
+        + series_type
+        + " "
         + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
     )
 
@@ -39,8 +48,7 @@ def set_default_values(project_filename, file_path):
 
 
 def test_define_dataset_auto_tile(tmp_path, caplog):
-    """
-    Test automatic dataset definition method for tile series.
+    """Test automatic dataset definition method for tile series.
 
     Parameters
     ----------
@@ -69,7 +77,7 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     bf_series_type = "Tiles"
 
     # Define the ImageJ command
-    cmd = "Define dataset ..."
+    cmd = "Define Multi-View Dataset"
 
     # Set the default values for dataset definitions
     options = set_default_values(project_filename, file_path)
@@ -77,10 +85,14 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     # Construct the options for dataset definitions
     options = (
         options
-        + "how_to_load_images=["
+        + "how_to_store_input_images=["
         + "Re-save as multiresolution HDF5"
         + "] "
-        + "dataset_save_path=["
+        + "load_raw_data_virtually "
+        + "metadata_save_path=["
+        + result_folder
+        + "] "
+        + "image_data_save_path=["
         + result_folder
         + "] "
         + "check_stack_sizes "
@@ -94,14 +106,15 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     final_call = "IJ.run(cmd=[%s], params=[%s])" % (cmd, options)
 
     # Define the dataset using the "Auto-Loader" option
-    bdv.define_dataset_auto(project_filename, file_path, bf_series_type)
+    bdv.define_dataset_auto(
+        project_filename, file_info["path"], bf_series_type
+    )
     # Check if the final call is in the log
     assert final_call == caplog.messages[0]
 
 
 def test_define_dataset_auto_angle(tmp_path, caplog):
-    """
-    Test automatic dataset definition method for angle series.
+    """Test automatic dataset definition method for angle series.
 
     Parameters
     ----------
@@ -133,15 +146,21 @@ def test_define_dataset_auto_angle(tmp_path, caplog):
     cmd = "Define Multi-View Dataset"
 
     # Set the default values for dataset definitions
-    options = set_default_values(project_filename, file_path)
+    options = set_default_values(
+        project_filename, file_path, bf_series_type
+    )
 
     # Construct the options for dataset definitions
     options = (
         options
-        + "how_to_load_images=["
+        + "how_to_store_input_images=["
         + "Re-save as multiresolution HDF5"
         + "] "
-        + "dataset_save_path=["
+        + "load_raw_data_virtually "
+        + "metadata_save_path=["
+        + result_folder
+        + "] "
+        + "image_data_save_path=["
         + result_folder
         + "] "
         + "check_stack_sizes "
@@ -156,6 +175,8 @@ def test_define_dataset_auto_angle(tmp_path, caplog):
     final_call = "IJ.run(cmd=[%s], params=[%s])" % (cmd, options)
 
     # Define the dataset using the "Auto-Loader" option
-    bdv.define_dataset_auto(project_filename, file_path, bf_series_type)
+    bdv.define_dataset_auto(
+        project_filename, file_info["path"], bf_series_type
+    )
     # Check if the final call is in the log
     assert final_call == caplog.messages[0]
