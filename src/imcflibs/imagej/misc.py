@@ -486,19 +486,6 @@ def write_ordereddict_to_csv(out_file, content):
         1;Sample A;42.5
         2;Sample B;37.2
 
-    >>> results = []
-    >>> for i in range(1, 3):
-    ...     results.append(OrderedDict([('id', i), ('name', f'Sample {chr(64+i)}'), ('value', 30 + i*7.5)]))
-    >>> write_ordereddict_to_csv('results.csv', results)
-
-    The resulting CSV file will have the following content:
-
-
-    id;name;value
-    1;Sample A;37.5
-    2;Sample B;45.0
-    3;Sample C;52.5
-
     Notes
     -----
     - Uses the semicolon charachter (`;`) as delimiter.
