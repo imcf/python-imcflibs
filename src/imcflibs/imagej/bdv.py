@@ -733,13 +733,9 @@ def check_processing_input(value, range_end):
         )
     if type(range_end) is int:
         if type(value[0]) is not int:
-            raise TypeError(
-                "Invalid input type. Expected an int for the range start"
-            )
+            raise TypeError("Range start needs to be an int.")
         elif len(value) != 1:
-            raise ValueError(
-                "Invalid input type. Expected a single number for the range start"
-            )
+            raise ValueError("Range start needs to be single number.")
         else:
             return "range"
     elif len(value) == 1:
