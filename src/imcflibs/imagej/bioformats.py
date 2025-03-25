@@ -368,31 +368,21 @@ def get_stage_coords(source, filenames):
     Returns
     -------
     dict
-        A dictionary containing the following metadata:
-        - `dimensions` : int
-            Number of dimensions (2D or 3D)
-        - `stage_coordinates_x` : list
-            The absolute stage x-coordinated
-        - `stage_coordinates_y` : list
-            The absolute stage y-coordinated
-        - `stage_coordinates_z` : list
-            The absolute stage z-coordinated
-        - `relative_coordinates_x` : list
-            The relative stage x-coordinates in px
-        - `relative_coordinates_y` : list
-            The relative stage y-coordinates in px
-        - `relative_coordinates_z` : list
-            The relative stage z-coordinates in px
-        - `image_calibration` : list
-            x,y,z image calibration in unit/px
-        - `calibration_unit` : str
-            Image calibration unit
-        - `image_dimensions_czt` : list
-            Number of images in dimensions c,z,t
-        - `series_names` : list of str
-            Names of all series contained in the files
-        - `max_size` : list of int
-            Maximum size across all files in dimensions x,y,z
+
+        {
+            dimensions : int,  # number of dimensions (2D or 3D)
+            stage_coordinates_x : list,  # absolute stage x-coordinated
+            stage_coordinates_y : list,  # absolute stage y-coordinated
+            stage_coordinates_z : list,  # absolute stage z-coordinated
+            relative_coordinates_x : list,  # relative stage x-coordinates in px
+            relative_coordinates_y : list,  # relative stage y-coordinates in px
+            relative_coordinates_z : list,  # relative stage z-coordinates in px
+            image_calibration : list,  # x,y,z image calibration in unit/px
+            calibration_unit : str,  # image calibration unit
+            image_dimensions_czt : list,  # number of images in dimensions c,z,t
+            series_names : list of str,  # names of all series in the files
+            max_size : list of int,  # max size (x/y/z) across all files
+        }
     """
 
     # open an array to store the abosolute stage coordinates from metadata
