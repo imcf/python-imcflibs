@@ -482,9 +482,9 @@ def write_ordereddict_to_csv(out_file, content):
 
     The resulting CSV file will have the following content:
 
-    id;name;value
-    1;Sample A;42.5
-    2;Sample B;37.2
+        id;name;value
+        1;Sample A;42.5
+        2;Sample B;37.2
 
     >>> results = []
     >>> for i in range(1, 3):
