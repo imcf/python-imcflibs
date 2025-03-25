@@ -361,9 +361,9 @@ def get_stage_coords(source, filenames):
     Parameters
     ----------
     source : str
-        Path to the images
+        Path to the images.
     filenames : list of str
-        List of images filenames
+        List of images filenames.
 
     Returns
     -------
