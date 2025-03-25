@@ -385,30 +385,24 @@ def upload_array_as_omero_table(
     --------
     >>> from fr.igred.omero import Client
     >>> from java.lang import String, Double, Long
-    >>>
-    >>> # Connect to OMERO
-    >>> client = Client()
+    ...
+    >>> client = Client()  # connect to OMERO
     >>> client.connect("omero.example.org", 4064, "username", "password")
-    >>>
-    >>> # Get an image
-    >>> image_id = 123456
-    >>> image_wpr = client.getImage(Long(image_id))
-    >>>
-    >>> # Prepare column definitions (name-type pairs)
-    >>> columns = {
+    ...
+    >>> image_wpr = client.getImage(Long(123456))  # get an image
+    ...
+    >>> columns = {  # prepare column definitions (name-type pairs)
     ...     "Row_ID": Long,
     ...     "Cell_Area": Double,
-    ...     "Cell_Type": String
+    ...     "Cell_Type": String,
     ... }
-    >>>
-    >>> # Prepare data (list of rows, each row is a list of values)
-    >>> data = [
+    ...
+    >>> data = [  # prepare data (list of rows, each row is a list of values)
     ...     [1, 250.5, "Neuron"],
     ...     [2, 180.2, "Astrocyte"],
-    ...     [3, 310.7, "Neuron"]
+    ...     [3, 310.7, "Neuron"],
     ... ]
-    >>>
-    >>> # Upload the table
+    ...
     >>> upload_array_as_omero_table(
     ...     client, "Cell Measurements", data, columns, image_wpr
     ... )
