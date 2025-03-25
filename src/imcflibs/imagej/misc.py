@@ -704,22 +704,15 @@ def run_imarisconvert(file_path):
 
     Convert the input image file to Imaris format (Imaris5) using the
     ImarisConvert utility. The function uses the latest installed Imaris
-    application to perform the conversion using subprocess.
-
-    Notes
-    -----
-    The function handles special case for .ids files by converting them
-    to .ics before processing. It uses the latest installed Imaris
-    application to perform the conversion.
+    application to perform the conversion via `subprocess.call()`.
 
     Parameters
     ----------
     file_path : str
         Absolute path to the input image file.
-
-
     """
-
+    # in case the given file has the suffix `.ids` (meaning it is part of an
+    # ICS-1 `.ics`+`.ids` pair), point ImarisConvert to the `.ics` file instead:
     path_root, file_extension = os.path.splitext(file_path)
     if file_extension == ".ids":
         file_extension = ".ics"
@@ -735,6 +728,6 @@ def run_imarisconvert(file_path):
     IJ.log("Converting to Imaris5 .ims...")
     result = subprocess.call(command, shell=True, cwd=imaris_path)
     if result == 0:
-        IJ.log("Conversion to .ims is finished")
+        IJ.log("Conversion to .ims is finished.")
     else:
         IJ.log("Conversion failed with error code: %d" % result)
