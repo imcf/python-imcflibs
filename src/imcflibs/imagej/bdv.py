@@ -915,7 +915,8 @@ def define_dataset_auto(
         + "bioformats_series_are?="
         + bf_series_type
         + " "
-        + "move_tiles_to_grid_(per_angle)?=[Do not move Tiles to Grid (use Metadata if available)] "
+        + "move_tiles_to_grid_(per_angle)?=["
+        + "Do not move Tiles to Grid (use Metadata if available)] "
         + "how_to_store_input_images=["
         + resave
         + "] "
@@ -1394,8 +1395,10 @@ def interest_points_registration(
         + processing_opts.fmt_acitt_options()
         + processing_opts.fmt_acitt_selectors()
         + "registration_algorithm=[Precise descriptor-based (translation invariant)] "
-        + "registration_over_time=[Match against one reference timepoint (no global optimization)] "
-        + "registration_in_between_views=[Only compare overlapping views (according to current transformations)] "
+        + "registration_over_time=["
+        + "Match against one reference timepoint (no global optimization)] "
+        + "registration_in_between_views=["
+        + "Only compare overlapping views (according to current transformations)] "
         + "interest_point_inclusion=[Compare all interest point of overlapping views] "
         + "interest_points=beads "
         + "group_tiles "
@@ -1412,8 +1415,11 @@ def interest_points_registration(
         + "significance=3 "
         + "allowed_error_for_ransac=5 "
         + "ransac_iterations=Normal "
-        + "global_optimization_strategy=[Two-Round: Handle unconnected tiles, remove wrong links RELAXED (5.0x / 7.0px)] "
-        + "interestpoint_grouping=[Group interest points (simply combine all in one virtual view)] "
+        + "global_optimization_strategy=["
+        + "Two-Round: Handle unconnected tiles, "
+        + "remove wrong links RELAXED (5.0x / 7.0px)] "
+        + "interestpoint_grouping=["
+        + "Group interest points (simply combine all in one virtual view)] "
         + "interest=5"
     )
 
