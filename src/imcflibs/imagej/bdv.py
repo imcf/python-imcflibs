@@ -113,8 +113,8 @@ class ProcessingOptions(object):
 
         Select the angle(s) to use for the operation, by default empty (`""`).
 
-        NOTE: this value will be used to render `angles=[use Angle VALUE]` when calling
-        the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `angles=[use Angle VALUE]` when
+        calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -127,11 +127,11 @@ class ProcessingOptions(object):
     def reference_channel(self, value):
         """Set the reference channel when using *Expert Grouping Options*.
 
-        Select the channel(s) to use for the operation, by default the averaging mode
-        will be used (`channels=[Average Channels]`).
+        Select the channel(s) to use for the operation, by default the averaging
+        mode will be used (`channels=[Average Channels]`).
 
-        NOTE: this value will be used to render `channels=[use Channel VALUE]` when
-        calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `channels=[use Channel VALUE]`
+        when calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -147,11 +147,11 @@ class ProcessingOptions(object):
     def reference_illumination(self, value):
         """Set the reference illumination when using *Expert Grouping Options*.
 
-        Select the illumination(s) to use for the operation, by default the averaging
-        mode will be used (`illuminations=[Average Illuminations]`).
+        Select the illumination(s) to use for the operation, by default the
+        averaging mode will be used (`illuminations=[Average Illuminations]`).
 
-        NOTE: this value will be used to render `illuminations=[use Illumination VALUE]`
-        when calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `illuminations=[use Illumination
+        VALUE]` when calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -169,11 +169,11 @@ class ProcessingOptions(object):
     def reference_tile(self, value):
         """Set the reference tile when using *Expert Grouping Options*.
 
-        Select the tile(s) to use for the operation, by default the averaging mode will
-        be used (`tiles=[Average Tiles]`).
+        Select the tile(s) to use for the operation, by default the averaging
+        mode will be used (`tiles=[Average Tiles]`).
 
-        NOTE: this value will be used to render `tiles=[use Tile VALUE]` when calling
-        the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `tiles=[use Tile VALUE]` when
+        calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -186,11 +186,11 @@ class ProcessingOptions(object):
     def reference_timepoint(self, value):
         """Set the reference timepoint when using *Expert Grouping Options*.
 
-        Select the timepoint(s) to use for the operation, by default the averaging mode
-        will be used (`timepoints=[Average Timepoints]`).
+        Select the timepoint(s) to use for the operation, by default the
+        averaging mode will be used (`timepoints=[Average Timepoints]`).
 
-        NOTE: this value will be used to render `timepoints=[use Timepoint VALUE]` when
-        calling the `fmt_use_acitt()` method.
+        NOTE: this value will be used to render `timepoints=[use Timepoint
+        VALUE]` when calling the `fmt_use_acitt()` method.
 
         Parameters
         ----------
@@ -239,7 +239,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The channel(s) to use for processing, either a single value or a list.
+            The channel(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
@@ -259,13 +259,13 @@ class ProcessingOptions(object):
     def process_illumination(self, value, range_end=None):
         """Set the processing option for illuminations.
 
-        Update the illumination processing option and selection depending on input.
-        If the range_end is not None, it is considered as a range.
+        Update the illumination processing option and selection depending on
+        input. If the range_end is not None, it is considered as a range.
 
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The illumination(s) to use for processing, either a single value or a list.
+            The illumination(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
@@ -291,7 +291,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The tile(s) to use for processing, either a single value or a list.
+            The tile(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
@@ -317,7 +317,7 @@ class ProcessingOptions(object):
         Parameters
         ----------
         value : str, int, list of int or list of str
-            The timepoint(s) to use for processing, either a single value or a list.
+            The timepoint(s) to use for processing, a single value or a list.
         range_end : int, optional
             Contains the end of the range, by default None.
 
