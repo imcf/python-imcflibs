@@ -8,11 +8,17 @@ Requires the [`simple-omero-client`][simple-omero-client] JAR to be installed.
 [simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client
 """
 
-from java.lang import Long
-
-
 from fr.igred.omero import Client
-from fr.igred.omero.annotations import MapAnnotationWrapper
+from fr.igred.omero.annotations import (
+    MapAnnotationWrapper,
+    TableWrapper,
+)
+from fr.igred.omero.roi import ROIWrapper
+from java.lang import Long
+from java.text import SimpleDateFormat
+from java.util import ArrayList
+from omero.cmd import OriginalMetadataRequest
+from omero.gateway.model import TableData, TableDataColumn
 
 
 def parse_url(client, omero_str):
@@ -187,6 +193,21 @@ def add_annotation(client, repository_wpr, annotations, header):
     repository_wpr.addMapAnnotation(client, map_annotation_wpr)
 
 
+def delete_keyvalue_annotations(user_client, object_wrapper):
+    """Delete annotations linked to object.
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO.
+    object_wrapper : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
+        Wrapper to the object for the anotation.
+
+    """
+    kv_pairs = object_wrapper.getMapAnnotations(user_client)
+    user_client.delete(kv_pairs)
+
+
 def find_dataset(client, dataset_id):
     """Retrieve a dataset (wrapper) from the OMERO server.
 
@@ -204,3 +225,193 @@ def find_dataset(client, dataset_id):
     """
     # Fetch the dataset from the OMERO server using the provided dataset ID
     return client.getDataset(Long(dataset_id))
+
+    def get_acquisition_metadata(user_client, image_wpr):
+        """Get acquisition metadata from OMERO based on an image ID.
+
+        Parameters
+        ----------
+        user_client : fr.igred.omero.Client
+            Client used for login to OMERO
+        image_wpr : fr.igred.omero.repositor.ImageWrapper
+            Wrapper to the image for the metadata
+
+        Returns
+        -------
+        dict
+
+            {
+                objective_magnification : float,
+                objective_na : float,
+                acquisition_date : str,
+                acquisition_date_number : str,
+            }
+        """
+        ctx = user_client.getCtx()
+        instrument_data = (
+            user_client.getGateway()
+            .getMetadataService(ctx)
+            .loadInstrument(image_wpr.asDataObject().getInstrumentId())
+        )
+        objective_data = instrument_data.copyObjective().get(0)
+        metadata = {}
+
+        metadata["objective_magnification"] = (
+            objective_data.getNominalMagnification().getValue()
+            if objective_data.getNominalMagnification() is not None
+            else 0
+        )
+        metadata["objective_na"] = (
+            objective_data.getLensNA().getValue()
+            if objective_data.getLensNA() is not None
+            else 0
+        )
+
+        if image_wpr.getAcquisitionDate() is None:
+            if image_wpr.asDataObject().getFormat() == "ZeissCZI":
+                field = "Information|Document|CreationDate"
+                date_field = get_info_from_original_metadata(
+                    user_client, image_wpr, field
+                )
+                metadata["acquisition_date"] = date_field.split("T")[0]
+                metadata["acquisition_date_number"] = int(
+                    metadata["acquisition_date"].replace("-", "")
+                )
+            else:
+                metadata["acquisition_date"] = "NA"
+                metadata["acquisition_date_number"] = 0
+        else:
+            sdf = SimpleDateFormat("yyyy-MM-dd")
+            metadata["acquisition_date"] = sdf.format(image_wpr.getAcquisitionDate())
+            metadata["acquisition_date_number"] = int(
+                metadata["acquisition_date"].replace("-", "")
+            )
+
+        return metadata
+
+
+def get_info_from_original_metadata(user_client, image_wpr, field):
+    """Retrieve information from the original metadata (as opposed to OME-MD).
+
+    In some cases not all information is parsed correctly by BF and has to be
+    recovered / identified directly from the *original* metadata. This function
+    extracts the corresponding value based on the field identifier.
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    image_wpr : fr.igred.omero.repositor.ImageWrapper
+        Wrapper to the image
+    field : str
+        Field to look for in the original metadata. Needs to be found beforehand.
+
+    Returns
+    -------
+    str
+        Value of the field
+    """
+    omr = OriginalMetadataRequest(Long(image_wpr.getId()))
+    cmd = user_client.getGateway().submit(user_client.getCtx(), omr)
+    rsp = cmd.loop(5, 500)
+    gm = rsp.globalMetadata
+    return gm.get(field).getValue()
+
+
+def create_table_columns(headings):
+    """Create OMERO table headings from an ImageJ results table.
+
+    Parameters
+    ----------
+    headings : list(str)
+        List of columns names.
+
+    Returns
+    -------
+    list(omero.gateway.model.TableDataColumn)
+        List of columns formatted to be uploaded to OMERO.
+    """
+    table_columns = []
+    # populate the headings
+    for h in range(len(headings)):
+        heading = headings.keys()[h]
+        type = headings.values()[h]
+        # OMERO.tables queries don't handle whitespace well
+        heading = heading.replace(" ", "_")
+        # title_heading = ["Slice", "Label"]
+        table_columns.append(TableDataColumn(heading, h, type))
+    # table_columns.append(TableDataColumn("Image", size, ImageData))
+    return table_columns
+
+
+def upload_array_as_omero_table(user_client, table_title, data, columns, image_wpr):
+    """Upload a table to OMERO from a list of lists.
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    table_title : str
+        Title of the table to be uploaded.
+    data : list(list())
+        List of lists of results to upload
+    columns : list(str)
+        List of columns names
+    image_wpr : fr.igred.omero.repositor.ImageWrapper
+        Wrapper to the image to be uploaded
+
+    Examples
+    --------
+    >>> from fr.igred.omero import Client
+    >>> from java.lang import String, Double, Long
+    ...
+    >>> client = Client()  # connect to OMERO
+    >>> client.connect("omero.example.org", 4064, "username", "password")
+    ...
+    >>> image_wpr = client.getImage(Long(123456))  # get an image
+    ...
+    >>> columns = {  # prepare column definitions (name-type pairs)
+    ...     "Row_ID": Long,
+    ...     "Cell_Area": Double,
+    ...     "Cell_Type": String,
+    ... }
+    ...
+    >>> data = [  # prepare data (list of rows, each row is a list of values)
+    ...     [1, 250.5, "Neuron"],
+    ...     [2, 180.2, "Astrocyte"],
+    ...     [3, 310.7, "Neuron"],
+    ... ]
+    ...
+    >>> upload_array_as_omero_table(
+    ...     client, "Cell Measurements", data, columns, image_wpr
+    ... )
+    """
+
+    dataset_wpr = image_wpr.getDatasets(user_client)[0]
+
+    table_columns = create_table_columns(columns)
+    table_data = TableData(table_columns, data)
+    table_wpr = TableWrapper(table_data)
+    table_wpr.setName(table_title)
+    dataset_wpr.addTable(user_client, table_wpr)
+
+
+def save_rois_to_omero(user_client, image_wpr, rm):
+    """Save ROIs to OMERO linked to the image.
+
+    Parameters
+    ----------
+    user_client : fr.igred.omero.Client
+        Client used for login to OMERO
+    image_wpr : fr.igred.omero.repositor.ImageWrapper
+        Wrapper to the image for the ROIs
+    rm : ij.plugin.frame.RoiManager
+        ROI Manager containing the ROIs
+
+    """
+    rois_list = rm.getRoisAsArray()
+    rois_arraylist = ArrayList(len(rois_list))
+    for roi in rois_list:
+        rois_arraylist.add(roi)
+    rois_to_upload = ROIWrapper.fromImageJ(rois_arraylist)
+    image_wpr.saveROIs(user_client, rois_to_upload)

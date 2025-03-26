@@ -149,16 +149,17 @@ def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
 
     # Return the new population with the filtered objects
     return Objects3DPopulation(objects_within_intensity)
-def maxima_finder_3D(imageplus, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
-    """
-    Find local maxima in a 3D image.
+
+
+def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
+    """Find local maxima in a 3D image.
 
     This function identifies local maxima in a 3D image using a specified minimum threshold and noise level.
     The radii for the maxima detection can be set independently for the x/y and z dimensions.
 
     Parameters
     ----------
-    imageplus : ij.ImagePlus
+    imp : ij.ImagePlus
         The input 3D image in which to find local maxima.
     min_threshold : int, optional
         The minimum intensity threshold for maxima detection. Default is 0.
@@ -175,7 +176,7 @@ def maxima_finder_3D(imageplus, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
         An ImagePlus object containing the detected maxima as peaks.
     """
     # Wrap the input ImagePlus into an ImageHandler
-    img = ImageHandler.wrap(imageplus)
+    img = ImageHandler.wrap(imp)
 
     # Duplicate the image and apply a threshold cut-off
     thresholded = img.duplicate()
@@ -194,7 +195,7 @@ def maxima_finder_3D(imageplus, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
     imp_peaks = img_peaks.getImagePlus()
 
     # Set the calibration of the peaks image to match the input image
-    imp_peaks.setCalibration(imageplus.getCalibration())
+    imp_peaks.setCalibration(imp.getCalibration())
 
     # Set the title of the peaks image
     imp_peaks.setTitle("Peaks")
@@ -203,8 +204,7 @@ def maxima_finder_3D(imageplus, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
 
 
 def seeded_watershed(imp_binary, imp_peaks, threshold=10):
-    """
-    Perform a seeded watershed segmentation on a binary image using seed points.
+    """Perform a seeded watershed segmentation on a binary image using seed points.
 
     This function applies a watershed segmentation to a binary image using seed points provided in another image.
     An optional threshold can be specified to control the segmentation process.

@@ -182,6 +182,7 @@ def process_files(files, outpath, model_file, fmt):
     if model:
         model.close()
 
+
 def simple_flatfield_correction(imp, sigma=20.0):
     """Perform a simple flatfield correction to a given ImagePlus stack.
 
@@ -205,10 +206,7 @@ def simple_flatfield_correction(imp, sigma=20.0):
 
     # Normalize image to the highest value of original (requires 32-bit image)
     IJ.run(flatfield, "32-bit", "")
-    IJ.run(
-        flatfield,
-        "Divide...",
-        "value=" + str(stats.max))
+    IJ.run(flatfield, "Divide...", "value=" + str(stats.max))
     ic = ImageCalculator()
     flatfield_corrected = ic.run("Divide create", imp, flatfield)
 
