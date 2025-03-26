@@ -1,4 +1,4 @@
-name: 🔎 Lint code ⚡
+name: 🔎 Code Linting ⚡
 
 on:
   push:
