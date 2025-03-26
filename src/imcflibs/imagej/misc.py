@@ -173,7 +173,9 @@ def find_focus(imp):
     return focused_slice
 
 
-def send_notification_email(job_name, recipient, filename, total_execution_time, subject = "", message=""):
+def send_notification_email(
+    job_name, recipient, filename, total_execution_time, subject="", message=""
+):
     """Send an automated email notification with optional details of the processed job.
 
     This function retrieves the sender email and SMTP server settings from
