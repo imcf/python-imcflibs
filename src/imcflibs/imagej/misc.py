@@ -211,8 +211,8 @@ def send_notification_email(
     Notes
     -----
     - The function requires two preferences to be set in `~/.imagej/IJ_Prefs.txt`:
-      `imcf.sender_email` (the sender's email address) and
-      `imcf.smtpserver` (the SMTP server address).
+      - `.imcf.sender_email`: the sender's email address
+      - `.imcf.smtpserver`: the SMTP server address
     - If these preferences are not set or if required parameters are missing,
       the function logs a message and exits without sending an email.
     - In case of an SMTP error, the function logs a warning.
