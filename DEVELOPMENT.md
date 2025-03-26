@@ -14,15 +14,28 @@ cd -
 
 RELEASE_SCRIPT="$BASE_DIR/scijava-scripts/release-version.sh"
 
-$RELEASE_SCRIPT --skip-push --skip-gpg --skip-license-update
+##############     ONLY FOR PRE-RELEASES     ##############
+PRE_RELEASE="1.5.0.a17"  # <-- adjust this to the desired version
+EXTRA_FLAGS="--skip-branch-check --skip-version-check $PRE_RELEASE"
+##############     ONLY FOR PRE-RELEASES     ##############
+
+$RELEASE_SCRIPT --skip-push --skip-gpg --skip-license-update $EXTRA_FLAGS
 ```
 
-**IMPORTANT**: after the release has been built, the corresponding tag needs to
-be pushed to github, e.g. like this:
+**IMPORTANT 1**: after the release has been built, the corresponding tag needs
+to be pushed to github, e.g. like this:
 
 ```bash
 RELEASE_TAG=$(git tag -l "python-imcflibs-*" | tail -n 1)
 git push origin $RELEASE_TAG
+```
+
+**IMPORTANT 2**: in case a **pre-releaes** was created, the last commit needs to
+be discarded as the _release-script_ places a wrong version / snapshot
+combination in the `pom.xml`:
+
+```bash
+git reset --hard HEAD~1
 ```
 
 ## Build & Deploy with Maven using VS Code
