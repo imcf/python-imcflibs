@@ -185,8 +185,13 @@ def find_focus(imp):
     return focused_slice
 
 
-def send_mail(job_name, recipient, filename, total_execution_time):
-    """Send an email using the SMTP server and sender email configured in ImageJ's Preferences.
+def send_notification_email(
+    job_name, recipient, filename, total_execution_time, subject="", message=""
+):
+    """Send an email notification with optional details of the processed job.
+
+    Retrieve the sender email and SMTP server settings from ImageJ's preferences
+    and use them to send an email notification with job details.
 
     Parameters
     ----------
@@ -198,34 +203,58 @@ def send_mail(job_name, recipient, filename, total_execution_time):
         The name of the file to be passed in the email.
     total_execution_time : str
         The time it took to process the file in the format [HH:MM:SS:ss].
+    subject : string, optional
+        Subject of the email, by default says job finished.
+    message : string, optional
+        Message to be included in the email, by default says job processed.
+
+    Notes
+    -----
+    - The function requires two preferences to be set in `~/.imagej/IJ_Prefs.txt`:
+      - `.imcf.sender_email`: the sender's email address
+      - `.imcf.smtpserver`: the SMTP server address
+    - If these preferences are not set or if required parameters are missing,
+      the function logs a message and exits without sending an email.
+    - In case of an SMTP error, the function logs a warning.
     """
+
     # Retrieve sender email and SMTP server from preferences
+    # NOTE: the leading dot "." has to be omitted in the `Prefs.get()` call,
+    # despite being present in the `IJ_Prefs.txt` file!
     sender = prefs.Prefs.get("imcf.sender_email", "").strip()
     server = prefs.Prefs.get("imcf.smtpserver", "").strip()
 
     # Ensure the sender and server are configured from Prefs
     if not sender:
-        log.info("Sender email is not configured. Please check IJ_Prefs.txt.")
+        log.info("[.imcf.sender_email] is not configured in '~/.imagej/IJ_Prefs.txt'.")
         return
     if not server:
-        log.info("SMTP server is not configured. Please check IJ_Prefs.txt.")
+        log.info("[.imcf.smtpserver] is not configured in '~/.imagej/IJ_Prefs.txt'.")
         return
+
+    log.debug("Using SMTP server [%s].", server)
 
     # Ensure the recipient is provided
     if not recipient.strip():
-        log.info("Recipient email is required.")
+        log.info("Recipient email is required, not sending email notification.")
         return
 
     # Form the email subject and body
-    subject = "Your {0} job finished successfully".format(job_name)
-    body = (
-        "Dear recipient,\n\n"
-        "This is an automated message.\n"
-        "Your dataset '{0}' has been successfully processed "
-        "({1} [HH:MM:SS:ss]).\n\n"
-        "Kind regards,\n"
-        "The IMCF-team"
-    ).format(filename, total_execution_time)
+    if subject == "":
+        subject = "Your {0} job has finished".format(job_name)
+    else:
+        subject = subject
+
+    if message == "":
+        body = (
+            "Dear recipient,\n\n"
+            "This is an automated message.\n"
+            "Your workflow '{0}' has been processed "
+            "({1} [HH:MM:SS:ss]).\n\n"
+            "Kind regards.\n"
+        ).format(filename, total_execution_time)
+    else:
+        body = message
 
     # Form the complete message
     message = ("From: {0}\nTo: {1}\nSubject: {2}\n\n{3}").format(
@@ -236,7 +265,7 @@ def send_mail(job_name, recipient, filename, total_execution_time):
     try:
         smtpObj = smtplib.SMTP(server)
         smtpObj.sendmail(sender, recipient, message)
-        log.debug("Successfully sent email")
+        log.debug("Successfully sent email to <%s>.", recipient)
     except smtplib.SMTPException as err:
         log.warning("Error: Unable to send email: %s", err)
     return
