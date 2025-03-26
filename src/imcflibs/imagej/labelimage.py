@@ -2,7 +2,7 @@
 
 """Functions to work with ImageJ label images."""
 
-from ij import IJ, ImagePlus, Prefs, ImageStack
+from ij import IJ, ImagePlus, ImageStack, Prefs
 from ij.plugin import Duplicator, ImageCalculator
 from ij.plugin.filter import ThresholdToSelection
 from ij.process import FloatProcessor, ImageProcessor
@@ -67,7 +67,7 @@ def label_image_to_roi_list(label_image, low_thresh=None):
     return roi_list, max_value
 
 
-def relate_label_images(label_image_ref, label_image_to_relate):
+def cookie_cut_labels(label_image_ref, label_image_to_relate):
     """Relate label images, giving the same label to objects belonging together.
 
     ❗ NOTE: Won't work with touching labels ❗
@@ -95,6 +95,57 @@ def relate_label_images(label_image_ref, label_image_to_relate):
     IJ.run(imp_dup, "Convert to Mask", "")
     IJ.run(imp_dup, "Divide...", "value=255")
     return ImageCalculator.run(label_image_ref, imp_dup, "Multiply create")
+
+
+def relate_label_images(outer_label_imp, inner_label_imp):
+    """Relate label images, giving the same label to objects belonging together.
+
+    Given two label images, this function will create a new label image with the
+    same labels as the reference image, but with the objects of the second image
+    using the 3D Association plugin from the 3DImageJSuite.
+
+    Parameters
+    ----------
+    outer_label_imp : ij.ImagePlus
+        The outer label image.
+    inner_label_imp : ij.ImagePlus
+        The inner label image.
+
+    Returns
+    -------
+    related_inner_imp : ij.ImagePlus
+        The related inner label image.
+
+    Notes
+    -----
+    Unlike `cookie_cut_labels`, this should work with touching labels by using
+    MereoTopology algorithms.
+    """
+
+    outer_label_imp.show()
+    inner_label_imp.show()
+
+    outer_title = outer_label_imp.getTitle()
+    inner_title = inner_label_imp.getTitle()
+
+    IJ.run(
+        "3D Association",
+        "image_a="
+        + outer_title
+        + " "
+        + "image_b="
+        + inner_title
+        + " "
+        + "method=Colocalisation min=1 max=0.000",
+    )
+
+    related_inner_imp = IJ.getImage()
+
+    outer_label_imp.hide()
+    inner_label_imp.hide()
+    related_inner_imp.hide()
+
+    return related_inner_imp
 
 
 def filter_objects(label_image, table, string, min_val, max_val):
@@ -182,11 +233,11 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
 
     # Set the minimum size for labeling if provided
     if min_vol:
-        labeler.setMinSize(min_vol)
+        labeler.setMinSizeCalibrated(min_vol)
 
     # Set the maximum size for labeling if provided
     if max_vol:
-        labeler.setMaxSize(max_vol)
+        labeler.setMinSizeCalibrated(max_vol)
 
     # Get the labeled image
     seg = labeler.getLabels(img)
@@ -229,17 +280,7 @@ def dilate_labels_2d(imp, dilation_radius):
         current_imp = Duplicator().run(imp, 1, 1, i, imp.getNSlices(), 1, 1)
 
         # Perform a dilation of the labels in the current slice
-        IJ.run(
-            current_imp,
-            "Label Morphological Filters",
-            "operation=Dilation radius=" + str(dilation_radius) + " from_any_label",
-        )
-
-        # Get the dilated labels
-        dilated_labels_imp = IJ.getImage()
-
-        # Hide the dilated labels to avoid visual clutter
-        dilated_labels_imp.hide()
+        dilated_labels_imp = li.dilateLabels(current_imp, dilation_radius)
 
         # Append the dilated labels to the list
         dilated_labels_list.append(dilated_labels_imp)

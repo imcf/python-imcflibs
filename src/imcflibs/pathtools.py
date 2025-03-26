@@ -2,8 +2,8 @@
 
 import os.path
 import platform
-from os import sep
 import re
+from os import sep
 
 from . import strtools
 from .log import LOG as log
@@ -38,6 +38,7 @@ def parse_path(path, prefix=""):
     dict
         The parsed (and possibly combined) path split into its components, with
         the following keys:
+
         - `orig` : The full string as passed into this function (possibly
           combined with the prefix in case one was specified).
         - `full` : The same as `orig` with separators adjusted to the current
@@ -355,6 +356,22 @@ def folder_size(source):
                 total_size += os.path.getsize(fpath)
 
     return total_size
+
+
+def create_directory(new_path):
+    """Create a new directory at the specified path.
+
+    This is a workaround for Python 2.7 where `os.makedirs()` is lacking
+    the `exist_ok` parameter that is present in Python 3.2 and newer.
+
+    Parameters
+    ----------
+    new_path : str
+        Path where the new directory should be created.
+    """
+
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
 
 
 # pylint: disable-msg=C0103

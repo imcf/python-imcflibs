@@ -5,9 +5,13 @@ Mostly (although not exclusively) related to the [`mcib3d`][mcib3d] package.
 [mcib3d]: https://mcib3d.frama.io/3d-suite-imagej/
 """
 
+from de.mpicbg.scf.imgtools.image.create.image import ImageCreationUtilities
+from de.mpicbg.scf.imgtools.image.create.labelmap import WatershedLabeling
 from ij import IJ
 from mcib3d.geom import Objects3DPopulation
 from mcib3d.image3d import ImageHandler, ImageLabeller
+from mcib3d.image3d.processing import MaximaFinder
+from net.imglib2.img import ImagePlusAdapter
 
 
 def population3d_to_imgplus(imp, population):
@@ -145,3 +149,93 @@ def get_objects_within_intensity(obj_pop, imp, min_intensity, max_intensity):
 
     # Return the new population with the filtered objects
     return Objects3DPopulation(objects_within_intensity)
+
+
+def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
+    """Find local maxima in a 3D image.
+
+    This function identifies local maxima in a 3D image using a specified minimum threshold and noise level.
+    The radii for the maxima detection can be set independently for the x/y and z dimensions.
+
+    Parameters
+    ----------
+    imp : ij.ImagePlus
+        The input 3D image in which to find local maxima.
+    min_threshold : int, optional
+        The minimum intensity threshold for maxima detection. Default is 0.
+    noise : int, optional
+        The noise tolerance level for maxima detection. Default is 100.
+    rxy : float, optional
+        The radius for maxima detection in the x and y dimensions. Default is 1.5.
+    rz : float, optional
+        The radius for maxima detection in the z dimension. Default is 1.5.
+
+    Returns
+    -------
+    ij.ImagePlus
+        An ImagePlus object containing the detected maxima as peaks.
+    """
+    # Wrap the input ImagePlus into an ImageHandler
+    img = ImageHandler.wrap(imp)
+
+    # Duplicate the image and apply a threshold cut-off
+    thresholded = img.duplicate()
+    thresholded.thresholdCut(min_threshold, False, True)
+
+    # Initialize the MaximaFinder with the thresholded image and noise level
+    maxima_finder = MaximaFinder(thresholded, noise)
+
+    # Set the radii for maxima detection in x/y and z dimensions
+    maxima_finder.setRadii(rxy, rz)
+
+    # Retrieve the image peaks as an ImageHandler
+    img_peaks = maxima_finder.getImagePeaks()
+
+    # Convert the ImageHandler peaks to an ImagePlus
+    imp_peaks = img_peaks.getImagePlus()
+
+    # Set the calibration of the peaks image to match the input image
+    imp_peaks.setCalibration(imp.getCalibration())
+
+    # Set the title of the peaks image
+    imp_peaks.setTitle("Peaks")
+
+    return imp_peaks
+
+
+def seeded_watershed(imp_binary, imp_peaks, threshold=10):
+    """Perform a seeded watershed segmentation on a binary image using seed points.
+
+    This function applies a watershed segmentation to a binary image using seed points provided in another image.
+    An optional threshold can be specified to control the segmentation process.
+
+    Parameters
+    ----------
+    imp_binary : ij.ImagePlus
+        The binary image to segment.
+    imp_peaks : ij.ImagePlus
+        The image containing the seed points for the watershed segmentation.
+    threshold : float, optional
+        The threshold value to use for the segmentation. Default is 10.
+
+    Returns
+    -------
+    ij.ImagePlus
+        The segmented image with labels.
+    """
+
+    img = ImagePlusAdapter.convertFloat(imp_binary)
+    img_seed = ImagePlusAdapter.convertFloat(imp_peaks).copy()
+
+    if threshold:
+        watersheded_result = WatershedLabeling.watershed(img, img_seed, threshold)
+    else:
+        watersheded_result = WatershedLabeling.watershed(img, img_seed)
+
+    return ImageCreationUtilities.convertImgToImagePlus(
+        watersheded_result,
+        "Label image",
+        "",
+        imp_binary.getDimensions(),
+        imp_binary.getCalibration(),
+    )
