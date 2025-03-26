@@ -224,15 +224,17 @@ def send_notification_email(
 
     # Ensure the sender and server are configured from Prefs
     if not sender:
-        log.info("Sender email is not configured. Please check IJ_Prefs.txt.")
+        log.info("[.imcf.sender_email] is not configured in '~/.imagej/IJ_Prefs.txt'.")
         return
     if not server:
-        log.info("SMTP server is not configured. Please check IJ_Prefs.txt.")
+        log.info("[.imcf.smtpserver] is not configured in '~/.imagej/IJ_Prefs.txt'.")
         return
+
+    log.debug("Using SMTP server [%s].", server)
 
     # Ensure the recipient is provided
     if not recipient.strip():
-        log.info("Recipient email is required.")
+        log.info("Recipient email is required, not sending email notification.")
         return
 
     # Form the email subject and body
@@ -261,7 +263,7 @@ def send_notification_email(
     try:
         smtpObj = smtplib.SMTP(server)
         smtpObj.sendmail(sender, recipient, message)
-        log.debug("Successfully sent email")
+        log.debug("Successfully sent email to <%s>.", recipient)
     except smtplib.SMTPException as err:
         log.warning("Error: Unable to send email: %s", err)
     return
