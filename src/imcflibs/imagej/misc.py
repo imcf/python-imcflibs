@@ -219,6 +219,8 @@ def send_notification_email(
     """
 
     # Retrieve sender email and SMTP server from preferences
+    # NOTE: the leading dot "." has to be omitted in the `Prefs.get()` call,
+    # despite being present in the `IJ_Prefs.txt` file!
     sender = prefs.Prefs.get("imcf.sender_email", "").strip()
     server = prefs.Prefs.get("imcf.smtpserver", "").strip()
 
