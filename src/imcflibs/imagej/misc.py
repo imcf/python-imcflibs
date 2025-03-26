@@ -188,10 +188,10 @@ def find_focus(imp):
 def send_notification_email(
     job_name, recipient, filename, total_execution_time, subject="", message=""
 ):
-    """Send an automated email notification with optional details of the processed job.
+    """Send an email notification with optional details of the processed job.
 
-    This function retrieves the sender email and SMTP server settings from
-    ImageJ's preferences and uses them to send an email notification with job details.
+    Retrieve the sender email and SMTP server settings from ImageJ's preferences
+    and use them to send an email notification with job details.
 
     Parameters
     ----------
