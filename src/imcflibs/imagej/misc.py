@@ -115,7 +115,14 @@ def calculate_mean_and_stdv(values_list, round_decimals=0):
     -------
     tuple of (float, float)
         Mean and standard deviation of the input list.
+
+    Notes
+    -----
+    Returns (0, 0) when:
+        - The input list is empty.
+        - After filtering out None values, no elements remain.
     """
+
     filtered_list = [x for x in values_list if x is not None]
 
     if not filtered_list:
