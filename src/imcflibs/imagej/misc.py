@@ -123,7 +123,7 @@ def calculate_mean_and_stdv(values_list, round_decimals=0):
 
     mean = round(sum(filtered_list) / len(filtered_list), round_decimals)
     variance = sum((x - mean) ** 2 for x in filtered_list) / len(filtered_list)
-    std_dev = round(variance ** 0.5, round_decimals)
+    std_dev = round(variance**0.5, round_decimals)
 
     return mean, std_dev
 
