@@ -10,9 +10,8 @@ Most of the functions will use the [`simple-omero-client`][simple-omero-client]
 to interact with the OMERO server. However, there are still some that
 requires the [`omero-insight`][omero-insight] plugin to read metadata.
 
-[simple-omero-client]:
-https://github.com/GReD-Clermont/simple-omero-client
-[omero]: https://github.com/ome/omero-insight
+[simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client
+[omero-insight]: https://github.com/ome/omero-insight
 """
 
 from fr.igred.omero import Client
