@@ -20,22 +20,28 @@ def debug_mode():
     return debug == "true"
 
 
-def fix_ij_options():
-    """Set up ImageJ default options.
+def set_default_ij_options():
+    """Configure ImageJ default options for consistency.
 
-    FIXME: Explain the rationale / idea!
+    Set the following options:
+    - Ensure ImageJ appearance settings are default values.
+    - Set foreground color to white and background to black.
+    - Set black background for binary images.
+    - Set default file saving format to .txt files.
+    - Ensure images are scaled appropriately when converting between different bit depths.
     """
 
-    # disable inverting LUT
-    IJ.run("Appearance...", " menu=0 16-bit=Automatic")
-    # set foreground color to be white, background black
+    # Set all appearance settings to default values (untick all options)
+    IJ.run("Appearance...", " ")
+
+    # Set foreground color to be white and background black
     IJ.run("Colors...", "foreground=white background=black selection=red")
-    # black BG for binary images and pad edges when eroding
-    IJ.run("Options...", "black pad")
-    # set saving format to .txt files
+
+    # Set black background for binary images and set pad edges to false to prevent eroding from image edge
+    IJ.run("Options...", "black ")
+
+    # Set default saving format to .txt files
     IJ.run("Input/Output...", "file=.txt save_column save_row")
-    # ============= DON'T MOVE UPWARDS =============
-    # set "Black Background" in "Binary Options"
-    IJ.run("Options...", "black")
-    # scale when converting = checked
+
+    # Scale when converting = checked
     IJ.run("Conversions...", "scale")
