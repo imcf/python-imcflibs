@@ -3,9 +3,16 @@
 Contains helpers to parse URLs and / or OMERO image IDs, connect to OMERO and
 fetch images from the server.
 
-Requires the [`simple-omero-client`][simple-omero-client] JAR to be installed.
+Requires both the [`simple-omero-client`][simple-omero-client] and the
+[`omero-insight`][omero-insight] JARs to be installed.
 
-[simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client
+Most of the functions will use the [`simple-omero-client`][simple-omero-client]
+to interact with the OMERO server. However, there are still some that
+requires the [`omero-insight`][omero-insight] plugin to read metadata.
+
+[simple-omero-client]:
+https://github.com/GReD-Clermont/simple-omero-client
+[omero]: https://github.com/ome/omero-insight
 """
 
 from fr.igred.omero import Client
