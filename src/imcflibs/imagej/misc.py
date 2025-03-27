@@ -123,7 +123,7 @@ def calculate_mean_and_stdv(values_list, round_decimals=0):
 
     mean = round(sum(filtered_list) / len(filtered_list), round_decimals)
     variance = sum((x - mean) ** 2 for x in filtered_list) / len(filtered_list)
-    std_dev = round(variance ** 0.5, round_decimals)
+    std_dev = round(variance**0.5, round_decimals)
 
     return mean, std_dev
 
@@ -625,31 +625,6 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
             bf.export(current_imp, out_path + out_ext[format])
 
         current_imp.close()
-
-
-def pad_number(index, pad_length=2):
-    """Pad a number with leading zeros to a specified length.
-
-    Parameters
-    ----------
-    index : int or str
-        The number to be padded
-    pad_length : int, optional
-        The total length of the resulting string after padding, by default 2
-
-    Returns
-    -------
-    str
-        The padded number as a string
-
-    Examples
-    --------
-    >>> pad_number(7)
-    '07'
-    >>> pad_number(42, 4)
-    '0042'
-    """
-    return str(index).zfill(pad_length)
 
 
 def locate_latest_imaris(paths_to_check=None):

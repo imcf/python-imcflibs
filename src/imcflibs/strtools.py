@@ -150,3 +150,28 @@ def sort_alphanumerically(data):
         return [convert(c) for c in re.split("([0-9]+)", key)]
 
     return sorted(data, key=alphanum_key)
+
+
+def pad_number(index, pad_length=2):
+    """Pad a number with leading zeros to a specified length.
+
+    Parameters
+    ----------
+    index : int or str
+        The number to be padded
+    pad_length : int, optional
+        The total length of the resulting string after padding, by default 2
+
+    Returns
+    -------
+    str
+        The padded number as a string
+
+    Examples
+    --------
+    >>> pad_number(7)
+    '07'
+    >>> pad_number(42, 4)
+    '0042'
+    """
+    return str(index).zfill(pad_length)
