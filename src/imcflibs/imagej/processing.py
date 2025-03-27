@@ -66,7 +66,7 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
     return imageplus
 
 
-def apply_background_subtraction(imp, rolling_ball_radius, do_3d=False):
+def apply_rollingball_bg_subtraction(imp, rolling_ball_radius, do_3d=False):
     """Perform background subtraction using a rolling ball method.
 
     Parameters
