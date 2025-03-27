@@ -4,21 +4,28 @@
 
 ## 1.5.0
 
-FIXME: complete description for `send_mail` configuration below!
+As this is a major release, not all changes and functions are listed below. For detailed information, please refer to the updated API documentation.
 
 ### Added
 
 * Various additions to `imcflibs.imagej.misc`:
-  * `imcflibs.imagej.misc.send_mail` to send notification emails to users, e.g.
-    upon completion of long running scripts (configurable via user preferences).
+  * `imcflibs.imagej.misc.send_notification_email` to send email notifications upon completion of long-running scripts.
+    * Sends a mail with job details, such as recipient, file name, execution time & an optional message.
+    * To enable email notifications, the following preferences must be set in `~/.imagej/IJ_Prefs.txt`:
+      * .imcf.sender_email: sender's email address.
+      * .imcf.smtpserver: the SMTP server used for sending emails.
+    * If the sender email or SMTP server is not configured, method logs a message and exits.
   * `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
     various suffixes from an ImagePlus.
   * `imcflibs.imagej.misc.subtract_images` to subtract an image from another.
   * `imcflibs.imagej.misc.close_images` for closing selected image windows.
-  * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that
-    a selected AutoThreshold method would be using.
+  * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that a selected AutoThreshold method would be using.
+  *`imcflibs.imagej.misc.write_orderddict_to_csv` to write data from an ordered dictionary to a CSV file.
 * `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image
   to get a label image (2D/3D).
+* `imcflibs.imagej.misc.save_image_in_format` to save an ImagePlus image in a specified format, such as ImageJ-TIF or OME-TIFF etc., to a given directory.
+*`imcflibs.imagej.misc.run_imarisconvert` to convert a given file to Imaris format using the utility ImarisConvert. Method uses `misc.locate_latest_imaris` to find the path to the Imaris installation.
+
 * New `imcflibs.imagej.objects3d` submodule, providing:
   * `imcflibs.imagej.objects3d.population3d_to_imgplus` to turn
     an Objects3DPopulation into an ImagePlus (2D/3D).
@@ -52,6 +59,17 @@ FIXME: complete description for `send_mail` configuration below!
     propagating transformation parameters to other channels.
   * `imcflibs.imagej.bdv.fuse_dataset` to call BigStitcher's "Fuse Dataset"
     command.
+
+* New `imcflibs.imagej.trackmate` submodule to provide helper functions to interface with Trackmate:
+  * Multiple functions to set up Trackmate settings with different detectors, such as `cellpose`, `StarDist` or a `sparseLAP tracker`.
+  * `imcflibs.imagej.trackmate.spot_filtering` to create settings to  filter detected spots based on optional thresholds for quality, area, circularity & intensity.
+  * `imcflibs.imagej.trackmate.track_filtering` to create settings to filter detected tracks based upon optional distances, such as maximum linking, gap closing, track splitting & merging and maximum frame gap.
+  * `imcflibs.imagej.trackmate.run_trackmate` to run Fiji's Trackmate plugin on an open ImagePlus with given settings, which can be set up with available methods in the `imcflibs.imagej.trackmate` submodule. The method then returns a label image.
+
+* New `imcflibs.imagej.omerotools` submodule, providing helper functions to connect to OMERO using user credentials, fetch and upload an image, retrieve a dataset,  or save ROIs to OMERO.
+
+* `imcflibs.pathtools.create_directory` to create a new directory at the specified path.
+
 
 ## 1.4.0
 
