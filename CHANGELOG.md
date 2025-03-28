@@ -25,7 +25,7 @@ As this is a major release, not all changes and functions are listed below. For 
   * `imcflibs.imagej.misc.close_images` for closing selected image windows.
   * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that a
   selected AutoThreshold method would be using.
-  *`imcflibs.imagej.misc.write_orderddict_to_csv` to write data from an ordered
+  * `imcflibs.imagej.misc.write_ordereddict_to_csv` to write data from an ordered
   dictionary to a CSV file.
 * `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image to get a
   label image (2D/3D).
