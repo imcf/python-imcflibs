@@ -573,13 +573,13 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
     Save a multichannel image as OME-TIFF without splitting channels:
 
     >>> save_image_with_extension(imp, "OME-TIFF", "/output/path", 1, 3, False)
-    # resulting file: /output/path/image_title_series_001.ome.tif
+    ... # resulting file: /output/path/image_title_series_001.ome.tif
 
     Save with channel splitting:
 
     >>> save_image_with_extension(imp, "OME-TIFF", "/output/path", 1, 3, True)
-    # resulting files: /output/path/C1/image_title_series_001.ome.tif
-    #                  /output/path/C2/image_title_series_001.ome.tif
+    ... # resulting files: /output/path/C1/image_title_series_001.ome.tif
+    ... #                  /output/path/C2/image_title_series_001.ome.tif
     """
 
     out_ext = {}
