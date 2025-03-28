@@ -23,7 +23,6 @@ As this is a major release, not all changes and functions are listed below. For 
     suffixes from an ImagePlus.
   * `imcflibs.imagej.misc.subtract_images` to subtract an image from another.
   * `imcflibs.imagej.misc.close_images` for closing selected image windows.
-*`imcflibs.imagej.misc.run_imarisconvert` to convert a given file to Imaris format using the utility ImarisConvert. Method uses `misc.locate_latest_imaris` to find the path to the Imaris installation.
   * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that a
   selected AutoThreshold method would be using.
   *`imcflibs.imagej.misc.write_orderddict_to_csv` to write data from an ordered
@@ -32,6 +31,7 @@ As this is a major release, not all changes and functions are listed below. For 
   label image (2D/3D).
 * `imcflibs.imagej.misc.save_image_in_format` to save an ImagePlus image in a specified
   format, such as ImageJ-TIF or OME-TIFF etc., to a given directory.
+* `imcflibs.imagej.misc.run_imarisconvert` to convert a given file to Imaris format using the utility ImarisConvert. Method uses `imcflibs.imagej.misc.locate_latest_imaris` to find the path to the Imaris installation.
 
 * New `imcflibs.imagej.objects3d` submodule, providing:
   * `imcflibs.imagej.objects3d.population3d_to_imgplus` to turn
