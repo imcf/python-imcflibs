@@ -9,22 +9,29 @@ As this is a major release, not all changes and functions are listed below. For 
 ### Added
 
 * Various additions to `imcflibs.imagej.misc`:
-  * `imcflibs.imagej.misc.send_notification_email` to send email notifications upon completion of long-running scripts.
-    * Sends a mail with job details, such as recipient, file name, execution time & an optional message.
-    * To enable email notifications, the following preferences must be set in `~/.imagej/IJ_Prefs.txt`:
+  * `imcflibs.imagej.misc.send_notification_email` to send email notifications upon
+    completion of long-running scripts.
+    * Sends a mail with job details, such as recipient, file name, execution time & an
+      optional message.
+    * To enable email notifications, the following preferences must be set in
+      `~/.imagej/IJ_Prefs.txt`:
       * .imcf.sender_email: sender's email address.
       * .imcf.smtpserver: the SMTP server used for sending emails.
-    * If the sender email or SMTP server is not configured, method logs a message and exits.
-  * `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
-    various suffixes from an ImagePlus.
+    * If the sender email or SMTP server is not configured, method logs a message and
+      exits.
+  * `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and various
+    suffixes from an ImagePlus.
   * `imcflibs.imagej.misc.subtract_images` to subtract an image from another.
   * `imcflibs.imagej.misc.close_images` for closing selected image windows.
-  * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that a selected AutoThreshold method would be using.
-  *`imcflibs.imagej.misc.write_orderddict_to_csv` to write data from an ordered dictionary to a CSV file.
-* `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image
-  to get a label image (2D/3D).
-* `imcflibs.imagej.misc.save_image_in_format` to save an ImagePlus image in a specified format, such as ImageJ-TIF or OME-TIFF etc., to a given directory.
 *`imcflibs.imagej.misc.run_imarisconvert` to convert a given file to Imaris format using the utility ImarisConvert. Method uses `misc.locate_latest_imaris` to find the path to the Imaris installation.
+  * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that a
+  selected AutoThreshold method would be using.
+  *`imcflibs.imagej.misc.write_orderddict_to_csv` to write data from an ordered
+  dictionary to a CSV file.
+* `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image to get a
+  label image (2D/3D).
+* `imcflibs.imagej.misc.save_image_in_format` to save an ImagePlus image in a specified
+  format, such as ImageJ-TIF or OME-TIFF etc., to a given directory.
 
 * New `imcflibs.imagej.objects3d` submodule, providing:
   * `imcflibs.imagej.objects3d.population3d_to_imgplus` to turn
@@ -69,7 +76,6 @@ As this is a major release, not all changes and functions are listed below. For 
 * New `imcflibs.imagej.omerotools` submodule, providing helper functions to connect to OMERO using user credentials, fetch and upload an image, retrieve a dataset,  or save ROIs to OMERO.
 
 * `imcflibs.pathtools.create_directory` to create a new directory at the specified path.
-
 
 ## 1.4.0
 
