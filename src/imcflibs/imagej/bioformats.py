@@ -486,44 +486,40 @@ def get_stage_coords(source, filenames):
     source : str
         Path to the images.
     filenames : list of str
-        List of images filenames.
+        List of image filenames.
 
     Returns
     -------
-    dict
-
-        {
-            dimensions : int,  # number of dimensions (2D or 3D)
-            stage_coordinates_x : list,  # absolute stage x-coordinated
-            stage_coordinates_y : list,  # absolute stage y-coordinated
-            stage_coordinates_z : list,  # absolute stage z-coordinated
-            relative_coordinates_x : list,  # relative stage x-coordinates in px
-            relative_coordinates_y : list,  # relative stage y-coordinates in px
-            relative_coordinates_z : list,  # relative stage z-coordinates in px
-            image_calibration : list,  # x,y,z image calibration in unit/px
-            calibration_unit : str,  # image calibration unit
-            image_dimensions_czt : list,  # number of images in dimensions c,z,t
-            series_names : list of str,  # names of all series in the files
-            max_size : list of int,  # max size (x/y/z) across all files
-        }
+    StageMetadata
+        An object containing extracted stage metadata.
     """
-
-    # open an array to store the abosolute stage coordinates from metadata
+    # Initialize lists to store stage coordinates and series names
     stage_coordinates_x = []
     stage_coordinates_y = []
     stage_coordinates_z = []
     series_names = []
 
+    # Intiialize default values
+    dimensions = 2
+    image_calibration = []
+    calibration_unit = "unknown"
+    image_dimensions_czt = []
+    max_size = []
+
+    # Initialize max_size variables to track the maximums
+    max_phys_size_x = 0.0
+    max_phys_size_y = 0.0
+    max_phys_size_z = 0.0
+
     for counter, image in enumerate(filenames):
-        # parse metadata
         reader = ImageReader()
         reader.setFlattenedResolutions(False)
-        omeMeta = MetadataTools.createOMEXMLMetadata()
-        reader.setMetadataStore(omeMeta)
+        ome_meta = MetadataTools.createOMEXMLMetadata()
+        reader.setMetadataStore(ome_meta)
         reader.setId(source + str(image))
         series_count = reader.getSeriesCount()
 
-        # get hyperstack dimensions from the first image
+        # Process only the first image to get values not dependent on series
         if counter == 0:
             frame_size_x = reader.getSizeX()
             frame_size_y = reader.getSizeY()
@@ -531,124 +527,80 @@ def get_stage_coords(source, filenames):
             frame_size_c = reader.getSizeC()
             frame_size_t = reader.getSizeT()
 
-            # note the dimensions
-            if frame_size_z == 1:
-                dimensions = 2
-            if frame_size_z > 1:
-                dimensions = 3
+            dimensions = 2 if frame_size_z == 1 else 3
 
-            # get the physical calibration for the first image series
-            physSizeX = omeMeta.getPixelsPhysicalSizeX(0)
-            physSizeY = omeMeta.getPixelsPhysicalSizeY(0)
-            physSizeZ = omeMeta.getPixelsPhysicalSizeZ(0)
+            # Retrieve physical size coordinates safely
+            phys_size_x = getattr(ome_meta.getPixelsPhysicalSizeX(0), "value", lambda: 1.0)()
+            phys_size_y = getattr(ome_meta.getPixelsPhysicalSizeY(0), "value", lambda: 1.0)()
+            phys_size_z = getattr(ome_meta.getPixelsPhysicalSizeZ(0), "value", lambda: None)()
 
-            # workaround to get the z-interval if physSizeZ.value() returns None.
-            z_interval = 1
-            if physSizeZ is not None:
-                z_interval = physSizeZ.value()
+            z_interval = phys_size_z if phys_size_z is not None else 1.0
 
-            if frame_size_z > 1 and physSizeZ is None:
-                log.debug("no z calibration found, trying to recover")
-                first_plane = omeMeta.getPlanePositionZ(0, 0)
-                next_plane_imagenumber = frame_size_c + frame_size_t - 1
-                second_plane = omeMeta.getPlanePositionZ(0, next_plane_imagenumber)
-                z_interval = abs(abs(first_plane.value()) - abs(second_plane.value()))
-                log.debug("z-interval seems to be: " + str(z_interval))
+            # Handle missing Z calibration
+            if phys_size_z is None and frame_size_z > 1:
+                first_plane = getattr(ome_meta.getPlanePositionZ(0, 0), "value", lambda: 0)()
+                next_plane_index = frame_size_c + frame_size_t - 1
+                second_plane = getattr(ome_meta.getPlanePositionZ(0, next_plane_index), "value", lambda: 0)()
+                z_interval = abs(first_plane - second_plane)
 
-            # create an image calibration
-            image_calibration = [
-                physSizeX.value(),
-                physSizeY.value(),
-                z_interval,
-            ]
-            calibration_unit = physSizeX.unit().getSymbol()
-            image_dimensions_czt = [
-                frame_size_c,
-                frame_size_z,
-                frame_size_t,
-            ]
+            image_calibration = [phys_size_x, phys_size_y, z_interval]
+            calibration_unit = (
+                getattr(ome_meta.getPixelsPhysicalSizeX(0).unit(), "getSymbol", lambda: "unknown")()
+                if phys_size_x
+                else "unknown"
+            )
+            image_dimensions_czt = [frame_size_c, frame_size_z, frame_size_t]
 
         reader.close()
 
         for series in range(series_count):
-            if omeMeta.getImageName(series) == "macro image":
+            if ome_meta.getImageName(series) == "macro image":
                 continue
 
             if series_count > 1 and not str(image).endswith(".vsi"):
-                series_names.append(omeMeta.getImageName(series))
+                series_names.append(ome_meta.getImageName(series))
             else:
                 series_names.append(str(image))
-            # get the plane position in calibrated units
-            current_position_x = omeMeta.getPlanePositionX(series, 0)
-            current_position_y = omeMeta.getPlanePositionY(series, 0)
-            current_position_z = omeMeta.getPlanePositionZ(series, 0)
 
-            physSizeX_max = (
-                physSizeX.value()
-                if physSizeX.value() >= omeMeta.getPixelsPhysicalSizeX(series).value()
-                else omeMeta.getPixelsPhysicalSizeX(series).value()
-            )
-            physSizeY_max = (
-                physSizeY.value()
-                if physSizeY.value() >= omeMeta.getPixelsPhysicalSizeY(series).value()
-                else omeMeta.getPixelsPhysicalSizeY(series).value()
-            )
-            if omeMeta.getPixelsPhysicalSizeZ(series):
-                physSizeZ_max = (
-                    physSizeZ.value()
-                    if physSizeZ.value()
-                    >= omeMeta.getPixelsPhysicalSizeZ(series).value()
-                    else omeMeta.getPixelsPhysicalSizeZ(series).value()
-                )
+            current_position_x = getattr(ome_meta.getPlanePositionX(series, 0), "value", lambda: 0)()
+            current_position_y = getattr(ome_meta.getPlanePositionY(series, 0), "value", lambda: 0)()
+            current_position_z = getattr(ome_meta.getPlanePositionZ(series, 0), "value", lambda: 1.0)()
 
-            else:
-                physSizeZ_max = 1.0
+            max_phys_size_x = max(max_phys_size_x, ome_meta.getPixelsPhysicalSizeX(series).value())
+            max_phys_size_y = max(max_phys_size_y, ome_meta.getPixelsPhysicalSizeY(series).value())
+            max_phys_size_z = max(max_phys_size_z, ome_meta.getPixelsPhysicalSizeZ(series).value()
+                                  if phys_size_z else z_interval)
 
-            # get the absolute stage positions and store them
-            pos_x = current_position_x.value()
-            pos_y = current_position_y.value()
+            stage_coordinates_x.append(current_position_x)
+            stage_coordinates_y.append(current_position_y)
+            stage_coordinates_z.append(current_position_z)
 
-            if current_position_z is None:
-                log.debug("the z-position is missing in the ome-xml metadata.")
-                pos_z = 1.0
-            else:
-                pos_z = current_position_z.value()
+    max_size = [max_phys_size_x, max_phys_size_y, max_phys_size_z]
 
-            stage_coordinates_x.append(pos_x)
-            stage_coordinates_y.append(pos_y)
-            stage_coordinates_z.append(pos_z)
+    relative_coordinates_x_px = [
+        (stage_coordinates_x[i] - stage_coordinates_x[0]) / (phys_size_x or 1.0)
+        for i in range(len(stage_coordinates_x))
+    ]
+    relative_coordinates_y_px = [
+        (stage_coordinates_y[i] - stage_coordinates_y[0]) / (phys_size_y or 1.0)
+        for i in range(len(stage_coordinates_y))
+    ]
+    relative_coordinates_z_px = [
+        (stage_coordinates_z[i] - stage_coordinates_z[0]) / (z_interval or 1.0)
+        for i in range(len(stage_coordinates_z))
+    ]
 
-    max_size = [physSizeX_max, physSizeY_max, physSizeZ_max]
-
-    # calculate the store the relative stage movements in px (for the grid/collection stitcher)
-    relative_coordinates_x_px = []
-    relative_coordinates_y_px = []
-    relative_coordinates_z_px = []
-
-    for i in range(len(stage_coordinates_x)):
-        rel_pos_x = (
-            stage_coordinates_x[i] - stage_coordinates_x[0]
-        ) / physSizeX.value()
-        rel_pos_y = (
-            stage_coordinates_y[i] - stage_coordinates_y[0]
-        ) / physSizeY.value()
-        rel_pos_z = (stage_coordinates_z[i] - stage_coordinates_z[0]) / z_interval
-
-        relative_coordinates_x_px.append(rel_pos_x)
-        relative_coordinates_y_px.append(rel_pos_y)
-        relative_coordinates_z_px.append(rel_pos_z)
-
-    return {
-        "dimensions": dimensions,
-        "stage_coordinates_x": stage_coordinates_x,
-        "stage_coordinates_y": stage_coordinates_y,
-        "stage_coordinates_z": stage_coordinates_z,
-        "relative_coordinates_x": relative_coordinates_x_px,
-        "relative_coordinates_y": relative_coordinates_y_px,
-        "relative_coordinates_z": relative_coordinates_z_px,
-        "image_calibration": image_calibration,
-        "calibration_unit": calibration_unit,
-        "image_dimensions_czt": image_dimensions_czt,
-        "series_names": series_names,
-        "max_size": max_size,
-    }
+    return StageMetadata(
+        dimensions=dimensions,
+        stage_coordinates_x=stage_coordinates_x,
+        stage_coordinates_y=stage_coordinates_y,
+        stage_coordinates_z=stage_coordinates_z,
+        relative_coordinates_x=relative_coordinates_x_px,
+        relative_coordinates_y=relative_coordinates_y_px,
+        relative_coordinates_z=relative_coordinates_z_px,
+        image_calibration=image_calibration,
+        calibration_unit=calibration_unit,
+        image_dimensions_czt=image_dimensions_czt,
+        series_names=series_names,
+        max_size=max_size,
+    )
