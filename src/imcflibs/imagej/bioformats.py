@@ -72,6 +72,7 @@ class ImageMetadata(object):
         unit_width=None,
         unit_height=None,
         unit_depth=None,
+        unit=None,
         pixel_width=None,
         pixel_height=None,
         slice_count=None,
@@ -83,6 +84,7 @@ class ImageMetadata(object):
         self.unit_width = unit_width
         self.unit_height = unit_height
         self.unit_depth = unit_depth
+        self.unit = unit
         self.pixel_width = pixel_width
         self.pixel_height = pixel_height
         self.slice_count = slice_count
