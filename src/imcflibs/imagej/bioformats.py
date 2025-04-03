@@ -464,9 +464,9 @@ def get_metadata_from_file(path_to_image):
     reader.setId(str(path_to_image))
 
     metadata = ImageMetadata(
-        unit_width=ome_meta.getPixelsPhysicalSizeX(0),
-        unit_height=ome_meta.getPixelsPhysicalSizeY(0),
-        unit_depth=ome_meta.getPixelsPhysicalSizeZ(0),
+        unit_width=ome_meta.getPixelsPhysicalSizeX(0).value(),
+        unit_height=ome_meta.getPixelsPhysicalSizeY(0).value(),
+        unit_depth=ome_meta.getPixelsPhysicalSizeZ(0).value(),
         unit=ome_meta.getPixelsPhysicalSizeX(0).unit().symbol,
         pixel_width=ome_meta.getPixelsSizeX(0),
         pixel_height=ome_meta.getPixelsSizeY(0),
