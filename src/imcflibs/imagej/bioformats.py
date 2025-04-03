@@ -27,6 +27,153 @@ from ._loci import (
 )
 
 
+class ImageMetadata(object):
+    """A class to store metadata information from an image.
+
+    This class stores metadata information extracted from an image file, such as image dimensions,
+    pixel dimensions, and calibration units. It provides a method to convert the attributes to a
+    dictionary and a string representation of the object.
+
+    Attributes
+    ----------
+    unit_width : float or None
+        Physical width of a pixel in the given unit.
+    unit_height : float or None
+        Physical height of a pixel in the given unit.
+    unit_depth : float or None
+        Physical depth of a voxel in the given unit.
+    pixel_width : int or None
+        Width of the image in pixels.
+    pixel_height : int or None
+        Height of the image in pixels.
+    slice_count : int or None
+        Number of Z-slices in the image.
+    channel_count : int or None
+        Number of channels in the image.
+    timepoints_count : int or None
+        Number of timepoints in the image.
+    dimension_order : str or None
+        Order of dimensions (e.g., "XYZCT").
+    pixel_type : str or None
+        Data type of the pixel values (e.g., "uint16").
+
+    Examples
+    --------
+    >>> metadata = ImageMetadata(
+    ...     unit_width=0.1,
+    ...     unit_height=0.1
+    ...     )
+    >>> print(metadata)
+    <ImageMetadata(unit_width=0.1, unit_height=0.1, ...)>
+    """
+
+    def __init__(
+        self,
+        unit_width=None,
+        unit_height=None,
+        unit_depth=None,
+        pixel_width=None,
+        pixel_height=None,
+        slice_count=None,
+        channel_count=None,
+        timepoints_count=None,
+        dimension_order=None,
+        pixel_type=None,
+    ):
+        self.unit_width = unit_width
+        self.unit_height = unit_height
+        self.unit_depth = unit_depth
+        self.pixel_width = pixel_width
+        self.pixel_height = pixel_height
+        self.slice_count = slice_count
+        self.channel_count = channel_count
+        self.timepoints_count = timepoints_count
+        self.dimension_order = dimension_order
+        self.pixel_type = pixel_type
+
+    def to_dict(self):
+        """Convert the object attributes to a dictionary.
+
+        Returns
+        -------
+        dict
+            A dictionary representation of the object attributes.
+        """
+        return self.__dict__
+
+    def __repr__(self):
+        """Return a string representation of the object."""
+        return "<ImageMetadata({})>".format(
+            ", ".join("{}={}".format(k, v) for k, v in self.__dict__.items())
+        )
+
+
+class StageMetadata:
+    """A class to store stage coordinates and calibration metadata for a set of images.
+
+    Attributes
+    ----------
+    dimensions : int
+        Number of dimensions (2D or 3D).
+    stage_coordinates_x : list of float
+        Absolute stage x-coordinates.
+    stage_coordinates_y : list of float
+        Absolute stage y-coordinates.
+    stage_coordinates_z : list of float
+        Absolute stage z-coordinates.
+    relative_coordinates_x : list of float
+        Relative stage x-coordinates in pixels.
+    relative_coordinates_y : list of float
+        Relative stage y-coordinates in pixels.
+    relative_coordinates_z : list of float
+        Relative stage z-coordinates in pixels.
+    image_calibration : list of float
+        Calibration values for x, y, and z in unit/px.
+    calibration_unit : str
+        Unit used for image calibration.
+    image_dimensions_czt : list of int
+        Number of images in dimensions (channels, z-slices, timepoints).
+    series_names : list of str
+        Names of all series in the image files.
+    max_size : list of float
+        Maximum physical size (x/y/z) across all files.
+    """
+
+    def __init__(
+        self,
+        dimensions=2,
+        stage_coordinates_x=None,
+        stage_coordinates_y=None,
+        stage_coordinates_z=None,
+        relative_coordinates_x=None,
+        relative_coordinates_y=None,
+        relative_coordinates_z=None,
+        image_calibration=None,
+        calibration_unit="unknown",
+        image_dimensions_czt=None,
+        series_names=None,
+        max_size=None,
+    ):
+        self.dimensions = dimensions
+        self.stage_coordinates_x = stage_coordinates_x or []
+        self.stage_coordinates_y = stage_coordinates_y or []
+        self.stage_coordinates_z = stage_coordinates_z or []
+        self.relative_coordinates_x = relative_coordinates_x or []
+        self.relative_coordinates_y = relative_coordinates_y or []
+        self.relative_coordinates_z = relative_coordinates_z or []
+        self.image_calibration = image_calibration or [1.0, 1.0, 1.0]
+        self.calibration_unit = calibration_unit or "unknown"
+        self.image_dimensions_czt = image_dimensions_czt or [1, 1, 1]
+        self.series_names = series_names or []
+        self.max_size = max_size or [1.0, 1.0, 1.0]
+
+    def __repr__(self):
+        """Return a string representation of the object."""
+        return "<StageMetadata(dimensions={}, calibration_unit='{}', ...)>".format(
+            self.dimensions, self.calibration_unit
+        )
+
+
 def import_image(
     filename,
     color_mode="color",
