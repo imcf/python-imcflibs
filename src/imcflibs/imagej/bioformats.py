@@ -480,15 +480,13 @@ def get_metadata_from_file(path_to_image):
     return metadata
 
 
-def get_stage_coords(source, filenames):
+def get_stage_coords(filenames):
     """Get stage coordinates and calibration for a given list of images.
 
     Parameters
     ----------
-    source : str
-        Path to the images.
     filenames : list of str
-        List of image filenames.
+        List of image filepaths.
 
     Returns
     -------
@@ -518,7 +516,7 @@ def get_stage_coords(source, filenames):
         reader.setFlattenedResolutions(False)
         ome_meta = MetadataTools.createOMEXMLMetadata()
         reader.setMetadataStore(ome_meta)
-        reader.setId(source + str(image))
+        reader.setId(str(image))
         series_count = reader.getSeriesCount()
 
         # Process only the first image to get values not dependent on series
