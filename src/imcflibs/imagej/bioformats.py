@@ -452,54 +452,30 @@ def get_metadata_from_file(path_to_image):
 
     Returns
     -------
-    dict
-        A dictionary containing the following metadata:
-
-            {
-                unit_width : float,  # physical width of a pixel
-                unit_height : float,  # physical height of a pixel
-                unit_depth : float,  # physical depth of a voxel
-                pixel_width : int,  # width of the image in pixels
-                pixel_height : int,  # height of the image in pixels
-                slice_count : int,  # number of Z-slices
-                channel_count : int,  # number of channels
-                timepoints_count : int,  # number of timepoints
-                dimension_order : str,  # order of dimensions, e.g. "XYZCT"
-                pixel_type : str,  # data type of the pixel values
-            }
+    ImageMetadata
+        An instance of `imcflibs.imagej.bioformats.ImageMetadata` containing the extracted metadata.
     """
+
     reader = ImageReader()
     ome_meta = MetadataTools.createOMEXMLMetadata()
     reader.setMetadataStore(ome_meta)
     reader.setId(str(path_to_image))
 
-    phys_size_x = ome_meta.getPixelsPhysicalSizeX(0)
-    phys_size_y = ome_meta.getPixelsPhysicalSizeY(0)
-    phys_size_z = ome_meta.getPixelsPhysicalSizeZ(0)
-    pixel_size_x = ome_meta.getPixelsSizeX(0)
-    pixel_size_y = ome_meta.getPixelsSizeY(0)
-    pixel_size_z = ome_meta.getPixelsSizeZ(0)
-    channel_count = ome_meta.getPixelsSizeC(0)
-    timepoints_count = ome_meta.getPixelsSizeT(0)
-    dimension_order = ome_meta.getPixelsDimensionOrder(0)
-    pixel_type = ome_meta.getPixelsType(0)
-
-    image_calibration = {
-        "unit_width": phys_size_x.value(),
-        "unit_height": phys_size_y.value(),
-        "unit_depth": phys_size_z.value(),
-        "pixel_width": pixel_size_x.getNumberValue(),
-        "pixel_height": pixel_size_y.getNumberValue(),
-        "slice_count": pixel_size_z.getNumberValue(),
-        "channel_count": channel_count.getNumberValue(),
-        "timepoints_count": timepoints_count.getNumberValue(),
-        "dimension_order": dimension_order,
-        "pixel_type": pixel_type,
-    }
-
+    metadata = ImageMetadata(
+        unit_width=ome_meta.getPixelsPhysicalSizeX(0),
+        unit_height=ome_meta.getPixelsPhysicalSizeY(0),
+        unit_depth=ome_meta.getPixelsPhysicalSizeZ(0),
+        pixel_width=ome_meta.getPixelsSizeX(0),
+        pixel_height=ome_meta.getPixelsSizeY(0),
+        slice_count=ome_meta.getPixelsSizeZ(0),
+        channel_count=ome_meta.getPixelsSizeC(0),
+        timepoints_count=ome_meta.getPixelsSizeT(0),
+        dimension_order=ome_meta.getPixelsDimensionOrder(0),
+        pixel_type=ome_meta.getPixelsType(0),
+    )
     reader.close()
 
-    return image_calibration
+    return metadata
 
 
 def get_stage_coords(source, filenames):
