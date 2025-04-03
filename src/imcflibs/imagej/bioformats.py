@@ -110,7 +110,7 @@ class ImageMetadata(object):
         )
 
 
-class StageMetadata:
+class StageMetadata(object):
     """A class to store stage coordinates and calibration metadata for a set of images.
 
     Attributes
@@ -171,10 +171,9 @@ class StageMetadata:
 
     def __repr__(self):
         """Return a string representation of the object."""
-        return "<StageMetadata(dimensions={}, calibration_unit='{}', ...)>".format(
-            self.dimensions, self.calibration_unit
+        return "<StageMetadata({})>".format(
+            ", ".join("{}={}".format(k, v) for k, v in self.__dict__.items())
         )
-
 
 def import_image(
     filename,
@@ -467,6 +466,7 @@ def get_metadata_from_file(path_to_image):
         unit_width=ome_meta.getPixelsPhysicalSizeX(0),
         unit_height=ome_meta.getPixelsPhysicalSizeY(0),
         unit_depth=ome_meta.getPixelsPhysicalSizeZ(0),
+        unit=ome_meta.getPixelsPhysicalSizeX(0).unit().symbol,
         pixel_width=ome_meta.getPixelsSizeX(0),
         pixel_height=ome_meta.getPixelsSizeY(0),
         slice_count=ome_meta.getPixelsSizeZ(0),
@@ -562,9 +562,12 @@ def get_stage_coords(filenames):
             else:
                 series_names.append(str(image))
 
-            current_position_x = getattr(ome_meta.getPlanePositionX(series, 0), "value", lambda: 0)()
-            current_position_y = getattr(ome_meta.getPlanePositionY(series, 0), "value", lambda: 0)()
-            current_position_z = getattr(ome_meta.getPlanePositionZ(series, 0), "value", lambda: 1.0)()
+            current_position_x = getattr(ome_meta.getPlanePositionX(series, 0), "value",
+                                         lambda: 0)()
+            current_position_y = getattr(ome_meta.getPlanePositionY(series, 0), "value",
+                                         lambda: 0)()
+            current_position_z = getattr(ome_meta.getPlanePositionZ(series, 0), "value",
+                                         lambda: 1.0)()
 
             max_phys_size_x = max(max_phys_size_x, ome_meta.getPixelsPhysicalSizeX(series).value())
             max_phys_size_y = max(max_phys_size_y, ome_meta.getPixelsPhysicalSizeY(series).value())
