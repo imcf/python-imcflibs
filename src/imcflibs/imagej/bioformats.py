@@ -175,6 +175,7 @@ class StageMetadata(object):
             ", ".join("{}={}".format(k, v) for k, v in self.__dict__.items())
         )
 
+
 def import_image(
     filename,
     color_mode="color",
@@ -530,22 +531,36 @@ def get_stage_coords(filenames):
             dimensions = 2 if frame_size_z == 1 else 3
 
             # Retrieve physical size coordinates safely
-            phys_size_x = getattr(ome_meta.getPixelsPhysicalSizeX(0), "value", lambda: 1.0)()
-            phys_size_y = getattr(ome_meta.getPixelsPhysicalSizeY(0), "value", lambda: 1.0)()
-            phys_size_z = getattr(ome_meta.getPixelsPhysicalSizeZ(0), "value", lambda: None)()
+            phys_size_x = getattr(
+                ome_meta.getPixelsPhysicalSizeX(0), "value", lambda: 1.0
+            )()
+            phys_size_y = getattr(
+                ome_meta.getPixelsPhysicalSizeY(0), "value", lambda: 1.0
+            )()
+            phys_size_z = getattr(
+                ome_meta.getPixelsPhysicalSizeZ(0), "value", lambda: None
+            )()
 
             z_interval = phys_size_z if phys_size_z is not None else 1.0
 
             # Handle missing Z calibration
             if phys_size_z is None and frame_size_z > 1:
-                first_plane = getattr(ome_meta.getPlanePositionZ(0, 0), "value", lambda: 0)()
+                first_plane = getattr(
+                    ome_meta.getPlanePositionZ(0, 0), "value", lambda: 0
+                )()
                 next_plane_index = frame_size_c + frame_size_t - 1
-                second_plane = getattr(ome_meta.getPlanePositionZ(0, next_plane_index), "value", lambda: 0)()
+                second_plane = getattr(
+                    ome_meta.getPlanePositionZ(0, next_plane_index), "value", lambda: 0
+                )()
                 z_interval = abs(first_plane - second_plane)
 
             image_calibration = [phys_size_x, phys_size_y, z_interval]
             calibration_unit = (
-                getattr(ome_meta.getPixelsPhysicalSizeX(0).unit(), "getSymbol", lambda: "unknown")()
+                getattr(
+                    ome_meta.getPixelsPhysicalSizeX(0).unit(),
+                    "getSymbol",
+                    lambda: "unknown",
+                )()
                 if phys_size_x
                 else "unknown"
             )
@@ -562,17 +577,28 @@ def get_stage_coords(filenames):
             else:
                 series_names.append(str(image))
 
-            current_position_x = getattr(ome_meta.getPlanePositionX(series, 0), "value",
-                                         lambda: 0)()
-            current_position_y = getattr(ome_meta.getPlanePositionY(series, 0), "value",
-                                         lambda: 0)()
-            current_position_z = getattr(ome_meta.getPlanePositionZ(series, 0), "value",
-                                         lambda: 1.0)()
+            current_position_x = getattr(
+                ome_meta.getPlanePositionX(series, 0), "value", lambda: 0
+            )()
+            current_position_y = getattr(
+                ome_meta.getPlanePositionY(series, 0), "value", lambda: 0
+            )()
+            current_position_z = getattr(
+                ome_meta.getPlanePositionZ(series, 0), "value", lambda: 1.0
+            )()
 
-            max_phys_size_x = max(max_phys_size_x, ome_meta.getPixelsPhysicalSizeX(series).value())
-            max_phys_size_y = max(max_phys_size_y, ome_meta.getPixelsPhysicalSizeY(series).value())
-            max_phys_size_z = max(max_phys_size_z, ome_meta.getPixelsPhysicalSizeZ(series).value()
-                                  if phys_size_z else z_interval)
+            max_phys_size_x = max(
+                max_phys_size_x, ome_meta.getPixelsPhysicalSizeX(series).value()
+            )
+            max_phys_size_y = max(
+                max_phys_size_y, ome_meta.getPixelsPhysicalSizeY(series).value()
+            )
+            max_phys_size_z = max(
+                max_phys_size_z,
+                ome_meta.getPixelsPhysicalSizeZ(series).value()
+                if phys_size_z
+                else z_interval,
+            )
 
             stage_coordinates_x.append(current_position_x)
             stage_coordinates_y.append(current_position_y)
