@@ -8,15 +8,14 @@ import sys
 
 from fiji.plugin.trackmate import Logger, Model, SelectionModel, Settings, TrackMate
 from fiji.plugin.trackmate.action import LabelImgExporter
+from fiji.plugin.trackmate.action.LabelImgExporter import LabelIdPainting
 from fiji.plugin.trackmate.cellpose import CellposeDetectorFactory
 from fiji.plugin.trackmate.cellpose.CellposeSettings import PretrainedModel
 from fiji.plugin.trackmate.detection import LogDetectorFactory
 from fiji.plugin.trackmate.features import FeatureFilter
 from fiji.plugin.trackmate.stardist import StarDistDetectorFactory
 from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
-
 from ij import IJ
-
 from java.lang import Double
 
 from .. import pathtools
@@ -376,9 +375,10 @@ def run_trackmate(
 
     exportSpotsAsDots = False
     exportTracksOnly = False
+    labelIdPainting = LabelIdPainting.LABEL_IS_TRACK_ID
     # implus2.close()
     label_imp = LabelImgExporter.createLabelImagePlus(
-        trackmate, exportSpotsAsDots, exportTracksOnly, False
+        trackmate, exportSpotsAsDots, exportTracksOnly, labelIdPainting
     )
     label_imp.setCalibration(cal)
     label_imp.setDimensions(dims[2], dims[3], dims[4])
