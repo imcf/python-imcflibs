@@ -4,8 +4,11 @@
 
 ## 1.5.0
 
-As this is a major release, not all changes and functions are listed below. For
-detailed information, please refer to the updated API documentation.
+This release brings a lot of additions, not all changes and functions are
+explained in depth below. For detailed information, please refer to the [updated
+API documentation][apidocs].
+
+[apidocs]: https://imcf.one/apidocs/imcflibs/imcflibs.html
 
 ### Added
 
