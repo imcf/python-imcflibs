@@ -168,7 +168,8 @@ detailed information, please refer to the updated API documentation.
 * `imcflibs.pathtools.listdir_matching` now has an additional optional boolean
   parameter `regex` to request the parameter `suffix` being interpreted as a
   regular expression for filtering.
-* `imcflibs.imagej.misc.calculate_mean_and_stdv` to allow for rounding the results.
+* `imcflibs.imagej.misc.calculate_mean_and_stdv` now has an optional parameter
+  `round_decimals` to allow for rounding the results, defaulting to `0`.
 
 ## 1.4.0
 
