@@ -16,9 +16,9 @@ from ij import IJ
 
 # Add directory path here that contains the files you wish to test for
 
-file_path_1 = join2(IMCF_TESTDATA, "bioformats/DON_25922_20250201_25922_2_01.vsi")
-file_path_2 = join2(IMCF_TESTDATA, "bioformats/DON_25922_20250201_25922_2_02.vsi")
-file_path_3 = join2(IMCF_TESTDATA, "bioformats/DON_25922_20250201_25922_2_03.vsi")
+file_path_1 = join2(IMCF_TESTDATA, "bioformats-multiposition/DON_25922_20250201_25922_2_01.vsi")
+file_path_2 = join2(IMCF_TESTDATA, "bioformats-multiposition/DON_25922_20250201_25922_2_02.vsi")
+file_path_3 = join2(IMCF_TESTDATA, "bioformats-multiposition/DON_25922_20250201_25922_2_03.vsi")
 
 metadata = bioformats.get_metadata_from_file(file_path_1)
 print(metadata.unit_width)
