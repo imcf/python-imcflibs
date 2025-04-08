@@ -178,7 +178,7 @@ def upload_image_to_omero(user_client, path, dataset_id):
     return user_client.getDataset(Long(dataset_id)).importImage(user_client, path)[0]
 
 
-def add_annotation(client, repository_wpr, annotations, header):
+def add_keyvalue_annotation(client, repository_wpr, annotations, header):
     """Add an annotation to an OMERO object.
 
     Parameters
@@ -234,7 +234,7 @@ def find_dataset(client, dataset_id):
 
 
 def get_acquisition_metadata(user_client, image_wpr):
-    """Get acquisition metadata from OMERO based on an image ID.
+    """Get acquisition metadata from OMERO based on an image wrapper.
 
     Parameters
     ----------
@@ -324,7 +324,7 @@ def get_info_from_original_metadata(user_client, image_wpr, field):
 
 
 def create_table_columns(headings):
-    """Create OMERO table headings from an ImageJ results table.
+    """Create OMERO table headings from a list of column names.
 
     Parameters
     ----------
