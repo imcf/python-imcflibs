@@ -29,8 +29,8 @@ detailed information, please refer to the updated API documentation.
   * `imcflibs.imagej.misc.close_images` for closing all ImagePluses from a list.
   * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that
     a selected AutoThreshold method would be using.
-  * `imcflibs.imagej.misc.write_ordereddict_to_csv` to write data from an ordered
-    dictionary (or list of ordered dictionaries) to a CSV file.
+  * `imcflibs.imagej.misc.write_ordereddict_to_csv` to write data from an
+    ordered dictionary (or list of ordered dictionaries) to a CSV file.
   * `imcflibs.imagej.misc.save_image_in_format` to save an ImagePlus in a
     specified format, such as ImageJ-TIF or OME-TIFF etc., to a given directory.
   * `imcflibs.imagej.misc.run_imarisconvert` to convert a given file to Imaris
@@ -38,15 +38,15 @@ detailed information, please refer to the updated API documentation.
     `imcflibs.imagej.misc.locate_latest_imaris` to find the path to the Imaris
     installation.
 * New functions in `imcflibs.imagej.labelimage`:
-  * `imcflibs.imagej.labelimage.cookie_cut_labels` to use a label image as a mask
-    for another label image. Objects might get split or merged depending on the
-    mask.
-  * `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image to
-    get a label image (2D/3D).
+  * `imcflibs.imagej.labelimage.cookie_cut_labels` to use a label image as a
+    mask for another label image. Objects might get split or merged depending on
+    the mask.
+  * `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image
+    to get a label image (2D/3D).
   * `imcflibs.imagej.labelimage.relate_label_images` to relate two label images
     (2D/3D) using the 3D Association plugin from the 3DImageJSuite.
-  * `imcflibs.imagej.labelimage.dilate_labels_2d` to dilate a label image slice by
-    slice. Works for 2D or 3D images.
+  * `imcflibs.imagej.labelimage.dilate_labels_2d` to dilate a label image slice
+    by slice. Works for 2D or 3D images.
 * New `imcflibs.imagej.objects3d` submodule, providing:
   * `imcflibs.imagej.objects3d.population3d_to_imgplus` to turn an
     Objects3DPopulation into an ImagePlus (2D/3D).
@@ -98,8 +98,8 @@ detailed information, please refer to the updated API documentation.
   * `imcflibs.imagej.trackmate.spot_filtering` to create settings to  filter
     detected spots based on optional thresholds for quality, area, circularity &
     intensity.
-  * `imcflibs.imagej.trackmate.sparse_lap_tracker` to create default settings for the
-    sparse LAP tracker.
+  * `imcflibs.imagej.trackmate.sparse_lap_tracker` to create default settings
+    for the sparse LAP tracker.
   * `imcflibs.imagej.trackmate.track_filtering` to create settings to filter
     detected tracks based upon optional distances, such as maximum linking, gap
     closing, track splitting & merging and maximum frame gap.
@@ -116,10 +116,10 @@ detailed information, please refer to the updated API documentation.
     credentials.
   * `imcflibs.imagej.omerotools.fetch_image` to fetch an image from OMERO using
     the image ID.
-  * `imcflibs.imagej.omerotools.upload_image_to_omero` to upload a local image to
-    OMERO and returning the new image ID.
-  * `imcflibs.imagej.omerotools.add_keyvalue_annotation` to add an annotation to an
-    OMERO object.
+  * `imcflibs.imagej.omerotools.upload_image_to_omero` to upload a local image
+    to OMERO and returning the new image ID.
+  * `imcflibs.imagej.omerotools.add_keyvalue_annotation` to add an annotation to
+    an OMERO object.
   * `imcflibs.imagej.omerotools.delete_keyvalue_annotations` to delete
     annotations from an OMERO object.
   * `imcflibs.imagej.omerotools.find_dataset` to find a dataset in OMERO using
