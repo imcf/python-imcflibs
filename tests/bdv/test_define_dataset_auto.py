@@ -35,7 +35,7 @@ def set_default_values(
         + ".xml"
         + "] "
         + "path=["
-        + file_info["path"]
+        + file_info["full"]
         + "] "
         + "exclude=10 "
         + "bioformats_series_are?="
