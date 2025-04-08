@@ -86,6 +86,9 @@ detailed information, please refer to the updated API documentation.
 
 * `imcflibs.pathtools.create_directory` to create a new directory at the specified path.
 
+* New function in `imcflibs.imagej.projections`:
+  * `project_stack` to project along a defined axis using the given projection type.
+
 ## 1.4.0
 
 ### Added
