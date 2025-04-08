@@ -37,8 +37,8 @@ def set_default_ij_options():
     # Set foreground color to be white and background black
     IJ.run("Colors...", "foreground=white background=black selection=red")
 
-    # Set black background for binary images and set pad edges to false to prevent eroding from image edge
-    IJ.run("Options...", "black ")
+    # Set black background for binary images and set pad edges to true to prevent eroding from image edge
+    IJ.run("Options...", "iterations=1 count=1 black pad")
 
     # Set default saving format to .txt files
     IJ.run("Input/Output...", "file=.txt save_column save_row")
