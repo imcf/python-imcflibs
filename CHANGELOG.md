@@ -76,7 +76,7 @@ detailed information, please refer to the updated API documentation.
     Dataset" using the "Manual Loader" option.
   * `imcflibs.imagej.bdv.resave_as_h5` to resave the dataset in H5 to make it
     compatible with BigDataViewer/BigStitcher.
-  * `imcflibs.imagej.bdv.flip_axes` tocall BigStitcher's "Flip Axes" command.
+  * `imcflibs.imagej.bdv.flip_axes` to call BigStitcher's "Flip Axes" command.
   * `imcflibs.imagej.bdv.phase_correlation_pairwise_shifts_calculation` to
     calculate pairwise shifts using Phase Correlation.
   * `imcflibs.imagej.bdv.filter_pairwise_shifts` for filtering pairwise shifts
@@ -158,6 +158,12 @@ detailed information, please refer to the updated API documentation.
 
 * `imcflibs.imagej.projections.project_stack` to project along a defined axis
   using the given projection type.
+  
+### Changed
+
+* `imcflibs.listdir_matching` changed to be able to use regex patterns for
+  matching. The regex pattern is passed as a string and the function will
+  return a list of all files matching the regex pattern.
 
 ## 1.4.0
 
