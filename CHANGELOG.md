@@ -63,8 +63,8 @@ detailed information, please refer to the updated API documentation.
 * New `imcflibs.imagej.bdv` submodule, providing BigDataViewer related
   functions:
   * New classes:
-    * `ProcessingOptions` to store all options on how to process the dataset.
-    * `DefinitionOptions` to store all options on how to define the dataset.
+    * `imcflibs.imagej.bdv.ProcessingOptions` to store all options on how to process the dataset.
+    * `imcflibs.imagej.bdv.DefinitionOptions` to store all options on how to define the dataset.
   * `imcflibs.imagej.bdv.check_processing_input` to sanitize and clarify the
     acitt input selection.
   * `imcflibs.imagej.bdv.get_processing_settings` to generate the strings needed
@@ -76,7 +76,7 @@ detailed information, please refer to the updated API documentation.
     Dataset" using the "Manual Loader" option.
   * `imcflibs.imagej.bdv.resave_as_h5` to resave the dataset in H5 to make it
     compatible with BigDataViewer/BigStitcher.
-  * `imcflibs.imagej.bdv.flip_axes` tocall BigStitcher's "Flip Axes" command.
+  * `imcflibs.imagej.bdv.flip_axes` to call BigStitcher's "Flip Axes" command.
   * `imcflibs.imagej.bdv.phase_correlation_pairwise_shifts_calculation` to
     calculate pairwise shifts using Phase Correlation.
   * `imcflibs.imagej.bdv.filter_pairwise_shifts` for filtering pairwise shifts
@@ -94,7 +94,7 @@ detailed information, please refer to the updated API documentation.
 * New `imcflibs.imagej.trackmate` submodule to provide helper functions to
   interface with Trackmate:
   * Multiple functions to set up Trackmate settings with different detectors,
-    such as `cellpose`, `StarDist` or a `log detector`.
+    such as `imcflibs.imagej.trackmate.cellpose_detector`, `imcflibs.imagej.trackmate.stardist_detector` or a `imcflibs.imagej.trackmate.log_detector`.
   * `imcflibs.imagej.trackmate.spot_filtering` to create settings to  filter
     detected spots based on optional thresholds for quality, area, circularity &
     intensity.
@@ -158,6 +158,13 @@ detailed information, please refer to the updated API documentation.
 
 * `imcflibs.imagej.projections.project_stack` to project along a defined axis
   using the given projection type.
+
+### Changed
+
+* `imcflibs.pathtools.listdir_matching` now has an additional optional boolean
+  parameter `regex` to request the parameter `suffix` being interpreted as a
+  regular expression for filtering.
+* `imcflibs.imagej.misc.calculate_mean_and_stdv` to allow for rounding the results.
 
 ## 1.4.0
 
