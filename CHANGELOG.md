@@ -9,10 +9,6 @@ detailed information, please refer to the updated API documentation.
 
 ### Added
 
-* `imcflibs.strtools.pad_number` to pad a number with leading zeros.
-* `imcflibs.pathtools.create_directory` to create a new directory at the
-  specified path if it does not exist (needed for Python 2.7).
-
 * **New functions** in `imcflibs.imagej.misc`:
   * `imcflibs.imagej.misc.send_notification_email` to send email notifications
     upon completion of long-running scripts.
@@ -147,9 +143,6 @@ detailed information, please refer to the updated API documentation.
   * `imcflibs.imagej.shading.simple_flatfield_correction` to perform a
     simple flatfield correction to an ImagePlus.
 
-* `imcflibs.imagej.prefs.set_default_ij_options` to configure ImageJ default
-  options to ensure consistent behavior.
-
 * **New submodule** `imcflibs.imagej.processing` containing utilities for
   filtering and thresholding:
   * `imcflibs.imagej.processing.apply_filter` to apply a filter to an
@@ -165,6 +158,13 @@ detailed information, please refer to the updated API documentation.
     metadata from a given file using BioFormats.
   * `imcflibs.imagej.bioformats.get_stage_coords`to get stage coordinates and
     calibration for one or more given images.
+
+* `imcflibs.strtools.pad_number` to pad a number with leading zeros.
+* `imcflibs.pathtools.create_directory` to create a new directory at the
+  specified path if it does not exist (needed for Python 2.7).
+
+* `imcflibs.imagej.prefs.set_default_ij_options` to configure ImageJ default
+  options to ensure consistent behavior.
 
 * `imcflibs.imagej.projections.project_stack` to project a stack along a defined
   axis using one of the available projection methods, such as `max`, `min`,
