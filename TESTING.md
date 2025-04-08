@@ -62,7 +62,7 @@ parameters specified, e.g.
 bash scripts/py2-pytest.sh -rv --cov --cov-report html
 ```
 
-## Common testing with ImageJ2 / Fiji
+## Common (interactive) testing with ImageJ2 / Fiji
 
 Unfortunately there is nothing like `pytest` available for the parts that are
 running exclusively in a ImageJ2 / Fiji context. So in order to provide at least
@@ -77,16 +77,16 @@ some basic, semi-interactive tests the following conventions are being used:
   manually in a (freshly started) Fiji instance. Yes, really. Any other
   suggestions are highly welcome!
 * To facilitate this, a collection of _test images_ (and possibly other input
-  data) should be cloned to the local file system. Currently this `sample_data`
+  data) should be cloned to the local file system. Currently this `sample-data`
   repository is _NOT_ publicly available due to legal ⚖ uncertainties. A repo
   containing test data 🗞 that can be published should be assembled over time
   though!
 * Any _interactive_ test script should start with a header similar to the one
   described below. Paths to input data _inside_ the test scripts **has** to be
-  relative to the location of the `sample_data` repository mentioned above. This
+  relative to the location of the `sample-data` repository mentioned above. This
   will allow for a fairly okayish testing workflow like this:
   * Make your changes in VS Code, then trigger a build by pressing `Shift` +
-  `Ctrl` + `B`. If things are configured as described in the *DEVELOPMENT*
+  `Ctrl` + `B`. If things are configured as described in the _DEVELOPMENT_
   document, the resulting `.jar` file will be automatically placed in Fiji's
   `jars/` folder.
   * Next, start a fresh instance of the Fiji that received the newly built JAR.
@@ -94,7 +94,7 @@ some basic, semi-interactive tests the following conventions are being used:
     the main window. This will open the _Script Editor_, then press `Ctrl` + `R`
     to launch the script.
   * Only on the first run on the machine being used you will have to select the
-    base location of the `sample_data` repository.
+    base location of the `sample-data` repository.
   * All subsequent runs of _**any**_ test script using the defined _Script
     Parameter_ `IMCF_TESTDATA` will remember this selection, so it will be
     sufficient to just confirm the dialog by pressing `Enter`.
