@@ -19,10 +19,10 @@ detailed information, please refer to the updated API documentation.
       time & an optional message.
     * To enable email notifications, the following preferences must be set in
       `~/.imagej/IJ_Prefs.txt`:
-      * .imcf.sender_email: sender's email address.
-      * .imcf.smtpserver: the SMTP server used for sending emails.
-    * If the sender email or SMTP server is not configured, method logs a
-      message and exits.
+      * `.imcf.sender_email`: sender's email address.
+      * `.imcf.smtpserver`: the SMTP server used for sending emails.
+    * If the sender email or SMTP server is not configured, the method logs a
+      message and returns.
   * `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
     various suffixes from an ImagePlus.
   * `imcflibs.imagej.misc.subtract_images` to subtract an image from another.
