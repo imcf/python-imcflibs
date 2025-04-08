@@ -69,10 +69,10 @@ running exclusively in a ImageJ2 / Fiji context. So in order to provide at least
 some basic, semi-interactive tests the following conventions are being used:
 
 * Each _**function**_ in any of the `imcflibs.imagej` submodules should have its
-  own directory underneath `/tests/imagej/`, using their fully qualified name
-  as the path (only skipping the `imcflibs.` prefix). For example test scripts
-  for `imcflibs.imagej.bioformats.import_image()` will be placed in the
-  directory `/tests/imagej/bioformats/import_image/`.
+  own directory underneath `/tests/interactive-imagej/`, using their fully
+  qualified name as the path (only skipping the `imcflibs.` prefix). For example
+  test scripts for `imcflibs.imagej.bioformats.import_image()` will be placed in
+  the directory `/tests/interactive-imagej/bioformats/import_image/`.
 * The scripts inside those directories are intended to be run interactively /
   manually in a (freshly started) Fiji instance. Yes, really. Any other
   suggestions are highly welcome!
