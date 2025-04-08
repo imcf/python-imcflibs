@@ -148,7 +148,6 @@ detailed information, please refer to the updated API documentation.
     rolling ball background subtraction to an ImagePlus.
   * `imcflibs.imagej.processing.apply_threshold` to apply a threshold method to
     an ImagePlus.
-  *
 
 * Additions to `imcflibs.imagej.bioformats`:
   * `imcflibs.imagej.bioformats.export` to export an image to a given file.
