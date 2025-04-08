@@ -8,6 +8,18 @@ from imcflibs.log import enable_console_logging
 from imcflibs.log import set_loglevel
 
 
+"""
+Usage:
+BEFORE starting Fiji, add to the IJ_Prefs.txt:
+
+.imcf.sender_email=imcf@unibas.ch
+.imcf.smtpserver=smtp.unibas.ch
+
+Linux/Mac: ~/.imagej/IJ_Prefs.txt 
+Windows: C:\Users\<USERNAME>\.imagej\IJ_Prefs.txt
+"""
+
+
 enable_console_logging()
 set_loglevel(2)
 
