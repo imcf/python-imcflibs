@@ -149,6 +149,9 @@ detailed information, please refer to the updated API documentation.
   * `imcflibs.imagej.bioformats.get_stage_coords`to get stage coordinates and
     calibration for one or more given images.
 
+* `imcflibs.imagej.projections.project_stack` to project along a defined axis
+  using the given projection type.
+
 ## 1.4.0
 
 ### Added
