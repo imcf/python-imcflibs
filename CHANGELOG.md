@@ -142,6 +142,13 @@ detailed information, please refer to the updated API documentation.
 * `imcflibs.imagej.prefs.set_default_ij_options` to configure ImageJ default
   options for consistency.
 
+* Additions to `imcflibs.imagej.bioformats`:
+  * `imcflibs.imagej.bioformats.export` to export an image to a given file.
+  * `imcflibs.imagej.bioformats.get_metadata_from_file` to extract various
+    metadata from a given file using BioFormats.
+  * `imcflibs.imagej.bioformats.get_stage_coords`to get stage coordinates and
+    calibration for one or more given images.
+
 ## 1.4.0
 
 ### Added
