@@ -1,0 +1,11 @@
+coverage:
+  precision: 0
+  round: nearest
+  range: "0...75"
+  # notification blocks
+  # https://docs.codecov.io/docs/codecovyml-reference#section-coverage-notify
+  notify:
+  status:
+    project:
+    patch:
+    changes:
