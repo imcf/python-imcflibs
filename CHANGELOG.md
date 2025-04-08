@@ -140,9 +140,6 @@ detailed information, please refer to the updated API documentation.
 * New `imcflibs.imagej.shading` module for everything background correction.
   * `imcflibs.imagej.shading.simple_flatfield_correction` to perform a
     simple flatfield correction to an ImagePlus.
-* `imcflibs.imagej.projection.project_stack` to project a stack using
-  different projection methods, such as `max`, `min`, `mean`, `sum` or
-  `standard_deviation` using a defined axis.
 * `imcflibs.imagej.prefs.set_default_ij_options` to configure ImageJ default
   options for consistency.
 * New module `imcflibs.imagej.processing` containing utilities for filtering and thresholding:
@@ -160,8 +157,9 @@ detailed information, please refer to the updated API documentation.
   * `imcflibs.imagej.bioformats.get_stage_coords`to get stage coordinates and
     calibration for one or more given images.
 
-* `imcflibs.imagej.projections.project_stack` to project along a defined axis
-  using the given projection type.
+* `imcflibs.imagej.projections.project_stack` to project a stack along a defined
+  axis using one of the available projection methods, such as `max`, `min`,
+  `mean`, `sum` or `standard_deviation`.
 
 ### Changed
 
