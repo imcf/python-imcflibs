@@ -158,7 +158,7 @@ detailed information, please refer to the updated API documentation.
 
 * `imcflibs.imagej.projections.project_stack` to project along a defined axis
   using the given projection type.
-  
+
 ### Changed
 
 * `imcflibs.pathtools.listdir_matching` changed to be able to use regex patterns
