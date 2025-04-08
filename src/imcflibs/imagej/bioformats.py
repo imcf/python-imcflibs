@@ -103,12 +103,6 @@ class ImageMetadata(object):
         """
         return self.__dict__
 
-    def __repr__(self):
-        """Return a string representation of the object."""
-        return "<ImageMetadata({})>".format(
-            ", ".join("{}={}".format(k, v) for k, v in self.__dict__.items())
-        )
-
 
 class StageMetadata(object):
     """A class to store stage coordinates and calibration metadata for a set of images.
