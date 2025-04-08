@@ -347,7 +347,7 @@ def run_trackmate(
 
     if not settings.trackerFactory:
         # Create a Sparse LAP Tracker if no Tracker has been created
-        settings = sparseLAP_tracker(settings)
+        settings = sparse_lap_tracker(settings)
 
     ok = trackmate.checkInput()
     if not ok:
