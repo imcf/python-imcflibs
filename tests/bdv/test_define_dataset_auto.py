@@ -78,7 +78,7 @@ def test_define_dataset_auto_tile(tmp_path, caplog):
     cmd = "Define Multi-View Dataset"
 
     # Set the default values for dataset definitions
-    options = set_default_values(project_filename, file_path)
+    options = set_default_values(project_filename, file_info["path"])
 
     # Construct the options for dataset definitions
     options = (
@@ -142,7 +142,7 @@ def test_define_dataset_auto_angle(tmp_path, caplog):
     cmd = "Define Multi-View Dataset"
 
     # Set the default values for dataset definitions
-    options = set_default_values(project_filename, file_path, bf_series_type)
+    options = set_default_values(project_filename, file_info["path"], bf_series_type)
 
     # Construct the options for dataset definitions
     options = (
