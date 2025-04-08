@@ -86,7 +86,6 @@ detailed information, please refer to the updated API documentation.
 
 * `imcflibs.pathtools.create_directory` to create a new directory at the specified path.
 
-
 ## 1.4.0
 
 ### Added
