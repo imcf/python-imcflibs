@@ -141,6 +141,14 @@ detailed information, please refer to the updated API documentation.
   `standard_deviation` using a defined axis.
 * `imcflibs.imagej.prefs.set_default_ij_options` to configure ImageJ default
   options for consistency.
+* New module `imcflibs.imagej.processing` containing utilities for filtering and thresholding:
+  * `imcflibs.imagej.processing.apply_filter` to apply a filter to an
+    ImagePlus.
+  * `imcflibs.imagej.processing.apply_rollingball_bg_subtraction` to apply a
+    rolling ball background subtraction to an ImagePlus.
+  * `imcflibs.imagej.processing.apply_threshold` to apply a threshold method to
+    an ImagePlus.
+  *
 
 * Additions to `imcflibs.imagej.bioformats`:
   * `imcflibs.imagej.bioformats.export` to export an image to a given file.
