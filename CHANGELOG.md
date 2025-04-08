@@ -161,9 +161,9 @@ detailed information, please refer to the updated API documentation.
 
 ### Changed
 
-* `imcflibs.pathtools.listdir_matching` changed to be able to use regex patterns
-  for matching. The regex pattern is passed as a string and the function will
-  return a list of all files matching the regex pattern.
+* `imcflibs.pathtools.listdir_matching` now has an additional optional boolean
+  parameter `regex` to request the parameter `suffix` being interpreted as a
+  regular expression for filtering.
 * `imcflibs.imagej.misc.calculate_mean_and_stdv` to allow for rounding the results.
 
 ## 1.4.0
