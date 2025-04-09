@@ -142,8 +142,8 @@ and upload images, retrieve datasets or save ROIs to OMERO.
     annotations from an OMERO object.
 * `imcflibs.imagej.omerotools.find_dataset` to find a dataset in OMERO using the
     dataset ID.
-* `imcflibs.imagej.get_acquisition_metadata` to get the acquisition metadata
-    from an image in OMERO.
+* `imcflibs.imagej.omerotools.get_acquisition_metadata` to get the acquisition
+    metadata from an image in OMERO.
 * `imcflibs.imagej.omerotools.get_info_from_original_metadata` to get the
     original metadata from an image in OMERO.
 * `imcflibs.imagej.omerotools.create_table_columns` to create OMERO table
