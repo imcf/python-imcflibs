@@ -1,31 +1,54 @@
 """Internal wrapper module to import from the (Java) loci package.
 
-This module mostly exists to work around the issue that importing the
-`ImporterOptions` class from the Java `loci` package requires syntax to be used
-that is considered invalid by any C-Python parser (but is still valid and
-working in Jython) and hence will break usage of Black, Pylint, and similar.
+This module exists to work around the issue that importing some of the classes
+from the Java `loci` package would require syntax that is considered invalid by
+any C-Python parser (but is still valid and working in Jython) and hence will
+break usage of Black, Pylint, and similar.
 
-By stashing this into an internal submodule only checks on this specific
-(minimalistic) file will fail but remain operational for the other code.
+By aggregating those "special" imports into this (private) submodule we can
+properly work around that issue by providing "dummy" objects for C-Python and
+importing the actual modules / classes when running within Jython. To avoid the
+invalid syntax issue (which would still prevent C-Python-based tools like black
+and pdoc to run) those parts are done via `importlib` calls.
 
-So why are the other imports in here then?
-
-This was a conscious decision as it seems to be confusing that *some* parts from
-the `loci` package need to be imported from the `imcflibs.imagej._loci`
-sub-module while others are imported directly. Instead we're simply importing
-proxy-style all loci components through the file here.
-
-NOTE: the actual import of `ImporterOptions` still requires the `# pdoc: skip`
-pragma to work with the documentation generation scripts, e.g.
-
-```
-from ._loci import ImporterOptions  # pdoc: skip
-```
+Other loci-related imports (i.e. those without problematic syntax) are placed in
+here simply for consistency reasons (to have everything in the same place).
 """
+
+#
+### *** WARNING *** ### *** WARNING *** ### *** WARNING *** ### *** WARNING ***
+#
+# Whenever an import is added here, make sure to also update the corresponding
+# part in `imcf-fiji-mocks`: https://github.com/imcf/imcf-fiji-mocks/
+#
+### *** WARNING *** ### *** WARNING *** ### *** WARNING *** ### *** WARNING ***
+#
+
 
 from loci.plugins import BF
 
-from loci.plugins.in import ImporterOptions # pdoc: skip
-from loci.formats.in import ZeissCZIReader, DefaultMetadataOptions, MetadataLevel, DynamicMetadataOptions, MetadataOptions # pdoc: skip
+# dummy objects to prevent failing imports in a non-ImageJ / Jython context:
+ImporterOptions = None
+ZeissCZIReader = None
+DefaultMetadataOptions = None
+MetadataLevel = None
+DynamicMetadataOptions = None
 
-from loci.formats import ImageReader, Memoizer
+# perform the actual imports when running under Jython using `importlib` calls:
+import platform as _python_platform
+
+if _python_platform.python_implementation() == "Jython":  # pragma: no cover
+    import importlib
+
+    _loci_plugins_in = importlib.import_module("loci.plugins.in")
+    ImporterOptions = _loci_plugins_in.ImporterOptions
+
+    _loci_formats_in = importlib.import_module("loci.formats.in")
+    ZeissCZIReader = _loci_formats_in.ZeissCZIReader
+    DefaultMetadataOptions = _loci_formats_in.DefaultMetadataOptions
+    MetadataLevel = _loci_formats_in.MetadataLevel
+    DynamicMetadataOptions = _loci_formats_in.DynamicMetadataOptions
+    MetadataOptions = _loci_formats_in.MetadataOptions
+del _python_platform
+
+from loci.formats import ImageReader, Memoizer, MetadataTools

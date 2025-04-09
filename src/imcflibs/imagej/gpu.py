@@ -62,7 +62,7 @@ def dilate_labels(clij2_instance, label_image, dilation_radius, channel=None):
         Instance of CLIJ to communicate with the GPU.
     label_image : ij.ImagePlus
         Label Image to be dilated.
-    erosion_radius : int
+    dilation_radius : int
         Radius for dilation.
     channel : int, optional
         Specific channel to apply dilation.

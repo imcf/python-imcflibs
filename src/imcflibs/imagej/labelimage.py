@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+
 """Functions to work with ImageJ label images."""
 
-from ij import IJ, ImagePlus, Prefs
+from ij import IJ, ImagePlus, ImageStack, Prefs
 from ij.plugin import Duplicator, ImageCalculator
-from ij.plugin.filter import ImageProcessor, ThresholdToSelection
+from ij.plugin.filter import ThresholdToSelection
 from ij.process import FloatProcessor, ImageProcessor
 from inra.ijpb.label import LabelImages as li
 from inra.ijpb.plugins import AnalyzeRegions
@@ -65,12 +67,14 @@ def label_image_to_roi_list(label_image, low_thresh=None):
     return roi_list, max_value
 
 
-def relate_label_images(label_image_ref, label_image_to_relate):
+def cookie_cut_labels(label_image_ref, label_image_to_relate):
     """Relate label images, giving the same label to objects belonging together.
 
     ❗ NOTE: Won't work with touching labels ❗
 
-    FIXME: explain with an example what the function is doing!
+    Given two label images, this function will create a new label image
+    with the same labels as the reference image, but with the objects
+    of the second image.
 
     Parameters
     ----------
@@ -90,7 +94,58 @@ def relate_label_images(label_image_ref, label_image_to_relate):
     Prefs.blackBackground = True
     IJ.run(imp_dup, "Convert to Mask", "")
     IJ.run(imp_dup, "Divide...", "value=255")
-    return ImageCalculator.run(label_image_ref, imp_dup, "Multimage_processorly create")
+    return ImageCalculator.run(label_image_ref, imp_dup, "Multiply create")
+
+
+def relate_label_images(outer_label_imp, inner_label_imp):
+    """Relate label images, giving the same label to objects belonging together.
+
+    Given two label images, this function will create a new label image with the
+    same labels as the reference image, but with the objects of the second image
+    using the 3D Association plugin from the 3DImageJSuite.
+
+    Parameters
+    ----------
+    outer_label_imp : ij.ImagePlus
+        The outer label image.
+    inner_label_imp : ij.ImagePlus
+        The inner label image.
+
+    Returns
+    -------
+    related_inner_imp : ij.ImagePlus
+        The related inner label image.
+
+    Notes
+    -----
+    Unlike `cookie_cut_labels`, this should work with touching labels by using
+    MereoTopology algorithms.
+    """
+
+    outer_label_imp.show()
+    inner_label_imp.show()
+
+    outer_title = outer_label_imp.getTitle()
+    inner_title = inner_label_imp.getTitle()
+
+    IJ.run(
+        "3D Association",
+        "image_a="
+        + outer_title
+        + " "
+        + "image_b="
+        + inner_title
+        + " "
+        + "method=Colocalisation min=1 max=0.000",
+    )
+
+    related_inner_imp = IJ.getImage()
+
+    outer_label_imp.hide()
+    inner_label_imp.hide()
+    related_inner_imp.hide()
+
+    return related_inner_imp
 
 
 def filter_objects(label_image, table, string, min_val, max_val):
@@ -148,13 +203,12 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
 
     Parameters
     ----------
-    imp : ImagePlus
+    imp : ij.ImagePlus
         Binary 3D stack or 2D image.
     title : str
         Title of the new image.
     min_thresh : int, optional
-        Threshold to do segmentation, also allows for label filtering, by
-        default 1.
+        Threshold to do segmentation, also allows for label filtering, by default 1.
     min_vol : float, optional
         Volume under which to exclude objects, by default None.
     max_vol : float, optional
@@ -162,21 +216,78 @@ def binary_to_label(imp, title, min_thresh=1, min_vol=None, max_vol=None):
 
     Returns
     -------
-    ImagePlus
+    ij.ImagePlus
         Segmented labeled ImagePlus.
     """
+    # Get the calibration of the input ImagePlus
     cal = imp.getCalibration()
+
+    # Wrap the ImagePlus in an ImageHandler
     img = ImageHandler.wrap(imp)
+
+    # Threshold the image using the specified threshold value
     img = img.threshold(min_thresh, False, False)
 
+    # Create an ImageLabeller instance
     labeler = ImageLabeller()
-    if min_vol:
-        labeler.setMinSize(min_vol)
-    if max_vol:
-        labeler.setMaxSize(max_vol)
 
+    # Set the minimum size for labeling if provided
+    if min_vol:
+        labeler.setMinSizeCalibrated(min_vol)
+
+    # Set the maximum size for labeling if provided
+    if max_vol:
+        labeler.setMinSizeCalibrated(max_vol)
+
+    # Get the labeled image
     seg = labeler.getLabels(img)
+
+    # Set the scale of the labeled image
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
+
+    # Set the title of the labeled image
     seg.setTitle(title)
 
+    # Return the segmented labeled ImagePlus
     return seg.getImagePlus()
+
+
+def dilate_labels_2d(imp, dilation_radius):
+    """Dilate each label in the given ImagePlus using the specified dilation radius.
+
+    This method will use a 2D dilation to be applied to each slice of the ImagePlus
+    and return a new stack.
+
+    Parameters
+    ----------
+    imp : ij.ImagePlus
+        Input ImagePlus with the labels to dilate
+    dilation_radius : int
+        Number of pixels to dilate each label
+
+    Returns
+    -------
+    ij.ImagePlus
+        New ImagePlus with the dilated labels
+    """
+
+    # Create a list of the dilated labels
+    dilated_labels_list = []
+
+    # Iterate over each slice of the input ImagePlus
+    for i in range(1, imp.getNSlices() + 1):
+        # Duplicate the current slice
+        current_imp = Duplicator().run(imp, 1, 1, i, imp.getNSlices(), 1, 1)
+
+        # Perform a dilation of the labels in the current slice
+        dilated_labels_imp = li.dilateLabels(current_imp, dilation_radius)
+
+        # Append the dilated labels to the list
+        dilated_labels_list.append(dilated_labels_imp)
+
+    # Create a new ImagePlus with the dilated labels
+    dilated_labels_imp = ImagePlus(
+        "Dilated labels", ImageStack().create(dilated_labels_list)
+    )
+
+    return dilated_labels_imp

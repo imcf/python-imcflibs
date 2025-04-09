@@ -1,6 +1,198 @@
+<!-- markdownlint-disable MD024 (no-duplicate-header) -->
+<!-- markdownlint-configure-file { "emphasis-style": { "style": "asterisk" } } -->
+
 # Changelog 🧾
 
-<!-- markdownlint-disable MD024 (no-duplicate-header) -->
+## 1.5.0
+
+This release brings a lot of additions, not all changes and functions are
+explained in depth below. For detailed information, please refer to the [updated
+API documentation][apidocs].
+
+[apidocs]: https://imcf.one/apidocs/imcflibs/imcflibs.html
+
+### Added
+
+#### New functions in `imcflibs.imagej.misc`
+
+* `imcflibs.imagej.misc.send_notification_email` to send email notifications
+    upon completion of long-running scripts.
+  * Sends a mail with job details, such as recipient, file name, execution time
+      & an optional message.
+  * To enable email notifications, the following preferences must be set in
+      `~/.imagej/IJ_Prefs.txt`:
+    * `.imcf.sender_email`: sender's email address.
+    * `.imcf.smtpserver`: the SMTP server used for sending emails.
+  * If the sender email or SMTP server is not configured, the method logs a
+      message and returns.
+* `imcflibs.imagej.misc.sanitize_image_title` to remove special chars and
+    various suffixes from an ImagePlus' window title.
+* `imcflibs.imagej.misc.subtract_images` to subtract an image from another.
+* `imcflibs.imagej.misc.close_images` for closing all ImagePluses from a list.
+* `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that a
+    selected *AutoThreshold* method would be using.
+* `imcflibs.imagej.misc.write_ordereddict_to_csv` to write data from an ordered
+    dictionary (or list of ordered dictionaries) to a CSV file.
+* `imcflibs.imagej.misc.save_image_in_format` to save an ImagePlus in a
+    specified format, such as `ImageJ-TIF` or `OME-TIFF` etc.
+* `imcflibs.imagej.misc.run_imarisconvert` to convert a given file to Imaris
+    format using the utility *ImarisConvert*. The function uses
+    `imcflibs.imagej.misc.locate_latest_imaris` to find the path to the most
+    recent Imaris installation.
+
+#### New functions in `imcflibs.imagej.labelimage`
+
+* `imcflibs.imagej.labelimage.cookie_cut_labels` to use a label image as a mask
+    for another label image. Objects might get split or merged depending on the
+    mask.
+* `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image to
+    get a label image (2D/3D).
+* `imcflibs.imagej.labelimage.relate_label_images` to relate two label images
+    (2D/3D) using the *3D Association* plugin from the 3DImageJSuite.
+* `imcflibs.imagej.labelimage.dilate_labels_2d` to dilate a label image slice by
+    slice. Works for 2D or 3D images.
+
+#### New submodule `imcflibs.imagej.objects3d`
+
+* `imcflibs.imagej.objects3d.population3d_to_imgplus` to turn an
+    *Objects3DPopulation* into an ImagePlus (2D/3D).
+* `imcflibs.imagej.objects3d.imgplus_to_population3d` to get the
+    *Objects3DPopulation* from an ImagePlus (2D/3D).
+* `imcflibs.imagej.objects3d.segment_3d_image` to threshold an image into a
+    labeled stack.
+* `imcflibs.imagej.objects3d.get_objects_within_intensity` to filter a
+    population of 3D objects by intensity.
+* `imcflibs.imagej.objects3d.maxima_finder_3d` to find local maxima in a 3D
+    image.
+* `imcflibs.imagej.objects3d.seeded_watershed` to perform a seeded watershed
+    segmentation on a binary image using seeds points.
+
+#### New submodule `imcflibs.imagej.bdv`
+
+Providing *BigDataViewer* related functionality.
+
+* Option configuration classes:
+  * `imcflibs.imagej.bdv.ProcessingOptions` to configure the options on how the
+      dataset should be processed
+  * `imcflibs.imagej.bdv.DefinitionOptions` to hold the options on how a dataset
+      is defined.
+* `imcflibs.imagej.bdv.check_processing_input` to sanitize and clarify the
+    `acitt` input selection.
+* `imcflibs.imagej.bdv.get_processing_settings` to generate the strings needed
+    for the processing.
+* `imcflibs.imagej.bdv.backup_xml_files` to create a backup of BDV-XML files.
+* `imcflibs.imagej.bdv.define_dataset_auto` to run "*Define Multi-View Dataset*"
+    using the "*Auto-Loader*" option.
+* `imcflibs.imagej.bdv.define_dataset_manual` to run "*Define Multi-View
+    Dataset*" using the "*Manual Loader*" option.
+* `imcflibs.imagej.bdv.resave_as_h5` to resave the dataset in H5 to make it
+    compatible with BigDataViewer/BigStitcher.
+* `imcflibs.imagej.bdv.flip_axes` to call BigStitcher's "*Flip Axes*" command.
+* `imcflibs.imagej.bdv.phase_correlation_pairwise_shifts_calculation` to
+    calculate pairwise shifts using Phase Correlation.
+* `imcflibs.imagej.bdv.filter_pairwise_shifts` for filtering pairwise shifts
+    based on different thresholds.
+* `imcflibs.imagej.bdv.optimize_and_apply_shifts` to optimize shifts and apply
+    them to a dataset.
+* `imcflibs.imagej.bdv.detect_interest_points` for running the "*Detect Interest
+    Points*" command for registration.
+* `imcflibs.imagej.bdv.interest_points_registration` to run the "*Register
+    Dataset based on Interest Points*" command.
+* `imcflibs.imagej.bdv.duplicate_transformations` for duplicating / propagating
+    transformation parameters to other channels.
+* `imcflibs.imagej.bdv.fuse_dataset` to call BigStitcher's "*Fuse Multi-View
+    Dataset*" command.
+
+#### New submodule `imcflibs.imagej.trackmate`
+
+Providing helper functions to interface with *Trackmate*.
+
+* Multiple functions to set up Trackmate settings with different detectors:
+  * `imcflibs.imagej.trackmate.cellpose_detector`
+  * `imcflibs.imagej.trackmate.stardist_detector`
+  * `imcflibs.imagej.trackmate.log_detector`
+* `imcflibs.imagej.trackmate.spot_filtering` to create settings to  filter
+    detected spots based on optional thresholds for quality, area, circularity &
+    intensity.
+* `imcflibs.imagej.trackmate.sparse_lap_tracker` to create default settings for
+    the sparse LAP tracker.
+* `imcflibs.imagej.trackmate.track_filtering` to create settings to filter
+    detected tracks based upon optional distances, such as `maximum linking`,
+    `gap closing`, `track splitting & merging` and `maximum frame gap`.
+* `imcflibs.imagej.trackmate.run_trackmate` to run Trackmate with given settings
+    (which can be set up with the methods in the `imcflibs.imagej.trackmate`
+    submodule) to create a label image.
+
+#### New submodule `imcflibs.imagej.omerotools`
+
+Providing helper functions to connect to *OMERO* using user credentials, fetch
+and upload images, retrieve datasets or save ROIs to OMERO.
+
+* `imcflibs.imagej.omerotools.parse_url` to parse the OMERO URL and get a list
+    of `ImageWrappers` from multiple image or datasets IDs.
+* `imcflibs.imagej.omerotools.connect` to connect to OMERO using user
+    credentials.
+* `imcflibs.imagej.omerotools.fetch_image` to fetch an image from OMERO using
+    the image ID.
+* `imcflibs.imagej.omerotools.upload_image_to_omero` to upload a local image to
+    OMERO and returning the new image ID.
+* `imcflibs.imagej.omerotools.add_keyvalue_annotation` to add an annotation to
+    an OMERO object.
+* `imcflibs.imagej.omerotools.delete_keyvalue_annotations` to delete key/value
+    annotations from an OMERO object.
+* `imcflibs.imagej.omerotools.find_dataset` to find a dataset in OMERO using the
+    dataset ID.
+* `imcflibs.imagej.omerotools.get_acquisition_metadata` to get the acquisition
+    metadata from an image in OMERO.
+* `imcflibs.imagej.omerotools.get_info_from_original_metadata` to get the
+    original metadata from an image in OMERO.
+* `imcflibs.imagej.omerotools.create_table_columns` to create OMERO table
+    headings from a list of column names.
+* `imcflibs.imagej.omerotools.upload_array_as_omero_table` to upload a table to
+    OMERO.
+* `imcflibs.imagej.omerotools.save_rois_to_omero` to save ROIs to OMERO.
+
+#### New submodule `imcflibs.imagej.shading`
+
+* `imcflibs.imagej.shading.simple_flatfield_correction` to perform a simple
+    flatfield correction to an ImagePlus.
+
+#### New submodule `imcflibs.imagej.processing`
+
+Utilities for filtering and thresholding.
+
+* `imcflibs.imagej.processing.apply_filter` to apply a filter to an ImagePlus.
+* `imcflibs.imagej.processing.apply_rollingball_bg_subtraction` to apply a
+    rolling ball background subtraction to an ImagePlus.
+* `imcflibs.imagej.processing.apply_threshold` to apply a threshold method to an
+    ImagePlus.
+
+#### New functions in `imcflibs.imagej.bioformats`
+
+* `imcflibs.imagej.bioformats.export` to export an image to a given file.
+* `imcflibs.imagej.bioformats.get_metadata_from_file` to extract various
+    metadata from a given file using BioFormats.
+* `imcflibs.imagej.bioformats.get_stage_coords`to get stage coordinates and
+    calibration for one or more given images.
+
+#### Other new functions
+
+* `imcflibs.strtools.pad_number` to pad a number with leading zeros.
+* `imcflibs.pathtools.create_directory` to create a new directory at the
+  specified path if it does not exist (needed for Python 2.7).
+* `imcflibs.imagej.prefs.set_default_ij_options` to configure ImageJ default
+  options to ensure consistent behavior.
+* `imcflibs.imagej.projections.project_stack` to project a stack along a defined
+  axis using one of the available projection methods, such as `max`, `min`,
+  `mean`, `sum` or `standard_deviation`.
+
+### Changed
+
+* `imcflibs.pathtools.listdir_matching` now has an additional optional boolean
+  parameter `regex` to request the parameter `suffix` being interpreted as a
+  regular expression for filtering.
+* `imcflibs.imagej.misc.calculate_mean_and_stdv` now has an optional parameter
+  `round_decimals` to allow for rounding the results, defaulting to `0`.
 
 ## 1.4.0
 

@@ -2,6 +2,8 @@
 
 import re
 
+from ._jython_compat import file_types
+
 
 # this is taken from numpy's iotools:
 def _is_string_like(obj):
@@ -11,6 +13,11 @@ def _is_string_like(obj):
     dealing with stuff that can behave like a 'str' but is not strictly an
     instance of it (or a subclass thereof). So it's more generic than using
     isinstance(obj, str).
+
+    Parameters
+    ----------
+    obj : any
+        The object to be checked for being string-like.
 
     Example
     -------
@@ -39,6 +46,7 @@ def filename(name):
     Parameters
     ----------
     name : str or filehandle or java.io.File
+        The object to retrieve the filename from.
 
     Returns
     -------
@@ -62,7 +70,7 @@ def filename(name):
         # likely we are not running under Jython
         pass
 
-    if isinstance(name, file):
+    if isinstance(name, file_types):
         return name.name
     elif _is_string_like(name):
         return name
@@ -76,6 +84,7 @@ def flatten(lst):
     Parameters
     ----------
     lst : list(str)
+        The list of strings to be flattened.
 
     Returns
     -------
@@ -141,3 +150,28 @@ def sort_alphanumerically(data):
         return [convert(c) for c in re.split("([0-9]+)", key)]
 
     return sorted(data, key=alphanum_key)
+
+
+def pad_number(index, pad_length=2):
+    """Pad a number with leading zeros to a specified length.
+
+    Parameters
+    ----------
+    index : int or str
+        The number to be padded
+    pad_length : int, optional
+        The total length of the resulting string after padding, by default 2
+
+    Returns
+    -------
+    str
+        The padded number as a string
+
+    Examples
+    --------
+    >>> pad_number(7)
+    '07'
+    >>> pad_number(42, 4)
+    '0042'
+    """
+    return str(index).zfill(pad_length)

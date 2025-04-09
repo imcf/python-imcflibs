@@ -4,7 +4,7 @@ from ij import Prefs, IJ  # pylint: disable-msg=E0401
 
 
 def debug_mode():
-    """Wrapper to check if 'imcf.debugging' is enabled.
+    """Check if the 'imcf.debugging' setting is enabled.
 
     This is a workaround for a Jython issue in ImageJ with values that are
     stored in the "IJ_Prefs.txt" file being cast to the wrong types and / or
@@ -20,19 +20,28 @@ def debug_mode():
     return debug == "true"
 
 
-def fix_ij_options():
-    """Wrapper to setup ImageJ default options."""
+def set_default_ij_options():
+    """Configure ImageJ default options for consistency.
 
-    # disable inverting LUT
-    IJ.run("Appearance...", " menu=0 16-bit=Automatic")
-    # set foreground color to be white, background black
+    Set the following options:
+    - Ensure ImageJ appearance settings are default values.
+    - Set foreground color to white and background to black.
+    - Set black background for binary images.
+    - Set default file saving format to .txt files.
+    - Ensure images are scaled appropriately when converting between different bit depths.
+    """
+
+    # Set all appearance settings to default values (untick all options)
+    IJ.run("Appearance...", " ")
+
+    # Set foreground color to be white and background black
     IJ.run("Colors...", "foreground=white background=black selection=red")
-    # black BG for binary images and pad edges when eroding
-    IJ.run("Options...", "black pad")
-    # set saving format to .txt files
+
+    # Set black background for binary images and set pad edges to true to prevent eroding from image edge
+    IJ.run("Options...", "iterations=1 count=1 black pad")
+
+    # Set default saving format to .txt files
     IJ.run("Input/Output...", "file=.txt save_column save_row")
-    # ============= DON'T MOVE UPWARDS =============
-    # set "Black Background" in "Binary Options"
-    IJ.run("Options...", "black")
-    # scale when converting = checked
+
+    # Scale when converting = checked
     IJ.run("Conversions...", "scale")

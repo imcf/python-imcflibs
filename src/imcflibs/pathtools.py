@@ -2,6 +2,7 @@
 
 import os.path
 import platform
+import re
 from os import sep
 
 from . import strtools
@@ -19,6 +20,11 @@ def parse_path(path, prefix=""):
     *Script Parameter* `#@ File`) for either of the parameters, so it is safe to
     use this in ImageJ Python scripts without additional measures.
 
+    **WARNING**: when passing in **Windows paths** literally, make sure to
+    declare them as **raw strings** using the `r""` notation, otherwise
+    unexpected things might happen if the path contains sections that Python
+    will interpret as escape sequences (e.g. `\n`, `\t`, `\u2324`, ...).
+
     Parameters
     ----------
     path : str or str-like
@@ -32,10 +38,12 @@ def parse_path(path, prefix=""):
     dict
         The parsed (and possibly combined) path split into its components, with
         the following keys:
+
         - `orig` : The full string as passed into this function (possibly
           combined with the prefix in case one was specified).
         - `full` : The same as `orig` with separators adjusted to the current
           platform.
+        - `parent` : The parent folder of the selected file.
         - `path` : The same as `full`, up to (including) the last separator.
         - `dname` : The segment between the last two separators (directory).
         - `fname` : The segment after the last separator (filename).
@@ -49,50 +57,64 @@ def parse_path(path, prefix=""):
 
     Examples
     --------
-
     POSIX-style path to a file with a suffix:
 
     >>> parse_path('/tmp/foo/file.suffix')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': 'file',
-     'full': '/tmp/foo/file',
-     'basename': 'file',
-     'orig': '/tmp/foo/file',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "file",
+        "full": "/tmp/foo/file",
+        "basename": "file",
+        "orig": "/tmp/foo/file",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
+
 
     POSIX-style path to a directory:
 
     >>> parse_path('/tmp/foo/')
-    {'dname': 'foo',
-     'ext': '',
-     'fname': '',
-     'full': '/tmp/foo/',
-     'basename': '',
-     'orig': '/tmp/foo/',
-     'path': '/tmp/foo/'}
+    {
+        "dname": "foo",
+        "ext": "",
+        "fname": "",
+        "full": "/tmp/foo/",
+        "basename": "",
+        "orig": "/tmp/foo/",
+        "parent": "/tmp/",
+        "path": "/tmp/foo/",
+    }
+
 
     Windows-style path to a file:
 
-    >>> parse_path('C:\\Temp\\foo\\file.ext')
-    {'dname': 'foo',
-     'ext': '.ext',
-     'fname': 'file.ext',
-     'full': 'C:/Temp/foo/file.ext',
-     'basename': 'file',
-     'orig': 'C:\\Temp\\foo\\file.ext',
-     'path': 'C:/Temp/foo/'}
+    >>> parse_path(r'C:\Temp\new\file.ext')
+    {
+        "dname": "new",
+        "ext": ".ext",
+        "fname": "file.ext",
+        "full": "C:/Temp/new/file.ext",
+        "basename": "file",
+        "orig": "C:\\Temp\\new\\file.ext",
+        "parent": "C:/Temp",
+        "path": "C:/Temp/new/",
+    }
+
 
     Special treatment for *OME-TIFF* suffixes:
 
     >>> parse_path("/path/to/some/nice.OME.tIf")
-    {'basename': 'nice',
-    'dname': 'some',
-    'ext': '.OME.tIf',
-    'fname': 'nice.OME.tIf',
-    'full': '/path/to/some/nice.OME.tIf',
-    'orig': '/path/to/some/nice.OME.tIf',
-    'path': '/path/to/some/'}
+    {
+        "basename": "nice",
+        "dname": "some",
+        "ext": ".OME.tIf",
+        "fname": "nice.OME.tIf",
+        "full": "/path/to/some/nice.OME.tIf",
+        "orig": "/path/to/some/nice.OME.tIf",
+        "parent": "/path/to/",
+        "path": "/path/to/some/",
+    }
     """
     path = str(path)
     if prefix:
@@ -104,7 +126,9 @@ def parse_path(path, prefix=""):
     parsed["orig"] = path
     path = path.replace("\\", sep)
     parsed["full"] = path
-    parsed["path"] = os.path.dirname(path) + sep
+    folder = os.path.dirname(path)
+    parsed["path"] = folder + sep
+    parsed["parent"] = os.path.dirname(folder)
     parsed["fname"] = os.path.basename(path)
     parsed["dname"] = os.path.basename(os.path.dirname(parsed["path"]))
     base, ext = os.path.splitext(parsed["fname"])
@@ -118,7 +142,7 @@ def parse_path(path, prefix=""):
 
 
 def join2(path1, path2):
-    """Join two paths into one, much like os.path.join().
+    r"""Join two paths into one, much like os.path.join().
 
     The main difference is that `join2()` takes exactly two arguments, but they
     can be non-str (as long as they're having a `__str__()` method), so this is
@@ -144,7 +168,7 @@ def join2(path1, path2):
 
 
 def jython_fiji_exists(path):
-    """Wrapper to work around problems with Jython 2.7 in Fiji.
+    """Work around problems with `os.path.exists()` in Jython 2.7 in Fiji.
 
     In current Fiji, the Jython implementation of os.path.exists(path) raises a
     java.lang.AbstractMethodError iff 'path' doesn't exist. This function
@@ -152,11 +176,11 @@ def jython_fiji_exists(path):
     """
     try:
         return os.path.exists(path)
-    except java.lang.AbstractMethodError:
+    except java.lang.AbstractMethodError:  # pragma: no cover
         return False
 
 
-def listdir_matching(path, suffix, fullpath=False, sort=False):
+def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -172,6 +196,9 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
     sort : bool, optional
         If set to True, the returned list will be sorted using
         `imcflibs.strtools.sort_alphanumerically()`.
+    regex : bool, optional
+        If set to True, uses the suffix-string as regular expression to match
+        filenames. By default False.
 
     Returns
     -------
@@ -180,8 +207,13 @@ def listdir_matching(path, suffix, fullpath=False, sort=False):
     """
     matching_files = list()
     for candidate in os.listdir(path):
-        if candidate.lower().endswith(suffix.lower()):
+        if not regex and candidate.lower().endswith(suffix.lower()):
             # log.debug("Found file %s", candidate)
+            if fullpath:
+                matching_files.append(os.path.join(path, candidate))
+            else:
+                matching_files.append(candidate)
+        if regex and re.match(suffix.lower(), candidate.lower()):
             if fullpath:
                 matching_files.append(os.path.join(path, candidate))
             else:
@@ -203,6 +235,7 @@ def image_basename(orig_name):
     Parameters
     ----------
     orig_name : str
+        The original name, possibly containing paths and filename suffix.
 
     Examples
     --------
@@ -325,10 +358,26 @@ def folder_size(source):
     return total_size
 
 
+def create_directory(new_path):
+    """Create a new directory at the specified path.
+
+    This is a workaround for Python 2.7 where `os.makedirs()` is lacking
+    the `exist_ok` parameter that is present in Python 3.2 and newer.
+
+    Parameters
+    ----------
+    new_path : str
+        Path where the new directory should be created.
+    """
+
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
+
+
 # pylint: disable-msg=C0103
 #   we use the variable name 'exists' in its common spelling (lowercase), so
 #   removing this workaround will be straightforward at a later point
-if platform.python_implementation() == "Jython":
+if platform.python_implementation() == "Jython":  # pragma: no cover
     # pylint: disable-msg=F0401
     #   java.lang is only importable within Jython, pylint would complain
     import java.lang

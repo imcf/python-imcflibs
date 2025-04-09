@@ -1,0 +1,62 @@
+[tool.poetry]
+authors = [
+  "Niko Ehrenfeuchter <nikolaus.ehrenfeuchter@unibas.ch>",
+  "Laurent Guerard <laurent.guerard@unibas.ch>",
+  "Kai Schleicher <kai.schleicher@unibas.ch>",
+  "Sébastien Herbert <sebastien.herbert@unibas.ch>",
+  "Rohan Girish <rohangirishrao@gmail.com>",
+]
+description = "Mostly ImageJ/Fiji-related Python helper functions."
+documentation = "https://imcf.one/apidocs/imcflibs/imcflibs.html"
+license = "GPL-3.0-or-later"
+name = "imcflibs"
+readme = "README.md"
+repository = "https://github.com/imcf/python-imcflibs"
+version = "0.0.0"
+
+# NOTE: to create an environment using 'poetry install' or similar operations,
+# the following modifications are temporarily necessary (can / should be
+# reverted after creating the env):
+# - either: python = ">=3.9"  AND disable ipython in the dev dependencies
+# - or: python = ">=3.10"
+
+[tool.poetry.dependencies]
+imcf-fiji-mocks = ">=0.10.0"
+python = ">=2.7"
+python-micrometa = "^15.2.2"
+sjlogging = ">=0.5.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.1"
+pytest-cov = "^6.0.0"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+
+[tool.ruff.lint]
+exclude = [
+  "tests/interactive-imagej/*"
+]
+
+select = [
+    "D",
+    # summary lines have to be placed on the first physical line of the docstring
+    "D212",
+    # imperative mood for all docstrings
+    "D401",
+    # summary line has to end in a punctuation mark
+    "D415",
+    # require documentation for _all_ function parameters
+    "D417",
+]
+
+ignore = [
+    # no blank lines allowed after function docstring
+    "D202",
+]
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
