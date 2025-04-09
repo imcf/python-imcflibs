@@ -1,0 +1,13 @@
+{
+    "markdownlint.config": {
+        "emphasis-style": {
+            "style": "asterisk"
+        },
+        "line-length": {
+            "line_length": 80,
+            "stern": true,
+            "code_blocks": false,
+            "tables": false
+        }
+    },
+}
