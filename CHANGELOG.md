@@ -1,6 +1,7 @@
-# Changelog 🧾
-
 <!-- markdownlint-disable MD024 (no-duplicate-header) -->
+<!-- markdownlint-configure-file { "emphasis-style": { "style": "asterisk" } } -->
+
+# Changelog 🧾
 
 ## 1.5.0
 
@@ -29,13 +30,13 @@ API documentation][apidocs].
 * `imcflibs.imagej.misc.subtract_images` to subtract an image from another.
 * `imcflibs.imagej.misc.close_images` for closing all ImagePluses from a list.
 * `imcflibs.imagej.misc.get_threshold_value_from_method` to get the value that a
-    selected _AutoThreshold_ method would be using.
+    selected *AutoThreshold* method would be using.
 * `imcflibs.imagej.misc.write_ordereddict_to_csv` to write data from an ordered
     dictionary (or list of ordered dictionaries) to a CSV file.
 * `imcflibs.imagej.misc.save_image_in_format` to save an ImagePlus in a
     specified format, such as `ImageJ-TIF` or `OME-TIFF` etc.
 * `imcflibs.imagej.misc.run_imarisconvert` to convert a given file to Imaris
-    format using the utility _ImarisConvert_. The function uses
+    format using the utility *ImarisConvert*. The function uses
     `imcflibs.imagej.misc.locate_latest_imaris` to find the path to the most
     recent Imaris installation.
 
@@ -47,16 +48,16 @@ API documentation][apidocs].
 * `imcflibs.imagej.labelimage.binary_to_label` for segmenting a binary image to
     get a label image (2D/3D).
 * `imcflibs.imagej.labelimage.relate_label_images` to relate two label images
-    (2D/3D) using the _3D Association_ plugin from the 3DImageJSuite.
+    (2D/3D) using the *3D Association* plugin from the 3DImageJSuite.
 * `imcflibs.imagej.labelimage.dilate_labels_2d` to dilate a label image slice by
     slice. Works for 2D or 3D images.
 
 #### New submodule `imcflibs.imagej.objects3d`
 
 * `imcflibs.imagej.objects3d.population3d_to_imgplus` to turn an
-    _Objects3DPopulation_ into an ImagePlus (2D/3D).
+    *Objects3DPopulation* into an ImagePlus (2D/3D).
 * `imcflibs.imagej.objects3d.imgplus_to_population3d` to get the
-    _Objects3DPopulation_ from an ImagePlus (2D/3D).
+    *Objects3DPopulation* from an ImagePlus (2D/3D).
 * `imcflibs.imagej.objects3d.segment_3d_image` to threshold an image into a
     labeled stack.
 * `imcflibs.imagej.objects3d.get_objects_within_intensity` to filter a
@@ -68,7 +69,7 @@ API documentation][apidocs].
 
 #### New submodule `imcflibs.imagej.bdv`
 
-Providing _BigDataViewer_ related functionality.
+Providing *BigDataViewer* related functionality.
 
 * Option configuration classes:
   * `imcflibs.imagej.bdv.ProcessingOptions` to configure the options on how the
@@ -80,31 +81,31 @@ Providing _BigDataViewer_ related functionality.
 * `imcflibs.imagej.bdv.get_processing_settings` to generate the strings needed
     for the processing.
 * `imcflibs.imagej.bdv.backup_xml_files` to create a backup of BDV-XML files.
-* `imcflibs.imagej.bdv.define_dataset_auto` to run "_Define Multi-View Dataset_"
-    using the "_Auto-Loader_" option.
-* `imcflibs.imagej.bdv.define_dataset_manual` to run "_Define Multi-View
-    Dataset_" using the "_Manual Loader_" option.
+* `imcflibs.imagej.bdv.define_dataset_auto` to run "*Define Multi-View Dataset*"
+    using the "*Auto-Loader*" option.
+* `imcflibs.imagej.bdv.define_dataset_manual` to run "*Define Multi-View
+    Dataset*" using the "*Manual Loader*" option.
 * `imcflibs.imagej.bdv.resave_as_h5` to resave the dataset in H5 to make it
     compatible with BigDataViewer/BigStitcher.
-* `imcflibs.imagej.bdv.flip_axes` to call BigStitcher's "_Flip Axes_" command.
+* `imcflibs.imagej.bdv.flip_axes` to call BigStitcher's "*Flip Axes*" command.
 * `imcflibs.imagej.bdv.phase_correlation_pairwise_shifts_calculation` to
     calculate pairwise shifts using Phase Correlation.
 * `imcflibs.imagej.bdv.filter_pairwise_shifts` for filtering pairwise shifts
     based on different thresholds.
 * `imcflibs.imagej.bdv.optimize_and_apply_shifts` to optimize shifts and apply
     them to a dataset.
-* `imcflibs.imagej.bdv.detect_interest_points` for running the "_Detect Interest
-    Points_" command for registration.
-* `imcflibs.imagej.bdv.interest_points_registration` to run the "_Register
-    Dataset based on Interest Points_" command.
+* `imcflibs.imagej.bdv.detect_interest_points` for running the "*Detect Interest
+    Points*" command for registration.
+* `imcflibs.imagej.bdv.interest_points_registration` to run the "*Register
+    Dataset based on Interest Points*" command.
 * `imcflibs.imagej.bdv.duplicate_transformations` for duplicating / propagating
     transformation parameters to other channels.
-* `imcflibs.imagej.bdv.fuse_dataset` to call BigStitcher's "_Fuse Multi-View
-    Dataset_" command.
+* `imcflibs.imagej.bdv.fuse_dataset` to call BigStitcher's "*Fuse Multi-View
+    Dataset*" command.
 
 #### New submodule `imcflibs.imagej.trackmate`
 
-Providing helper functions to interface with _Trackmate_.
+Providing helper functions to interface with *Trackmate*.
 
 * Multiple functions to set up Trackmate settings with different detectors:
   * `imcflibs.imagej.trackmate.cellpose_detector`
@@ -124,7 +125,7 @@ Providing helper functions to interface with _Trackmate_.
 
 #### New submodule `imcflibs.imagej.omerotools`
 
-Providing helper functions to connect to _OMERO_ using user credentials, fetch
+Providing helper functions to connect to *OMERO* using user credentials, fetch
 and upload images, retrieve datasets or save ROIs to OMERO.
 
 * `imcflibs.imagej.omerotools.parse_url` to parse the OMERO URL and get a list
@@ -141,8 +142,8 @@ and upload images, retrieve datasets or save ROIs to OMERO.
     annotations from an OMERO object.
 * `imcflibs.imagej.omerotools.find_dataset` to find a dataset in OMERO using the
     dataset ID.
-* `imcflibs.imagej.omerotools.get_acquisition_metadata` to get the acquisition metadata
-    from an image in OMERO.
+* `imcflibs.imagej.omerotools.get_acquisition_metadata` to get the acquisition
+    metadata from an image in OMERO.
 * `imcflibs.imagej.omerotools.get_info_from_original_metadata` to get the
     original metadata from an image in OMERO.
 * `imcflibs.imagej.omerotools.create_table_columns` to create OMERO table
@@ -259,7 +260,7 @@ Utilities for filtering and thresholding.
 
 * The functions below now also accept parameters of type `java.io.File` (instead
   of `str`), making them safe for being used directly with variables retrieved
-  via ImageJ2's _Script Parameter_ `@# File`:
+  via ImageJ2's *Script Parameter* `@# File`:
   * `imcflibs.pathtools.parse_path`
   * `imcflibs.strtools.filename`
 * Several changes in `imcflibs.pathtools.parse_path`:
