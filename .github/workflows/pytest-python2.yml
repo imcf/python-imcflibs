@@ -1,12 +1,11 @@
 name: Pytest-Python2 🧪🐍
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
     tags:
-      - run-pytest*
-      - py2-pytest*
       - "*-[0-9]+.*"
   pull_request:
     branches:

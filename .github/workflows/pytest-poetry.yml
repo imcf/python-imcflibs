@@ -3,12 +3,11 @@
 name: Pytest-Poetry 🧪🎭
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
     tags:
-      - run-pytest*
-      - py3-pytest*
       - "*-[0-9]+.*"
   pull_request:
     branches:
