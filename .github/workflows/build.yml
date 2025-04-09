@@ -65,6 +65,11 @@ jobs:
 
     - name: 🕵 Inspect if this is a proper "scijava-scripts" release
       run: scripts/check-if-release.sh
+      # This will make sure the file 'release.properties' exists, meaning
+      # `release-version.sh` from the 'scijava-scripts' repo has been run to
+      # prepare the release and modify 'pom.xml' (which is in turn
+      # required by the local 'scripts/run-poetry.sh' script for building the
+      # Python package through Poetry.
 
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
