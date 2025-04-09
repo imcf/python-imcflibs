@@ -1,19 +1,18 @@
 ## action file inspired by https://jacobian.org/til/github-actions-poetry/
 
-name: 🧪 pytest (via 🎭 Poetry)
+name: Pytest-Poetry 🧪🎭
 
 on:
+  workflow_dispatch:
   push:
     branches:
-    - master
+      - master
     tags:
-      - run-pytest*
-      - py3-pytest*
       - "*-[0-9]+.*"
   pull_request:
     branches:
-    - master
-    - devel
+      - master
+      - devel
 
 jobs:
   pytest-poetry:

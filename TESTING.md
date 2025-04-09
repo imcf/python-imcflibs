@@ -7,7 +7,7 @@ be tested via [`pytest`][pytest] up to a certain level, some (most?) of them
 should even work in a Python 3 environment.
 
 To perform those tests, the packges otherwise provided by ImageJ need to be
-mocked using the `imcf-fiji-mocks` package. For seting up a _venv_ use the steps
+mocked using the `imcf-fiji-mocks` package. For seting up a *venv* use the steps
 described here:
 
 ```bash
@@ -37,7 +37,7 @@ pip install --upgrade \
 pip install -e .
 ```
 
-Using this _venv_, tests can be triggered just the usual way. To run only
+Using this *venv*, tests can be triggered just the usual way. To run only
 specific tests, use e.g.
 
 ```bash
@@ -48,12 +48,12 @@ pytest tests/bdv/test_processingoptions.py
 
 For running [`pytest`][pytest] in a C-Python 2 environment, things are slightly
 more complicated than the approach described for Python 3 above as `pip` for
-Python 2 cannot install a project in _editable_ mode unless it has a `setup.py`
+Python 2 cannot install a project in *editable* mode unless it has a `setup.py`
 file (which we don't have and don't want).
 
 Therefore, a wheel needs to be built (e.g. using [`poetry`][poetry]) and
 installed (every time) into the corresponding virtualenv when performing the
-tests. Assuming you're having a working _poetry_ setup on your machine, you can
+tests. Assuming you're having a working *poetry* setup on your machine, you can
 simply use the provided `scripts/py2-pytest.sh` wrapper that will create the
 virtualenv, build and install the `imcflibs` wheel and launch `pytest` with the
 parameters specified, e.g.
@@ -68,7 +68,7 @@ Unfortunately there is nothing like `pytest` available for the parts that are
 running exclusively in a ImageJ2 / Fiji context. So in order to provide at least
 some basic, semi-interactive tests the following conventions are being used:
 
-* Each _**function**_ in any of the `imcflibs.imagej` submodules should have its
+* Each ***function*** in any of the `imcflibs.imagej` submodules should have its
   own directory underneath `/tests/interactive-imagej/`, using their fully
   qualified name as the path (only skipping the `imcflibs.` prefix). For example
   test scripts for `imcflibs.imagej.bioformats.import_image()` will be placed in
@@ -76,27 +76,27 @@ some basic, semi-interactive tests the following conventions are being used:
 * The scripts inside those directories are intended to be run interactively /
   manually in a (freshly started) Fiji instance. Yes, really. Any other
   suggestions are highly welcome!
-* To facilitate this, a collection of _test images_ (and possibly other input
+* To facilitate this, a collection of *test images* (and possibly other input
   data) should be cloned to the local file system. Currently this `sample-data`
-  repository is _NOT_ publicly available due to legal ⚖ uncertainties. A repo
+  repository is *NOT* publicly available due to legal ⚖ uncertainties. A repo
   containing test data 🗞 that can be published should be assembled over time
   though!
-* Any _interactive_ test script should start with a header similar to the one
-  described below. Paths to input data _inside_ the test scripts **has** to be
+* Any *interactive* test script should start with a header similar to the one
+  described below. Paths to input data *inside* the test scripts **has** to be
   relative to the location of the `sample-data` repository mentioned above. This
   will allow for a fairly okayish testing workflow like this:
   * Make your changes in VS Code, then trigger a build by pressing `Shift` +
-  `Ctrl` + `B`. If things are configured as described in the _DEVELOPMENT_
+  `Ctrl` + `B`. If things are configured as described in the *DEVELOPMENT*
   document, the resulting `.jar` file will be automatically placed in Fiji's
   `jars/` folder.
   * Next, start a fresh instance of the Fiji that received the newly built JAR.
   * After Fiji has started, simply drag and drop the desired test script onto
-    the main window. This will open the _Script Editor_, then press `Ctrl` + `R`
+    the main window. This will open the *Script Editor*, then press `Ctrl` + `R`
     to launch the script.
   * Only on the first run on the machine being used you will have to select the
     base location of the `sample-data` repository.
-  * All subsequent runs of _**any**_ test script using the defined _Script
-    Parameter_ `IMCF_TESTDATA` will remember this selection, so it will be
+  * All subsequent runs of ***any*** test script using the defined *Script
+    Parameter* `IMCF_TESTDATA` will remember this selection, so it will be
     sufficient to just confirm the dialog by pressing `Enter`.
 
 ### Quick Workflow Summary

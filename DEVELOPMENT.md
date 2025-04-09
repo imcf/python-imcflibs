@@ -31,7 +31,7 @@ git push origin $RELEASE_TAG
 ```
 
 **IMPORTANT 2**: in case a **pre-releaes** was created, the last commit needs to
-be discarded as the _release-script_ places a wrong version / snapshot
+be discarded as the *release-script* places a wrong version / snapshot
 combination in the `pom.xml`:
 
 ```bash
@@ -43,7 +43,7 @@ git reset --hard HEAD~1
 Building and deploying the package can be greatly simplified using "tasks" in
 [Visual Studio Code][www_vscode]. By adding the following settings to the
 `.vscode/tasks.json` file, you can simply press `Ctrl+Shift+B` in VS Code and
-select the _deploy_ task for running Maven and have the resulting JAR file being
+select the *deploy* task for running Maven and have the resulting JAR file being
 placed in `/opt/fiji-packaging/Fiji.app/jars/` (adjust to your path as
 necessary):
 
@@ -80,7 +80,7 @@ necessary):
 ## Linting Python 2.7 with VS Code
 
 For being able to lint the old Python code properly, you'll need to set up an
-appropriate _virtualenv_ with `pylint` being installed.
+appropriate *virtualenv* with `pylint` being installed.
 
 Using [`fish`][www_fish] and [virtualfish][www_vf], this can be done as follows:
 

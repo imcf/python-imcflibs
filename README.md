@@ -1,8 +1,12 @@
 
 # IMCFlibs 🐍 ☕ 🔩 🔧 🪛
 
-[![Build Status](https://github.com/imcf/python-imcflibs/actions/workflows/build.yml/badge.svg)][build]
 [![Linting ⚡](https://github.com/imcf/python-imcflibs/actions/workflows/lint.yml/badge.svg)](https://github.com/imcf/python-imcflibs/actions/workflows/lint.yml)
+[![Pytest-Python2 🧪🐍](https://github.com/imcf/python-imcflibs/actions/workflows/pytest-python2.yml/badge.svg)](https://github.com/imcf/python-imcflibs/actions/workflows/pytest-python2.yml)
+[![Pytest-Poetry 🧪🎭](https://github.com/imcf/python-imcflibs/actions/workflows/pytest-poetry.yml/badge.svg)](https://github.com/imcf/python-imcflibs/actions/workflows/pytest-poetry.yml)
+[![codecov](https://codecov.io/github/imcf/python-imcflibs/branch/devel/graph/badge.svg?token=JTDK74OT79)](https://codecov.io/github/imcf/python-imcflibs)
+
+[![Build Status](https://github.com/imcf/python-imcflibs/actions/workflows/build.yml/badge.svg)][build]
 [![DOI](https://zenodo.org/badge/156891364.svg)][doi]
 
 This package contains a diverse collection of Python functions dealing with

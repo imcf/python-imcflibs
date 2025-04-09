@@ -3,8 +3,7 @@ authors = [
   "Niko Ehrenfeuchter <nikolaus.ehrenfeuchter@unibas.ch>",
   "Laurent Guerard <laurent.guerard@unibas.ch>",
   "Kai Schleicher <kai.schleicher@unibas.ch>",
-  "Sébastien Herbert <sebastien.herbert@unibas.ch>",
-  "Rohan Girish <rohangirishrao@gmail.com>",
+  "Rohan Girish <r.rohangirish@unibas.ch>",
 ]
 description = "Mostly ImageJ/Fiji-related Python helper functions."
 documentation = "https://imcf.one/apidocs/imcflibs/imcflibs.html"
@@ -41,22 +40,17 @@ exclude = [
 ]
 
 select = [
-    "D",
-    # summary lines have to be placed on the first physical line of the docstring
-    "D212",
-    # imperative mood for all docstrings
-    "D401",
-    # summary line has to end in a punctuation mark
-    "D415",
-    # require documentation for _all_ function parameters
-    "D417",
+    "D",     # enable "pydocstyle" rules
+    "D212",  # summary lines must be on the first physical line of the docstring
+    "D401",  # imperative mood for all docstrings
+    "D415",  # summary line has to end in a punctuation mark
+    "D417",  # require documentation for *all* function parameters
+
 ]
 
 ignore = [
-    # no blank lines allowed after function docstring
-    "D202",
+    "D202",  # no blank lines allowed after function docstring
 ]
-
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
