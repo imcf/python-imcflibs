@@ -1,16 +1,18 @@
 name: 🚚🌍 Publish to 🔬☕ SciJava and 🎪 PyPI
 
 on:
+
+  release:
+    types:
+      - published  # A release, pre-release, or draft of a release was published.
+
   workflow_dispatch:
 
-  push:
-    branches:
-      - master
-    tags:
-      - "python-imcflibs-[0-9]+.*"
-  pull_request:
-    branches:
-      - master
+  ## Do NOT run on pushes or PR's, as they won't have a 'release.properties',
+  ## which is required by the build-tooling (see the comment at the "Inspect" /
+  ## "check-if-release.sh" section below for details).
+  # push:
+  # pull_request:
 
 
 jobs:
