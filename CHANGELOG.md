@@ -1,7 +1,7 @@
-# Changelog 🧾
-
 <!-- markdownlint-disable MD024 (no-duplicate-header) -->
 <!-- markdownlint-configure-file { "emphasis-style": { "style": "asterisk" } } -->
+
+# Changelog 🧾
 
 ## 1.5.0
 
