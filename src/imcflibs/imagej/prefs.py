@@ -37,6 +37,11 @@ def set_default_ij_options():
     # Set foreground color to be white and background black
     IJ.run("Colors...", "foreground=white background=black selection=red")
 
+    # Set iterations and count to 1
+    #  - Iterations: number of times erosion (dilation, opening, closing) is performed
+    #  - Count: number of adjacent background pixels necessary before a pixel is removed
+    #    from the edge of an object during erosion and the number of adjacent foreground
+    #    pixels necessary before a pixel is added to the edge of an object during dilation.
     # Set black background for binary images and set pad edges to true to prevent eroding from image edge
     IJ.run("Options...", "iterations=1 count=1 black pad")
 
