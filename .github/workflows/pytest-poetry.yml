@@ -5,15 +5,15 @@ name: Pytest-Poetry 🧪🎭
 on:
   push:
     branches:
-    - master
+      - master
     tags:
       - run-pytest*
       - py3-pytest*
       - "*-[0-9]+.*"
   pull_request:
     branches:
-    - master
-    - devel
+      - master
+      - devel
 
 jobs:
   pytest-poetry:
