@@ -23,12 +23,35 @@ def debug_mode():
 def set_default_ij_options():
     """Configure ImageJ default options for consistency.
 
-    Set the following options:
-    - Ensure ImageJ appearance settings are default values.
+    Will set the following options to ensure consistent behaviour independent of
+    how ImageJ is configured on a specific machine.
+
+    - Ensure ImageJ appearance settings are the default values.
     - Set foreground color to white and background to black.
-    - Set black background for binary images.
     - Set default file saving format to .txt files.
-    - Ensure images are scaled appropriately when converting between different bit depths.
+    - Ensure intensities are being scaled when converting between bit depths.
+    - Options on binary images:
+        - Set background to black.
+        - Enable padding to prevent eroding from image edges.
+        - Enforce defaults on iterations and count for *erosion*, *dilation*,
+          *opening* and *closing* operations.
+
+    References
+    ----------
+    The ImageJ User Guide is providing detailed explanations of the options
+    configured by this function:
+
+    - [Edit > Options > Appearance][ijo_app]
+    - [Edit > Options > Colors][ijo_col]
+    - [Edit > Options > Conversions][ijo_cnv]
+    - [Edit > Options > Input/Output][ijo_i_o]
+    - [Process > Binary > Options][ijo_bin]
+
+    [ijo_app]: https://imagej.net/ij/docs/guide/146-27.html#sub:Appearance...
+    [ijo_cnv]: https://imagej.net/ij/docs/guide/146-27.html#sub:Conversions...
+    [ijo_col]: https://imagej.net/ij/docs/guide/146-27.html#sub:Colors...
+    [ijo_i_o]: https://imagej.net/ij/docs/guide/146-27.html#sub:Input/Output...
+    [ijo_bin]: https://imagej.net/ij/docs/guide/146-29.html#sub:BinaryOptions...
     """
 
     # Set all appearance settings to default values (untick all options)
@@ -37,11 +60,22 @@ def set_default_ij_options():
     # Set foreground color to be white and background black
     IJ.run("Colors...", "foreground=white background=black selection=red")
 
-    # Set black background for binary images and set pad edges to true to prevent eroding from image edge
+    # Options regarding binary images:
+    # - `black`: set background for binary images to be black.
+    # - `pad`: enable padding of edges to prevent eroding from image edge.
+    # - `iterations=1`: number of times erosion (dilation, opening, closing) is
+    #   performed
+    # - `count=1`: number of adjacent background pixels necessary before a pixel
+    #   is removed from the edge of an object during erosion and the number of
+    #   adjacent foreground pixels necessary before a pixel is added to the edge
+    #   of an object during dilation.
+    # https://imagej.net/ij/docs/menus/process.html#options
+    # https://imagej.net/ij/docs/guide/146-29.html#sub:BinaryOptions...
     IJ.run("Options...", "iterations=1 count=1 black pad")
 
     # Set default saving format to .txt files
     IJ.run("Input/Output...", "file=.txt save_column save_row")
 
-    # Scale when converting = checked
+    # Enable "scale when converting".
+    # https://imagej.net/ij/docs/menus/edit.html#options
     IJ.run("Conversions...", "scale")
