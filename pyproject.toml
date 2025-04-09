@@ -3,8 +3,7 @@ authors = [
   "Niko Ehrenfeuchter <nikolaus.ehrenfeuchter@unibas.ch>",
   "Laurent Guerard <laurent.guerard@unibas.ch>",
   "Kai Schleicher <kai.schleicher@unibas.ch>",
-  "Sébastien Herbert <sebastien.herbert@unibas.ch>",
-  "Rohan Girish <rohangirishrao@gmail.com>",
+  "Rohan Girish <r.rohangirish@unibas.ch>",
 ]
 description = "Mostly ImageJ/Fiji-related Python helper functions."
 documentation = "https://imcf.one/apidocs/imcflibs/imcflibs.html"
