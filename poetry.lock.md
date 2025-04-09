@@ -1,4 +1,4 @@
-## Updating `poetry.lock` 🎭🔐
+# Updating `poetry.lock` 🎭🔐
 
 Every time dependencies in `pyproject.toml` have been modified (e.g. when
 pulling in a newer version of the [`imcf-fiji-mocks`][1] package), [Poetry's
