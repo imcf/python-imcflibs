@@ -8,7 +8,7 @@ def debug_mode():
 
     This is a workaround for a Jython issue in ImageJ with values that are
     stored in the "IJ_Prefs.txt" file being cast to the wrong types and / or
-    values in Python. Callling Prefs.get() using a (Python) boolean as the
+    values in Python. Calling Prefs.get() using a (Python) boolean as the
     second parameter always leads to the return value '0.0' (Python type float),
     no matter what is actually stored in the preferences. Doing the same in e.g.
     Groovy behaves correctly.
@@ -23,7 +23,7 @@ def debug_mode():
 def set_default_ij_options():
     """Configure ImageJ default options for consistency.
 
-    Will set the following options to ensure consistent behaviour independent of
+    Will set the following options to ensure consistent behavior independent of
     how ImageJ is configured on a specific machine.
 
     - Ensure ImageJ appearance settings are the default values.
