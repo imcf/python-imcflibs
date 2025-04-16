@@ -669,7 +669,7 @@ def locate_latest_imaris(paths_to_check=None):
     return imaris_paths[-1]
 
 
-def run_imarisconvert(file_path):
+def run_imarisconvert(file_path, pixel_calibration=None):
     """Convert a given file to Imaris format using ImarisConvert.
 
     Convert the input image file to Imaris format (Imaris5) using the
@@ -680,6 +680,9 @@ def run_imarisconvert(file_path):
     ----------
     file_path : str
         Absolute path to the input image file.
+    pixel_calibration : tuple or list, optional
+        Sequence of 3 values (x, y, z) representing voxel dimensions to be set during
+        conversion, by default None.
     """
     # in case the given file has the suffix `.ids` (meaning it is part of an
     # ICS-1 `.ics`+`.ids` pair), point ImarisConvert to the `.ics` file instead:
@@ -694,6 +697,13 @@ def run_imarisconvert(file_path):
         file_path,
         file_path.replace(file_extension, ".ims"),
     )
+    if pixel_calibration:
+        command = command + " --voxelsizex %s --voxelsizey %s --voxelsizez %s" % (
+            pixel_calibration[0],
+            pixel_calibration[1],
+            pixel_calibration[2],
+        )
+
     log.debug("\n%s" % command)
     IJ.log("Converting to Imaris5 .ims...")
     result = subprocess.call(command, shell=True, cwd=imaris_path)
