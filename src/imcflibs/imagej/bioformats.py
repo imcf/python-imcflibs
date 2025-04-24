@@ -569,8 +569,7 @@ def get_stage_coords(filenames):
             if series_count > 1 and not str(image).endswith(".vsi"):
                 series_names.append(ome_meta.getImageName(series))
             else:
-                series_names.append(str(image))
-
+                series_names.append(os.path.basename(str(image)))
             current_position_x = getattr(
                 ome_meta.getPlanePositionX(series, 0), "value", lambda: 0
             )()
