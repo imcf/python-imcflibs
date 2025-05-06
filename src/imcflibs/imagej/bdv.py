@@ -1685,7 +1685,7 @@ def read_metadata_from_xml(xml_path):
     # Use our robust XML parsing function
     dbf = DocumentBuilderFactory.newInstance()
     db = dbf.newDocumentBuilder()
-    # This is needed to fix some issues with `µm` in the xml file
+    # This is needed to fix some issues with the micron symbol in the xml file
     reader = InputStreamReader(FileInputStream(File(xml_path)))
     dom = db.parse(InputSource(reader))
 
