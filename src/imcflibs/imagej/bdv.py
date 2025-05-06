@@ -18,6 +18,10 @@ from ch.epfl.biop.scijava.command.spimdata import (
 )
 from ij import IJ
 
+from java.io import File, FileInputStream, InputStreamReader
+from javax.xml.parsers import DocumentBuilderFactory
+from org.xml.sax import InputSource
+
 from .. import pathtools
 from ..log import LOG as log
 
@@ -1648,3 +1652,79 @@ def fuse_dataset_bdvp(
         "compress_temp_files",
         False,
     )
+
+def read_metadata_from_xml(xml_path):
+    """Extract metadata from a Zeiss Lightsheet microscopy XML file.
+
+    Parses the XML document to retrieve the number of channels, illuminations,
+    and timepoints from the experiment metadata.
+
+    Parameters
+    ----------
+    xml_path : str
+        Path to the XML metadata file.
+
+    Returns
+    -------
+    dict
+        A dictionary containing the following keys:
+        - 'channels_count': Number of channels in the dataset
+        - 'illuminations_count': Number of illumination directions
+        - 'timepoints_count': Number of timepoints in the dataset
+
+    Examples
+    --------
+    >>> metadata = read_metadata_from_xml("/path/to/experiment.xml")
+    >>> print(metadata["channels_count"])
+    2
+    >>> print(metadata["illuminations_count"])
+    4
+    >>> print(metadata["timepoints_count"])
+    1
+    """
+    # Use our robust XML parsing function
+    dbf = DocumentBuilderFactory.newInstance()
+    db = dbf.newDocumentBuilder()
+    # This is needed to fix some issues with `µm` in the xml file
+    reader = InputStreamReader(FileInputStream(File(xml_path)))
+    dom = db.parse(InputSource(reader))
+
+    # Initialize default values
+    nbr_chnl = 1
+    nbr_ill = 1
+    nbr_tp = 1
+
+    try:
+        # Extract channel and illumination counts
+        nodeList = dom.getElementsByTagName("Attributes")
+        for i in range(nodeList.getLength()):
+            name_attr = nodeList.item(i).getAttributes().getNamedItem("name")
+            if name_attr is None:
+                continue
+
+            node = name_attr.getNodeValue()
+            if node == "channel":
+                nbr_chnl = int(
+                    nodeList.item(i).getElementsByTagName("Channel").getLength()
+                )
+            if node == "illumination":
+                nbr_ill = int(
+                    nodeList.item(i).getElementsByTagName("Illumination").getLength()
+                )
+
+        # Get timepoints
+        timepoints_node = dom.getElementsByTagName("Timepoints")
+        if timepoints_node.getLength() > 0:
+            last_nodes = timepoints_node.item(0).getElementsByTagName("last")
+            if last_nodes.getLength() > 0:
+                nbr_tp = int(last_nodes.item(0).getTextContent()) + 1
+    except Exception as e:
+        log.error("Error extracting metadata from XML: {0}".format(str(e)))
+
+    xml_metadata = {
+        "channels_count": nbr_chnl,
+        "illuminations_count": nbr_ill,
+        "timepoints_count": nbr_tp,
+    }
+
+    return xml_metadata
