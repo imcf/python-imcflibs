@@ -713,7 +713,7 @@ def run_imarisconvert(file_path, pixel_calibration=None):
         IJ.log("Conversion failed with error code: %d" % result)
 
 def convert_bytes(size):
-    """Convert size from bytes to a readable value
+    """Convert size from bytes to a readable value.
 
     Parameters
     ----------
