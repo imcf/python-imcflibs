@@ -711,3 +711,23 @@ def run_imarisconvert(file_path, pixel_calibration=None):
         IJ.log("Conversion to .ims is finished.")
     else:
         IJ.log("Conversion failed with error code: %d" % result)
+
+def convert_bytes(size):
+    """Convert size from bytes to a readable value
+
+    Parameters
+    ----------
+    size : int
+        Byte size
+
+    Returns
+    -------
+    str
+        Easy to read value with the correct unit
+    """
+    for x in ["bytes", "KB", "MB", "GB", "TB"]:
+        if size < 1024.0:
+            return "%3.1f %s" % (size, x)
+        size /= 1024.0
+
+    return size
