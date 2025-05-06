@@ -523,7 +523,7 @@ def write_ordereddict_to_csv(out_file, content):
             dict_writer.writerows(content)
 
 
-def save_image_in_format(imp, format, out_dir, series, pad_number, split_channels):
+def save_image_in_format(imp, format, out_dir, series, pad_number, split_channels, suffix=""):
     """Save an ImagePlus object in the specified format.
 
     This function provides flexible options for saving ImageJ images in various
@@ -552,6 +552,8 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
         If True, split channels and save them individually in separate folders
         named "C1", "C2", etc. inside out_dir. If False, save all channels in a
         single file.
+    suffix : str, optional
+        Text to be added to the filename, by default an empty string.
 
     Notes
     -----
@@ -616,12 +618,12 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
 
         out_path = os.path.join(
             dir_to_save[index],
-            basename + "_series_" + str(series).zfill(pad_number),
+            basename + "_series_" + str(series).zfill(pad_number) + suffix,
         )
 
         if format == "ImageJ-TIF":
             pathtools.create_directory(dir_to_save[index])
-            IJ.saveAs(current_imp, "Tiff", out_path + ".tif")
+            IJ.saveAs(current_imp, "Tiff", out_path + suffix + ".tif")
 
         elif format == "BMP":
             out_folder = os.path.join(out_dir, basename + os.path.sep)
@@ -629,7 +631,7 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
             StackWriter.save(current_imp, out_folder, "format=bmp")
 
         else:
-            bf.export(current_imp, out_path + out_ext[format])
+            bf.export(current_imp, out_path + suffix + out_ext[format])
 
         current_imp.close()
 
