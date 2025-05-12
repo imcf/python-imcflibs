@@ -614,7 +614,7 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
     for index, current_imp in enumerate(imp_to_use):
         basename = imp.getShortTitle()
 
-        out_path = os.path.join(
+        out_path = pathtools.join2(
             dir_to_save[index],
             basename + "_series_" + str(series).zfill(pad_number),
         )
