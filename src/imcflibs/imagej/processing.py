@@ -118,7 +118,7 @@ def apply_threshold(imp, threshold_method, do_3d=True):
     imageplus = imp.duplicate()
 
     auto_threshold_options = (
-        threshold_method + " " + "dark" + " " + "stack" if do_3D else ""
+        threshold_method + " " + "dark" + " " + "stack" if do_3d else ""
     )
 
     log.debug("Auto threshold options: %s" % auto_threshold_options)
