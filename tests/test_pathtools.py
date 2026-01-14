@@ -1,11 +1,16 @@
 """Tests for `imcflibs.pathtools`."""
 # -*- coding: utf-8 -*-
 
-from imcflibs.pathtools import parse_path
-from imcflibs.pathtools import jython_fiji_exists
-from imcflibs.pathtools import image_basename
-from imcflibs.pathtools import gen_name_from_orig
-from imcflibs.pathtools import derive_out_dir
+import os
+
+from imcflibs.pathtools import (
+    derive_out_dir,
+    gen_name_from_orig,
+    image_basename,
+    jython_fiji_exists,
+    listdir_matching,
+    parse_path,
+)
 
 
 def test_parse_path():
@@ -114,3 +119,41 @@ def test_derive_out_dir():
     assert derive_out_dir("/foo", "none") == "/foo"
     assert derive_out_dir("/foo", "NONE") == "/foo"
     assert derive_out_dir("/foo", "/bar") == "/bar"
+
+
+def test_listdir_matching_various(tmpdir):
+    """Test non-recursive, recursive, fullpath, regex and sorting behaviour."""
+    base = tmpdir.mkdir("base")
+
+    # create mixed files
+    base.join("a.TIF").write("x")
+    base.join("b.tif").write("x")
+    base.join("c.png").write("x")
+
+    # non-recursive, suffix match (case-insensitive)
+    res = listdir_matching(str(base), ".tif")
+    assert set(res) == {"a.TIF", "b.tif"}
+
+    # fullpath returns absolute paths
+    res_full = listdir_matching(str(base), ".tif", fullpath=True)
+    assert all(os.path.isabs(x) for x in res_full)
+
+    # recursive with relative paths
+    sub = base.mkdir("sub")
+    sub.join("s.TIF").write("x")
+    res_rec = listdir_matching(str(base), ".tif", recursive=True)
+    # should include the file from subdir as a relative path
+    assert "sub/" in "/".join(res_rec) or any(p.startswith("sub/") for p in res_rec)
+
+    # regex matching
+    res_regex = listdir_matching(str(base), r".*\.tif$", regex=True)
+    assert set(res_regex) >= {"a.TIF", "b.tif"}
+
+    # sorting: create names that sort differently lexicographically
+    base.join("img2.tif").write("x")
+    base.join("img10.tif").write("x")
+    base.join("img1.tif").write("x")
+    res_sorted = listdir_matching(str(base), ".tif", sort=True)
+    # expected alphanumeric order
+    assert res_sorted.index("img1.tif") < res_sorted.index("img2.tif")
+    assert res_sorted.index("img2.tif") < res_sorted.index("img10.tif")
