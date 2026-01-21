@@ -157,3 +157,28 @@ def test_listdir_matching_various(tmpdir):
     # expected alphanumeric order
     assert res_sorted.index("img1.tif") < res_sorted.index("img2.tif")
     assert res_sorted.index("img2.tif") < res_sorted.index("img10.tif")
+
+
+def test_listdir_matching_invalid_regex(tmpdir):
+    """Invalid regular expressions should result in an empty list."""
+    base = tmpdir.mkdir("base_invalid_regex")
+    base.join("a.tif").write("x")
+
+    # invalid regex should not raise but simply return an empty list
+    res = listdir_matching(str(base), "([", regex=True)
+    assert res == []
+
+
+def test_listdir_matching_recursive_regex_fullpath(tmpdir):
+    """Recursive search with regex and fullpath should return absolute paths."""
+    base = tmpdir.mkdir("base_recursive")
+    sub = base.mkdir("subdir")
+    sub.join("s.tif").write("x")
+
+    # recursive + regex + fullpath should return absolute path including subdir
+    res = listdir_matching(
+        str(base), r".*\.tif$", regex=True, recursive=True, fullpath=True
+    )
+    assert any(os.path.isabs(x) for x in res)
+    expected = os.path.join(str(sub), "s.tif")
+    assert expected in res
