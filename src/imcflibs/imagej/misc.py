@@ -737,3 +737,56 @@ def run_imarisconvert(file_path, pixel_calibration=None, output_folder=""):
     else:
         timed_log("Error converting [%s]: %d" % (file_path, result))
 
+
+def save_script_parameters(destination, save_file_name="script_parameters.txt"):
+    """Save all Fiji script parameters to a text file.
+
+    Parameters
+    ----------
+    destination : str
+        Directory where the script parameters file will be saved.
+    save_file_name : str, optional
+        Name of the script parameters file, by default "script_parameters.txt".
+
+    Notes
+    -----
+    This function records all input parameters defined in the Fiji script header
+    (e.g. `#@ String`) to a text file.
+
+    The following parameters are excluded:
+    - Parameters explicitly declared with `style="password"` are ignored.
+    - Runtime keys (e.g. 'SJLOG', 'COMMAND', 'RM') are also skipped.
+    """
+    # Get the ScriptModule object from globals made by Fiji
+    module = globals().get("org.scijava.script.ScriptModule")
+    if module is None:
+        timed_log("No ScriptModule found - skipping saving script parameters.")
+        return
+
+    destination = str(destination)
+    out_path = os.path.join(destination, save_file_name)
+
+    # Access script metadata and inputs
+    script_info = module.getInfo()
+    inputs = module.getInputs()
+
+    # Keys to skip explicitly
+    skip_keys = ["USERNAME", "SJLOG", "COMMAND", "RM"]
+
+    with open(out_path, "w") as f:
+        for item in script_info.inputs():
+            key = item.getName()
+
+            # Skip if any keys are in the skip list
+            if any(skip in key.upper() for skip in skip_keys):
+                continue
+
+            # Skip if parameter is declared with password style
+            if WidgetStyle.isStyle(item, TextWidget.PASSWORD_STYLE):
+                continue
+
+            if inputs.containsKey(key):
+                val = inputs.get(key)
+                f.write("%s: %s\n" % (key, str(val)))
+
+    timed_log("Saved script parameters to: %s" % out_path)
