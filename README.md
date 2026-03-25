@@ -56,7 +56,7 @@ following necessary update sites for this package.
 - TrackMate-MorpholibJ
 
 The **`IMCF Uni Basel`** update-site will always provide the latest compatible
-combination of *official*`.jar` file to use this package.
+combination of *official* `.jar` files to use this package.
 
 ### Manual Downloads
 
