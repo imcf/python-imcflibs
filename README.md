@@ -129,5 +129,5 @@ correct_and_project(raw_image, out_path, model, "Maximum", ".ics")
 [apidocs]: https://imcf.one/apidocs/imcflibs/imcflibs.html
 [pdoc]: https://pdoc.dev/
 [pypi]: https://pypi.org/project/imcflibs/
-[simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client 
-[omero-insight]: https://github.com/ome/omero-insight 
+[simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client
+[omero-insight]: https://github.com/ome/omero-insight
