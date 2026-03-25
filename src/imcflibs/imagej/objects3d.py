@@ -71,7 +71,15 @@ def imgplus_to_population3d(imp):
     return Objects3DPopulation(img)
 
 
-def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
+def segment_3d_image(
+    imp,
+    title=None,
+    min_thresh=1,
+    min_vol=None,
+    max_vol=None,
+    remove_touching_borders=False,
+    remove_touching_borders_z=False,
+):
     """Segment a 3D binary image to get a labelled stack.
 
     Parameters
@@ -90,6 +98,11 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
     max_vol : int, optional
         Maximum volume (in voxels) above which objects get filtered.
         Defaults to None.
+    remove_touching_borders : bool, optional
+        Whether to remove objects that touch the borders in X and Y. Defaults to False.
+    remove_touching_borders_z : bool, optional
+        Whether to remove objects that touch the z-axis borders. Defaults to False.
+
 
     Returns
     -------
@@ -107,10 +120,15 @@ def segment_3d_image(imp, title=None, min_thresh=1, min_vol=None, max_vol=None):
         labeler.setMinSizeCalibrated(min_vol, img)
     if max_vol:
         labeler.setMaxSizeCalibrated(max_vol, img)
-
     # Generate labelled segmentation
     seg = labeler.getLabels(img)
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
+
+    if remove_touching_borders:
+        obj = seg.getObjects3DPopulation()
+        obj.removeObjectsTouchingBorders(seg, remove_touching_borders_z)
+        seg = ImageHandler.wrap(population3d_to_imgplus(imp, obj))
+
     if title:
         seg.setTitle(title)
 
