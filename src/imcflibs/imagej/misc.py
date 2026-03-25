@@ -10,14 +10,12 @@ import time
 
 from ij import IJ  # pylint: disable-msg=import-error
 from ij.plugin import Duplicator, ImageCalculator, StackWriter
+from org.scijava.widget import TextWidget, WidgetStyle
 
 from .. import pathtools
 from ..log import LOG as log
 from . import bioformats as bf
 from . import prefs
-
-from org.scijava.widget import WidgetStyle
-from org.scijava.widget import TextWidget
 
 
 def show_status(msg):
@@ -533,7 +531,9 @@ def write_ordereddict_to_csv(out_file, content):
             dict_writer.writerows(content)
 
 
-def save_image_in_format(imp, format, out_dir, series, pad_number, split_channels, suffix=""):
+def save_image_in_format(
+    imp, format, out_dir, series, pad_number, split_channels, suffix=""
+):
     """Save an ImagePlus object in the specified format.
 
     This function provides flexible options for saving ImageJ images in various
@@ -737,3 +737,32 @@ def run_imarisconvert(file_path, pixel_calibration=None, output_folder=""):
     else:
         timed_log("Error converting [%s]: %d" % (file_path, result))
 
+
+def bytes_to_human_readable(size):
+    """Convert a byte count to a human-readable string using binary units.
+
+    Parameters
+    ----------
+    size : int
+        Byte size (number of bytes).
+
+    Returns
+    -------
+    str
+        Human-friendly size string, e.g. `"512.0 bytes"`, `"2.0 KB"`,
+        `"1.0 MB"`.
+
+    Notes
+    -----
+    - Uses powers of 1024 (KB = 1024 bytes).
+    - Always returns a string with one decimal place and the unit.
+    """
+
+    for unit in ["bytes", "KB", "MB", "GB", "TB"]:
+        if size < 1024.0:
+            return "%3.1f %s" % (size, unit)
+        size /= 1024.0
+
+    # If the value is larger than the largest unit, fall back to TB with
+    # the current value (already divided accordingly).
+    return "%3.1f %s" % (size, "TB")
