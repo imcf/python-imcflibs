@@ -807,7 +807,7 @@ def define_dataset_auto(
     file_path,
     bf_series_type,
     dataset_save_path=None,
-    timepoints_per_partition=1,
+    timepoints_per_partition=0,
     resave="Re-save as multiresolution HDF5",
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
@@ -830,8 +830,9 @@ def define_dataset_auto(
         Defines how Bio-Formats interprets the series.
     timepoints_per_partition : int, optional
         Split the output dataset by timepoints. Use `0` for no split, resulting
-        in a single HDF5 file containing all timepoints. By default `1`,
-        resulting in a HDF5 per timepoints.
+        in a single HDF5 file containing all timepoints. Otherwise, choose the
+        number of timepoints per file. By default `0`.
+    
     resave : str, optional
         Allow the function to either re-save the images or simply create a
         merged xml. Use `Load raw data` to avoid re-saving, by default `Re-save
@@ -864,6 +865,12 @@ def define_dataset_auto(
         hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
     else:
         hdf5_chunk_sizes = ""
+    if timepoints_per_partition > 0:
+        split_timepoints = "split_hdf5 timepoints_per_partition=" + str(
+            timepoints_per_partition
+        ) + " "
+    else:
+        split_timepoints = ""
 
     if bf_series_type == "Angles":
         angle_rotation = "apply_angle_rotation "
@@ -901,10 +908,7 @@ def define_dataset_auto(
         + angle_rotation
         + subsampling_factors
         + hdf5_chunk_sizes
-        + "split_hdf5 "
-        + "timepoints_per_partition="
-        + str(timepoints_per_partition)
-        + " "
+        + split_timepoints
         + "setups_per_partition=0 "
         + "use_deflate_compression "
     )
