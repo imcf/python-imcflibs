@@ -533,7 +533,9 @@ def write_ordereddict_to_csv(out_file, content):
             dict_writer.writerows(content)
 
 
-def save_image_in_format(imp, format, out_dir, series, pad_number, split_channels, suffix=""):
+def save_image_in_format(
+    imp, format, out_dir, series, pad_number, split_channels, suffix=""
+):
     """Save an ImagePlus object in the specified format.
 
     This function provides flexible options for saving ImageJ images in various
