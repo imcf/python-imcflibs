@@ -56,13 +56,22 @@ following necessary update sites for this package.
 - TrackMate-MorpholibJ
 
 The **`IMCF Uni Basel`** update-site will always provide the latest compatible
-combination of *official*`.jar` file to use this package.
+combination of *official* `.jar` files to use this package.
+
+### Manual Downloads for OMERO
+
+In addition to the update sites, two manual downloads concerning OMERO are
+necessary:
+
+- [simple-omero-client]
+- [omero-insight]
 
 ### 🏗 Alternative: SciJava Maven Package 👷
 
 💡 **IMPORTANT:** 💡 same as for the *default* installation previously
-described, you will need to enable **all Update Sites listed above** in your
-Fiji as well when using the method described here!
+described, you will need to enable **all Update Sites listed above** (and
+obviously the respective OMERO downloads) in your Fiji as well when using the
+method described here!
 
 The most up-to-date `.jar` (or any other published version, including
 pre-releases) for this package can be always found on the [Scijava Maven
@@ -122,3 +131,5 @@ correct_and_project(raw_image, out_path, model, "Maximum", ".ics")
 [apidocs]: https://imcf.one/apidocs/imcflibs/imcflibs.html
 [pdoc]: https://pdoc.dev/
 [pypi]: https://pypi.org/project/imcflibs/
+[simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client
+[omero-insight]: https://github.com/ome/omero-insight
