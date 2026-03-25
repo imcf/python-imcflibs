@@ -60,7 +60,7 @@ combination of *official* `.jar` files to use this package.
 
 ### Manual Downloads
 
-In addition to the update sites, two manual downloads concerning Omero are necessary:
+In addition to the update sites, two manual downloads concerning OMERO are necessary:
 
 - [simple-omero-client]
 - [omero-insight]
