@@ -58,6 +58,13 @@ following necessary update sites for this package.
 The **`IMCF Uni Basel`** update-site will always provide the latest compatible
 combination of *official*`.jar` file to use this package.
 
+### Manual Downloads
+
+In addition to the update sites, two manual downloads concerning Omero are necessary:
+
+- [simple-omero-client]
+- [omero-insight]
+
 ### 🏗 Alternative: SciJava Maven Package 👷
 
 💡 **IMPORTANT:** 💡 same as for the *default* installation previously
@@ -122,3 +129,5 @@ correct_and_project(raw_image, out_path, model, "Maximum", ".ics")
 [apidocs]: https://imcf.one/apidocs/imcflibs/imcflibs.html
 [pdoc]: https://pdoc.dev/
 [pypi]: https://pypi.org/project/imcflibs/
+[simple-omero-client]: https://github.com/GReD-Clermont/simple-omero-client 
+[omero-insight]: https://github.com/ome/omero-insight 
