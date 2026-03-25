@@ -740,7 +740,9 @@ def run_imarisconvert(file_path, pixel_calibration=None, output_folder=""):
         timed_log("Error converting [%s]: %d" % (file_path, result))
 
 
-def save_script_parameters(destination, save_file_name="script_parameters.txt"):
+def save_script_parameters(
+    destination, save_file_name="script_parameters.txt", script_globals=None
+):
     """Save all Fiji script parameters to a text file.
 
     Parameters
@@ -749,6 +751,9 @@ def save_script_parameters(destination, save_file_name="script_parameters.txt"):
         Directory where the script parameters file will be saved.
     save_file_name : str, optional
         Name of the script parameters file, by default "script_parameters.txt".
+    script_globals : dict, optional
+        The globals dictionary from the Fiji script, default None.
+        Must be passed explicitly as ``globals()`` from the script.
 
     Notes
     -----
@@ -758,9 +763,15 @@ def save_script_parameters(destination, save_file_name="script_parameters.txt"):
     The following parameters are excluded:
     - Parameters explicitly declared with `style="password"` are ignored.
     - Runtime keys (e.g. 'SJLOG', 'COMMAND', 'RM') are also skipped.
+
+    Examples
+    --------
+    In a Fiji script, you can call this function as follows to save the parameters:
+        save_script_parameters(destination="params.txt", script_globals=globals())
     """
-    # Get the ScriptModule object from globals made by Fiji
-    module = globals().get("org.scijava.script.ScriptModule")
+    # script_globals must be passed explicitly as globals() from the script.
+    g = script_globals if script_globals is not None else {}
+    module = g.get("org.scijava.script.ScriptModule")
     if module is None:
         timed_log("No ScriptModule found - skipping saving script parameters.")
         return
