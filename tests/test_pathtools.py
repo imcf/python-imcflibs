@@ -141,13 +141,20 @@ def test_listdir_matching_various(tmpdir):
     # fullpath returns absolute paths
     res_full = listdir_matching(str(base), ".tif", fullpath=True)
     assert all(os.path.isabs(x) for x in res_full)
+    assert os.path.join(str(base), "a.TIF") in res_full
+    assert os.path.join(str(base), "b.tif") in res_full
 
     # recursive with relative paths
     sub = base.mkdir("sub")
     sub.join("s.TIF").write("x")
     res_rec = listdir_matching(str(base), ".tif", recursive=True)
     # should include the file from subdir as a relative path
-    assert "sub/" in "/".join(res_rec) or any(p.startswith("sub/") for p in res_rec)
+    assert "sub/s.TIF" in [p.replace(os.sep, "/") for p in res_rec]
+
+    # recursive with fullpath
+    res_rec_full = listdir_matching(str(base), ".tif", recursive=True, fullpath=True)
+    assert all(os.path.isabs(x) for x in res_rec_full)
+    assert os.path.join(str(sub), "s.TIF") in res_rec_full
 
     # regex matching
     res_regex = listdir_matching(str(base), r".*\.tif$", regex=True)
