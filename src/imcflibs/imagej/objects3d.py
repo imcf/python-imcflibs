@@ -8,6 +8,7 @@ Mostly (although not exclusively) related to the [`mcib3d`][mcib3d] package.
 from de.mpicbg.scf.imgtools.image.create.image import ImageCreationUtilities
 from de.mpicbg.scf.imgtools.image.create.labelmap import WatershedLabeling
 from ij import IJ
+from inra.ijpb.plugins import RemoveBorderLabelsPlugin
 from mcib3d.geom import Objects3DPopulation
 from mcib3d.image3d import ImageHandler, ImageLabeller
 from mcib3d.image3d.processing import MaximaFinder
@@ -124,15 +125,20 @@ def segment_3d_image(
     seg = labeler.getLabels(img)
     seg.setScale(cal.pixelWidth, cal.pixelDepth, cal.getUnits())
 
-    if remove_touching_borders:
-        obj = seg.getObjects3DPopulation()
-        obj.removeObjectsTouchingBorders(seg, remove_touching_borders_z)
-        seg = ImageHandler.wrap(population3d_to_imgplus(imp, obj))
+    seg = RemoveBorderLabelsPlugin().remove(
+        seg.getImagePlus(),
+        remove_touching_borders,
+        remove_touching_borders,
+        remove_touching_borders,
+        remove_touching_borders,
+        remove_touching_borders_z,
+        remove_touching_borders_z,
+    )
 
     if title:
         seg.setTitle(title)
 
-    return seg.getImagePlus()
+    return seg
 
 
 def maxima_finder_3d(imp, min_threshold=0, noise=100, rxy=1.5, rz=1.5):
