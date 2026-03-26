@@ -4,9 +4,13 @@
 import os
 
 from imcflibs.pathtools import (
+    create_directory,
     derive_out_dir,
+    find_dirs_containing_filetype,
+    folder_size,
     gen_name_from_orig,
     image_basename,
+    join_files_with_channel_suffix,
     jython_fiji_exists,
     listdir_matching,
     parse_path,
@@ -180,5 +184,73 @@ def test_listdir_matching_recursive_regex_fullpath(tmpdir):
         str(base), r".*\.tif$", regex=True, recursive=True, fullpath=True
     )
     assert any(os.path.isabs(x) for x in res)
-    expected = os.path.join(str(sub), "s.tif")
+    expected = os.path.abspath(os.path.join(str(sub), "s.tif"))
     assert expected in res
+
+
+def test_find_dirs_containing_filetype(tmpdir):
+    """Test find_dirs_containing_filetype function."""
+    base = tmpdir.mkdir("find_dirs")
+    sub1 = base.mkdir("sub1")
+    sub2 = base.mkdir("sub2")
+    sub1.join("file1.tif").write("x")
+    sub2.join("file2.png").write("x")
+    sub2.join("file3.tif").write("x")
+
+    res = find_dirs_containing_filetype(str(base), ".tif")
+    # find_dirs_containing_filetype appends a "/" to the dirname
+    expected_sub1 = str(sub1) + "/"
+    expected_sub2 = str(sub2) + "/"
+    assert expected_sub1 in res
+    assert expected_sub2 in res
+    assert len(res) == 2
+
+
+def test_folder_size(tmpdir):
+    """Test folder_size function."""
+    base = tmpdir.mkdir("folder_size")
+    base.join("file1.txt").write("123")  # 3 bytes
+    sub = base.mkdir("sub")
+    sub.join("file2.txt").write("12345")  # 5 bytes
+    # Total should be 8 bytes
+
+    assert folder_size(str(base)) == 8
+
+
+def test_join_files_with_channel_suffix():
+    """Test join_files_with_channel_suffix function."""
+    files = ["file1.tif", "file2.tif"]
+
+    # nchannels = 1 (no suffixed copies added)
+    assert join_files_with_channel_suffix(files, 1) == files
+
+    # nchannels = 3 (original then _0 and _1 copies)
+    res = join_files_with_channel_suffix(files, 3)
+    expected = [
+        "file1.tif",
+        "file2.tif",
+        "file1_0.tif",
+        "file2_0.tif",
+        "file1_1.tif",
+        "file2_1.tif",
+    ]
+    assert res == expected
+
+    # Empty files list
+    assert join_files_with_channel_suffix([], 3) == ""
+
+    # nchannels as string
+    assert join_files_with_channel_suffix(["a.tif"], "2") == ["a.tif", "a_0.tif"]
+
+
+def test_create_directory(tmpdir):
+    """Test create_directory function."""
+    new_dir = os.path.join(str(tmpdir), "new_dir")
+    assert not os.path.exists(new_dir)
+    create_directory(new_dir)
+    assert os.path.exists(new_dir)
+    assert os.path.isdir(new_dir)
+
+    # Calling again should not raise (exist_ok behavior)
+    create_directory(new_dir)
+    assert os.path.exists(new_dir)
