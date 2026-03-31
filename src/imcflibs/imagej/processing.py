@@ -114,7 +114,7 @@ def apply_rollingball_bg_subtraction(
     log.debug("Background subtraction options: %s" % options)
 
     imageplus = imp.duplicate()
-    IJ.run(imageplus, "Substract Background...", options)
+    IJ.run(imageplus, "Subtract Background...", options)
 
     return imageplus
 
