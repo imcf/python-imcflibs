@@ -98,18 +98,13 @@ def apply_rollingball_bg_subtraction(
     """
     log.info("Applying rolling ball with radius %d" % rolling_ball_radius)
 
-    option_parts = ["rolling=" + str(rolling_ball_radius)]
-
-    if light_background:
-        option_parts.append("light")
-    if sliding:
-        option_parts.append("sliding")
-    if disable:
-        option_parts.append("disable")
-    if do_3d:
-        option_parts.append("stack")
-
-    options = " ".join(option_parts)
+    options = rolling_ball_options(
+        rolling_ball_radius,
+        light_background=light_background,
+        sliding=sliding,
+        disable=disable,
+        do_3d=do_3d,
+    )
 
     log.debug("Background subtraction options: %s" % options)
 
@@ -117,6 +112,26 @@ def apply_rollingball_bg_subtraction(
     IJ.run(imageplus, "Subtract Background...", options)
 
     return imageplus
+
+
+def rolling_ball_options(
+    rolling_ball_radius,
+    light_background=False,
+    sliding=False,
+    disable=False,
+    do_3d=False,
+):
+    """Return the option string for rolling ball background subtraction."""
+    parts = ["rolling=" + str(rolling_ball_radius)]
+    if light_background:
+        parts.append("light")
+    if sliding:
+        parts.append("sliding")
+    if disable:
+        parts.append("disable")
+    if do_3d:
+        parts.append("stack")
+    return " ".join(parts)
 
 
 def apply_threshold(imp, threshold_method, do_3d=True):
