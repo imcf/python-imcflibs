@@ -66,7 +66,14 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
     return imageplus
 
 
-def apply_rollingball_bg_subtraction(imp, rolling_ball_radius, do_3d=False):
+def apply_rollingball_bg_subtraction(
+    imp,
+    rolling_ball_radius,
+    light_background=False,
+    sliding=False,
+    disable=False,
+    do_3d=False,
+):
     """Perform background subtraction using a rolling ball method.
 
     Parameters
@@ -75,6 +82,12 @@ def apply_rollingball_bg_subtraction(imp, rolling_ball_radius, do_3d=False):
         Input ImagePlus to filter and threshold
     rolling_ball_radius : int
         Radius of the rolling ball filter to use
+    light_background : bool, optional
+        If set to True, will treat the background as light, by default False
+    sliding : bool, optional
+        If set to True, will do a sliding window approach, by default False
+    disable : bool, optional
+        If set to True, will disable the smoothing, by default False
     do_3d : bool, optional
         If set to True, will do a 3D filtering, by default False
 
@@ -85,7 +98,18 @@ def apply_rollingball_bg_subtraction(imp, rolling_ball_radius, do_3d=False):
     """
     log.info("Applying rolling ball with radius %d" % rolling_ball_radius)
 
-    options = "rolling=" + str(rolling_ball_radius) + " stack" if do_3d else ""
+    option_parts = ["rolling=" + str(rolling_ball_radius)]
+
+    if light_background:
+        option_parts.append("light")
+    if sliding:
+        option_parts.append("sliding")
+    if disable:
+        option_parts.append("disable")
+    if do_3d:
+        option_parts.append("stack")
+
+    options = " ".join(option_parts)
 
     log.debug("Background subtraction options: %s" % options)
 
