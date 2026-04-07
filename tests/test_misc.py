@@ -38,6 +38,8 @@ class ScriptModule:
         return self.inputs
 
 
+# FIXME: probably better use monkeypatch instead of mocker for more flexibility
+# in modifying the return value depending on the ScriptModule contents
 def test_save_script_parameters(tmpdir, mocker):
     """Tests for imcflibs.imagej.misc.save_script_parameters."""
     base = tmpdir.mkdir("base")
