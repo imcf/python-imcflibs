@@ -825,6 +825,7 @@ def save_script_parameters(
         timed_log("ScriptModule inspection failed - skipping saving of parameters.")
         return
 
+    # TODO: discuss if the two parameters should better be merged into one?
     destination = str(destination)
     out_path = os.path.join(destination, save_file_name)
 
