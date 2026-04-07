@@ -350,7 +350,7 @@ def get_free_memory():
 def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-argument
     """Set up a clean and defined ImageJ environment.
 
-    This funtion clears the active results table, the ROI manager, and the log.
+    This function clears the active results table, the ROI manager, and the log.
     Additionally, it closes all open images and resets the ImageJ options,
     performing a [*Fresh Start*][fresh_start].
 
@@ -496,7 +496,7 @@ def write_ordereddict_to_csv(out_file, content):
 
     Notes
     -----
-    - The CSV file will use the semicolon charachter (`;`) as delimiter.
+    - The CSV file will use the semicolon character (`;`) as delimiter.
     - When appending to an existing file, the column structure has to match. No
       sanity checking is being done on this by the function!
     - The output file is opened in binary mode for compatibility.
