@@ -27,7 +27,7 @@ class ScriptInfo:
 class ScriptModule:
     """Mock for the org.scijava.script.ScriptModule class."""
 
-    def __init__(self, input_names, inputs: dict):
+    def __init__(self, input_names, inputs):
         self.info = ScriptInfo(input_names)
         self.inputs = inputs
 
