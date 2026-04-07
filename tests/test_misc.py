@@ -28,6 +28,16 @@ class ScriptModule:
     """Mock for the org.scijava.script.ScriptModule class."""
 
     def __init__(self, input_names, inputs):
+        """ScriptModule constructor.
+
+        Parameters
+        ----------
+        input_names : list(str)
+            The list of input names. FIXME: explain better.
+        inputs :dict
+            A dict having the `input_names` as keys. Values are representing the
+            content of the respective script parameter.
+        """
         self.info = ScriptInfo(input_names)
         self.inputs = inputs
 
