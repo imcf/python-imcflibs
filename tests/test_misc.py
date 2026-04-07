@@ -1,6 +1,55 @@
 """Tests for `imcflibs.imagej.misc` utility functions."""
 
 from imcflibs.imagej.misc import bytes_to_human_readable
+from imcflibs.imagej.misc import save_script_parameters
+
+
+class ModuleItem:
+    """Mock for the org.scijava.module.ModuleItem interface."""
+
+    def __init__(self, input_name):
+        self.input_name = input_name
+
+    def getName(self):
+        return self.input_name
+
+
+class ScriptInfo:
+    """Mock for the org.scijava.script.ScriptInfo class."""
+
+    def __init__(self, input_names):
+        self.input_names = [ModuleItem(x) for x in input_names]
+
+    def inputs(self):
+        return self.input_names
+
+
+class ScriptModule:
+    """Mock for the org.scijava.script.ScriptModule class."""
+
+    def __init__(self, input_names, inputs: dict):
+        self.info = ScriptInfo(input_names)
+        self.inputs = inputs
+
+    def getInfo(self):
+        return self.info
+
+    def getInputs(self):
+        return self.inputs
+
+
+def test_save_script_parameters(tmpdir, mocker):
+    """Tests for imcflibs.imagej.misc.save_script_parameters."""
+    base = tmpdir.mkdir("base")
+    m_is_password_style = mocker.patch("imcflibs.imagej.misc._is_password_style")
+    m_is_password_style.return_value = False
+
+    script_module = ScriptModule(["AAA", "BBB"], {"AAA": "aaa", "BBB": "bbb"})
+    script_globals = {"org.scijava.script.ScriptModule": script_module}
+    save_script_parameters(script_globals, destination=base)
+    with open(base / "script_parameters.txt", "r") as f:
+        contents = f.read()
+    assert contents == "AAA: aaa\nBBB: bbb\n"
 
 
 def test_bytes_to_human_readable_simple():
