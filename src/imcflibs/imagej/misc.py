@@ -769,7 +769,7 @@ def bytes_to_human_readable(size):
 
 
 def save_script_parameters(
-    destination, save_file_name="script_parameters.txt", script_globals=None
+    script_globals, destination, save_file_name="script_parameters.txt"
 ):
     """Save all Fiji script parameters to a text file.
 
@@ -785,13 +785,13 @@ def save_script_parameters(
 
     Parameters
     ----------
+    script_globals : dict
+        The globals dictionary from the running Fiji instance. Must be passed
+        explicitly as `globals()` by the calling code.
     destination : str
         Directory where the script parameters file will be saved.
     save_file_name : str, optional
         Name of the script parameters file, by default "script_parameters.txt".
-    script_globals : dict, optional
-        The globals dictionary from the Fiji script, default None.
-        Must be passed explicitly as ``globals()`` from the script.
 
     Examples
     --------
