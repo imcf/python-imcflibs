@@ -231,7 +231,9 @@ def listdir_matching(
                 if not regex_compiled:
                     if candidate.lower().endswith(suffix.lower()):
                         if fullpath:
-                            matching_files.append(os.path.join(dirpath, candidate))
+                            matching_files.append(
+                                os.path.abspath(os.path.join(dirpath, candidate))
+                            )
                         else:
                             rel = os.path.relpath(
                                 os.path.join(dirpath, candidate), path
@@ -240,7 +242,9 @@ def listdir_matching(
                 else:
                     if regex_compiled.match(candidate):
                         if fullpath:
-                            matching_files.append(os.path.join(dirpath, candidate))
+                            matching_files.append(
+                                os.path.abspath(os.path.join(dirpath, candidate))
+                            )
                         else:
                             rel = os.path.relpath(
                                 os.path.join(dirpath, candidate), path
@@ -252,13 +256,17 @@ def listdir_matching(
             if not regex_compiled:
                 if candidate.lower().endswith(suffix.lower()):
                     if fullpath:
-                        matching_files.append(os.path.join(path, candidate))
+                        matching_files.append(
+                            os.path.abspath(os.path.join(path, candidate))
+                        )
                     else:
                         matching_files.append(candidate)
             else:
                 if regex_compiled.match(candidate):
                     if fullpath:
-                        matching_files.append(os.path.join(path, candidate))
+                        matching_files.append(
+                            os.path.abspath(os.path.join(path, candidate))
+                        )
                     else:
                         matching_files.append(candidate)
 
