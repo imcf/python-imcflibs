@@ -800,19 +800,17 @@ def save_script_parameters(
     >>> save_script_parameters(script_globals=globals(), destination="/data")
     Saved script parameters to: /data/script_parameters.txt
     """
-    # script_globals must be passed explicitly as globals() from the script.
-    g = script_globals if script_globals is not None else {}
-    module = g.get("org.scijava.script.ScriptModule")
-    if module is None:
-        timed_log("No ScriptModule found - skipping saving script parameters.")
+    try:
+        module = script_globals.get("org.scijava.script.ScriptModule")
+        # Access script metadata and inputs
+        script_info = module.getInfo()
+        inputs = module.getInputs()
+    except:
+        timed_log("ScriptModule inspection failed - skipping saving of parameters.")
         return
 
     destination = str(destination)
     out_path = os.path.join(destination, save_file_name)
-
-    # Access script metadata and inputs
-    script_info = module.getInfo()
-    inputs = module.getInputs()
 
     # Keys to skip explicitly
     skip_keys = ["USERNAME", "SJLOG", "COMMAND", "RM"]
