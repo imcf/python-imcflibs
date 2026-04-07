@@ -22,7 +22,7 @@ test -d "venv" || python3 -m venv venv
 source venv/bin/activate
 
 # install dependencies / requirements:
-MOCKS_REL="0.2.0"
+MOCKS_REL="0.14.0"
 URL_PFX="https://github.com/imcf/imcf-fiji-mocks/releases/download/v$MOCKS_REL"
 pip install --upgrade \
     $URL_PFX/imcf_fiji_mocks-${MOCKS_REL}-py2.py3-none-any.whl \
