@@ -796,7 +796,9 @@ def save_script_parameters(
     Examples
     --------
     In a Fiji script, you can call this function as follows to save the parameters:
-        save_script_parameters(destination="params.txt", script_globals=globals())
+
+    >>> save_script_parameters(script_globals=globals(), destination="/data")
+    Saved script parameters to: /data/script_parameters.txt
     """
     # script_globals must be passed explicitly as globals() from the script.
     g = script_globals if script_globals is not None else {}
