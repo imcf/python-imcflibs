@@ -121,7 +121,7 @@ def rolling_ball_options(
     disable=False,
     do_3d=False,
 ):
-    """Return the option string for rolling ball background subtraction."""
+    """Generate the options for the "Subtract Background..." macro command."""
     parts = ["rolling=" + str(rolling_ball_radius)]
     if light_background:
         parts.append("light")
