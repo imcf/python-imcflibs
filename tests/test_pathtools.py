@@ -1,11 +1,21 @@
 """Tests for `imcflibs.pathtools`."""
 # -*- coding: utf-8 -*-
 
-from imcflibs.pathtools import parse_path
-from imcflibs.pathtools import jython_fiji_exists
-from imcflibs.pathtools import image_basename
-from imcflibs.pathtools import gen_name_from_orig
-from imcflibs.pathtools import derive_out_dir
+import os
+
+from imcflibs.pathtools import (
+    create_directory,
+    derive_out_dir,
+    find_dirs_containing_filetype,
+    folder_size,
+    gen_name_from_orig,
+    image_basename,
+    join2,
+    join_files_with_channel_suffix,
+    jython_fiji_exists,
+    listdir_matching,
+    parse_path,
+)
 
 
 def test_parse_path():
@@ -114,3 +124,200 @@ def test_derive_out_dir():
     assert derive_out_dir("/foo", "none") == "/foo"
     assert derive_out_dir("/foo", "NONE") == "/foo"
     assert derive_out_dir("/foo", "/bar") == "/bar"
+
+
+def test_listdir_matching_various(tmpdir):
+    """Test non-recursive, recursive, fullpath, regex and sorting behaviour."""
+    base = tmpdir.mkdir("base")
+
+    # create mixed files
+    base.join("a.TIF").write("x")
+    base.join("b.tif").write("x")
+    base.join("c.png").write("x")
+
+    # non-recursive, suffix match (case-insensitive)
+    res = listdir_matching(str(base), ".tif")
+    assert set(res) == {"a.TIF", "b.tif"}
+
+    # fullpath returns absolute paths
+    res_full = listdir_matching(str(base), ".tif", fullpath=True)
+    assert all(os.path.isabs(x) for x in res_full)
+    assert os.path.join(str(base), "a.TIF") in res_full
+    assert os.path.join(str(base), "b.tif") in res_full
+
+    # recursive with relative paths
+    sub = base.mkdir("sub")
+    sub.join("s.TIF").write("x")
+    res_rec = listdir_matching(str(base), ".tif", recursive=True)
+    # should include the file from subdir as a relative path
+    assert "sub/s.TIF" in [p.replace(os.sep, "/") for p in res_rec]
+
+    # recursive with fullpath
+    res_rec_full = listdir_matching(str(base), ".tif", recursive=True, fullpath=True)
+    assert all(os.path.isabs(x) for x in res_rec_full)
+    assert os.path.join(str(sub), "s.TIF") in res_rec_full
+
+    # regex matching
+    res_regex = listdir_matching(str(base), r".*\.tif$", regex=True)
+    assert set(res_regex) >= {"a.TIF", "b.tif"}
+
+    # sorting: create names that sort differently lexicographically
+    base.join("img2.tif").write("x")
+    base.join("img10.tif").write("x")
+    base.join("img1.tif").write("x")
+    res_sorted = listdir_matching(str(base), ".tif", sort=True)
+    # expected alphanumeric order
+    assert res_sorted.index("img1.tif") < res_sorted.index("img2.tif")
+    assert res_sorted.index("img2.tif") < res_sorted.index("img10.tif")
+
+
+def test_listdir_matching_invalid_regex(tmpdir):
+    """Invalid regular expressions should result in an empty list."""
+    base = tmpdir.mkdir("base_invalid_regex")
+    base.join("a.tif").write("x")
+
+    # invalid regex should not raise but simply return an empty list
+    res = listdir_matching(str(base), "([", regex=True)
+    assert res == []
+
+
+def test_listdir_matching_recursive_regex_fullpath(tmpdir):
+    """Recursive search with regex and fullpath should return absolute paths."""
+    base = tmpdir.mkdir("base_recursive")
+    sub = base.mkdir("subdir")
+    sub.join("s.tif").write("x")
+
+    # recursive + regex + fullpath should return absolute path including subdir
+    res = listdir_matching(
+        str(base), r".*\.tif$", regex=True, recursive=True, fullpath=True
+    )
+    assert any(os.path.isabs(x) for x in res)
+    expected = os.path.abspath(os.path.join(str(sub), "s.tif"))
+    assert expected in res
+
+
+def test_find_dirs_containing_filetype(tmpdir):
+    """Test find_dirs_containing_filetype function."""
+    base = tmpdir.mkdir("find_dirs")
+    sub1 = base.mkdir("sub1")
+    sub2 = base.mkdir("sub2")
+    sub1.join("file1.tif").write("x")
+    sub2.join("file2.png").write("x")
+    sub2.join("file3.tif").write("x")
+
+    res = find_dirs_containing_filetype(str(base), ".tif")
+    # find_dirs_containing_filetype appends a "/" to the dirname
+    expected_sub1 = str(sub1) + "/"
+    expected_sub2 = str(sub2) + "/"
+    assert expected_sub1 in res
+    assert expected_sub2 in res
+    assert len(res) == 2
+
+
+def test_folder_size(tmpdir):
+    """Test folder_size function."""
+    base = tmpdir.mkdir("folder_size")
+    base.join("file1.txt").write("123")  # 3 bytes
+    sub = base.mkdir("sub")
+    sub.join("file2.txt").write("12345")  # 5 bytes
+    # Total should be 8 bytes
+
+    assert folder_size(str(base)) == 8
+
+
+def test_join_files_with_channel_suffix():
+    """Test join_files_with_channel_suffix function."""
+    files = ["file1.tif", "file2.tif"]
+
+    # nchannels = 1 (no suffixed copies added)
+    assert join_files_with_channel_suffix(files, 1) == files
+
+    # nchannels = 3 (original then _0 and _1 copies)
+    res = join_files_with_channel_suffix(files, 3)
+    expected = [
+        "file1.tif",
+        "file2.tif",
+        "file1_0.tif",
+        "file2_0.tif",
+        "file1_1.tif",
+        "file2_1.tif",
+    ]
+    assert res == expected
+
+    # Empty files list
+    assert join_files_with_channel_suffix([], 3) == ""
+
+    # nchannels as string
+    assert join_files_with_channel_suffix(["a.tif"], "2") == ["a.tif", "a_0.tif"]
+
+    # nchannels as invalid string (fall back to [0])
+    assert join_files_with_channel_suffix(["a.tif"], "foo") == ["a.tif", "a_0.tif"]
+
+
+def test_create_directory(tmpdir):
+    """Test create_directory function."""
+    new_dir = tmpdir.join("new_dir")
+    assert not os.path.exists(str(new_dir))
+    create_directory(str(new_dir))
+    assert os.path.exists(str(new_dir))
+    # Test creating existing directory (should not fail)
+    create_directory(str(new_dir))
+    assert os.path.exists(str(new_dir))
+
+
+def test_join2():
+    """Test join2 function."""
+    assert join2("/foo", "bar") == "/foo/bar"
+    assert join2("/foo/", "bar") == "/foo/bar"
+    assert join2("/foo", "/bar") == "/foo/bar"
+    # test with double backslashes which should be sanitized
+    assert join2("C:\\Temp", "file.txt") == "C:/Temp/file.txt"
+
+
+def test_listdir_matching_recursive_with_subfolders(tmpdir):
+    """Test recursive listdir_matching ensures paths are correctly combined."""
+    base = tmpdir.mkdir("base_rec_sf")
+    sub = base.mkdir("subfolder")
+    sub.join("test.tif").write("x")
+
+    # non-recursive path join (uses path + candidate)
+    res = listdir_matching(str(base), ".tif", fullpath=True, recursive=False)
+    assert res == []
+
+    # recursive path join (uses dirpath + candidate)
+    res_rec = listdir_matching(str(base), ".tif", fullpath=True, recursive=True)
+    expected = os.path.abspath(os.path.join(str(sub), "test.tif"))
+    assert expected in res_rec
+
+    # recursive path join with regex and fullpath
+    res_rec_regex = listdir_matching(
+        str(base), r".*\.tif$", fullpath=True, recursive=True, regex=True
+    )
+    assert expected in res_rec_regex
+
+    # recursive path join with regex and NOT fullpath
+    res_rec_regex_rel = listdir_matching(
+        str(base), r".*\.tif$", fullpath=False, recursive=True, regex=True
+    )
+    assert "subfolder/test.tif" in [p.replace(os.sep, "/") for p in res_rec_regex_rel]
+
+    # non-recursive path join with regex and fullpath
+    sub_file = sub.join("test2.tif").write("x")
+    res_nonrec_regex = listdir_matching(
+        str(sub), r".*\.tif$", fullpath=True, recursive=False, regex=True
+    )
+    expected_nonrec = os.path.abspath(os.path.join(str(sub), "test2.tif"))
+    assert expected_nonrec in res_nonrec_regex
+
+
+def test_create_directory(tmpdir):
+    """Test create_directory function."""
+    new_dir = os.path.join(str(tmpdir), "new_dir")
+    assert not os.path.exists(new_dir)
+    create_directory(new_dir)
+    assert os.path.exists(new_dir)
+    assert os.path.isdir(new_dir)
+
+    # Calling again should not raise (exist_ok behavior)
+    create_directory(new_dir)
+    assert os.path.exists(new_dir)
