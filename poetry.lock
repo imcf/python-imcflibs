@@ -137,13 +137,13 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "imcf-fiji-mocks"
-version = "0.13.0"
+version = "0.14.0"
 description = "Mocks collection for Fiji-Python. Zero functional code."
 optional = false
 python-versions = ">=2.7"
 files = [
-    {file = "imcf_fiji_mocks-0.13.0-py2.py3-none-any.whl", hash = "sha256:cb6be2b4af480a9340d182c2bccff78f996c0048abbf05380e214a91a2f89bf2"},
-    {file = "imcf_fiji_mocks-0.13.0.tar.gz", hash = "sha256:c29f2dc82a0d4e94963a9f7a455f17012ee37aa8eda4d1c9e9565496df50b063"},
+    {file = "imcf_fiji_mocks-0.14.0-py2.py3-none-any.whl", hash = "sha256:df50de4e6eb9ba9b2134b67da949f88a74b0e4129824bee37425a72c4a3c4829"},
+    {file = "imcf_fiji_mocks-0.14.0.tar.gz", hash = "sha256:2c297a0a24e8e48b05772acb739bb3c57d5621ae3bd40dad37370d033aff1a7b"},
 ]
 
 [[package]]
@@ -345,4 +345,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10"
-content-hash = "f42e21607d534dc04b7be746639e9ed07e70c2ca736844b023b61598df369638"
+content-hash = "c97e2a509e4d74b95df8d58a80c5dd69787a34099243c0b6fb5ce7d333404aad"
