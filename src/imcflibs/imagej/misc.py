@@ -773,6 +773,16 @@ def save_script_parameters(
 ):
     """Save all Fiji script parameters to a text file.
 
+    Record all input parameters defined in the Fiji script header (e.g.
+    `#@ String`) to a text file such that they can be stored e.g. next to the
+    input data and the analysis results in order to document how a specific
+    processing run was executed.
+
+    The following parameters are excluded:
+
+    - Parameters explicitly declared with `style="password"`.
+    - Runtime keys: `USERNAME`, `SJLOG`, `COMMAND`, `RM`.
+
     Parameters
     ----------
     destination : str
@@ -782,15 +792,6 @@ def save_script_parameters(
     script_globals : dict, optional
         The globals dictionary from the Fiji script, default None.
         Must be passed explicitly as ``globals()`` from the script.
-
-    Notes
-    -----
-    This function records all input parameters defined in the Fiji script header
-    (e.g. `#@ String`) to a text file.
-
-    The following parameters are excluded:
-    - Parameters explicitly declared with `style="password"` are ignored.
-    - Runtime keys (e.g. 'SJLOG', 'COMMAND', 'RM') are also skipped.
 
     Examples
     --------
