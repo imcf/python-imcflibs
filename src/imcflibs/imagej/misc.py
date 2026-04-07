@@ -768,6 +768,22 @@ def bytes_to_human_readable(size):
     return "%3.1f %s" % (size, "TB")
 
 
+def _is_password_style(item):
+    """Check if a script-parameter item is declared with `style="password"`.
+
+    Parameters
+    ----------
+    item : org.scijava.module.ModuleItem
+        The module item to check, obtained e.g. by calling `inputs()` on an
+        instance of `org.scijava.script.ScriptInfo`.
+
+    Returns
+    -------
+    bool
+    """
+    return WidgetStyle.isStyle(item, TextWidget.PASSWORD_STYLE)
+
+
 def save_script_parameters(
     script_globals, destination, save_file_name="script_parameters.txt"
 ):
@@ -824,11 +840,14 @@ def save_script_parameters(
                 continue
 
             # Skip if parameter is declared with password style
-            if WidgetStyle.isStyle(item, TextWidget.PASSWORD_STYLE):
+            if _is_password_style(item):
                 continue
 
-            if inputs.containsKey(key):
+            # TODO: discuss if this approach is fine within Fiji/Jython
+            try:
                 val = inputs.get(key)
                 f.write("%s: %s\n" % (key, str(val)))
+            except:
+                pass
 
     timed_log("Saved script parameters to: %s" % out_path)
