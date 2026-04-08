@@ -21,7 +21,7 @@ version = "0.0.0"
 
 [tool.poetry.dependencies]
 # IMPORTANT: see the "poetry.lock.md" file when changing dependencies!!!
-imcf-fiji-mocks = ">=0.14.0"
+imcf-fiji-mocks = ">=0.15.0.a0"
 python = ">=2.7"
 python-micrometa = "^15.2.3"
 sjlogging = ">=0.5.2"
