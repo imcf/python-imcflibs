@@ -114,7 +114,6 @@ vpip install \
     olefile==0.46 \
     pytest \
     pytest-cov \
-    pytest-mock \
     pip
 
 echo "== * Cleaning up egg-info..."
