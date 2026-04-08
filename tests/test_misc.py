@@ -86,10 +86,18 @@ class ScriptModule:
         return self.inputs
 
 
+def test_save_script_parameters_fail(caplog):
+    """Tests save_script_parameters with an invalid script_globals object."""
+    caplog.clear()
+
+    save_script_parameters(script_globals=None, destination="")
+    assert "ScriptModule inspection failed" in caplog.messages[0]
+
+
 # FIXME: probably better use monkeypatch instead of mocker for more flexibility
 # in modifying the return value depending on the ScriptModule contents
 def test_save_script_parameters(tmpdir, mocker):
-    """Tests for imcflibs.imagej.misc.save_script_parameters."""
+    """Tests save_script_parameters."""
     base = tmpdir.mkdir("base")
     m_is_password_style = mocker.patch("imcflibs.imagej.misc._is_password_style")
     m_is_password_style.return_value = False
