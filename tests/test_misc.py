@@ -97,7 +97,7 @@ def test_save_script_parameters(tmpdir, mocker):
     script_module = ScriptModule(["AAA", "BBB"], {"AAA": "aaa", "BBB": "bbb"})
     script_globals = {"org.scijava.script.ScriptModule": script_module}
     save_script_parameters(script_globals, destination=base)
-    with open(base / "script_parameters.txt", "r") as f:
+    with open(str(base) + "/script_parameters.txt", "r") as f:
         contents = f.read()
     assert contents == "AAA: aaa\nBBB: bbb\n"
 
