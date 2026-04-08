@@ -1,5 +1,15 @@
 # Testing 🧪🧫 in Fiji / ImageJ2
 
+## Using 🎭 Poetry, pytest 🐍🔬 and Python 3 for plain Python code
+
+The easiest way to run [`pytest`][pytest] (using Python 3) is when you're
+already having a working [poetry] setup. In that case tests can simply be run by
+using the `run-poetry.sh` wrapper script, for example:
+
+```bash
+scripts/run-poetry.sh run pytest tests/test_misc.py
+```
+
 ## Using pytest 🐍🔬 and Python 3 for plain Python code
 
 Those parts of the package that do not interact / depend on ImageJ objects can
