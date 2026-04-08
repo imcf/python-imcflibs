@@ -797,7 +797,11 @@ def save_script_parameters(
     The following parameters are excluded:
 
     - Parameters explicitly declared with `style="password"`.
-    - Runtime keys: `USERNAME`, `SJLOG`, `COMMAND`, `RM`.
+    - Runtime keys (case insensitive):
+      - `USERNAME`
+      - `SJLOG` (SciJava LogService)
+      - `COMMAND` (SciJava CommandService)
+      - `RM` (RoiManager)
 
     Parameters
     ----------
