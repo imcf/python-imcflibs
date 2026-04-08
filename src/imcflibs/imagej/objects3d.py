@@ -80,7 +80,7 @@ def segment_3d_image(
     max_vol=None,
     remove_touching_borders=False,
     remove_touching_borders_z=False,
-):  # cover:jython
+):  # pragma: no cover (jython)
     """Segment a 3D binary image to get a labelled stack.
 
     Parameters
