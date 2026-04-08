@@ -35,3 +35,6 @@ res_img = trackmate.run_trackmate(imp, settings)
 res_img.show()
 ```
 
+## Expected behavior / results
+
+FIXME!!
