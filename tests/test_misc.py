@@ -1,7 +1,14 @@
 """Tests for `imcflibs.imagej.misc` utility functions."""
 
+import logging
+
+import imcflibs.imagej.misc
+
 from imcflibs.imagej.misc import bytes_to_human_readable
 from imcflibs.imagej.misc import save_script_parameters
+
+
+PASSWORD_ITEMS = ["OMERO_PASSWD"]
 
 
 class ModuleItem:
@@ -94,17 +101,29 @@ def test_save_script_parameters_fail(caplog):
     assert "ScriptModule inspection failed" in caplog.messages[0]
 
 
-# FIXME: probably better use monkeypatch instead of mocker for more flexibility
-# in modifying the return value depending on the ScriptModule contents
-def test_save_script_parameters(tmpdir, mocker):
+def test_save_script_parameters(tmp_path, monkeypatch, caplog):
     """Tests save_script_parameters."""
-    base = tmpdir.mkdir("base")
-    m_is_password_style = mocker.patch("imcflibs.imagej.misc._is_password_style")
-    m_is_password_style.return_value = False
+    caplog.set_level(logging.DEBUG)
+    caplog.clear()
 
-    script_module = ScriptModule(["AAA", "BBB"], {"AAA": "aaa", "BBB": "bbb"})
+    base = tmp_path / "saved_parameters"
+    base.mkdir()
+
+    def _is_password_style(item):
+        return item.getName() in PASSWORD_ITEMS
+
+    monkeypatch.setattr(imcflibs.imagej.misc, "_is_password_style", _is_password_style)
+
+    script_module = ScriptModule(
+        ["AAA", "BBB", "OMERO_PASSWD"],
+        {"AAA": "aaa", "BBB": "bbb", "OMERO_PASSWD": "ultra-secret"},
+    )
     script_globals = {"org.scijava.script.ScriptModule": script_module}
     save_script_parameters(script_globals, destination=base)
+    assert "Skipping password-style parameter" in caplog.text
+    assert "Saved 2 parameters (skipped 1 password" in caplog.text
+    assert "Saved 2 script parameters to" in caplog.text
+
     with open(str(base) + "/script_parameters.txt", "r") as f:
         contents = f.read()
     assert contents == "AAA: aaa\nBBB: bbb\n"
