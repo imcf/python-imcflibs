@@ -857,6 +857,7 @@ def save_script_parameters(
                 f.write("%s: %s\n" % (key, str(val)))
                 saved += 1
             except:
+                log.warning("Unable to fetch value for parameter: %s", key)
                 pass
 
     log.info(
