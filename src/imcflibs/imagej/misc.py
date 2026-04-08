@@ -856,7 +856,7 @@ def save_script_parameters(
             # TODO: discuss if this approach is fine within Fiji/Jython
             try:
                 val = inputs.get(key)
-                if not val:  # required for testing in CPython
+                if val is None:  # required for testing in CPython
                     raise KeyError("failure looking up value for '%s'" % key)
                 f.write("%s: %s\n" % (key, str(val)))
                 saved += 1
