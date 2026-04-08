@@ -768,7 +768,7 @@ def bytes_to_human_readable(size):
     return "%3.1f %s" % (size, "TB")
 
 
-def _is_password_style(item):  # no-cover:jython-only
+def _is_password_style(item):  # pragma: no cover (jython)
     """Check if a script-parameter item is declared with `style="password"`.
 
     Parameters
