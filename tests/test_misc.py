@@ -115,13 +115,15 @@ def test_save_script_parameters(tmp_path, monkeypatch, caplog):
     monkeypatch.setattr(imcflibs.imagej.misc, "_is_password_style", _is_password_style)
 
     script_module = ScriptModule(
-        ["AAA", "BBB", "OMERO_PASSWD"],
-        {"AAA": "aaa", "BBB": "bbb", "OMERO_PASSWD": "ultra-secret"},
+        input_names=["AAA", "BBB", "OMERO_PASSWD", "SJLOG", "NOT_THERE"],
+        inputs={"AAA": "aaa", "BBB": "bbb", "OMERO_PASSWD": "ultra-secret"},
     )
     script_globals = {"org.scijava.script.ScriptModule": script_module}
     save_script_parameters(script_globals, destination=base)
+    assert "Skipping parameter from skip-list" in caplog.text
     assert "Skipping password-style parameter" in caplog.text
-    assert "Saved 2 parameters (skipped 1 password" in caplog.text
+    assert "Unable to fetch value for parameter: NOT_THERE" in caplog.text
+    assert "Saved 2 parameters (skipped 1 password-style and 1 others)." in caplog.text
     assert "Saved 2 script parameters to" in caplog.text
 
     with open(str(base) + "/script_parameters.txt", "r") as f:
