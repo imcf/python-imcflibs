@@ -832,23 +832,35 @@ def save_script_parameters(
     # Keys to skip explicitly
     skip_keys = ["USERNAME", "SJLOG", "COMMAND", "RM"]
 
+    saved = skipped = passwords = 0
     with open(out_path, "w") as f:
         for item in script_info.inputs():
             key = item.getName()
 
             # Skip if any keys are in the skip list
             if any(skip in key.upper() for skip in skip_keys):
+                log.info("Skipping parameter from skip-list: %s", key)
+                skipped += 1
                 continue
 
             # Skip if parameter is declared with password style
             if _is_password_style(item):
+                log.info("Skipping password-style parameter: %s", key)
+                passwords += 1
                 continue
 
             # TODO: discuss if this approach is fine within Fiji/Jython
             try:
                 val = inputs.get(key)
                 f.write("%s: %s\n" % (key, str(val)))
+                saved += 1
             except:
                 pass
 
-    timed_log("Saved script parameters to: %s" % out_path)
+    log.info(
+        "Saved %i parameters (skipped %i password-style and %i others).",
+        saved,
+        passwords,
+        skipped,
+    )
+    timed_log("Saved %i script parameters to: %s" % (saved, out_path))
