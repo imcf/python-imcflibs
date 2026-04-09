@@ -11,8 +11,14 @@
 #@ LogService sjlog
 
 import os
-from imcflibs.imagej import misc, omerotools
 
-misc.save_script_parameters(outputPath, script_globals=globals())
-print("Saved params")
+import imcflibs.log
+from imcflibs.imagej import misc
+
+imcflibs.log.enable_console_logging()
+log = imcflibs.log.LOG
+
+log.warning("Starting...")
+misc.save_script_parameters(script_globals=globals(), destination=outputPath)
+log.warning("Saved parameters to: %s/script_parameters.txt", outputPath)
 ```
