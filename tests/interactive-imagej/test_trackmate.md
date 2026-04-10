@@ -37,4 +37,4 @@ res_img.show()
 
 ## Expected behavior / results
 
-FIXME!!
+- A label image of round spots named `LblImg_blobs.gif` should open next to the raw `blobs.gif`. If this image has many segmented spots, the test was successful. If the cellpose detector is used, the segmented blobs should be quite accurate, while the log detector only finds many spots inside the image.
