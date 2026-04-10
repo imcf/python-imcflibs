@@ -17,4 +17,4 @@ log = imcflibs.log.LOG
 
 log.warning("Starting...")
 misc.save_script_parameters(script_globals=globals(), destination=outputPath)
-log.warning("Saved parameters to: %s/script_parameters.txt", outputPath)
+log.warning("Saved parameters to: %s\script_parameters.txt", outputPath)
