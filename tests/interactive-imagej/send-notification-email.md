@@ -1,24 +1,23 @@
 # Test the send_notification_email function
 
+Usage:
+BEFORE starting Fiji, add to the `IJ_Prefs.txt` (depending on your OS, located in one of the following paths):
+
+Linux/Mac: `~/.imagej/IJ_Prefs.txt `
+
+Windows: `C:\Users\<USERNAME>\.imagej\IJ_Prefs.txt`
+
+```bash
+.imcf.sender_email=imcf@unibas.ch
+.imcf.smtpserver=smtp.unibas.ch
+```
+
 ```Python
 from imcflibs.imagej.misc import send_notification_email
 
 from imcflibs.log import LOG as log
 from imcflibs.log import enable_console_logging
 from imcflibs.log import set_loglevel
-
-
-"""
-Usage:
-BEFORE starting Fiji, add to the IJ_Prefs.txt:
-
-.imcf.sender_email=imcf@unibas.ch
-.imcf.smtpserver=smtp.unibas.ch
-
-Linux/Mac: ~/.imagej/IJ_Prefs.txt 
-Windows: C:\Users\<USERNAME>\.imagej\IJ_Prefs.txt
-"""
-
 
 enable_console_logging()
 set_loglevel(2)
@@ -37,3 +36,7 @@ send_notification_email(
 
 log.info("DONE")
 ```
+
+## Expected behaviour / results
+
+A mail should be sent to the address from imcf@unibas.ch, with the output in Fiji being "Successfully sent email to <nikolaus.ehrenfeuchter@unibas.ch>".
