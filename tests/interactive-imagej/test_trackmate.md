@@ -7,8 +7,8 @@ Instructions for *interactive* testing (i.e. manually running a script in Fiji's
 
 1. An updated `python-imcflibs.jar` containing the changes to be tested has to
    be installed into Fiji already.
-1. Next, open the blobs image, e.g. using `Ctrl` + `Shift` + `B`.
-1. Then, launch the *Script Editor* using `Ctrl` + `Shift` + `N`, paste the
+2. Next, open the blobs image, e.g. using `Ctrl` + `Shift` + `B`.
+3. Then, launch the *Script Editor* using `Ctrl` + `Shift` + `N`, paste the
    following script and finally run it:
 
 ```Python
