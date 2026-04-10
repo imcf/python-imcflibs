@@ -16,3 +16,8 @@ imp = IJ.getImage()
 imcf_shading = shading.simple_flatfield_correction(imp)
 # Or any other method in class shading
 imcf_shading.show()
+```
+
+## Expected behavior / results
+
+- A new image titled "Result of blobs.gif", which is a flatfield corrected image of the raw `blobs.gif` should open alongside the original.
