@@ -21,6 +21,19 @@ if [ -z "$RUN_ON_UNCLEAN" ]; then
     fi
 fi
 
+TOML_STATUS=$(git status --porcelain pyproject.toml)
+if [ -n "$TOML_STATUS" ]; then
+    echo "==== ERROR: stopping to preserve changes in 'pyproject.toml'! ===="
+    echo
+    git status pyproject.toml --porcelain
+    echo
+    echo "--------"
+    echo "Refusing to continue as 'pyproject.toml' would be re-set at the end"
+    echo "of this script. Please stash your changes and re-run the script!"
+    echo
+    exit 2
+fi
+
 ### clean up old poetry artifacts:
 rm -rf dist/
 

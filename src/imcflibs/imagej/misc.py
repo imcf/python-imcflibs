@@ -766,3 +766,110 @@ def bytes_to_human_readable(size):
     # If the value is larger than the largest unit, fall back to TB with
     # the current value (already divided accordingly).
     return "%3.1f %s" % (size, "TB")
+
+
+def _is_password_style(item):  # pragma: no cover (jython)
+    """Check if a script-parameter item is declared with `style="password"`.
+
+    Parameters
+    ----------
+    item : org.scijava.module.ModuleItem
+        The module item to check, obtained e.g. by calling `inputs()` on an
+        instance of `org.scijava.script.ScriptInfo`.
+
+    Returns
+    -------
+    bool
+    """
+    return WidgetStyle.isStyle(item, TextWidget.PASSWORD_STYLE)
+
+
+def save_script_parameters(
+    script_globals, destination, save_file_name="script_parameters.txt"
+):
+    """Save all Fiji script parameters to a text file.
+
+    Record all input parameters defined in the Fiji script header (e.g.
+    `#@ String`) to a text file such that they can be stored e.g. next to the
+    input data and the analysis results in order to document how a specific
+    processing run was executed.
+
+    The following parameters are excluded:
+
+    - Parameters explicitly declared with `style="password"`.
+    - Runtime keys (case insensitive):
+      - `USERNAME`
+      - `SJLOG` (SciJava LogService)
+      - `COMMAND` (SciJava CommandService)
+      - `RM` (RoiManager)
+
+    Parameters
+    ----------
+    script_globals : dict
+        The globals dictionary from the running Fiji instance. Must be passed
+        explicitly as `globals()` by the calling code.
+    destination : str
+        Directory where the script parameters file will be saved.
+    save_file_name : str, optional
+        Name of the script parameters file, by default "script_parameters.txt".
+
+    Examples
+    --------
+    In a Fiji script, you can call this function as follows to save the parameters:
+
+    >>> save_script_parameters(script_globals=globals(), destination="/data")
+    Saved script parameters to: /data/script_parameters.txt
+    """
+    try:
+        module = script_globals.get("org.scijava.script.ScriptModule")
+        # Access script metadata and inputs
+        script_info = module.getInfo()
+        inputs = module.getInputs()
+    except:
+        timed_log("ScriptModule inspection failed - skipping saving of parameters.")
+        return
+
+    # NOTE: the two parameters are intentionally kept separate for (1) consistency
+    # reasons with other scripts and (b) as this allows for easier modification of just
+    # the output file e.g. in subsequent runs.
+    destination = str(destination)
+    out_path = os.path.join(destination, save_file_name)
+
+    # Keys to skip explicitly
+    skip_keys = ["USERNAME", "SJLOG", "COMMAND", "RM"]
+
+    saved = skipped = passwords = 0
+    with open(out_path, "w") as f:
+        for item in script_info.inputs():
+            key = item.getName()
+
+            # Skip if any keys are in the skip list
+            if any(skip in key.upper() for skip in skip_keys):
+                log.info("Skipping parameter from skip-list: %s", key)
+                skipped += 1
+                continue
+
+            # Skip if parameter is declared with password style
+            if _is_password_style(item):
+                log.info("Skipping password-style parameter: %s", key)
+                passwords += 1
+                continue
+
+            # TODO: discuss if this approach is fine within Fiji/Jython
+            try:
+                val = inputs.get(key)
+                if val is None:  # required for testing in CPython
+                    raise KeyError("failure looking up value for '%s'" % key)
+                f.write("%s: %s\n" % (key, str(val)))
+                saved += 1
+            except:
+                log.warning("Unable to fetch value for parameter: %s", key)
+                pass
+
+    log.info(
+        "Saved %i parameters (skipped %i password-style and %i others).",
+        saved,
+        passwords,
+        skipped,
+    )
+    timed_log("Saved %i script parameters to: %s" % (saved, out_path))
