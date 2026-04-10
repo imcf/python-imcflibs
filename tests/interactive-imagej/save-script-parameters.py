@@ -1,11 +1,11 @@
-# @ String(label="Username") USERNAME
-# @ String(label="Password", style="password") PASSWORD
-# @ File(label="Path for results", style="directory") outputPath
-# @ Integer threshold
-# @ Boolean(label="Yes/No?") choice
-# @ RoiManager rm
-# @ CommandService command
-# @ LogService sjlog
+#@ String(label="Username") USERNAME
+#@ String(label="Password", style="password") PASSWORD
+#@ File(label="Path for results", style="directory") outputPath
+#@ Integer threshold
+#@ Boolean(label="Yes/No?") choice
+#@ RoiManager rm
+#@ CommandService command
+#@ LogService sjlog
 
 import os
 
