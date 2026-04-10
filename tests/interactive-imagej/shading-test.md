@@ -1,3 +1,4 @@
+
 ### ----------------------
 
  The following code block is a `python` script to be used in a Fiji with the shading branch's .jar already pasted into ./jars in the Fiji installation
