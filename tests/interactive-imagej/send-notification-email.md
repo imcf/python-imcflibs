@@ -39,4 +39,4 @@ log.info("DONE")
 
 ## Expected behaviour / results
 
-A mail should be sent to the address from imcf@unibas.ch, with the output in Fiji being "Successfully sent email to <nikolaus.ehrenfeuchter@unibas.ch>".
+A mail should be sent to the address from `imcf@unibas.ch`, with the output in Fiji being "Successfully sent email to <nikolaus.ehrenfeuchter@unibas.ch>".
