@@ -1,21 +1,18 @@
+# Test shading function
 
-### ----------------------
+ The following code block is a `python` script to be used in a Fiji with the shading branch's .jar already pasted into `./jars` in the Fiji installation
 
- The following code block is a `python` script to be used in a Fiji with the shading branch's .jar already pasted into ./jars in the Fiji installation
-
- Recommended is to import an image you wish to test on (Shaded-blobs.png e.g) and then drag this script into Fiji and run it.
- If a resulting image pops up (while using flatfield method), everything works finely.
-### ----------------------
+ Recommended is to import an image you wish to test on (`Shaded-blobs.png` e.g) and then drag this script into Fiji and run it, or make a new one and choose language Python, and paste the following block.
 
 ```python
 from imcflibs.imagej import shading
-# import imcflibs.imagej
 import ij
 from ij import IJ
 
 imp = IJ.getImage()
+
+# Any other method in class shading also works
 imcf_shading = shading.simple_flatfield_correction(imp)
-# Or any other method in class shading
 imcf_shading.show()
 ```
 
