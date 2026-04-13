@@ -8,8 +8,7 @@
 #   .imcf.smtpserver=smtp.unibas.ch
 #
 # Expected result: a mail is sent to nikolaus.ehrenfeuchter@unibas.ch from
-# imcf@unibas.ch, with Fiji printing "Successfully sent email to
-# <nikolaus.ehrenfeuchter@unibas.ch>".
+# imcf@unibas.ch, with a print statement in Fiji.
 
 from imcflibs.imagej.misc import send_notification_email
 
