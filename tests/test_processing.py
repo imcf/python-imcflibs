@@ -35,9 +35,25 @@ def test_filter_options():
     assert options == "radius=5 stack"
 
 
+def test_filter_options_gaussian_blur():
+    """Test `filter_options()` with the Gaussian Blur branch."""
+
+    command, options = filter_options("Gaussian Blur", 5)
+    assert command == "Gaussian Blur..."
+    assert options == "sigma="
+
+
 def test_threshold_options():
     """Test `threshold_options()` string concatenation."""
 
     auto_threshold, convert_to_binary = threshold_options("Otsu", do_3d=True)
     assert auto_threshold == "Otsu dark stack"
+    assert convert_to_binary == "method=Otsu background=Dark black"
+
+
+def test_threshold_options_without_stack():
+    """Test `threshold_options()` when 3D stacking is disabled."""
+
+    auto_threshold, convert_to_binary = threshold_options("Otsu", do_3d=False)
+    assert auto_threshold == ""
     assert convert_to_binary == "method=Otsu background=Dark black"
