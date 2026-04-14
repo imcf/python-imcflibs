@@ -9,6 +9,37 @@ from ij import IJ
 from ..log import LOG as log
 
 
+def filter_options(filter_method, filter_radius, do_3d=False):
+    """Build the ImageJ filter command and options strings."""
+
+    if do_3d:
+        filter_name = filter_method + " 3D..."
+    else:
+        filter_name = filter_method + "..."
+
+    options = (
+        "sigma="
+        if filter_method == "Gaussian Blur"
+        else "radius=" + str(filter_radius) + " stack"
+    )
+
+    return filter_name, options
+
+
+def threshold_options(threshold_method, do_3d=True):
+    """Build the ImageJ threshold option strings."""
+
+    auto_threshold_options = (
+        threshold_method + " " + "dark" + " " + "stack" if do_3d else ""
+    )
+
+    convert_to_binary_options = (
+        "method=" + threshold_method + " " + "background=Dark" + " " + "black"
+    )
+
+    return auto_threshold_options, convert_to_binary_options
+
+
 def apply_filter(imp, filter_method, filter_radius, do_3d=False):
     """Make a specific filter followed by a threshold method of choice.
 
@@ -47,16 +78,7 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
             "filter_method must be one of: Median, Mean, Gaussian Blur, Minimum, Maximum"
         )
 
-    if do_3d:
-        filter = filter_method + " 3D..."
-    else:
-        filter = filter_method + "..."
-
-    options = (
-        "sigma="
-        if filter_method == "Gaussian Blur"
-        else "radius=" + str(filter_radius) + " stack"
-    )
+    filter, options = filter_options(filter_method, filter_radius, do_3d=do_3d)
 
     log.debug("Filter: <%s> with options <%s>" % (filter, options))
 
@@ -156,17 +178,13 @@ def apply_threshold(imp, threshold_method, do_3d=True):
 
     imageplus = imp.duplicate()
 
-    auto_threshold_options = (
-        threshold_method + " " + "dark" + " " + "stack" if do_3d else ""
+    auto_threshold_options, convert_to_binary_options = threshold_options(
+        threshold_method, do_3d=do_3d
     )
 
     log.debug("Auto threshold options: %s" % auto_threshold_options)
 
     IJ.setAutoThreshold(imageplus, auto_threshold_options)
-
-    convert_to_binary_options = (
-        "method=" + threshold_method + " " + "background=Dark" + " " + "black"
-    )
 
     log.debug("Convert to binary options: %s" % convert_to_binary_options)
 
