@@ -58,3 +58,9 @@ ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.coverage.report]
+exclude_also = [ # additional pragmas to exclude lines from coverage reporting
+  'no-cover:jython-only',
+  'cover:jython',
+]
