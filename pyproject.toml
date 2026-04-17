@@ -36,6 +36,7 @@ requires = ["poetry-core"]
 
 
 [tool.ruff.lint]
+preview = true # enable preview mode (https://docs.astral.sh/ruff/preview/)
 exclude = [
   "tests/interactive-imagej/*", # no linting for the interactive test scripts
 ]
@@ -46,6 +47,8 @@ select = [
   "D401", # imperative mood for all docstrings
   "D415", # summary line has to end in a punctuation mark
   "D417", # require documentation for *all* function parameters
+  "DOC102", # check for parameters which are not in the function signature
+  # "DOC101", # enable as soon as ruff/pull/21076 has been merged!
 
 ]
 
