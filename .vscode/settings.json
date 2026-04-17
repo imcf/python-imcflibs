@@ -69,6 +69,7 @@
         "subsampling",
         "sumpix",
         "TESTDATA",
+        "Thresholded",
         "thresholding",
         "trackmate",
         "virtualenv",
