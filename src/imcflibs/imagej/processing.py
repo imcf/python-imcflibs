@@ -122,7 +122,7 @@ def apply_rollingball_bg_subtraction(
     rolling_ball_radius,
     light_background=False,
     sliding=False,
-    disable_smooth=False,
+    disable_smoothing=False,
     do_3d=False,
 ):
     """Perform background subtraction using a rolling ball method.
@@ -137,7 +137,7 @@ def apply_rollingball_bg_subtraction(
         If set to True, will treat the background as light, by default False
     sliding : bool, optional
         If set to True, will do a sliding window approach, by default False
-    disable_smooth : bool, optional
+    disable_smoothing : bool, optional
         If set to True, will disable the smoothing, by default False
     do_3d : bool, optional
         If set to True, will do a 3D filtering, by default False
@@ -153,7 +153,7 @@ def apply_rollingball_bg_subtraction(
         rolling_ball_radius,
         light_background=light_background,
         sliding=sliding,
-        disable_smooth=disable_smooth,
+        disable_smoothing=disable_smoothing,
         do_3d=do_3d,
     )
 
@@ -169,7 +169,7 @@ def rolling_ball_options(
     rolling_ball_radius,
     light_background=False,
     sliding=False,
-    disable_smooth=False,
+    disable_smoothing=False,
     do_3d=False,
 ):
     """Generate the options for the "Subtract Background..." macro command.
@@ -182,7 +182,7 @@ def rolling_ball_options(
         If set to True, will treat the background as light, by default False
     sliding : bool, optional
         If set to True, will do a sliding window approach, by default False
-    disable_smooth : bool, optional
+    disable_smoothing : bool, optional
         If set to True, will disable the smoothing, by default False
     do_3d : bool, optional
         If set to True, will do a 3D filtering, by default False
@@ -198,7 +198,7 @@ def rolling_ball_options(
         parts.append("light")
     if sliding:
         parts.append("sliding")
-    if disable_smooth:
+    if disable_smoothing:
         parts.append("disable")
     if do_3d:
         parts.append("stack")

@@ -21,7 +21,7 @@ def test_rolling_ball_options_with_flags():
         12,
         light_background=True,
         sliding=True,
-        disable=True,
+        disable_smoothing=True,
         do_3d=True,
     )
     assert options == "rolling=12 light sliding disable stack"
@@ -40,7 +40,7 @@ def test_filter_options_gaussian_blur():
 
     command, options = filter_options("Gaussian Blur", 5)
     assert command == "Gaussian Blur..."
-    assert options == "sigma="
+    assert options == "sigma=5 stack"
 
 
 def test_threshold_options():
