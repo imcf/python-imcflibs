@@ -10,24 +10,53 @@ from ..log import LOG as log
 
 
 def filter_options(filter_method, filter_radius, do_3d=False):
-    """Build the ImageJ filter command and options strings."""
+    """Build the ImageJ filter command and options strings.
+
+    Parameters
+    ----------
+    filter_method : str
+        Name of the filter method to use
+    filter_radius : int
+        Radius of the filter to use
+    do_3d : bool, optional
+        If set to True, will do a 3D filtering, by default False
+
+    Returns
+    -------
+    tuple[str, str]
+        The filter name and options strings
+    """
 
     if do_3d:
         filter_name = filter_method + " 3D..."
     else:
         filter_name = filter_method + "..."
 
-    options = (
-        "sigma="
-        if filter_method == "Gaussian Blur"
-        else "radius=" + str(filter_radius) + " stack"
-    )
+    if filter_method == "Gaussian Blur":
+        options = "sigma=" + str(filter_radius) + " stack"
+    else:
+        options = "radius=" + str(filter_radius) + " stack"
 
     return filter_name, options
 
 
 def threshold_options(threshold_method, do_3d=True):
-    """Build the ImageJ threshold option strings."""
+    """Build the ImageJ threshold option strings.
+
+    Parameters
+    ----------
+    threshold_method : str
+        Name of the threshold method to use
+    do_3d : bool, optional
+        If set to True, the automatic threshold will be done on a 3D stack,
+        by default True
+
+    Returns
+    -------
+    tuple[str, str]
+        The auto threshold options and the convert to binary options strings
+
+    """
 
     auto_threshold_options = (
         threshold_method + " " + "dark" + " " + "stack" if do_3d else ""
@@ -93,7 +122,7 @@ def apply_rollingball_bg_subtraction(
     rolling_ball_radius,
     light_background=False,
     sliding=False,
-    disable=False,
+    disable_smooth=False,
     do_3d=False,
 ):
     """Perform background subtraction using a rolling ball method.
@@ -108,7 +137,7 @@ def apply_rollingball_bg_subtraction(
         If set to True, will treat the background as light, by default False
     sliding : bool, optional
         If set to True, will do a sliding window approach, by default False
-    disable : bool, optional
+    disable_smooth : bool, optional
         If set to True, will disable the smoothing, by default False
     do_3d : bool, optional
         If set to True, will do a 3D filtering, by default False
@@ -124,7 +153,7 @@ def apply_rollingball_bg_subtraction(
         rolling_ball_radius,
         light_background=light_background,
         sliding=sliding,
-        disable=disable,
+        disable_smooth=disable_smooth,
         do_3d=do_3d,
     )
 
@@ -140,16 +169,36 @@ def rolling_ball_options(
     rolling_ball_radius,
     light_background=False,
     sliding=False,
-    disable=False,
+    disable_smooth=False,
     do_3d=False,
 ):
-    """Generate the options for the "Subtract Background..." macro command."""
+    """Generate the options for the "Subtract Background..." macro command.
+
+    Parameters
+    ----------
+    rolling_ball_radius : int
+        Radius of the rolling ball filter to use
+    light_background : bool, optional
+        If set to True, will treat the background as light, by default False
+    sliding : bool, optional
+        If set to True, will do a sliding window approach, by default False
+    disable_smooth : bool, optional
+        If set to True, will disable the smoothing, by default False
+    do_3d : bool, optional
+        If set to True, will do a 3D filtering, by default False
+
+    Returns
+    -------
+    str
+        The options string for the "Subtract Background..." macro command
+
+    """
     parts = ["rolling=" + str(rolling_ball_radius)]
     if light_background:
         parts.append("light")
     if sliding:
         parts.append("sliding")
-    if disable:
+    if disable_smooth:
         parts.append("disable")
     if do_3d:
         parts.append("stack")
@@ -166,7 +215,8 @@ def apply_threshold(imp, threshold_method, do_3d=True):
     threshold_method : str
         Name of the threshold method to use
     do_3d : bool, optional
-        If set to True, the automatic threshold will be done on a 3D stack, by default True
+        If set to True, the automatic threshold will be done on a 3D stack,
+        by default True
 
     Returns
     -------
