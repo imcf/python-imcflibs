@@ -69,6 +69,13 @@ def cellpose_detector(
     ...    optional_channel=0
     ... )
     """
+
+    dims = imageplus.getDimensions()
+    cal = imageplus.getCalibration()
+
+    if imageplus.getNSlices() > 1:
+        imageplus.setDimensions(dims[2], dims[4], dims[3])
+
     settings = Settings(imageplus)
 
     settings.detectorFactory = CellposeDetectorFactory()
@@ -94,9 +101,11 @@ def cellpose_detector(
         return
 
     settings.detectorSettings["CELLPOSE_MODEL"] = selected_model
-    settings.detectorSettings["CELL_DIAMETER"] = obj_diameter
+    settings.detectorSettings["CELL_DIAMETER"] = Double(obj_diameter)
     settings.detectorSettings["USE_GPU"] = use_gpu
     settings.detectorSettings["SIMPLIFY_CONTOURS"] = simplify_contours
+
+    imageplus.setDimensions(dims[2], dims[3], dims[4])
 
     return settings
 
