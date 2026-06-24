@@ -22,9 +22,9 @@ def filter_options(filter_method, filter_radius, do_3d=False):
             - Minimum
             - Maximum
     filter_radius : int
-        Radius of the filter to use
+        Radius of the filter to use.
     do_3d : bool, optional
-        If set to True, will do a 3D filtering, by default False
+        If set to True, will do a 3D filtering, by default False.
 
     Returns
     -------
@@ -51,10 +51,10 @@ def threshold_options(threshold_method, do_3d=True):
     Parameters
     ----------
     threshold_method : str
-        Name of the threshold method to use
+        Name of the threshold method to use.
     do_3d : bool, optional
         If set to True, the automatic threshold will be done on a 3D stack,
-        by default True
+        by default True.
 
     Returns
     -------
@@ -80,7 +80,7 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
     Parameters
     ----------
     imp : ImagePlus
-        Input ImagePlus to filter and threshold
+        Input ImagePlus to filter and threshold.
     filter_method : str
         Name of the filter method to use. Must be one of:
             - Median
@@ -89,9 +89,9 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
             - Minimum
             - Maximum
     filter_radius : int
-        Radius of the filter filter to use
+        Radius of the filter filter to use.
     do_3d : bool, optional
-        If set to True, will do a 3D filtering, by default False
+        If set to True, will do a 3D filtering, by default False.
 
 
     Returns
@@ -135,17 +135,17 @@ def apply_rollingball_bg_subtraction(
     Parameters
     ----------
     imp : ij.ImagePlus
-        Input ImagePlus to filter and threshold
+        Input ImagePlus to filter and threshold.
     rolling_ball_radius : int
-        Radius of the rolling ball filter to use
+        Radius of the rolling ball filter to use.
     light_background : bool, optional
-        If set to True, will treat the background as light, by default False
+        If set to True, will treat the background as light, by default False.
     sliding : bool, optional
-        If set to True, will do a sliding window approach, by default False
+        If set to True, will do a sliding window approach, by default False.
     disable_smoothing : bool, optional
-        If set to True, will disable the smoothing, by default False
+        If set to True, will disable the smoothing, by default False.
     do_3d : bool, optional
-        If set to True, will do a 3D filtering, by default False
+        If set to True, will do a 3D filtering, by default False.
 
     Returns
     -------
@@ -182,15 +182,15 @@ def rolling_ball_options(
     Parameters
     ----------
     rolling_ball_radius : int
-        Radius of the rolling ball filter to use
+        Radius of the rolling ball filter to use.
     light_background : bool, optional
-        If set to True, will treat the background as light, by default False
+        If set to True, will treat the background as light, by default False.
     sliding : bool, optional
-        If set to True, will do a sliding window approach, by default False
+        If set to True, will do a sliding window approach, by default False.
     disable_smoothing : bool, optional
-        If set to True, will disable the smoothing, by default False
+        If set to True, will disable the smoothing, by default False.
     do_3d : bool, optional
-        If set to True, will do a 3D filtering, by default False
+        If set to True, will do a 3D filtering, by default False.
 
     Returns
     -------
@@ -216,12 +216,12 @@ def apply_threshold(imp, threshold_method, do_3d=True):
     Parameters
     ----------
     imp : ij.ImagePlus
-        Input ImagePlus to filter and threshold
+        Input ImagePlus to filter and threshold.
     threshold_method : str
-        Name of the threshold method to use
+        Name of the threshold method to use.
     do_3d : bool, optional
         If set to True, the automatic threshold will be done on a 3D stack,
-        by default True
+        by default True.
 
     Returns
     -------
