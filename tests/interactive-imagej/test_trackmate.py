@@ -1,17 +1,13 @@
-# Testing the `imcflibs.imagej.trackmate` module
+# Prerequisites before running this script in Fiji:
+#
+# - Open the blobs image, e.g. using Ctrl + Shift + B.
+# - Drag and drop this script and run it in Fiji.
+#
+# Expected result: a label image named "LblImg_blobs.gif" opens next to the raw
+# blobs.gif with many segmented spots (LoG detector). With the Cellpose detector
+# the segmented blobs should be quite accurate; the LoG detector finds many spots
+# across the image.
 
-Instructions for *interactive* testing (i.e. manually running a script in Fiji's
-*Script Editor*) of the `imcflibs.imagej.trackmate` module.
-
-## Testing instructions
-
-1. An updated `python-imcflibs.jar` containing the changes to be tested has to
-   be installed into Fiji already.
-1. Next, open the blobs image, e.g. using `Ctrl` + `Shift` + `B`.
-1. Then, launch the *Script Editor* using `Ctrl` + `Shift` + `N`, paste the
-   following script and finally run it:
-
-```Python
 from imcflibs.imagej import trackmate
 from ij import IJ
 
@@ -33,8 +29,3 @@ settings = trackmate.log_detector(imp, 5, 1, 0)
 
 res_img = trackmate.run_trackmate(imp, settings)
 res_img.show()
-```
-
-## Expected behavior / results
-
-FIXME!!

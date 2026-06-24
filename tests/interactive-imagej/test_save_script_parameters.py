@@ -7,8 +7,15 @@
 #@ CommandService command
 #@ LogService sjlog
 
-import os
+# Prerequisites before running this script in Fiji:
+#
+# - Drag and drop, and run this script in Fiji.
+# - Set parameters in the dialog box.
+#
+# Expected result: a file named "script_parameters.txt" is written to the
+# chosen output directory, with all parameters from the script.
 
+import os
 import imcflibs.log
 from imcflibs.imagej import misc
 
