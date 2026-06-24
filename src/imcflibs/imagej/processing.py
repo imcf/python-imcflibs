@@ -15,7 +15,12 @@ def filter_options(filter_method, filter_radius, do_3d=False):
     Parameters
     ----------
     filter_method : str
-        Name of the filter method to use
+        Name of the filter method to use. Must be one of:
+            - Median
+            - Mean
+            - Gaussian Blur
+            - Minimum
+            - Maximum
     filter_radius : int
         Radius of the filter to use
     do_3d : bool, optional
