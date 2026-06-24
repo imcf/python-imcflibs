@@ -99,8 +99,8 @@ multiple modules. For detailed information, please refer to the
 #### `imcflibs.pathtools`
 
 * `imcflibs.pathtools.listdir_matching`:
-    * Enhancement to support recursive directory traversal
-    * Adds `recursive` parameter to include files from subdirectories
+  * Add support for recursive directory traversal.
+  * Add `recursive` parameter to include files from subdirectories.
 
 ### Removed 🗑️
 
