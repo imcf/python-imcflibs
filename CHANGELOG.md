@@ -4,9 +4,126 @@
 
 ## 2.0.0
 
-### Changed
+This major release brings a host of additions and breaking changes across
+multiple modules. For detailed information, please refer to the
+[API documentation][apidocs].
+
+### Added ✨
+
+#### New functions in `imcflibs.imagej.bioformats`
+
+* `imcflibs.imagej.bioformats.get_reader` gets the reader used for opening a
+    file, allowing support for multi series files, and gets the highest pyramid
+    level for infos.
+
+#### New functions in `imcflibs.imagej.bdv`
+
+* `imcflibs.imagej.bdv.read_metadata_from_xml` allows reading metadata back
+    from the xml of a H5/XML couple.
+
+#### New functions in `imcflibs.imagej.misc`
+
+* `imcflibs.imagej.misc.bytes_to_human_readable` converts size from bytes to a
+    more readable format.
+
+#### New functions in `imcflibs.imagej.trackmate`
+
+* `imcflibs.imagej.trackmate.set_spotfilter` to set a TrackMate spot filter
+    with specified filter key and values.
+
+#### New functions in `imcflibs.imagej.pathtools`
+
+* `imcflibs.imagej.pathtools.join_files_with_channel_suffix` to generate lists
+    of filenames with channel suffixes, facilitating workflows where each
+    channel is stored in a separate file.
+
+### Changed ♻️
 
 * Minimum required version for [python-micrometa] increased to `15.2.3`.
+
+#### `imcflibs.imagej.bdv`
+
+* `imcflibs.imagej.bdv.define_dataset_auto` does not split time points by
+    default any more.
+* `imcflibs.imagej.bdv.define_dataset_manual` now supports passing a list of
+    files (`list_files`) directly, enabling the use of explicit file lists in
+    "show_list" mode rather than relying solely on file patterns.
+* `imcflibs.imagej.bdv.fuse_dataset_bdvp`:
+  * Fix a bug and expose additional parameters.
+  * Allow specifying the number of resolution levels, LZW compression, and the
+      fusion method; update parameter names and documentation for clarity and
+      flexibility.
+* `imcflibs.imagej.bdv.interest_points_registration`: Fix typo and add missing
+    options.
+* `imcflibs.imagej.bdv.resave_as_h5`: use the correct processing options
+    object and change the ImageJ command to "Resave as HDF5 (local)" for better
+    accuracy.
+
+#### `imcflibs.imagej.bioformats`
+
+* `imcflibs.imagej.bioformats.import_image` now accepts importing a
+    specified image region (crop). Also fix a spelling mistake.
+* `imcflibs.imagej.bioformats.get_stage_coords` returns the filename
+ instead of full path.  
+
+#### `imcflibs.imagej.misc`
+
+* `imcflibs.imagej.misc.run_imarisconvert`:
+  * Now allows to select an output folder.
+  * Adds pixel calibration to the converted file.
+* `imcflibs.imagej.misc.subtract_images` now validates the slice count is equal
+    for both images.
+* `imcflibs.imagej.misc.save_image_with_extension`: fix issue with java path
+    object.
+* `imcflibs.imagej.misc.save_image_in_format`: This method also accepts a new
+    optional parameter `suffix`to append custom text to output filenames.
+
+#### `imcflibs.imagej.objects3d`
+
+* `imcflibs.imagej.objects3d.segment_3d_image`: add option to filter out 3D
+    objects touching the image borders when creating a label image.
+
+#### `imcflibs.imagej.resultstable`
+
+* `imcflibs.imagej.resultstable.add_results_to_resultstable`:
+  * Add support for writing values to specific rows in a results table.
+  * Raise an error when provided values don't match target rows.
+  * Update docstring description and examples.
+
+#### `imcflibs.imagej.trackmate`
+
+* Improve support for 3D data and fix an issue for diameter of objects to be
+    found using TrackMate.
+
+#### `imcflibs.omerotools`
+
+* `imcflibs.omerotools.parse_url`: safely handle empty input strings, and strip
+    the link to ignore trailing white spaces.
+
+#### `imcflibs.pathtools`
+
+* `imcflibs.pathtools.listdir_matching`:
+  * Add support for recursive directory traversal.
+  * Add `recursive` parameter to include files from subdirectories.
+
+### Removed 🗑️
+
+#### `imcflibs.imagej.objects3d`
+
+* `imcflibs.imagej.objects3d.get_objects_within_intensity` has been removed as
+    it is now present in the Image3D suite. The method
+    `mcib3d.geom.Objects3DPopulation.getObjectsWithinIntensityRange` performs
+    the same function as the removed method from this package.
+
+### Documentation 📝
+
+* Update `README.md` installation instructions to install imcflibs into a
+    "vanilla" Fiji, including required dependencies.
+
+### Interactive Tests 🧪
+
+* All interactive test files in `tests/interactive-imagej` are now `.py`, so
+    that they can be dragged directly into a Fiji and run.
 
 ## 1.5.0
 
