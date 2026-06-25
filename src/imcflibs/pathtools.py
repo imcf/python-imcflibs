@@ -1,5 +1,6 @@
 """Helper functions to work with filenames, directories etc."""
 
+import os
 import os.path
 import platform
 import re
@@ -180,7 +181,9 @@ def jython_fiji_exists(path):
         return False
 
 
-def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
+def listdir_matching(
+    path, suffix, fullpath=False, sort=False, regex=False, recursive=False
+):
     """Get a list of files in a directory matching a given suffix.
 
     Parameters
@@ -199,6 +202,11 @@ def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
     regex : bool, optional
         If set to True, uses the suffix-string as regular expression to match
         filenames. By default False.
+    recursive : bool, optional
+        If set to True, the directory tree will be traversed recursively and
+        files in subfolders will be included. When `fullpath` is False and
+        `recursive` is True the returned file names are relative to `path`
+        (e.g. `subdir/file.ext`). Default is False.
 
     Returns
     -------
@@ -206,18 +214,61 @@ def listdir_matching(path, suffix, fullpath=False, sort=False, regex=False):
         All file names in the directory matching the suffix (without path!).
     """
     matching_files = list()
-    for candidate in os.listdir(path):
-        if not regex and candidate.lower().endswith(suffix.lower()):
-            # log.debug("Found file %s", candidate)
-            if fullpath:
-                matching_files.append(os.path.join(path, candidate))
+
+    # Prepare regex if requested (case-insensitive)
+    regex_compiled = None
+    if regex:
+        try:
+            regex_compiled = re.compile(suffix, re.IGNORECASE)
+        except re.error:
+            # If provided regex is invalid, fall back to no matches
+            return matching_files
+
+    if recursive:
+        # Walk directory tree and test each filename
+        for dirpath, _, filenames in os.walk(path):
+            for candidate in filenames:
+                if not regex_compiled:
+                    if candidate.lower().endswith(suffix.lower()):
+                        if fullpath:
+                            matching_files.append(
+                                os.path.abspath(os.path.join(dirpath, candidate))
+                            )
+                        else:
+                            rel = os.path.relpath(
+                                os.path.join(dirpath, candidate), path
+                            )
+                            matching_files.append(rel)
+                else:
+                    if regex_compiled.match(candidate):
+                        if fullpath:
+                            matching_files.append(
+                                os.path.abspath(os.path.join(dirpath, candidate))
+                            )
+                        else:
+                            rel = os.path.relpath(
+                                os.path.join(dirpath, candidate), path
+                            )
+                            matching_files.append(rel)
+    else:
+        # Non-recursive: only list entries in the given directory
+        for candidate in os.listdir(path):
+            if not regex_compiled:
+                if candidate.lower().endswith(suffix.lower()):
+                    if fullpath:
+                        matching_files.append(
+                            os.path.abspath(os.path.join(path, candidate))
+                        )
+                    else:
+                        matching_files.append(candidate)
             else:
-                matching_files.append(candidate)
-        if regex and re.match(suffix.lower(), candidate.lower()):
-            if fullpath:
-                matching_files.append(os.path.join(path, candidate))
-            else:
-                matching_files.append(candidate)
+                if regex_compiled.match(candidate):
+                    if fullpath:
+                        matching_files.append(
+                            os.path.abspath(os.path.join(path, candidate))
+                        )
+                    else:
+                        matching_files.append(candidate)
 
     if sort:
         matching_files = strtools.sort_alphanumerically(matching_files)
@@ -385,3 +436,44 @@ if platform.python_implementation() == "Jython":  # pragma: no cover
     exists = jython_fiji_exists
 else:
     exists = os.path.exists
+
+
+def join_files_with_channel_suffix(files, nchannels):
+    """Join filenames and append channel-suffixed copies.
+
+    For each filename in `files`, return a list where original filenames
+    appear first followed by copies with suffixes `_0` .. `_{n-2}`
+    (inserted before the file extension). This is suitable for passing
+    to Bioformats/Jython in ``show_list`` mode when each channel is stored
+    as a separate file.
+
+    Parameters
+    ----------
+    files : list or tuple
+        List or tuple of filename strings.
+    nchannels : int
+        Number of channels (>=1). If ``nchannels`` is 1 no suffixed copies
+        are added.
+
+    Returns
+    -------
+    list of str
+        Ordered list of filenames (originals then suffixed copies).
+    """
+    if not files:
+        return ""
+    try:
+        x = range(int(nchannels) - 1)
+    except Exception:
+        x = [0]
+    suff = "_" + str(x)
+    out = []
+    # Keep original order, then add suffixed copies
+    for f in files:
+        out.append(f)
+    for i in x:
+        suff = "_" + str(i)
+        for f in files:
+            base, ext = os.path.splitext(f)
+            out.append(base + suff + ext)
+    return out

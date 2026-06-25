@@ -30,7 +30,7 @@ RELEASE_TAG=$(git tag -l "python-imcflibs-*" | tail -n 1)
 git push origin $RELEASE_TAG
 ```
 
-**IMPORTANT 2**: in case a **pre-releaes** was created, the last commit needs to
+**IMPORTANT 2**: in case a **pre-release** was created, the last commit needs to
 be discarded as the *release-script* places a wrong version / snapshot
 combination in the `pom.xml`:
 

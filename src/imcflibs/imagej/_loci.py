@@ -24,8 +24,10 @@ here simply for consistency reasons (to have everything in the same place).
 ### *** WARNING *** ### *** WARNING *** ### *** WARNING *** ### *** WARNING ***
 #
 
-
+# unproblematic imports kept here for consistency
 from loci.plugins import BF
+from loci.common import Region
+from loci.formats import ImageReader, Memoizer, MetadataTools
 
 # dummy objects to prevent failing imports in a non-ImageJ / Jython context:
 ImporterOptions = None
@@ -33,6 +35,7 @@ ZeissCZIReader = None
 DefaultMetadataOptions = None
 MetadataLevel = None
 DynamicMetadataOptions = None
+MetadataOptions = None
 
 # perform the actual imports when running under Jython using `importlib` calls:
 import platform as _python_platform
@@ -50,5 +53,3 @@ if _python_platform.python_implementation() == "Jython":  # pragma: no cover
     DynamicMetadataOptions = _loci_formats_in.DynamicMetadataOptions
     MetadataOptions = _loci_formats_in.MetadataOptions
 del _python_platform
-
-from loci.formats import ImageReader, Memoizer, MetadataTools

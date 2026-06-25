@@ -21,22 +21,49 @@ def preset_results_column(results_table, column, value):
     results_table.show("Results")
 
 
-def add_results_to_resultstable(results_table, column, values):
-    """Add values to the ResultsTable starting from row 0 of a given column.
+def add_results_to_resultstable(results_table, column, values, rows=None):
+    """Add values to the ResultsTable in a specified column.
+
+    This function works in two ways, depending on the value of `rows`:
+
+    1. If rows is `None`, it adds values sequentially starting from row 0.
+    2. If rows is a list of int, it adds values to the given row indices.
 
     Parameters
     ----------
     results_table : ij.measure.ResultsTable
-        a reference of the IJ-ResultsTable
-    column : string
-        the column in which to add the values
-    values : list(int, double or float)
-        array with values to be added
+        A reference to the IJ-ResultsTable
+    column : str
+        The column in which to add the values.
+    values : list of int, float or str
+        Values to be added.
+    rows : list of int, optional
+        Specific row indices where values should be added. If None, values are
+        added sequentially starting from row 0.
+
+    Examples
+    --------
+    To add the same value (42) to a given `ResultsTable` to rows 1, 3 and 5:
+    >>> add_results_to_resultstable(rt, "Intensity", 42, rows=[1, 3, 5])
     """
-    for index, value in enumerate(values):
-        results_table.setValue(column, index, value)
+    if not isinstance(values, list) and rows is not None:
+        values = [values] * len(rows)
+
+    # Case 1: Add values sequentially from row 0
+    if rows is None:
+        for index, value in enumerate(values):
+            results_table.setValue(column, index, value)
+
+    # Case 2: Add values to specific rows
+    else:
+        if len(values) != len(rows):
+            raise ValueError(f"Length mismatch: values ({len(values)}) and rows ({len(rows)})")
+
+        for i, row_index in enumerate(rows):
+            results_table.setValue(column, row_index, values[i])
 
     results_table.show("Results")
+
 
 
 def get_resultstable():

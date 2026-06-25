@@ -24,6 +24,7 @@ from ._loci import (
     Memoizer,
     MetadataTools,
     ZeissCZIReader,
+    Region,
 )
 
 
@@ -186,6 +187,7 @@ def import_image(
     t_start=None,
     t_end=None,
     t_interval=None,
+    region=None,
 ):
     """Open an image file using the Bio-Formats importer.
 
@@ -229,8 +231,11 @@ def import_image(
         only import a subset of time points ending with this one. Requires to
         set t_start and t_interval.
     t_interval : int, optional
-        only import a subset of time points with thsi interval. Requires to set
+        only import a subset of time points with this interval. Requires to set
         t_start and t_end.
+    region : list, optional
+        Bio-Formats crop region, by default None.
+        Format: `[start_x, start_y, width_in_px, height_in_px]`.
 
     Returns
     -------
@@ -275,6 +280,12 @@ def import_image(
         options.setTBegin(series_number, t_start)
         options.setTEnd(series_number, t_end)
         options.setTStep(series_number, t_interval)
+
+    if region is not None:
+        options.setCrop(True)
+        options.setCropRegion(
+            series_number, Region(region[0], region[1], region[2], region[3])
+        )
 
     log.info("Reading [%s]", filename)
     orig_imps = BF.openImagePlus(options)
@@ -352,6 +363,31 @@ def export_using_orig_name(imp, path, orig_name, tag, suffix, overwrite=False):
     return out_file
 
 
+def get_reader(path_to_file, setFlattenedResolutions=False):
+    """Get a Bio-Formats ImageReader for the specified file.
+
+    Parameters
+    ----------
+    path_to_file : str
+        The full path to the image file.
+    setFlattenedResolutions : bool, optional
+        Whether to flatten resolutions in the ImageReader (default: False).
+
+    Returns
+    -------
+    ImageReader
+        A configured ImageReader instance for the specified file.
+    """
+    reader = ImageReader()
+    ome_meta = MetadataTools.createOMEXMLMetadata()
+    reader.setMetadataStore(ome_meta)
+    m = DynamicMetadataOptions()
+    m.setBoolean(ZeissCZIReader.ALLOW_AUTOSTITCHING_KEY, False)
+    reader.setMetadataOptions(m)
+    reader.setId(str(path_to_file))
+    return reader, ome_meta
+
+
 def get_series_info_from_ome_metadata(path_to_file, skip_labels=False):
     """Get the Bio-Formats series information from a file on disk.
 
@@ -378,44 +414,31 @@ def get_series_info_from_ome_metadata(path_to_file, skip_labels=False):
     >>> count, indices = get_series_info_from_ome_metadata("image.nd2", skip_labels=True)
     """
 
+    reader, ome_meta = get_reader(path_to_file, skip_labels)
+    series_count = reader.getSeriesCount()
     if not skip_labels:
-        reader = ImageReader()
-        reader.setFlattenedResolutions(False)
-        ome_meta = MetadataTools.createOMEXMLMetadata()
-        reader.setMetadataStore(ome_meta)
-        reader.setId(path_to_file)
-        series_count = reader.getSeriesCount()
-
-        reader.close()
+        # If we are not skipping labels, return the full range
         return series_count, range(series_count)
 
-    else:
-        reader = ImageReader()
-        # reader.setFlattenedResolutions(True)
-        ome_meta = MetadataTools.createOMEXMLMetadata()
-        reader.setMetadataStore(ome_meta)
-        reader.setId(path_to_file)
-        series_count = reader.getSeriesCount()
+    series_ids = []
+    series_names = []
+    x = 0
+    y = 0
+    for i in range(series_count):
+        reader.setSeries(i)
 
-        series_ids = []
-        series_names = []
-        x = 0
-        y = 0
-        for i in range(series_count):
-            reader.setSeries(i)
+        if reader.getSizeX() > x and reader.getSizeY() > y:
+            name = ome_meta.getImageName(i)
 
-            if reader.getSizeX() > x and reader.getSizeY() > y:
-                name = ome_meta.getImageName(i)
+            if name not in ["label image", "macro image"]:
+                series_ids.append(i)
+                series_names.append(name)
 
-                if name not in ["label image", "macro image"]:
-                    series_ids.append(i)
-                    series_names.append(name)
+        x = reader.getSizeX()
+        y = reader.getSizeY()
 
-            x = reader.getSizeX()
-            y = reader.getSizeY()
-
-        print(series_names)
-        return len(series_ids), series_ids
+    print(series_names)
+    return len(series_ids), series_ids
 
 
 def write_bf_memoryfile(path_to_file):
@@ -452,10 +475,7 @@ def get_metadata_from_file(path_to_image):
         An instance of `imcflibs.imagej.bioformats.ImageMetadata` containing the extracted metadata.
     """
 
-    reader = ImageReader()
-    ome_meta = MetadataTools.createOMEXMLMetadata()
-    reader.setMetadataStore(ome_meta)
-    reader.setId(str(path_to_image))
+    reader, ome_meta = get_reader(path_to_image)
 
     metadata = ImageMetadata(
         unit_width=ome_meta.getPixelsPhysicalSizeX(0).value(),
@@ -507,11 +527,7 @@ def get_stage_coords(filenames):
     max_phys_size_z = 0.0
 
     for counter, image in enumerate(filenames):
-        reader = ImageReader()
-        reader.setFlattenedResolutions(False)
-        ome_meta = MetadataTools.createOMEXMLMetadata()
-        reader.setMetadataStore(ome_meta)
-        reader.setId(str(image))
+        reader, ome_meta = get_reader(image)
         series_count = reader.getSeriesCount()
 
         # Process only the first image to get values not dependent on series
@@ -569,8 +585,7 @@ def get_stage_coords(filenames):
             if series_count > 1 and not str(image).endswith(".vsi"):
                 series_names.append(ome_meta.getImageName(series))
             else:
-                series_names.append(str(image))
-
+                series_names.append(os.path.basename(str(image)))
             current_position_x = getattr(
                 ome_meta.getPlanePositionX(series, 0), "value", lambda: 0
             )()

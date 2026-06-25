@@ -17,10 +17,12 @@ from ch.epfl.biop.scijava.command.spimdata import (
     FuseBigStitcherDatasetIntoOMETiffCommand,
 )
 from ij import IJ
+from java.io import File, FileInputStream, InputStreamReader
+from javax.xml.parsers import DocumentBuilderFactory
+from org.xml.sax import InputSource
 
 from .. import pathtools
 from ..log import LOG as log
-
 
 # internal template strings used in string formatting (note: the `"""@private"""`
 # pseudo-decorator is there to instruct [pdoc] to omit those variables when generating
@@ -732,6 +734,22 @@ def get_processing_settings(dimension, selection, value, range_end):
     tuple of str
         processing_option, dimension_select
     """
+    processing_option = dimension_select = ""
+
+    # Validate inputs according to the function docstring
+    valid_dimensions = ("angle", "channel", "illumination", "tile", "timepoint")
+    if dimension not in valid_dimensions:
+        raise ValueError(
+            "Invalid dimension '%s', expected one of: %s"
+            % (dimension, ", ".join(valid_dimensions))
+        )
+
+    valid_selections = ("single", "multiple", "range")
+    if selection not in valid_selections:
+        raise ValueError(
+            "Invalid selection '%s', expected one of: %s"
+            % (selection, ", ".join(valid_selections))
+        )
 
     if selection == "single":
         processing_option = SINGLE % dimension
@@ -789,7 +807,7 @@ def define_dataset_auto(
     file_path,
     bf_series_type,
     dataset_save_path=None,
-    timepoints_per_partition=1,
+    timepoints_per_partition=0,
     resave="Re-save as multiresolution HDF5",
     subsampling_factors=None,
     hdf5_chunk_sizes=None,
@@ -812,8 +830,9 @@ def define_dataset_auto(
         Defines how Bio-Formats interprets the series.
     timepoints_per_partition : int, optional
         Split the output dataset by timepoints. Use `0` for no split, resulting
-        in a single HDF5 file containing all timepoints. By default `1`,
-        resulting in a HDF5 per timepoints.
+        in a single HDF5 file containing all timepoints. Otherwise, choose the
+        number of timepoints per file. By default `0`.
+    
     resave : str, optional
         Allow the function to either re-save the images or simply create a
         merged xml. Use `Load raw data` to avoid re-saving, by default `Re-save
@@ -846,6 +865,12 @@ def define_dataset_auto(
         hdf5_chunk_sizes = "hdf5_chunk_sizes=" + hdf5_chunk_sizes + " "
     else:
         hdf5_chunk_sizes = ""
+    if timepoints_per_partition > 0:
+        split_timepoints = "split_hdf5 timepoints_per_partition=" + str(
+            timepoints_per_partition
+        ) + " "
+    else:
+        split_timepoints = ""
 
     if bf_series_type == "Angles":
         angle_rotation = "apply_angle_rotation "
@@ -883,10 +908,7 @@ def define_dataset_auto(
         + angle_rotation
         + subsampling_factors
         + hdf5_chunk_sizes
-        + "split_hdf5 "
-        + "timepoints_per_partition="
-        + str(timepoints_per_partition)
-        + " "
+        + split_timepoints
         + "setups_per_partition=0 "
         + "use_deflate_compression "
     )
@@ -902,6 +924,7 @@ def define_dataset_manual(
     image_file_pattern,
     dataset_organisation,
     definition_opts=None,
+    list_files=None,
 ):
     """Run "Define Multi-View Dataset" using the "Manual Loader" option.
 
@@ -915,25 +938,28 @@ def define_dataset_manual(
         Regular expression corresponding to the names of your files and how to
         read the different dimensions.
     dataset_organisation : str
-        Organisation of the dataset and the dimensions to process.
-        Allows for defining the range of interest of the different dimensions.
-        Looks like "timepoints_=%s-%s channels_=0-%s tiles_=%s-%s"
+        Organisation of the dataset and the dimensions to process. Allows for
+        defining the range(s) of interest for the different dimensions, for
+        example: `timepoints_=%s-%s channels_=0-%s tiles_=%s-%s`.
     definition_opts : dict
         Dictionary containing the details about the file repartitions.
+    list_files : list of str, optional
+        An optional list of file names to pass directly to the manual loader in
+        "show_list" mode. When provided, the function will include the filenames
+        in the options string instead of relying on a file pattern; items should
+        be either full paths or relative to the selected `source_directory`.
     """
-
-    xml_filename = project_filename + ".xml"
+    # xml_filename = project_filename + ".xml"
 
     if definition_opts is None:
         definition_opts = DefinitionOptions()
 
-    temp = os.path.join(source_directory, project_filename + "_temp")
-    os.path.join(temp, project_filename)
+    show_list_options = "" if not list_files else "show_list " + " ".join(list_files)
 
     options = (
         "define_dataset=[Manual Loader (Bioformats based)] "
         + "project_filename=["
-        + xml_filename
+        + project_filename
         + "] "
         + "_____"
         + definition_opts.fmt_acitt_options()
@@ -943,11 +969,12 @@ def define_dataset_manual(
         + " "
         + "image_file_pattern="
         + image_file_pattern
+        + " "
         + dataset_organisation
         + " "
         + "calibration_type=[Same voxel-size for all views] "
         + "calibration_definition=[Load voxel-size(s) from file(s)] "
-        # + "imglib2_data_container=[ArrayImg (faster)]"
+        + show_list_options
     )
 
     log.debug("Manual dataset definition options: <%s>", options)
@@ -1032,7 +1059,7 @@ def resave_as_h5(
     )
 
     log.debug("Resave as HDF5 options: <%s>", options)
-    IJ.run("As HDF5", str(options))
+    IJ.run("Resave as HDF5 (local)", str(options))
 
 
 def flip_axes(source_xml_file, x=False, y=True, z=False):
@@ -1081,7 +1108,7 @@ def phase_correlation_pairwise_shifts_calculation(
     project_path : str
         Full path to the `.xml` file.
     processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
-        The `ProcessingOptinos` object defining parameters for the run. Will
+        The `ProcessingOptions` object defining parameters for the run. Will
         fall back to the defaults defined in the corresponding class if the
         parameter is `None` or skipped.
     downsampling_xyz : list of int, optional
@@ -1200,7 +1227,7 @@ def optimize_and_apply_shifts(
     project_path : str
         Path to the `.xml` on which to optimize and apply the shifts.
     processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
-        The `ProcessingOptinos` object defining parameters for the run. Will
+        The `ProcessingOptions` object defining parameters for the run. Will
         fall back to the defaults defined in the corresponding class if the
         parameter is `None` or skipped.
     relative_error : float, optional
@@ -1351,11 +1378,13 @@ def interest_points_registration(
         + "transformation=Affine "
         + "regularize_model "
         + "model_to_regularize_with=Affine "
-        + "lamba=0.10 "
+        + "lambda=0.10 "
         + "number_of_neighbors=3 "
         + "redundancy=1 "
         + "significance=3 "
+        + "search_radius=100 "
         + "allowed_error_for_ransac=5 "
+        + "inlier_factor=3 "
         + "ransac_iterations=Normal "
         + "global_optimization_strategy=["
         + "Two-Round: Handle unconnected tiles, "
@@ -1373,7 +1402,7 @@ def interest_points_registration(
 def duplicate_transformations(
     project_path,
     transformation_type="channel",
-    channel_source=None,
+    channel_source=0,
     tile_source=None,
     transformation_to_use="[Replace all transformations]",
 ):
@@ -1390,7 +1419,7 @@ def duplicate_transformations(
         Transformation mode, one of `channel` (to propagate from one channel to
         all others) and `tiles` (to propagate from one tile to all others).
     channel_source : int, optional
-        Reference channel nummber (starting at 1), by default None.
+        Reference channel number (starting at 1), by default None.
     tile_source : int, optional
         Reference tile, by default None.
     transformation_to_use : str, optional
@@ -1406,13 +1435,16 @@ def duplicate_transformations(
     tile_apply = ""
     tile_process = ""
 
-    chnl_apply = ""
-    chnl_process = ""
+    ch_apply = ""
+    ch_process = ""
 
     if transformation_type == "channel":
         apply = "[One channel to other channels]"
         target = "[All Channels]"
-        source = str(channel_source - 1)
+        if channel_source > 0:
+            source = str(channel_source - 1)
+        else:
+            source = "0"
         if tile_source:
             tile_apply = "apply_to_tile=[Single tile (Select from List)] "
             tile_process = "processing_tile=[tile " + str(tile_source) + "] "
@@ -1422,15 +1454,13 @@ def duplicate_transformations(
         apply = "[One tile to other tiles]"
         target = "[All Tiles]"
         source = str(tile_source)
-        if channel_source:
-            chnl_apply = "apply_to_channel=[Single channel (Select from List)] "
-            chnl_process = (
-                "processing_channel=[channel " + str(channel_source - 1) + "] "
-            )
+        if channel_source > 0:
+            ch_apply = "apply_to_channel=[Single channel (Select from List)] "
+            ch_process = "processing_channel=[channel " + str(channel_source - 1) + "] "
         else:
-            chnl_apply = "apply_to_channel=[All channels] "
+            ch_apply = "apply_to_channel=[All channels] "
     else:
-        sys.exit("Issue with transformation duplication")
+        raise ValueError("Invalid transformation type: %s" % transformation_type)
 
     options = (
         "apply="
@@ -1443,8 +1473,8 @@ def duplicate_transformations(
         + "apply_to_illumination=[All illuminations] "
         + tile_apply
         + tile_process
-        + chnl_apply
-        + chnl_process
+        + ch_apply
+        + ch_process
         + "apply_to_timepoint=[All Timepoints] "
         + "source="
         + source
@@ -1489,7 +1519,7 @@ def fuse_dataset(
     project_path : str
         Path to the `.xml` on which to run the fusion.
     processing_opts : imcflibs.imagej.bdv.ProcessingOptions, optional
-        The `ProcessingOptinos` object defining parameters for the run. Will
+        The `ProcessingOptions` object defining parameters for the run. Will
         fall back to the defaults defined in the corresponding class if the
         parameter is `None` or skipped.
     result_path : str, optional
@@ -1593,14 +1623,24 @@ def fuse_dataset(
 def fuse_dataset_bdvp(
     project_path,
     command,
-    processing_opts=None,
     result_path=None,
-    compression="LZW",
+    fusion_method="SMOOTH AVERAGE",
+    range_channels="",
+    range_slices="",
+    range_frames="",
+    n_resolution_levels=5,
+    use_lzw_compression=True,
+    split_slices=False,
+    split_channels=False,
+    split_frames=False,
+    override_z_ratio=False,
+    z_ratio=1.0,
+    use_interpolation=True,
 ):
-    """Export a BigDataViewer project using the BIOP Kheops exporter.
+    """Export a project using the BigDataViewer playground (`bdvp`) exporter.
 
-    Use the BIOP Kheops exporter to convert a BigDataViewer project into
-    OME-TIFF files, with optional compression.
+    Use the BigDataViewer playground / BIOP Kheops exporter to fuse a
+    BigDataViewer project and save it as pyramidal OME-TIFF.
 
     Parameters
     ----------
@@ -1608,43 +1648,102 @@ def fuse_dataset_bdvp(
         Full path to the BigDataViewer XML project file.
     command : CommandService
         The Scijava CommandService instance to execute the export command.
-    processing_opts : ProcessingOptions, optional
-        Options defining which parts of the dataset to process. If None, default
-        processing options will be used (process all angles, channels, etc.).
     result_path : str, optional
-        Path where to store the exported files. If None, files will be saved in
-        the same directory as the input project.
-    compression : str, optional
-        Compression method to use for the TIFF files. Default is "LZW".
+        Path where to store the exported files. If `None`, files will be
+        saved in the same directory as the input project.
+    fusion_method : str, optional
+        Fusion method to use for exporting (default `SMOOTH AVERAGE`).
+    range_channels : str, optional
+        Channels to include in the export. Default is all channels.
+    range_slices : str, optional
+        Slices to include in the export. Default is all slices.
+    range_frames : str, optional
+        Frames to include in the export. Default is all frames.
+    n_resolution_levels : int, optional
+        Number of pyramid resolution levels to use for the export. Default is 5.
+    use_lzw_compression : bool, optional
+        Compress the output file using LZW. Default is True.
+    split_slices : bool, optional
+        Split output into separate files for each slice. Default is False.
+    split_channels : bool, optional
+        Split output into separate files for each channel. Default is False.
+    split_frames : bool, optional
+        Split output into separate files for each frame. Default is False.
+    override_z_ratio : bool, optional
+        Override the default `z_ratio` value. Default is False.
+    z_ratio : float, optional
+        The z ratio to use for the export. Default is 1.0.
+    use_interpolation : bool, optional
+        Interpolate during fusion (takes ~4x longer). Default is True.
 
     Notes
     -----
-    This function requires the PTBIOP update site to be enabled in Fiji/ImageJ.
-    """
-    if processing_opts is None:
-        processing_opts = ProcessingOptions()
+    Requires the `PTBIOP` update site to be enabled in Fiji/ImageJ.
 
+    Examples
+    --------
+    Example 1 - simple export using a CommandService instance available as
+    `command`, using the default options and placing the output  next to the
+    input xml:
+
+    >>> #@ CommandService command
+    >>> xml_input = "/path/to/project.xml"
+    >>> fuse_dataset_bdvp(xml_input, command)
+
+    Example 2 - explicit options using a custom output path, specific channels,
+    disabling interpolation and overriding the z-ratio:
+
+    >>> #@ CommandService command
+    >>> xml_input = "/path/to/project.xml"
+    >>> out_dir = "/path/to/output_dir"
+    >>> fuse_dataset_bdvp(
+    ...     xml_input,
+    ...     command,
+    ...     result_path=out_dir,
+    ...     fusion_method="SMOOTH AVERAGE",
+    ...     range_channels="0-1",
+    ...     n_resolution_levels=4,
+    ...     use_lzw_compression=False,
+    ...     split_channels=True,
+    ...     override_z_ratio=True,
+    ...     z_ratio=2.0,
+    ...     use_interpolation=False,
+    ... )
+    """
     file_info = pathtools.parse_path(project_path)
+
     if not result_path:
         result_path = file_info["path"]
-        # if not os.path.exists(result_path):
-        #     os.makedirs(result_path)
 
     command.run(
         FuseBigStitcherDatasetIntoOMETiffCommand,
-        True,
-        "image",
+        True,  # seems to indicate whether to run the command headless or not
+        "xml_bigstitcher_file",
         project_path,
-        "output_dir",
+        "output_path_directory",
         result_path,
-        "compression",
-        compression,
-        "subset_channels",
-        "",
-        "subset_slices",
-        "",
-        "subset_frames",
-        "",
-        "compress_temp_files",
-        False,
-    )
+        "range_channels",
+        range_channels,
+        "range_slices",
+        range_slices,
+        "range_frames",
+        range_frames,
+        "n_resolution_levels",
+        n_resolution_levels,
+        "fusion_method",
+        fusion_method,
+        "use_lzw_compression",
+        use_lzw_compression,
+        "split_slices",
+        split_slices,
+        "split_channels",
+        split_channels,
+        "split_frames",
+        split_frames,
+        "override_z_ratio",
+        override_z_ratio,
+        "z_ratio",
+        z_ratio,
+        "use_interpolation",
+        use_interpolation,
+    ).get()

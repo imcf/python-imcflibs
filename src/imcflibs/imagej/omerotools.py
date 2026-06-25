@@ -47,7 +47,22 @@ def parse_url(client, omero_str):
     -------
     list(fr.igred.omero.repository.ImageWrapper)
         List of ImageWrappers parsed from the string.
+
+    Examples
+    --------
+    >>> from fr.igred.omero import Client
+    >>> client = Client()
+    >>> OMERO_LINK = "123456"
+    >>> img_wrappers = omerotools.parse_url(client, OMERO_LINK)
+    >>> for wrapper in img_wrappers:
+    >>>    imp = wpr.toImagePlus(client)
     """
+    if not str(omero_str).strip():
+        raise ValueError("No OMERO link or image ID provided.")
+
+    # Sanitize the string
+    omero_str = omero_str.strip()
+
     image_ids = []
     dataset_ids = []
     image_wpr_list = []

@@ -118,3 +118,4 @@ docs/api/*
 docs/_build/*
 cover/*
 MANIFEST
+AGENTS.md

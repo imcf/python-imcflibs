@@ -10,6 +10,7 @@ import time
 
 from ij import IJ  # pylint: disable-msg=import-error
 from ij.plugin import Duplicator, ImageCalculator, StackWriter
+from org.scijava.widget import TextWidget, WidgetStyle
 
 from .. import pathtools
 from ..log import LOG as log
@@ -302,7 +303,7 @@ def progressbar(progress, total, line_number, prefix=""):
         "\\Update%i:%s[%s%s] %i/%i\r"
         % (
             line_number,
-            timed_log(prefix, True),
+            timed_log(prefix, as_string=True),
             "#" * x,
             "." * (size - x),
             progress,
@@ -314,7 +315,7 @@ def progressbar(progress, total, line_number, prefix=""):
 def timed_log(message, as_string=False):
     """Print a message to the ImageJ log window, prefixed with a timestamp.
 
-    If `as_string` is set to True, nothgin will be printed to the log window,
+    If `as_string` is set to True, nothing will be printed to the log window,
     instead the formatted log message will be returned as a string.
 
     Parameters
@@ -349,7 +350,7 @@ def get_free_memory():
 def setup_clean_ij_environment(rm=None, rt=None):  # pylint: disable-msg=unused-argument
     """Set up a clean and defined ImageJ environment.
 
-    This funtion clears the active results table, the ROI manager, and the log.
+    This function clears the active results table, the ROI manager, and the log.
     Additionally, it closes all open images and resets the ImageJ options,
     performing a [*Fresh Start*][fresh_start].
 
@@ -416,7 +417,14 @@ def subtract_images(imp1, imp2):
         The ImagePlus resulting from the subtraction.
     """
     ic = ImageCalculator()
-    subtracted = ic.run("Subtract create", imp1, imp2)
+    if imp1.getNSlices() != imp2.getNSlices():
+        raise ValueError(
+            "Cannot subtract images with different number of slices, "
+            "please check your input data."
+        )
+    option = " stack" if imp1.getNSlices() > 1 else ""
+    subtracted = ic.run("Subtract create" + option, imp1, imp2)
+    subtracted.setCalibration(imp1.getCalibration())
 
     return subtracted
 
@@ -488,7 +496,7 @@ def write_ordereddict_to_csv(out_file, content):
 
     Notes
     -----
-    - The CSV file will use the semicolon charachter (`;`) as delimiter.
+    - The CSV file will use the semicolon character (`;`) as delimiter.
     - When appending to an existing file, the column structure has to match. No
       sanity checking is being done on this by the function!
     - The output file is opened in binary mode for compatibility.
@@ -523,7 +531,9 @@ def write_ordereddict_to_csv(out_file, content):
             dict_writer.writerows(content)
 
 
-def save_image_in_format(imp, format, out_dir, series, pad_number, split_channels):
+def save_image_in_format(
+    imp, format, out_dir, series, pad_number, split_channels, suffix=""
+):
     """Save an ImagePlus object in the specified format.
 
     This function provides flexible options for saving ImageJ images in various
@@ -552,6 +562,8 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
         If True, split channels and save them individually in separate folders
         named "C1", "C2", etc. inside out_dir. If False, save all channels in a
         single file.
+    suffix : str, optional
+        Text to be added to the filename, by default an empty string.
 
     Notes
     -----
@@ -614,14 +626,14 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
     for index, current_imp in enumerate(imp_to_use):
         basename = imp.getShortTitle()
 
-        out_path = os.path.join(
+        out_path = pathtools.join2(
             dir_to_save[index],
-            basename + "_series_" + str(series).zfill(pad_number),
+            basename + "_series_" + str(series).zfill(pad_number) + suffix,
         )
 
         if format == "ImageJ-TIF":
             pathtools.create_directory(dir_to_save[index])
-            IJ.saveAs(current_imp, "Tiff", out_path + ".tif")
+            IJ.saveAs(current_imp, "Tiff", out_path + suffix + ".tif")
 
         elif format == "BMP":
             out_folder = os.path.join(out_dir, basename + os.path.sep)
@@ -629,7 +641,7 @@ def save_image_in_format(imp, format, out_dir, series, pad_number, split_channel
             StackWriter.save(current_imp, out_folder, "format=bmp")
 
         else:
-            bf.export(current_imp, out_path + out_ext[format])
+            bf.export(current_imp, out_path + suffix + out_ext[format])
 
         current_imp.close()
 
@@ -669,7 +681,7 @@ def locate_latest_imaris(paths_to_check=None):
     return imaris_paths[-1]
 
 
-def run_imarisconvert(file_path):
+def run_imarisconvert(file_path, pixel_calibration=None, output_folder=""):
     """Convert a given file to Imaris format using ImarisConvert.
 
     Convert the input image file to Imaris format (Imaris5) using the
@@ -680,6 +692,19 @@ def run_imarisconvert(file_path):
     ----------
     file_path : str
         Absolute path to the input image file.
+    pixel_calibration : tuple or list, optional
+        Sequence of 3 values (x, y, z) representing voxel dimensions to be set
+        during conversion, by default None.
+    output_folder : str, optional
+        Folder where the newly created IMS file will be saved. If empty (or not
+        supplied), the directory of the input file will be used.
+
+    Notes
+    -----
+    - The output filename is constructed by replacing extension of the input
+      filename with `.ims` (e.g. `/path/to/image.czi` -> `/path/to/image.ims`).
+    - If the input has an `.ids` extension (part of an ICS-1 pair), the
+      corresponding `.ics` file is used instead.
     """
     # in case the given file has the suffix `.ids` (meaning it is part of an
     # ICS-1 `.ics`+`.ids` pair), point ImarisConvert to the `.ics` file instead:
@@ -690,14 +715,161 @@ def run_imarisconvert(file_path):
 
     imaris_path = locate_latest_imaris()
 
+    if not output_folder:
+        output_folder = os.path.dirname(file_path)
+
     command = 'ImarisConvert.exe  -i "%s" -of Imaris5 -o "%s"' % (
         file_path,
-        file_path.replace(file_extension, ".ims"),
+        os.path.join(output_folder, file_path.replace(file_extension, ".ims")),
     )
+    if pixel_calibration:
+        command = command + " --voxelsizex %s --voxelsizey %s --voxelsizez %s" % (
+            pixel_calibration[0],
+            pixel_calibration[1],
+            pixel_calibration[2],
+        )
+
     log.debug("\n%s" % command)
-    IJ.log("Converting to Imaris5 .ims...")
+    timed_log("Converting to Imaris5 .ims...")
     result = subprocess.call(command, shell=True, cwd=imaris_path)
     if result == 0:
-        IJ.log("Conversion to .ims is finished.")
+        timed_log("Conversion to .ims is finished: %s" % file_path)
     else:
-        IJ.log("Conversion failed with error code: %d" % result)
+        timed_log("Error converting [%s]: %d" % (file_path, result))
+
+
+def bytes_to_human_readable(size):
+    """Convert a byte count to a human-readable string using binary units.
+
+    Parameters
+    ----------
+    size : int
+        Byte size (number of bytes).
+
+    Returns
+    -------
+    str
+        Human-friendly size string, e.g. `"512.0 bytes"`, `"2.0 KB"`,
+        `"1.0 MB"`.
+
+    Notes
+    -----
+    - Uses powers of 1024 (KB = 1024 bytes).
+    - Always returns a string with one decimal place and the unit.
+    """
+
+    for unit in ["bytes", "KB", "MB", "GB", "TB"]:
+        if size < 1024.0:
+            return "%3.1f %s" % (size, unit)
+        size /= 1024.0
+
+    # If the value is larger than the largest unit, fall back to TB with
+    # the current value (already divided accordingly).
+    return "%3.1f %s" % (size, "TB")
+
+
+def _is_password_style(item):  # pragma: no cover (jython)
+    """Check if a script-parameter item is declared with `style="password"`.
+
+    Parameters
+    ----------
+    item : org.scijava.module.ModuleItem
+        The module item to check, obtained e.g. by calling `inputs()` on an
+        instance of `org.scijava.script.ScriptInfo`.
+
+    Returns
+    -------
+    bool
+    """
+    return WidgetStyle.isStyle(item, TextWidget.PASSWORD_STYLE)
+
+
+def save_script_parameters(
+    script_globals, destination, save_file_name="script_parameters.txt"
+):
+    """Save all Fiji script parameters to a text file.
+
+    Record all input parameters defined in the Fiji script header (e.g.
+    `#@ String`) to a text file such that they can be stored e.g. next to the
+    input data and the analysis results in order to document how a specific
+    processing run was executed.
+
+    The following parameters are excluded:
+
+    - Parameters explicitly declared with `style="password"`.
+    - Runtime keys (case insensitive):
+      - `USERNAME`
+      - `SJLOG` (SciJava LogService)
+      - `COMMAND` (SciJava CommandService)
+      - `RM` (RoiManager)
+
+    Parameters
+    ----------
+    script_globals : dict
+        The globals dictionary from the running Fiji instance. Must be passed
+        explicitly as `globals()` by the calling code.
+    destination : str
+        Directory where the script parameters file will be saved.
+    save_file_name : str, optional
+        Name of the script parameters file, by default "script_parameters.txt".
+
+    Examples
+    --------
+    In a Fiji script, you can call this function as follows to save the parameters:
+
+    >>> save_script_parameters(script_globals=globals(), destination="/data")
+    Saved script parameters to: /data/script_parameters.txt
+    """
+    try:
+        module = script_globals.get("org.scijava.script.ScriptModule")
+        # Access script metadata and inputs
+        script_info = module.getInfo()
+        inputs = module.getInputs()
+    except:
+        timed_log("ScriptModule inspection failed - skipping saving of parameters.")
+        return
+
+    # NOTE: the two parameters are intentionally kept separate for (1) consistency
+    # reasons with other scripts and (b) as this allows for easier modification of just
+    # the output file e.g. in subsequent runs.
+    destination = str(destination)
+    out_path = os.path.join(destination, save_file_name)
+
+    # Keys to skip explicitly
+    skip_keys = ["USERNAME", "SJLOG", "COMMAND", "RM"]
+
+    saved = skipped = passwords = 0
+    with open(out_path, "w") as f:
+        for item in script_info.inputs():
+            key = item.getName()
+
+            # Skip if any keys are in the skip list
+            if any(skip in key.upper() for skip in skip_keys):
+                log.info("Skipping parameter from skip-list: %s", key)
+                skipped += 1
+                continue
+
+            # Skip if parameter is declared with password style
+            if _is_password_style(item):
+                log.info("Skipping password-style parameter: %s", key)
+                passwords += 1
+                continue
+
+            # TODO: discuss if this approach is fine within Fiji/Jython
+            try:
+                val = inputs.get(key)
+                if val is None:  # required for testing in CPython
+                    raise KeyError("failure looking up value for '%s'" % key)
+                f.write("%s: %s\n" % (key, str(val)))
+                saved += 1
+            except:
+                log.warning("Unable to fetch value for parameter: %s", key)
+                pass
+
+    log.info(
+        "Saved %i parameters (skipped %i password-style and %i others).",
+        saved,
+        passwords,
+        skipped,
+    )
+    timed_log("Saved %i script parameters to: %s" % (saved, out_path))

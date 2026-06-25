@@ -12,13 +12,12 @@ by looking at the log handlers in the different modules.
 
 The logging levels, in increasing order of importance, are:
 
-10 DEBUG
-20 INFO
-30 WARN
-40 ERROR
-50 CRITICAL
+* 10 DEBUG
+* 20 INFO
+* 30 WARN
+* 40 ERROR
+* 50 CRITICAL
 """
-
 
 import logging
 

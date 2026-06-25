@@ -1,14 +1,24 @@
 # Testing 🧪🧫 in Fiji / ImageJ2
 
-## Using `pytest` 🐍🔬 and Python 3 for plain Python code
+## Using 🎭 Poetry, pytest 🐍🔬 and Python 3 for plain Python code
+
+The easiest way to run [`pytest`][pytest] (using Python 3) is when you're
+already having a working [poetry] setup. In that case tests can simply be run by
+using the `run-poetry.sh` wrapper script, for example:
+
+```bash
+scripts/run-poetry.sh run pytest tests/test_misc.py
+```
+
+## Using pytest 🐍🔬 and Python 3 for plain Python code
 
 Those parts of the package that do not interact / depend on ImageJ objects can
 be tested via [`pytest`][pytest] up to a certain level, some (most?) of them
 should even work in a Python 3 environment.
 
-To perform those tests, the packges otherwise provided by ImageJ need to be
-mocked using the `imcf-fiji-mocks` package. For seting up a *venv* use the steps
-described here:
+To perform those tests, the packages otherwise provided by ImageJ need to be
+mocked using the `imcf-fiji-mocks` package. For setting up a *venv* use the
+steps described here:
 
 ```bash
 # check if we're "inside" the repo already, otherwise clone it here:
@@ -22,7 +32,7 @@ test -d "venv" || python3 -m venv venv
 source venv/bin/activate
 
 # install dependencies / requirements:
-MOCKS_REL="0.2.0"
+MOCKS_REL="0.14.0"
 URL_PFX="https://github.com/imcf/imcf-fiji-mocks/releases/download/v$MOCKS_REL"
 pip install --upgrade \
     $URL_PFX/imcf_fiji_mocks-${MOCKS_REL}-py2.py3-none-any.whl \
@@ -44,7 +54,7 @@ specific tests, use e.g.
 pytest tests/bdv/test_processingoptions.py
 ```
 
-## Using `pytest` 🐍🔬 and Python 2 for plain Python code
+## Using pytest 🐍🔬 and Python 2 for plain Python code
 
 For running [`pytest`][pytest] in a C-Python 2 environment, things are slightly
 more complicated than the approach described for Python 3 above as `pip` for
@@ -84,7 +94,7 @@ some basic, semi-interactive tests the following conventions are being used:
 * Any *interactive* test script should start with a header similar to the one
   described below. Paths to input data *inside* the test scripts **has** to be
   relative to the location of the `sample-data` repository mentioned above. This
-  will allow for a fairly okayish testing workflow like this:
+  will allow for a fairly okay-ish testing workflow like this:
   * Make your changes in VS Code, then trigger a build by pressing `Shift` +
   `Ctrl` + `B`. If things are configured as described in the *DEVELOPMENT*
   document, the resulting `.jar` file will be automatically placed in Fiji's

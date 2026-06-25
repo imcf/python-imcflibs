@@ -69,6 +69,13 @@ def cellpose_detector(
     ...    optional_channel=0
     ... )
     """
+
+    dims = imageplus.getDimensions()
+    cal = imageplus.getCalibration()
+
+    if imageplus.getNSlices() > 1:
+        imageplus.setDimensions(dims[2], dims[4], dims[3])
+
     settings = Settings(imageplus)
 
     settings.detectorFactory = CellposeDetectorFactory()
@@ -94,9 +101,11 @@ def cellpose_detector(
         return
 
     settings.detectorSettings["CELLPOSE_MODEL"] = selected_model
-    settings.detectorSettings["CELL_DIAMETER"] = obj_diameter
+    settings.detectorSettings["CELL_DIAMETER"] = Double(obj_diameter)
     settings.detectorSettings["USE_GPU"] = use_gpu
     settings.detectorSettings["SIMPLIFY_CONTOURS"] = simplify_contours
+
+    imageplus.setDimensions(dims[2], dims[3], dims[4])
 
     return settings
 
@@ -231,6 +240,47 @@ def spot_filtering(
                 "MEAN_INTENSITY_CH" + str(key), abs(value), value >= 0
             )
             settings.addSpotFilter(filter_spot)
+
+    return settings
+
+
+def set_spotfilter(settings, filter_key, filter_value):
+    """Set a TrackMate spot filter with specified filter key and values.
+
+    Parameters
+    ----------
+    settings : fiji.plugin.trackmate.Settings
+        Settings object to use for TrackMate.
+    filter_key : str
+        The key-name of the filter to be applied (as opposed to the filter
+        "name" shown in ImageJ. Refer to the spot features table on the related
+        ImageJ wiki page:
+        https://imagej.net/plugins/trackmate/scripting/trackmate-detectors-trackers-keys#the-feature-penalty-map
+    filter_value : list
+        A list containing two values for the filter. The first value is applied
+        as an above-threshold filter, and the second as a below-threshold
+        filter.
+
+    Returns
+    -------
+    Settings
+        The modified TrackMate settings dict with added spot filters
+
+    Example
+    -------
+
+    To set an above-threshold filter value for spot `QUALITY` without a
+    below-threshold value use:
+
+    >>> settings = set_trackmate_spotfilter(tm_settings, 'QUALITY', [120, None])
+    """
+    settings.addAllAnalyzers()
+    if filter_value[0] != None:
+        filter_low = FeatureFilter(filter_key, filter_value[0], True)
+        settings.addSpotFilter(filter_low)
+    if filter_value[1] != None:
+        filter_high = FeatureFilter(filter_key, filter_value[1], False)
+        settings.addSpotFilter(filter_high)
 
     return settings
 
