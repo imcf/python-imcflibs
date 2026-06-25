@@ -61,9 +61,10 @@ multiple modules. For detailed information, please refer to the
 
 #### `imcflibs.imagej.bioformats`
 
-* `imcflibs.imagej.bioformats.import_image` now accepts importing a specified
-    image region (crop). Also fix a spelling mistake.
-* `imcflibs.imagej.bioformats.get_stage_coords` returns the filename instead of full path.
+* `imcflibs.imagej.bioformats.import_image` now accepts importing a
+    specified image region (crop). Also fix a spelling mistake.
+* `imcflibs.imagej.bioformats.get_stage_coords` returns the filename
+ instead of full path.  
 
 #### `imcflibs.imagej.misc`
 
@@ -74,7 +75,8 @@ multiple modules. For detailed information, please refer to the
     for both images.
 * `imcflibs.imagej.misc.save_image_with_extension`: fix issue with java path
     object.
-* `imcflibs.imagej.misc.save_image_in_format`: This method also accepts a new optional parameter `suffix`to append custom text to output filenames.
+* `imcflibs.imagej.misc.save_image_in_format`: This method also accepts a new
+    optional parameter `suffix`to append custom text to output filenames.
 
 #### `imcflibs.imagej.objects3d`
 
