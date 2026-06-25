@@ -95,10 +95,10 @@ multiple modules. For detailed information, please refer to the
 * Improve support for 3D data and fix an issue for diameter of objects to be
     found using TrackMate.
 
-#### `imcflibs.omerotools`
+#### `imcflibs.imagej.omerotools`
 
-* `imcflibs.omerotools.parse_url`: safely handle empty input strings, and strip
-    the link to ignore trailing white spaces.
+* `imcflibs.imagej.omerotools.parse_url`: safely handle empty input strings, and
+    strip the link to ignore trailing white spaces.
 
 #### `imcflibs.pathtools`
 
