@@ -29,7 +29,7 @@ def filter_options(filter_method, filter_radius, do_3d=False):
     Returns
     -------
     tuple[str, str]
-        The filter name and options strings
+        The filter name and options strings.
     """
 
     if do_3d:
@@ -59,8 +59,7 @@ def threshold_options(threshold_method, do_3d=True):
     Returns
     -------
     tuple[str, str]
-        The auto threshold options and the convert to binary options strings
-
+        The auto threshold options and the convert to binary options strings.
     """
 
     auto_threshold_options = (
@@ -97,8 +96,9 @@ def apply_filter(imp, filter_method, filter_radius, do_3d=False):
     Returns
     -------
     ij.ImagePlus
-        Filtered ImagePlus
+        Filtered ImagePlus.
     """
+
     log.info("Applying filter %s with radius %d" % (filter_method, filter_radius))
 
     if filter_method not in [
@@ -150,7 +150,7 @@ def apply_rollingball_bg_subtraction(
     Returns
     -------
     ij.ImagePlus
-        Filtered ImagePlus
+        Filtered ImagePlus.
     """
     log.info("Applying rolling ball with radius %d" % rolling_ball_radius)
 
@@ -195,9 +195,9 @@ def rolling_ball_options(
     Returns
     -------
     str
-        The options string for the "Subtract Background..." macro command
-
+        The options string for the "Subtract Background..." macro command.
     """
+
     parts = ["rolling=" + str(rolling_ball_radius)]
     if light_background:
         parts.append("light")
@@ -226,7 +226,7 @@ def apply_threshold(imp, threshold_method, do_3d=True):
     Returns
     -------
     ij.ImagePlus
-        Thresholded ImagePlus
+        Thresholded ImagePlus.
     """
 
     log.info("Applying threshold method %s" % threshold_method)
