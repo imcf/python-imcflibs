@@ -830,7 +830,7 @@ def save_script_parameters(
         return
 
     # NOTE: the two parameters are intentionally kept separate for (1) consistency
-    # reasons with other scripts and (b) as this allows for easier modification of just
+    # reasons with other scripts and (2) as this allows for easier modification of just
     # the output file e.g. in subsequent runs.
     destination = str(destination)
     out_path = os.path.join(destination, save_file_name)
