@@ -855,7 +855,6 @@ def save_script_parameters(
                 passwords += 1
                 continue
 
-            # TODO: discuss if this approach is fine within Fiji/Jython
             try:
                 val = inputs.get(key)
                 if val is None:  # required for testing in CPython
