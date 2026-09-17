@@ -784,15 +784,16 @@ def _is_password_style(item):  # pragma: no cover (jython)
     return WidgetStyle.isStyle(item, TextWidget.PASSWORD_STYLE)
 
 
-def save_script_parameters(
-    script_globals, destination, save_file_name="script_parameters.txt"
-):
+def save_script_parameters(script_globals, destination="", overwrite=False):
     """Save all Fiji script parameters to a text file.
 
     Record all input parameters defined in the Fiji script header (e.g.
     `#@ String`) to a text file such that they can be stored e.g. next to the
     input data and the analysis results in order to document how a specific
     processing run was executed.
+
+    The file name is generated automatically following the pattern
+    ``<script_name>_run-<timestamp>_params.txt``.
 
     The following parameters are excluded:
 
@@ -808,30 +809,49 @@ def save_script_parameters(
     script_globals : dict
         The globals dictionary from the running Fiji instance. Must be passed
         explicitly as `globals()` by the calling code.
-    destination : str
-        Directory where the script parameters file will be saved.
-    save_file_name : str, optional
-        Name of the script parameters file, by default "script_parameters.txt".
+    destination : str, optional
+        Directory where the script parameters file will be saved. If empty
+        (the default), parameter saving is skipped.
+    overwrite : bool, optional
+        If True, use a fixed filename ``<script_name>_params.txt`` that gets
+        overwritten on each run. If False (the default), a timestamp is
+        included in the filename to preserve parameters from each run.
 
     Examples
     --------
     In a Fiji script, you can call this function as follows to save the parameters:
 
     >>> save_script_parameters(script_globals=globals(), destination="/data")
-    Saved script parameters to: /data/script_parameters.txt
+    Saved 2 script parameters to: /data/example1_run-2026-04-10--10-41_params.txt
     """
+    if destination == "":
+        timed_log("No destination provided for saving script parameters - skipping.")
+        return
+
     try:
         module = script_globals.get("org.scijava.script.ScriptModule")
-        # Access script metadata and inputs
         script_info = module.getInfo()
         inputs = module.getInputs()
     except:
         timed_log("ScriptModule inspection failed - skipping saving of parameters.")
         return
 
-    # NOTE: the two parameters are intentionally kept separate for (1) consistency
-    # reasons with other scripts and (2) as this allows for easier modification of just
-    # the output file e.g. in subsequent runs.
+    script_location = script_info.getLocation()
+    if script_location:
+        # getLocation() returns "file:/path/to/script.py"
+        # strip the "file:" prefix to get the actual path
+        if script_location.startswith("file:"):
+            script_location = script_location[5:]
+        script_name = os.path.splitext(os.path.basename(script_location))[0]
+    else:
+        script_name = "script"
+
+    if overwrite:
+        save_file_name = "%s_params.txt" % script_name
+    else:
+        timestamp = time.strftime("%Y-%m-%d--%H-%M")
+        save_file_name = "%s_run-%s_params.txt" % (script_name, timestamp)
+
     destination = str(destination)
     out_path = os.path.join(destination, save_file_name)
 
