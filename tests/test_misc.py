@@ -13,11 +13,19 @@ from imcflibs.imagej.misc import save_script_parameters
 PASSWORD_ITEMS = ["OMERO_PASSWD"]
 
 
-def test_save_script_parameters_fail(caplog):
+def test_save_script_parameters_no_destination(caplog):
+    """Tests save_script_parameters skips saving without a destination."""
+    caplog.clear()
+
+    save_script_parameters(script_globals=None)
+    assert "No destination provided" in caplog.messages[0]
+
+
+def test_save_script_parameters_fail(tmp_path, caplog):
     """Tests save_script_parameters with an invalid script_globals object."""
     caplog.clear()
 
-    save_script_parameters(script_globals=None, destination="")
+    save_script_parameters(script_globals=None, destination=tmp_path)
     assert "ScriptModule inspection failed" in caplog.messages[0]
 
 
