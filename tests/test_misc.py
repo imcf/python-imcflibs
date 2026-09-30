@@ -45,16 +45,17 @@ def test_save_script_parameters(tmp_path, monkeypatch, caplog):
     script_module = ScriptModule(
         input_names=["AAA", "BBB", "OMERO_PASSWD", "SJLOG", "NOT_THERE"],
         inputs={"AAA": "aaa", "BBB": "bbb", "OMERO_PASSWD": "ultra-secret"},
+        location="file:/some/path/example1.py",
     )
     script_globals = {"org.scijava.script.ScriptModule": script_module}
-    save_script_parameters(script_globals, destination=base)
+    save_script_parameters(script_globals, destination=base, overwrite=True)
     assert "Skipping parameter from skip-list" in caplog.text
     assert "Skipping password-style parameter" in caplog.text
     assert "Unable to fetch value for parameter: NOT_THERE" in caplog.text
     assert "Saved 2 parameters (skipped 1 password-style and 1 others)." in caplog.text
     assert "Saved 2 script parameters to" in caplog.text
 
-    with open(str(base) + "/script_parameters.txt", "r") as f:
+    with open(str(base) + "/example1_params.txt", "r") as f:
         contents = f.read()
     assert contents == "AAA: aaa\nBBB: bbb\n"
 
