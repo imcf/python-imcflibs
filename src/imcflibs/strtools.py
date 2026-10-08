@@ -175,3 +175,44 @@ def pad_number(index, pad_length=2):
     '0042'
     """
     return str(index).zfill(pad_length)
+
+
+def text_in_last_bracket_group(text):
+    """Return the content of the last balanced square-bracket group.
+
+    Parameters
+    ----------
+    text : str
+        The input string to search for the last balanced square-bracket group.
+
+    Returns
+    -------
+    str or None
+        The content of the last balanced square-bracket group, or None if no
+        such group exists.
+
+    Examples
+    --------
+    >>> text_in_last_bracket_group("foo[bar]baz")
+    'bar'
+    >>> text_in_last_bracket_group("foo[bar[baz]qux]")
+    'bar[baz]qux'
+    >>> text_in_last_bracket_group("foo[]bar")
+    ''
+    >>> text_in_last_bracket_group("foobar")
+    None
+    """
+    depth = 0
+    end = None
+
+    for index in range(len(text) - 1, -1, -1):
+        if text[index] == "]":
+            if end is None:
+                end = index
+            depth += 1
+        elif text[index] == "[":
+            depth -= 1
+            if depth == 0:
+                return text[index + 1 : end]
+
+    return None
