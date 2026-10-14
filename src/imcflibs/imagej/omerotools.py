@@ -32,9 +32,9 @@ def parse_url(client, omero_str):
 
     Assemble a list of ImageWrapper objects from one of the following inputs:
 
-    - An OMERO URL (as retrieved e.g. from OMERO.web).
+    - An OMERO URL for Dataset(s) or Image(s)
+        (as retrieved e.g. from OMERO.web).
     - One or more OMERO image IDs.
-    - An OMERO Dataset ID.
 
     Parameters
     ----------
