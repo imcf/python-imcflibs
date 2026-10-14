@@ -128,57 +128,31 @@ def parse_url(client, omero_str):
     # Sanitize the string
     omero_str = omero_str.strip()
 
-    image_ids = []
-    dataset_ids = []
-    image_wpr_list = []
+    # Get a list of str IDs and their OMERO type
+    omero_ids, omero_type = parse_url_string(omero_str)
 
-    # Check if the url is a dataset
-    if "dataset-" in omero_str:
-        # If there are multiple datasets
-        if "|" in omero_str:
-            parts = omero_str.split("|")
-            for part in parts:
-                if "dataset-" in part:
-                    image_ids.extend(
-                        [
-                            image
-                            for image in client.getDataset(
-                                Long(part.split("dataset-")[1].split("/")[0])
-                            ).getImages()
-                        ]
-                    )
-                    dataset_id = Long(part.split("dataset-")[1].split("/")[0])
-                    dataset_ids.append(dataset_id)
-        else:
-            image_ids.extend(
-                [
-                    image
-                    for image in client.getDataset(
-                        Long(omero_str.split("dataset-")[1].split("/")[0])
-                    ).getImages()
-                ]
-            )
-            # If there is only one dataset
-            dataset_id = Long(omero_str.split("dataset-")[1].split("/")[0])
-            dataset_ids.append(dataset_id)
+    if omero_type == "project":
+        raise NotImplementedError(
+            "Getting Image IDs from Project(s) is not implemented."
+        )
 
-        # Get the images from the dataset
-        for dataset_id in dataset_ids:
-            dataset_wpr = client.getDataset(dataset_id)
+    elif omero_type == "dataset":
+        image_wpr_list = []
+        # Get the images from the dataset(s)
+        for omero_id in omero_ids:
+            dataset_wpr = client.getDataset(omero_id)
             image_wpr_list.extend(dataset_wpr.getImages())
-
         return image_wpr_list
 
-    # Check if the url is an image
-    elif "image-" in omero_str:
-        image_ids = omero_str.split("image-")
-        image_ids.pop(0)
-        image_ids = [s.split("%")[0].replace("|", "") for s in image_ids]
-    else:
-        # If it is a list of IDs separated by commas
-        image_ids = omero_str.split(",")
+    elif omero_type == "image":
+        # omero_ids will be processed at the end
+        pass
 
-    return [client.getImage(Long(image_id)) for image_id in image_ids]
+    else:
+        # (omero_type == "") supposedly a list of IDs separated by commas
+        omero_ids = omero_str.split(",")
+
+    return [client.getImage(Long(image_id)) for image_id in omero_ids]
 
 
 def connect(host, port, username, password):
