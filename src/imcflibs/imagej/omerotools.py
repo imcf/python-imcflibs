@@ -14,6 +14,8 @@ requires the [`omero-insight`][omero-insight] plugin to read metadata.
 [omero-insight]: https://github.com/ome/omero-insight
 """
 
+import os
+
 from fr.igred.omero import Client
 from fr.igred.omero.annotations import (
     MapAnnotationWrapper,
@@ -185,6 +187,8 @@ def upload_image_to_omero(user_client, path, dataset_id):
     Long
         ID of the uploaded image
     """
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Could not find file: {path}")
     return user_client.getDataset(Long(dataset_id)).importImage(user_client, path)[0]
 
 
