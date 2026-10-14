@@ -196,7 +196,7 @@ def add_keyvalue_annotation(client, repository_wpr, annotations, header):
     client : fr.igred.omero.Client
         The client object used to connect to the OMERO server.
     repository_wpr : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
-        Wrapper to the object for the anotation.
+        Wrapper to the object for the annotation.
     annotations : dict
         Dictionary with the annotation to add.
     header : str
@@ -217,7 +217,7 @@ def delete_keyvalue_annotations(user_client, object_wrapper):
     user_client : fr.igred.omero.Client
         Client used for login to OMERO.
     object_wrapper : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
-        Wrapper to the object for the anotation.
+        Wrapper to the object for the annotation.
 
     """
     kv_pairs = object_wrapper.getMapAnnotations(user_client)
