@@ -4,6 +4,7 @@ import pytest
 
 from imcflibs.imagej.omerotools import (
     extract_ids_from_string,
+    parse_url,
     parse_url_string,
     upload_image_to_omero,
 )
@@ -77,3 +78,22 @@ def test_parse_url_string():
     omero_ids, omero_type = parse_url_string(url_bad)
     assert len(omero_ids) == 0
     assert omero_type == ""
+
+
+def test_parse_url():
+    """Test `parse_url()`.
+
+    Only tests the first part of the function
+    (NotImplementedError on Project-URLs).
+    Since the reset of the function depends on OMERO libraries.
+    """
+    url_empty = ""
+    with pytest.raises(ValueError, match="No OMERO link or image ID prov*"):
+        parse_url(None, url_empty)
+
+    url_proj = "webclient/?show=project-25406"
+    with pytest.raises(
+            NotImplementedError,
+            match="Getting Image IDs from Project(s) is*",
+        ):
+        parse_url(None, url_proj)
