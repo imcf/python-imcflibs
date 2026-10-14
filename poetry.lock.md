@@ -9,7 +9,7 @@ To do so, it's not sufficient to simply call `poetry lock --no-update` but
 rather the Poetry wrapper script has to be used like this:
 
 ```bash
-scripts/run-poetry.sh lock --no-update
+scripts/run-poetry.sh lock
 ```
 
 Sometimes poetry is refusing to update its cache for unknown reasons, resulting
@@ -18,7 +18,7 @@ similar. To solve this, fully clear the cache and re-run the `lock` command:
 
 ```bash
 scripts/run-poetry.sh cache clear --all -- PyPI
-scripts/run-poetry.sh lock --no-update
+scripts/run-poetry.sh lock
 ```
 
 [1]: https://pypi.org/project/imcf-fiji-mocks
