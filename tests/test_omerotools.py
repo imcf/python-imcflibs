@@ -15,7 +15,7 @@ def test_upload_image_to_omero():
     Tests only the case for non-existing files.
     """
     path = "/usr/random/path/questionable/file.tiff"
-    with pytest.raises(FileNotFoundError, match="Could not find file*"):
+    with pytest.raises(FileNotFoundError, match=r"Could not find file*"):
         upload_image_to_omero(None, path, None)
 
 
@@ -24,7 +24,7 @@ def test_extract_ids_from_string():
 
     url_proj = "webclient/?show=project-25406"
     # Expect error with wrong omero_type
-    with pytest.raises(ValueError, match="Unknown OMERO type*"):
+    with pytest.raises(ValueError, match=r"Unknown OMERO type*"):
         extract_ids_from_string(url_proj, "unicorn")
 
     assert len(extract_ids_from_string(url_proj, "Project")) == 1
@@ -88,12 +88,12 @@ def test_parse_url():
     Since the reset of the function depends on OMERO libraries.
     """
     url_empty = ""
-    with pytest.raises(ValueError, match="No OMERO link or image ID prov*"):
+    with pytest.raises(ValueError, match=r"No OMERO link or image ID prov*"):
         parse_url(None, url_empty)
 
     url_proj = "webclient/?show=project-25406"
     with pytest.raises(
             NotImplementedError,
-            match="Getting Image IDs from Project(s) is*",
+            match=r"Getting Image IDs from Project*",
         ):
         parse_url(None, url_proj)
