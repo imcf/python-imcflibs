@@ -28,7 +28,10 @@ case $PACKAGE_VERSION in
     ;;
 esac
 
+export PACKAGE_VERSION
 echo "Using Python package version: [$PACKAGE_VERSION]"
-### put the version into the project file and the package source:
-sed -i "s/^version = \"0.0.0\"/version = \"${PACKAGE_VERSION}\"/" pyproject.toml
-sed -i "s/\${project.version}/${PACKAGE_VERSION}/" "${PACKAGE_DIR}/__init__.py"
+### put the version into the project file and the package source (note, this is
+### intentionally NOT using `sed` as there is no cross-platform syntax for in-place
+### editing that also works on macOS (BSD `sed`):
+perl -i -pe 's/^version = "0\.0\.0"/version = "$ENV{PACKAGE_VERSION}"/' pyproject.toml
+perl -i -pe 's/\$\{project\.version\}/$ENV{PACKAGE_VERSION}/' "${PACKAGE_DIR}/__init__.py"

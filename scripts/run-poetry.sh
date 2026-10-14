@@ -45,11 +45,11 @@ scripts/pom-to-pyproject.sh
 # needs to be set to a version satisfying the other dependencies requirements -
 # this can be turned off e.g. for simply packaging for PyPi.
 PYPROJ="pyproject.toml"
-DEPS_PYTHON='>=3.10'
+export DEPS_PYTHON='>=3.10'
 if [ -z "$IGNORE_DEPS_PYTHON" ]; then
     echo "$PYPROJ: setting [python = \"$DEPS_PYTHON\"]"
     echo "Use 'export IGNORE_DEPS_PYTHON=true' to skip this step."
-    sed -i 's/^python = ">=2.7"$/python = "'"$DEPS_PYTHON"'"/' $PYPROJ
+    perl -i -pe 's/^python = ">=2.7"$/python = "$ENV{DEPS_PYTHON}"/' $PYPROJ
 else
     echo "$PYPROJ: found 'IGNORE_DEPS_PYTHON' envvar, not modifying."
 fi
