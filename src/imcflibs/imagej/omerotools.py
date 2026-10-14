@@ -110,11 +110,6 @@ def parse_url(client, omero_str):
         image_ids.pop(0)
         image_ids = [s.split("%")[0].replace("|", "") for s in image_ids]
     else:
-        image_ids = (
-            [s.split("%")[0].replace("|", "") for s in omero_str.split("image-")[1:]]
-            if "image-" in omero_str
-            else omero_str.split(",")
-        )
         # If it is a list of IDs separated by commas
         image_ids = omero_str.split(",")
 
