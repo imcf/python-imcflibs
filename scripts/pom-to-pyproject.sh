@@ -20,7 +20,8 @@ case $PACKAGE_VERSION in
     ### calculate the distance to the last release tag:
     LAST_TAG=$(git tag --list "${PACKAGE_NAME}-*" | sort | tail -n1)
     # echo "Last git tag: '$LAST_TAG'"
-    COMMITS_SINCE=$(git rev-list "${LAST_TAG}..HEAD" | wc -l)
+    ### NOTE: BSD-wc adds extra spaces, strip them with 'tr -d " "'
+    COMMITS_SINCE=$(git rev-list "${LAST_TAG}..HEAD" | wc -l | tr -d " " )
     # echo "Nr of commits since last tag: $COMMITS_SINCE"
     HEAD_ID=$(git rev-parse --short HEAD)
     # echo "HEAD commit hash: $HEAD_ID"
