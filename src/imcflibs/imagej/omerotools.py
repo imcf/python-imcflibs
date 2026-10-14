@@ -29,6 +29,33 @@ from omero.cmd import OriginalMetadataRequest
 from omero.gateway.model import TableData, TableDataColumn
 
 
+def parse_url_string(url_str):
+    """Extract IDs from an OMERO URL.
+
+    Info: URLs can only be of the same type (Dataset, Project, Images).
+    Returns tuple[empty list, ""] if input str (URL) is not an OMERO URL.
+
+    Parameters
+    ----------
+    url_str : str
+        OMERO URL, e.g. from the webclient.
+
+    Returns
+    -------
+    tuple[list[str], str]
+        - List of IDs extracted from the OMERO URL.
+        - Type of IDs (i.e. "project", "dataset", or "image")
+    """
+    omero_types = ["dataset-", "project-", "image-"]
+
+    for omero_type in omero_types:
+        omero_ids = extract_ids_from_string(url_str, omero_type)
+        if len(omero_ids) > 0:
+            return omero_ids, omero_type.strip("-")
+    # If no IDs identified
+    return [], ""
+
+
 def extract_ids_from_string(omero_str, omero_type):
     """Extract IDs from an OMERO URL for a given OMERO type.
 
@@ -63,6 +90,7 @@ def extract_ids_from_string(omero_str, omero_type):
             omero_id = omero_str.split(omero_type)[1].split("/")[0]
             omero_ids.append(omero_id)
     return omero_ids
+
 
 def parse_url(client, omero_str):
     """Parse an OMERO URL / image IDs into the respective ImageWrapper objects.

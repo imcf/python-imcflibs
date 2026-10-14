@@ -4,6 +4,7 @@ import pytest
 
 from imcflibs.imagej.omerotools import (
     extract_ids_from_string,
+    parse_url_string,
     upload_image_to_omero,
 )
 
@@ -41,3 +42,38 @@ def test_extract_ids_from_string():
 
     url_bad = "https://github.com/imcf/python-imcflibs"
     assert len(extract_ids_from_string(url_bad, "image")) == 0
+
+
+def test_parse_url_string():
+    """Test `parse_url_string()`."""
+    url_proj = "webclient/?show=project-25406"
+    omero_ids, omero_type = parse_url_string(url_proj)
+    assert len(omero_ids) == 1
+    assert omero_type == "project"
+    assert "25406" in omero_ids
+
+    url_dataset = "webclient/?show=dataset-82753"
+    omero_ids, omero_type = parse_url_string(url_dataset)
+    assert len(omero_ids) == 1
+    assert omero_type == "dataset"
+    assert "82753" in omero_ids
+
+    url_image = "webclient/?show=image-3598144"
+    omero_ids, omero_type = parse_url_string(url_image)
+    assert len(omero_ids) == 1
+    assert omero_type == "image"
+    assert "3598144" in omero_ids
+
+    url_multi_image = "webclient/?show=image-3598144|image-3598145|image-3598146|image-3598147"
+    omero_ids, omero_type = parse_url_string(url_multi_image)
+    assert len(omero_ids) == 4
+    assert omero_type == "image"
+    assert "3598144" in omero_ids
+    assert "3598145" in omero_ids
+    assert "3598146" in omero_ids
+    assert "3598147" in omero_ids
+
+    url_bad = "https://github.com/imcf/python-imcflibs"
+    omero_ids, omero_type = parse_url_string(url_bad)
+    assert len(omero_ids) == 0
+    assert omero_type == ""
