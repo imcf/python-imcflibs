@@ -140,7 +140,7 @@ def parse_url(client, omero_str):
         image_wpr_list = []
         # Get the images from the dataset(s)
         for omero_id in omero_ids:
-            dataset_wpr = client.getDataset(omero_id)
+            dataset_wpr = client.getDataset(Long(omero_id))
             image_wpr_list.extend(dataset_wpr.getImages())
         return image_wpr_list
 
