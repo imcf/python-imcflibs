@@ -1,6 +1,7 @@
 """Tests for `imcflibs.imagej.misc` utility functions."""
 
 import logging
+import os
 
 from org.scijava.script import ScriptInfo, ScriptModule
 
@@ -9,15 +10,22 @@ import imcflibs.imagej.misc
 from imcflibs.imagej.misc import bytes_to_human_readable
 from imcflibs.imagej.misc import save_script_parameters
 
-
 PASSWORD_ITEMS = ["OMERO_PASSWD"]
 
 
-def test_save_script_parameters_fail(caplog):
+def test_save_script_parameters_no_destination(caplog):
+    """Tests save_script_parameters skips saving without a destination."""
+    caplog.clear()
+
+    save_script_parameters(script_globals=None)
+    assert "No destination provided" in caplog.messages[0]
+
+
+def test_save_script_parameters_fail(tmp_path, caplog):
     """Tests save_script_parameters with an invalid script_globals object."""
     caplog.clear()
 
-    save_script_parameters(script_globals=None, destination="")
+    save_script_parameters(script_globals=None, destination=tmp_path)
     assert "ScriptModule inspection failed" in caplog.messages[0]
 
 
@@ -38,17 +46,43 @@ def test_save_script_parameters(tmp_path, monkeypatch, caplog):
         input_names=["AAA", "BBB", "OMERO_PASSWD", "SJLOG", "NOT_THERE"],
         inputs={"AAA": "aaa", "BBB": "bbb", "OMERO_PASSWD": "ultra-secret"},
     )
+    script_module.getInfo().location = "file:/some/path/example1.py"
     script_globals = {"org.scijava.script.ScriptModule": script_module}
-    save_script_parameters(script_globals, destination=base)
+    save_script_parameters(script_globals, destination=base, overwrite=True)
     assert "Skipping parameter from skip-list" in caplog.text
     assert "Skipping password-style parameter" in caplog.text
     assert "Unable to fetch value for parameter: NOT_THERE" in caplog.text
     assert "Saved 2 parameters (skipped 1 password-style and 1 others)." in caplog.text
     assert "Saved 2 script parameters to" in caplog.text
 
-    with open(str(base) + "/script_parameters.txt", "r") as f:
+    with open(str(base) + "/example1_params.txt", "r") as f:
         contents = f.read()
     assert contents == "AAA: aaa\nBBB: bbb\n"
+
+
+def test_save_script_parameters_timestamped(tmp_path, monkeypatch):
+    """Tests save_script_parameters default naming without a script location."""
+
+    def _is_password_style(item):
+        return False
+
+    monkeypatch.setattr(imcflibs.imagej.misc, "_is_password_style", _is_password_style)
+
+    script_module = ScriptModule(input_names=["AAA"], inputs={"AAA": "aaa"})
+    script_globals = {"org.scijava.script.ScriptModule": script_module}
+    save_script_parameters(script_globals, destination=tmp_path)
+
+    # the folder should now contain exactly one file
+    files = os.listdir(str(tmp_path))
+    assert len(files) == 1
+
+    # its name is "script_run-<timestamp>_params.txt"
+    file_name = files[0]
+    assert file_name.startswith("script_run-")
+    assert file_name.endswith("_params.txt")
+
+    with open(os.path.join(str(tmp_path), file_name), "r") as f:
+        assert f.read() == "AAA: aaa\n"
 
 
 def test_bytes_to_human_readable_simple():
