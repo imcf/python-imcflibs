@@ -9,6 +9,12 @@ from imcflibs.imagej.omerotools import (
     upload_image_to_omero,
 )
 
+# Enusre Python 2.7 and 3.x compability
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
+
 
 def test_upload_image_to_omero():
     """Test `upload_image_to_omero()`.
