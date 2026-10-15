@@ -73,7 +73,7 @@ def extract_ids_from_string(omero_str, omero_type):
     """
     omero_type = omero_type.lower().strip("-")
     if omero_type not in ["project", "dataset", "image"]:
-        raise ValueError(f"Unknown OMERO type: {omero_type}")
+        raise ValueError("Unknown OMERO type: {}".format(omero_type))
 
     omero_ids = []
     omero_type = omero_type + "-"
@@ -225,7 +225,7 @@ def upload_image_to_omero(user_client, path, dataset_id):
         ID of the uploaded image
     """
     if not os.path.exists(path):
-        raise FileNotFoundError(f"Could not find file: {path}")
+        raise FileNotFoundError("Could not find file: {}".format(path))
     return user_client.getDataset(Long(dataset_id)).importImage(user_client, path)[0]
 
 
