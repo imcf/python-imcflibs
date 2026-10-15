@@ -1,6 +1,7 @@
 """Tests for `imcflibs.imagej.misc` utility functions."""
 
 import logging
+import os
 
 from org.scijava.script import ScriptInfo, ScriptModule
 
@@ -8,7 +9,6 @@ import imcflibs.imagej.misc
 
 from imcflibs.imagej.misc import bytes_to_human_readable
 from imcflibs.imagej.misc import save_script_parameters
-
 
 PASSWORD_ITEMS = ["OMERO_PASSWD"]
 
@@ -58,6 +58,31 @@ def test_save_script_parameters(tmp_path, monkeypatch, caplog):
     with open(str(base) + "/example1_params.txt", "r") as f:
         contents = f.read()
     assert contents == "AAA: aaa\nBBB: bbb\n"
+
+
+def test_save_script_parameters_timestamped(tmp_path, monkeypatch):
+    """Tests save_script_parameters default naming without a script location."""
+
+    def _is_password_style(item):
+        return False
+
+    monkeypatch.setattr(imcflibs.imagej.misc, "_is_password_style", _is_password_style)
+
+    script_module = ScriptModule(input_names=["AAA"], inputs={"AAA": "aaa"})
+    script_globals = {"org.scijava.script.ScriptModule": script_module}
+    save_script_parameters(script_globals, destination=tmp_path)
+
+    # the folder should now contain exactly one file
+    files = os.listdir(str(tmp_path))
+    assert len(files) == 1
+
+    # its name is "script_run-<timestamp>_params.txt"
+    file_name = files[0]
+    assert file_name.startswith("script_run-")
+    assert file_name.endswith("_params.txt")
+
+    with open(os.path.join(str(tmp_path), file_name), "r") as f:
+        assert f.read() == "AAA: aaa\n"
 
 
 def test_bytes_to_human_readable_simple():
