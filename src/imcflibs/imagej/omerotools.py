@@ -64,7 +64,7 @@ def extract_ids_from_string(omero_str, omero_type):
     omero_str : str
         OMERO URL, e.g. from the webclient.
     omero_type : str
-    OMERO type, i.e. "project", "Dataset", or "Image"
+        OMERO type, i.e. "project", "Dataset", or "Image" # FIXME
 
     Returns
     -------

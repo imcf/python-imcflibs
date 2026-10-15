@@ -9,6 +9,7 @@ from imcflibs.imagej.omerotools import (
     upload_image_to_omero,
 )
 
+
 def test_upload_image_to_omero():
     """Test `upload_image_to_omero()`.
 
@@ -37,7 +38,9 @@ def test_extract_ids_from_string():
     url_image = "webclient/?show=image-3598144"
     assert len(extract_ids_from_string(url_image, "image")) == 1
 
-    url_multi_image = "webclient/?show=image-3598144|image-3598145|image-3598146|image-3598147"
+    url_multi_image = (
+        "webclient/?show=image-3598144|image-3598145|image-3598146|image-3598147"
+    )
     assert len(extract_ids_from_string(url_multi_image, "image-")) == 4
     assert len(extract_ids_from_string(url_multi_image, "Project")) == 0
 
@@ -65,7 +68,9 @@ def test_parse_url_string():
     assert omero_type == "image"
     assert "3598144" in omero_ids
 
-    url_multi_image = "webclient/?show=image-3598144|image-3598145|image-3598146|image-3598147"
+    url_multi_image = (
+        "webclient/?show=image-3598144|image-3598145|image-3598146|image-3598147"
+    )
     omero_ids, omero_type = parse_url_string(url_multi_image)
     assert len(omero_ids) == 4
     assert omero_type == "image"
@@ -93,7 +98,7 @@ def test_parse_url():
 
     url_proj = "webclient/?show=project-25406"
     with pytest.raises(
-            NotImplementedError,
-            match=r"Getting Image IDs from Project*",
-        ):
+        NotImplementedError,
+        match=r"Getting Image IDs from Project*",
+    ):
         parse_url(None, url_proj)
