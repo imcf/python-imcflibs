@@ -45,8 +45,8 @@ def test_save_script_parameters(tmp_path, monkeypatch, caplog):
     script_module = ScriptModule(
         input_names=["AAA", "BBB", "OMERO_PASSWD", "SJLOG", "NOT_THERE"],
         inputs={"AAA": "aaa", "BBB": "bbb", "OMERO_PASSWD": "ultra-secret"},
-        location="file:/some/path/example1.py",
     )
+    script_module.getInfo().location = "file:/some/path/example1.py"
     script_globals = {"org.scijava.script.ScriptModule": script_module}
     save_script_parameters(script_globals, destination=base, overwrite=True)
     assert "Skipping parameter from skip-list" in caplog.text
