@@ -14,6 +14,8 @@ requires the [`omero-insight`][omero-insight] plugin to read metadata.
 [omero-insight]: https://github.com/ome/omero-insight
 """
 
+import os
+
 from fr.igred.omero import Client
 from fr.igred.omero.annotations import (
     MapAnnotationWrapper,
@@ -27,14 +29,77 @@ from omero.cmd import OriginalMetadataRequest
 from omero.gateway.model import TableData, TableDataColumn
 
 
+def parse_url_string(url_str):
+    """Extract IDs from an OMERO URL.
+
+    Info: URLs can only be of the same type (Dataset, Project, Images).
+    Returns tuple[empty list, ""] if input str (URL) is not an OMERO URL.
+
+    Parameters
+    ----------
+    url_str : str
+        OMERO URL, e.g. from the webclient.
+
+    Returns
+    -------
+    tuple[list[str], str]
+        - List of IDs extracted from the OMERO URL.
+        - Type of IDs (i.e. "project", "dataset", or "image")
+    """
+    omero_types = ["dataset-", "project-", "image-"]
+
+    for omero_type in omero_types:
+        omero_ids = extract_ids_from_string(url_str, omero_type)
+        if len(omero_ids) > 0:
+            return omero_ids, omero_type.strip("-")
+    # If no IDs identified
+    return [], ""
+
+
+def extract_ids_from_string(omero_str, omero_type):
+    """Extract IDs from an OMERO URL for a given OMERO type.
+
+    Parameters
+    ----------
+    omero_str : str
+        OMERO URL, e.g. from the webclient.
+    omero_type : str
+        OMERO type, i.e. "project", "Dataset", or "Image" # FIXME
+
+    Returns
+    -------
+    list[str]
+        List of IDs extracted from the OMERO URL.
+    """
+    omero_type = omero_type.lower().strip("-")
+    if omero_type not in ["project", "dataset", "image"]:
+        raise ValueError("Unknown OMERO type: {}".format(omero_type))
+
+    omero_ids = []
+    omero_type = omero_type + "-"
+    if omero_type in omero_str:
+        # If there are multiple types
+        if "|" in omero_str:
+            parts = omero_str.split("|")
+            for part in parts:
+                if omero_type in part:
+                    omero_id = part.split(omero_type)[1].split("/")[0]
+                    omero_ids.append(omero_id)
+        else:
+            # If there is only one dataset
+            omero_id = omero_str.split(omero_type)[1].split("/")[0]
+            omero_ids.append(omero_id)
+    return omero_ids
+
+
 def parse_url(client, omero_str):
     """Parse an OMERO URL / image IDs into the respective ImageWrapper objects.
 
     Assemble a list of ImageWrapper objects from one of the following inputs:
 
-    - An OMERO URL (as retrieved e.g. from OMERO.web).
+    - An OMERO URL for Dataset(s) or Image(s)
+        (as retrieved e.g. from OMERO.web).
     - One or more OMERO image IDs.
-    - An OMERO Dataset ID.
 
     Parameters
     ----------
@@ -63,62 +128,31 @@ def parse_url(client, omero_str):
     # Sanitize the string
     omero_str = omero_str.strip()
 
-    image_ids = []
-    dataset_ids = []
-    image_wpr_list = []
+    # Get a list of str IDs and their OMERO type
+    omero_ids, omero_type = parse_url_string(omero_str)
 
-    # Check if the url is a dataset
-    if "dataset-" in omero_str:
-        # If there are multiple datasets
-        if "|" in omero_str:
-            parts = omero_str.split("|")
-            for part in parts:
-                if "dataset-" in part:
-                    image_ids.extend(
-                        [
-                            image
-                            for image in client.getDataset(
-                                Long(part.split("dataset-")[1].split("/")[0])
-                            ).getImages()
-                        ]
-                    )
-                    dataset_id = Long(part.split("dataset-")[1].split("/")[0])
-                    dataset_ids.append(dataset_id)
-        else:
-            image_ids.extend(
-                [
-                    image
-                    for image in client.getDataset(
-                        Long(omero_str.split("dataset-")[1].split("/")[0])
-                    ).getImages()
-                ]
-            )
-            # If there is only one dataset
-            dataset_id = Long(omero_str.split("dataset-")[1].split("/")[0])
-            dataset_ids.append(dataset_id)
+    if omero_type == "project":
+        raise NotImplementedError(
+            "Getting Image IDs from Project(s) is not implemented."
+        )
 
-        # Get the images from the dataset
-        for dataset_id in dataset_ids:
-            dataset_wpr = client.getDataset(dataset_id)
+    elif omero_type == "dataset":
+        image_wpr_list = []
+        # Get the images from the dataset(s)
+        for omero_id in omero_ids:
+            dataset_wpr = client.getDataset(Long(omero_id))
             image_wpr_list.extend(dataset_wpr.getImages())
-
         return image_wpr_list
 
-    # Check if the url is an image
-    elif "image-" in omero_str:
-        image_ids = omero_str.split("image-")
-        image_ids.pop(0)
-        image_ids = [s.split("%")[0].replace("|", "") for s in image_ids]
-    else:
-        image_ids = (
-            [s.split("%")[0].replace("|", "") for s in omero_str.split("image-")[1:]]
-            if "image-" in omero_str
-            else omero_str.split(",")
-        )
-        # If it is a list of IDs separated by commas
-        image_ids = omero_str.split(",")
+    elif omero_type == "image":
+        # omero_ids will be processed at the end
+        pass
 
-    return [client.getImage(Long(image_id)) for image_id in image_ids]
+    else:
+        # (omero_type == "") supposedly a list of IDs separated by commas
+        omero_ids = omero_str.split(",")
+
+    return [client.getImage(Long(image_id)) for image_id in omero_ids]
 
 
 def connect(host, port, username, password):
@@ -190,6 +224,12 @@ def upload_image_to_omero(user_client, path, dataset_id):
     Long
         ID of the uploaded image
     """
+    if not os.path.exists(path):
+        try:
+            raise FileNotFoundError("Could not find file: {}".format(path))
+        except NameError:
+            raise IOError("Could not find file: {}".format(path))
+        
     return user_client.getDataset(Long(dataset_id)).importImage(user_client, path)[0]
 
 
@@ -201,7 +241,7 @@ def add_keyvalue_annotation(client, repository_wpr, annotations, header):
     client : fr.igred.omero.Client
         The client object used to connect to the OMERO server.
     repository_wpr : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
-        Wrapper to the object for the anotation.
+        Wrapper to the object for the annotation.
     annotations : dict
         Dictionary with the annotation to add.
     header : str
@@ -222,7 +262,7 @@ def delete_keyvalue_annotations(user_client, object_wrapper):
     user_client : fr.igred.omero.Client
         Client used for login to OMERO.
     object_wrapper : fr.igred.omero.repositor.GenericRepositoryObjectWrapper
-        Wrapper to the object for the anotation.
+        Wrapper to the object for the annotation.
 
     """
     kv_pairs = object_wrapper.getMapAnnotations(user_client)
