@@ -863,8 +863,9 @@ def save_script_parameters(script_globals, destination="", overwrite=False):
         for item in script_info.inputs():
             key = item.getName()
 
-            # Skip if any keys are in the skip list
-            if any(skip in key.upper() for skip in skip_keys):
+            # Skip if the key is in the skip list (whole name, not a substring:
+            # e.g. "FUSION_FORMAT" contains "RM")
+            if key.upper() in skip_keys:
                 log.info("Skipping parameter from skip-list: %s", key)
                 skipped += 1
                 continue
