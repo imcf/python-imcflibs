@@ -3,13 +3,13 @@
 import pytest
 
 from imcflibs.imagej.omerotools import (
-    extract_ids_from_string,
+    _extract_ids_of_type,
     parse_url,
     ids_from_url,
     upload_image_to_omero,
 )
 
-# Enusre Python 2.7 and 3.x compability
+# Ensure Python 2.7 and 3.x compatibility
 try:
     FileNotFoundError
 except NameError:
@@ -26,32 +26,32 @@ def test_upload_image_to_omero():
         upload_image_to_omero(None, path, None)
 
 
-def test_extract_ids_from_string():
-    """Test `extract_ids_from_string()`."""
+def test_extract_ids_of_type():
+    """Test `_extract_ids_of_type()`."""
 
     url_proj = "webclient/?show=project-25406"
     # Expect error with wrong omero_type
     with pytest.raises(ValueError, match=r"Unknown OMERO type"):
-        extract_ids_from_string(url_proj, "unicorn")
+        _extract_ids_of_type(url_proj, "unicorn")
 
-    assert len(extract_ids_from_string(url_proj, "Project")) == 1
-    assert len(extract_ids_from_string(url_proj, "Project-")) == 1
-    assert len(extract_ids_from_string(url_proj, "Dataset")) == 0
+    assert len(_extract_ids_of_type(url_proj, "Project")) == 1
+    assert len(_extract_ids_of_type(url_proj, "Project-")) == 1
+    assert len(_extract_ids_of_type(url_proj, "Dataset")) == 0
 
     url_dataset = "webclient/?show=dataset-82753"
-    assert len(extract_ids_from_string(url_dataset, "dataset")) == 1
+    assert len(_extract_ids_of_type(url_dataset, "dataset")) == 1
 
     url_image = "webclient/?show=image-3598144"
-    assert len(extract_ids_from_string(url_image, "image")) == 1
+    assert len(_extract_ids_of_type(url_image, "image")) == 1
 
     url_multi_image = (
         "webclient/?show=image-3598144|image-3598145|image-3598146|image-3598147"
     )
-    assert len(extract_ids_from_string(url_multi_image, "image-")) == 4
-    assert len(extract_ids_from_string(url_multi_image, "Project")) == 0
+    assert len(_extract_ids_of_type(url_multi_image, "image-")) == 4
+    assert len(_extract_ids_of_type(url_multi_image, "Project")) == 0
 
     url_bad = "https://github.com/imcf/python-imcflibs"
-    assert len(extract_ids_from_string(url_bad, "image")) == 0
+    assert len(_extract_ids_of_type(url_bad, "image")) == 0
 
 
 def test_parse_url_string():
