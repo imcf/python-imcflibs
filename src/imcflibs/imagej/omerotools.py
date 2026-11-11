@@ -54,8 +54,8 @@ def parse_url_string(url_str):
         omero_ids = extract_ids_from_string(url_str, omero_type)
         if len(omero_ids) > 0:
             return omero_ids, omero_type.strip("-")
-    # If no IDs identified
-    return [], ""
+
+    return [], ""  # if no IDs identified
 
 
 def extract_ids_from_string(omero_str, omero_type):
