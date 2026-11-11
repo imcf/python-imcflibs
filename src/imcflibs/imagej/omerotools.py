@@ -51,14 +51,14 @@ def parse_url_string(url_str):
     omero_types = ["dataset-", "project-", "image-"]
 
     for omero_type in omero_types:
-        omero_ids = extract_ids_from_string(url_str, omero_type)
+        omero_ids = _extract_ids_of_type(url_str, omero_type)
         if len(omero_ids) > 0:
             return omero_ids, omero_type.strip("-")
 
     return [], ""  # if no IDs identified
 
 
-def extract_ids_from_string(omero_str, omero_type):
+def _extract_ids_of_type(omero_str, omero_type):
     """Extract IDs from an OMERO URL for a given OMERO type.
 
     Parameters
