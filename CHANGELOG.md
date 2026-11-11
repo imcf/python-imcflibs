@@ -71,6 +71,9 @@ multiple modules. For detailed information, please refer to the
 * `imcflibs.imagej.misc.run_imarisconvert`:
   * Now allows to select an output folder.
   * Adds pixel calibration to the converted file.
+* `imcflibs.imagej.misc.save_script_parameters` skips only parameters whose
+    whole name is in the skip list (`fusion_format` was skipped because it
+    contains `RM`).
 * `imcflibs.imagej.misc.subtract_images` now validates the slice count is equal
     for both images.
 * `imcflibs.imagej.misc.save_image_with_extension`: fix issue with java path
