@@ -10,7 +10,7 @@ def test_defaults():
     acitt_options = (
         "multiple_angles=[NO (one angle)] "
         "multiple_channels=[YES (all channels in one file)] "
-        "multiple_illuminations_directions=[NO (one illumination direction)] "
+        "_____multiple_illumination_directions=[NO (one illumination direction)] "
         "multiple_tiles=[YES (one file per tile)] "
         "multiple_timepoints=[NO (one time-point)] "
     )
@@ -40,7 +40,7 @@ def test__multiple_timepoints_files():
     acitt_options = (
         "multiple_angles=[NO (one angle)] "
         "multiple_channels=[YES (all channels in one file)] "
-        "multiple_illuminations_directions=[NO (one illumination direction)] "
+        "_____multiple_illumination_directions=[NO (one illumination direction)] "
         "multiple_tiles=[YES (one file per tile)] "
         "multiple_timepoints=[YES (one file per time-point)] "
     )
@@ -57,7 +57,7 @@ def test__multiple_channels_files_multiple_timepoints():
     acitt_options = (
         "multiple_angles=[NO (one angle)] "
         "multiple_channels=[YES (one file per channel)] "
-        "multiple_illuminations_directions=[NO (one illumination direction)] "
+        "_____multiple_illumination_directions=[NO (one illumination direction)] "
         "multiple_tiles=[YES (one file per tile)] "
         "multiple_timepoints=[YES (all time-points in one file)] "
     )
@@ -75,7 +75,7 @@ def test_single_tile_multiple_angles_files():
     acitt_options = (
         "multiple_angles=[YES (one file per angle)] "
         "multiple_channels=[YES (all channels in one file)] "
-        "multiple_illuminations_directions=[NO (one illumination direction)] "
+        "_____multiple_illumination_directions=[NO (one illumination direction)] "
         "multiple_tiles=[NO (one tile)] "
         "multiple_timepoints=[NO (one time-point)] "
     )

@@ -20,6 +20,16 @@ multiple modules. For detailed information, please refer to the
 
 * `imcflibs.imagej.bdv.read_metadata_from_xml` allows reading metadata back
     from the xml of a H5/XML couple.
+* `imcflibs.imagej.bdv.run_command` runs an MVR / BigStitcher command by its
+    plugin class instead of its menu name. The legacy `SPIM_Registration`
+    plugin registers several of the same command names, so `IJ.run()` could
+    start the old plugin instead (e.g. a `VerifyError` in "Register Dataset
+    based on Interest Points"). All MVR / BigStitcher wrappers use it (#158).
+* `imcflibs.imagej.bdv.fmt_ransac_options` formats the RANSAC options of the
+    interest point registration (minimal number of inliers, iterations,
+    inlier ratio, maximal trust) for multiview-reconstruction 9.x.
+* `imcflibs.imagej.bdv.export_choice` gives the `export=` choice of the
+    N5-API fusion export of MVR 9.x (`[N5]`, `[OME-ZARR v3]`).
 
 #### New functions in `imcflibs.imagej.misc`
 
@@ -58,6 +68,39 @@ multiple modules. For detailed information, please refer to the
 * `imcflibs.imagej.bdv.resave_as_h5`: use the correct processing options
     object and change the ImageJ command to "Resave as HDF5 (local)" for better
     accuracy.
+* Match the dialogs of multiview-reconstruction 9.x and BigStitcher 3.x
+    (checked against the 9.0.11 / 3.0.8 jars, #159):
+  * `imcflibs.imagej.bdv.ProcessingOptions`: timepoints are spelled
+      "Timepoint" (`[Single Timepoint (Select from List)]`, `[Timepoint N]`)
+      and "TimePoints" in the grouping choices (`[Average TimePoints]`).
+  * `imcflibs.imagej.bdv.DefinitionOptions`: illumination key
+      `_____multiple_illumination_directions`.
+  * `imcflibs.imagej.bdv.interest_points_registration`: RANSAC keys
+      `minmal_number_of_inliers` (replaces `inlier_factor`) and
+      `ransac_iterations=[Normal (10,000)]`; the search radius only applies with
+      `limit_search_radius`. New optional parameters: label, transformation and
+      regularization, grouping, view / point selection, descriptor parameters,
+      search radius, RANSAC options, strategy, fixed views, pre-alignment.
+  * `imcflibs.imagej.bdv.optimize_and_apply_shifts`: new optional `strategy`,
+      `fix_groups` and `pre_align` (MVR 9 only pre-aligns with the
+      `pre-align` key; default on, as MVR 7 always did).
+  * `imcflibs.imagej.bdv.detect_interest_points`: new optional label,
+      downsampling, fixed intensity range and grouping.
+  * `imcflibs.imagej.bdv.fuse_dataset`: the default export is now TIFF
+      (uncompressed; HDF5 export is not available in MVR 9.x and raises a
+      `ValueError`). N5 and OME-ZARR (v3) always create a BDV/BigStitcher XML
+      and a multi-resolution pyramid (keys `create_a_bdv/bigstitcher` and
+      `create_multi-resolution`, were `create` / `create_0`); optional
+      compression, block sizes, pyramid levels, sharding and single-container
+      settings. Compression and block sizes are always passed (MVR's initial
+      defaults), since MVR keeps the values of the previous fusion of the
+      session (#160); the pyramid levels default to MVR's proposal. Processing
+      selectors are passed on; new optional bounding box, `preserve_original`, non-rigid
+      fusion, TIFF `filename_addition` and output base name.
+  * `phase_correlation_pairwise_shifts_calculation`, `filter_pairwise_shifts`
+      and `optimize_and_apply_shifts`: optional `backup_xml` (default `True`).
+* `imcflibs.imagej.bdv` can be imported without the PTBIOP update site: the
+    BIOP command is only imported in `fuse_dataset_bdvp`.
 
 #### `imcflibs.imagej.bioformats`
 
