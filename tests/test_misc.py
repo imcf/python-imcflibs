@@ -96,9 +96,9 @@ def test_save_script_parameters_skip_whole_names(tmp_path, monkeypatch, caplog):
         inputs={"rm": "roimanager", "fusion_format": "TIFF", "commander": "x"},
     )
     script_globals = {"org.scijava.script.ScriptModule": script_module}
-    save_script_parameters(script_globals, destination=tmp_path)
+    save_script_parameters(script_globals, destination=tmp_path, overwrite=True)
 
-    with open(str(tmp_path) + "/script_parameters.txt", "r") as f:
+    with open(str(tmp_path) + "/script_params.txt", "r") as f:
         contents = f.read()
     assert contents == "fusion_format: TIFF\ncommander: x\n"
 
