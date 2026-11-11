@@ -229,9 +229,9 @@ def upload_image_to_omero(user_client, path, dataset_id):
     if not os.path.exists(path):
         try:
             raise FileNotFoundError("Could not find file: {}".format(path))
-        except NameError:
+        except NameError:  # Python 2.7 has no FileNotFoundError
             raise IOError("Could not find file: {}".format(path))
-        
+
     return user_client.getDataset(Long(dataset_id)).importImage(user_client, path)[0]
 
 
